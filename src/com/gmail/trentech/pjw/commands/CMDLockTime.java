@@ -34,14 +34,32 @@ public class CMDLockTime implements CommandExecutor {
 		ConfigManager loader = new ConfigManager();
 		ConfigurationNode config = loader.getConfig();
 
-		if(config.getNode("Worlds", world.getName(), "Time", "Lock").getBoolean()){
-			config.getNode("Worlds", world.getName(), "Time", "Lock").setValue(false);
-			src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set time lock of world ", worldName, " to false"));
-		}else{
-			config.getNode("Worlds", world.getName(), "Time", "Lock").setValue(true);
-			config.getNode("Worlds", world.getName(), "Time", "Set").setValue(world.getProperties().getWorldTime());
-			src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set time lock of world ", worldName, " to true"));
+		if(!args.hasAny("value")) {
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "                 ", worldName, " Properties:"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Time Lock: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Lock").getString()));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Time Set: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Set").getString()));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			return CommandResult.success();
 		}
+		String value = args.<String>getOne("value").get();
+		
+		Boolean bool;
+		try{
+			bool = Boolean.parseBoolean(value);
+		}catch(Exception e){
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world keepspawnloaded <world> [value]"));
+			return CommandResult.empty();	
+		}
+		
+		config.getNode("Worlds", world.getName(), "Time", "Lock").setValue(bool);
+		if(bool){
+			config.getNode("Worlds", world.getName(), "Time", "Set").setValue(world.getProperties().getWorldTime());
+		}
+		
+		src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set time lock of world ", worldName, " to ", value));
 
 		loader.save();
 		

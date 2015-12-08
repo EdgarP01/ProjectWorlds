@@ -20,7 +20,7 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world keepspawnloaded <world>"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world keepspawnloaded <world> [value]"));
 			return CommandResult.empty();
 		}
 		String worldName = args.<String>getOne("name").get();
@@ -34,16 +34,31 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 		ConfigManager loader = new ConfigManager();
 		ConfigurationNode config = loader.getConfig();
 		
-		if(world.getProperties().doesKeepSpawnLoaded()){
-			world.getProperties().setKeepSpawnLoaded(false);
-			config.getNode("Worlds", world.getName(), "Keep-Spawn-Loaded").setValue(false);
-			src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set keep spawn loaded of world ", worldName, " to false"));
-		}else{
-			world.getProperties().setKeepSpawnLoaded(true);
-			config.getNode("Worlds", world.getName(), "Keep-Spawn-Loaded").setValue(true);
-			src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set keep spawn loaded of world ", worldName, " to true"));
+		if(!args.hasAny("value")) {
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "                 ", worldName, " Properties:"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Keep Spawn Loaded: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Hardcore").getString()));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			return CommandResult.success();
 		}
+		String value = args.<String>getOne("value").get();
 		
+		Boolean bool;
+		try{
+			bool = Boolean.parseBoolean(value);
+		}catch(Exception e){
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world keepspawnloaded <world> [value]"));
+			return CommandResult.empty();	
+		}
+
+		world.getProperties().setKeepSpawnLoaded(bool);
+		
+		config.getNode("Worlds", world.getName(), "Keep-Spawn-Loaded").setValue(value);
+		
+		src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set keep spawn loaded of world ", worldName, " to ", value));
+
 		loader.save();
 		
 		return CommandResult.success();

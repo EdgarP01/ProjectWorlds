@@ -10,8 +10,8 @@ import org.spongepowered.api.world.difficulty.Difficulties;
 import org.spongepowered.api.world.difficulty.Difficulty;
 
 public class Utils {
-	// Convenience methods to avoid null or absent values
-	
+
+	// Convenience method to avoid null or absent values
 	public static DimensionType getDimensionType(String type){
 		switch(type){
 		case "OVERWORLD": return DimensionTypes.OVERWORLD;
@@ -21,6 +21,7 @@ public class Utils {
 		}
 	}
 	
+	// Convenience method to avoid null or absent values
 	public static GameMode getGameMode(String gamemode){
 		switch(gamemode){
 		case "SURVIVAL": return GameModes.SURVIVAL;
@@ -31,6 +32,7 @@ public class Utils {
 		}
 	}
 	
+	// Convenience method to avoid null or absent values
 	public static GeneratorType getGeneratorType(String type){
 		switch(type){
 		case "OVERWORLD": return GeneratorTypes.OVERWORLD;
@@ -42,6 +44,7 @@ public class Utils {
 		}
 	}
 	
+	// Convenience method to avoid null or absent values
 	public static Difficulty getGetDifficulty(String difficulty){
 		switch(difficulty){
 		case "EASY": return Difficulties.EASY;

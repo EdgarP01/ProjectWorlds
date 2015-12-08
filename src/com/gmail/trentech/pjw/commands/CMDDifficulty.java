@@ -37,7 +37,8 @@ public class CMDDifficulty implements CommandExecutor {
 		ConfigurationNode config = loader.getConfig();
 		
 		if(!args.hasAny("value")) {
-			src.sendMessage(Texts.of(TextColors.DARK_GREEN, "            ", worldName, " Properties:"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "                 ", worldName, " Properties:"));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Difficulty: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Difficulty").getString()));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));

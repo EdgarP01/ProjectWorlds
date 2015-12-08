@@ -11,7 +11,7 @@ import com.gmail.trentech.pjw.managers.ConfigManager;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
-public class TimeLock {
+public class Tasks {
 
     public Task task;
 

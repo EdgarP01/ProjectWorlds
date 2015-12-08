@@ -34,13 +34,29 @@ public class CMDLockWeather implements CommandExecutor {
 		ConfigManager loader = new ConfigManager();
 		ConfigurationNode config = loader.getConfig();
 
-		if(config.getNode("Worlds", world.getName(), "Weather", "Lock").getBoolean()){
-			config.getNode("Worlds", world.getName(), "Weather", "Lock").setValue(false);
-			src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set time lock of world ", worldName, " to false"));
-		}else{
-			config.getNode("Worlds", world.getName(), "Weather", "Lock").setValue(true);
+		if(!args.hasAny("value")) {
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "                 ", worldName, " Properties:"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Weather Lock: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Weather", "Lock").getString()));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Weather Set: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Weather", "Set").getString()));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			return CommandResult.success();
+		}
+		String value = args.<String>getOne("value").get();
+		
+		Boolean bool;
+		try{
+			bool = Boolean.parseBoolean(value);
+		}catch(Exception e){
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world lockweather <world> [value]"));
+			return CommandResult.empty();	
+		}
+		
+		config.getNode("Worlds", world.getName(), "Weather", "Lock").setValue(bool);
+		if(bool){
 			config.getNode("Worlds", world.getName(), "Weather", "Set").setValue(world.getWeather().getName().toUpperCase());
-			src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set time lock of world ", worldName, " to true"));			
 		}
 
 		loader.save();

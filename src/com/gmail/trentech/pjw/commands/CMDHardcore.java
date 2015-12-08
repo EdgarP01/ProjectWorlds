@@ -34,17 +34,33 @@ public class CMDHardcore implements CommandExecutor {
 		ConfigManager loader = new ConfigManager();
 		ConfigurationNode config = loader.getConfig();
 		
-		if(world.getProperties().isHardcore()){
-			world.getProperties().setHardcore(false);
-			config.getNode("Worlds", world.getName(), "Hardcore").setValue(false);
-			src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set hardcore of world ", worldName, " to false"));
-		}else{
-			world.getProperties().setHardcore(true);
-			config.getNode("Worlds", world.getName(), "Hardcore").setValue(true);
-			src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set hardcore of world ", worldName, " to true"));
+		if(!args.hasAny("value")) {
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "                 ", worldName, " Properties:"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Hardcore").getString()));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			return CommandResult.success();
+		}
+		String value = args.<String>getOne("value").get();
+
+		Boolean bool;
+		try{
+			bool = Boolean.parseBoolean(value);
+		}catch(Exception e){
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world hardcore <world> [value]"));
+			return CommandResult.empty();	
 		}
 		
+		world.getProperties().setHardcore(bool);
+		
+		config.getNode("Worlds", world.getName(), "Hardcore").setValue(true);
+		
+		src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set hardcore of world ", worldName, " to ", value));
+
 		loader.save();
+		
 		return CommandResult.success();
 	}
 

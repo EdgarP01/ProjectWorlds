@@ -1,9 +1,10 @@
 package com.gmail.trentech.pjw.managers;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.spongepowered.api.block.BlockSnapshot;
-import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.key.Keys;
@@ -28,22 +29,138 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.weather.Weather;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.Portal;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
 public class EventManager {
 
 	@Listener
-	public void onDisplaceEntityEvent(DisplaceEntityEvent event) {
-		if(event.getTargetEntity() instanceof Player){
-			Player player = (Player) event.getTargetEntity();
-			BlockState blockState = player.getWorld().getBlock(player.getLocation().getBlockPosition());
-			if(blockState.getType() == BlockTypes.PORTAL){
-				System.out.println("PORTAL");
+	public void onPlayerPlaceBlock(ChangeBlockEvent.Place event) {
+		if (!event.getCause().first(Player.class).isPresent()) {
+			return;
+		}
+		Player player = event.getCause().first(Player.class).get();
+
+		ConfigManager loader = new ConfigManager("portals.conf");
+		ConfigurationNode config =  loader.getConfig();
+		
+		Set<Portal> portals = Main.getPortalsList();
+		for (Portal portal : portals) {
+			if (portal.getPlayerUUID().equals(player.getUniqueId())) {
+				for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
+					Main.getPortalsList().remove(portal);
+					
+					Location<World> location = transaction.getFinal().getLocation().get();
+					
+					String name = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+
+					if(config.getNode("Portals", name).getString() != null){
+						config.getNode("Portals", name).setValue(null);
+						portal.getBlockData().put(transaction.getFinal(), true);
+						player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Portal block deleted"));
+					}else{
+						if(portal.getWorld() != null){
+							config.getNode("Portals", name).setValue(portal.getWorld());
+							portal.getBlockData().put(transaction.getFinal(), false);
+							player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Portal block placed"));
+						}
+					}
+
+					Main.getPortalsList().add(portal);
+
+					loader.save();
+				}
+				return;
 			}
-		}		
+		}
+
+		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
+			Location<World> location = transaction.getFinal().getLocation().get();
+			
+			String name = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+
+			if(config.getNode("Portals", name).getString() != null){
+				event.setCancelled(true);
+			}
+		}
 	}
 	
+	@Listener
+	public void onPlayerBreakBlock(ChangeBlockEvent.Break event) {
+		if (!event.getCause().first(Player.class).isPresent()) {
+			return;
+		}
+		Player player = event.getCause().first(Player.class).get();
+		
+		ConfigManager loader = new ConfigManager("portals.conf");
+		ConfigurationNode config =  loader.getConfig();
+		
+		Set<Portal> portals = Main.getPortalsList();
+		for (Portal portal : portals) {
+			if (portal.getPlayerUUID().equals(player.getUniqueId())) {
+				for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
+					Location<World> location = transaction.getFinal().getLocation().get();
+					
+					String name = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+
+					if(config.getNode("Portals", name).getString() != null){
+						config.getNode("Portals", name).setValue(null);
+						player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Portal block deleted"));
+					}
+
+					loader.save();
+				}
+				return;
+			}
+		}
+
+		List<Player> list = Main.getPlayersList();
+		for(Player playerRan : list){
+			if(playerRan == player){
+				Main.getPlayersList().remove(playerRan);
+				return;
+			}
+		}
+		
+		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
+			Location<World> location = transaction.getFinal().getLocation().get();
+			
+			String name = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+
+			if(config.getNode("Portals", name).getString() != null){
+				event.setCancelled(true);
+			}
+		}	
+	}
+	
+	@Listener
+	public void onPlayerMove(DisplaceEntityEvent event){
+		if (!(event.getTargetEntity() instanceof Player)){
+			return;
+		}
+		Player player = (Player) event.getTargetEntity();
+		
+		ConfigurationNode config = new ConfigManager("portals.conf").getConfig();
+		String location = player.getLocation().getExtent().getName() + "." + player.getLocation().getBlockX() + "." + player.getLocation().getBlockY() + "." + player.getLocation().getBlockZ();
+
+		if(config.getNode("Portals", location).getString() == null){
+			return;
+		}
+		
+		String worldName = config.getNode("Portals", location).getString();
+		
+		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
+			player.sendMessage(Texts.of(TextColors.DARK_RED, worldName, " does not exist"));
+			return;
+		}
+		World world = Main.getGame().getServer().getWorld(worldName).get();
+		
+		player.setLocationSafely(world.getSpawnLocation());
+		
+		player.sendTitle(Titles.of(Texts.of(TextColors.GOLD, world.getName()), Texts.of(TextColors.DARK_PURPLE, "x: ", world.getSpawnLocation().getBlockX(), ", y: ", world.getSpawnLocation().getBlockY(),", z: ", world.getSpawnLocation().getBlockZ())));
+	}
+
 	@Listener
 	public void onRespawnPlayerEvent(RespawnPlayerEvent event) {
 		if(!(event.getTargetEntity() instanceof Player)){
@@ -79,7 +196,7 @@ public class EventManager {
 		}
 	}
 	
-	// CURRENTLY NOT WORKING
+	// CURRENTLY NOT WORKING - TEMP SOLUTION IN TASKS CLASS
 	@Listener
 	public void onChangeWorldWeatherEvent(ChangeWorldWeatherEvent event) {
 		World world = event.getTargetWorld();
@@ -139,7 +256,7 @@ public class EventManager {
 		}
 		Player player = playerOptional.get();
 
-		Location<?> block = event.getTargetBlock().getLocation().get();
+		Location<World> block = event.getTargetBlock().getLocation().get();
 
 		Optional<SignData> data = block.getOrCreate(SignData.class);
 		if(!data.isPresent()){
@@ -154,8 +271,8 @@ public class EventManager {
         	return;
 		}
 
-		if(!player.hasPermission("pjw.sign.use")) {
-			player.sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to use portal signs"));
+		if(!player.hasPermission("pjw.sign.interact")) {
+			player.sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to interact with portal signs"));
 			event.setCancelled(true);
 			return;
 		}

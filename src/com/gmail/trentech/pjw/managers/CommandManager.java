@@ -68,7 +68,7 @@ public class CommandManager {
 	public CommandSpec cmdHardcore = CommandSpec.builder()
 		    .description(Texts.of("toggle hardcore of world"))
 		    .permission("pjw.cmd.world.hardcore")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
 		    .executor(new CMDHardcore())
 		    .build();
 	
@@ -82,21 +82,21 @@ public class CommandManager {
 	public CommandSpec cmdKeepSpawnLoaded = CommandSpec.builder()
 		    .description(Texts.of("toggle keep world spawn loaded"))
 		    .permission("pjw.cmd.world.keeploaded")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
 		    .executor(new CMDKeepSpawnLoaded())
 		    .build();
 	
 	public CommandSpec cmdLockTime = CommandSpec.builder()
 		    .description(Texts.of("toggle lock time of world"))
 		    .permission("pjw.cmd.world.time")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
 		    .executor(new CMDLockTime())
 		    .build();
 	
 	public CommandSpec cmdLockWeather = CommandSpec.builder()
 		    .description(Texts.of("toggle lock weather of world"))
 		    .permission("pjw.cmd.world.weather")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
 		    .executor(new CMDLockWeather())
 		    .build();
 	
