@@ -1,4 +1,4 @@
-package com.gmail.trentech.pjw.managers;
+package com.gmail.trentech.pjw.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +7,6 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.Resource;
 
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;

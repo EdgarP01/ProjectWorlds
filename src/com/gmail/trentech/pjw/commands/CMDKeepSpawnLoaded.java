@@ -10,7 +10,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.managers.ConfigManager;
+import com.gmail.trentech.pjw.utils.ConfigManager;
 
 import ninja.leaping.configurate.ConfigurationNode;
 

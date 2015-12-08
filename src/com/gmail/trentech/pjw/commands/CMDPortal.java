@@ -1,11 +1,5 @@
 package com.gmail.trentech.pjw.commands;
 
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.spongepowered.api.block.BlockSnapshot;
-import org.spongepowered.api.block.BlockType;
-import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -14,16 +8,12 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.Portal;
+import com.gmail.trentech.pjw.portal.PortalBuilder;
 
 public class CMDPortal implements CommandExecutor {
 
-	private static boolean ran = false;
-	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!(src instanceof Player)){
@@ -32,39 +22,10 @@ public class CMDPortal implements CommandExecutor {
 		}
 		Player player = (Player) src;
 
-		Set<Portal> portals = Main.getPortalsList();
-		
-		for (Portal portal : portals){
-			if (portal.getPlayerUUID().equals(player.getUniqueId())){
-				for(Entry<BlockSnapshot, Boolean> blockData : portal.getBlockData().entrySet()){
-					Location<World> location = blockData.getKey().getLocation().get();
-					BlockType type = blockData.getKey().getState().getType();
-
-					if(!blockData.getValue()){
-						if(type == BlockTypes.WOOL){
-							location.setBlockType(BlockTypes.OBSIDIAN);
-						}else{
-							location.setBlockType(BlockTypes.AIR);
-						}
-					}else{
-						location.setBlockType(BlockTypes.AIR);
-					}
-				}
-				
-				player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Portal builder stopped"));
-				
-				Main.getPortalsList().remove(portal);	
-				Main.getPlayersList().add(player);
-				
-				return CommandResult.success();
-			}
-		}
-
 		if(!args.hasAny("name")) {
-			Portal portal = new Portal(player.getUniqueId(), null);
-			Main.getPortalsList().add(portal);
-			player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Portal builder started (remove only)"));
-			return CommandResult.success();
+			player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Right click the portal to remove"));
+			Main.getActiveBuilders().put(player, new PortalBuilder());
+			return CommandResult.empty();
 		}
 		String worldName = args.<String>getOne("name").get();
 
@@ -72,16 +33,12 @@ public class CMDPortal implements CommandExecutor {
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
 			return CommandResult.empty();
 		}
-		
-		Portal portal = new Portal(player.getUniqueId(), worldName);
-		Main.getPortalsList().add(portal);
-		player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Portal builder started"));
+		PortalBuilder builder = new PortalBuilder(worldName);
+
+		Main.getActiveBuilders().put(player, builder);
+
+		player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Right click starting point"));
 
 		return CommandResult.success();
 	}
-
-	public static boolean isRan() {
-		return ran;
-	}
-
 }

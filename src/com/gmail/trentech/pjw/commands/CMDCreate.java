@@ -12,7 +12,7 @@ import org.spongepowered.api.world.WorldBuilder;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.managers.ConfigManager;
+import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Utils;
 
 import ninja.leaping.configurate.ConfigurationNode;

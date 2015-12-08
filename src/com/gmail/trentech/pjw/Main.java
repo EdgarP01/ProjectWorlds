@@ -1,11 +1,8 @@
 package com.gmail.trentech.pjw;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -20,10 +17,12 @@ import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
-import com.gmail.trentech.pjw.managers.CommandManager;
-import com.gmail.trentech.pjw.managers.ConfigManager;
-import com.gmail.trentech.pjw.managers.EventManager;
-import com.gmail.trentech.pjw.utils.Portal;
+import com.gmail.trentech.pjw.commands.CommandManager;
+import com.gmail.trentech.pjw.events.EventManager;
+import com.gmail.trentech.pjw.events.PortalEventManager;
+import com.gmail.trentech.pjw.events.SignEventManager;
+import com.gmail.trentech.pjw.portal.PortalBuilder;
+import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Resource;
 import com.gmail.trentech.pjw.utils.Tasks;
 
@@ -36,9 +35,8 @@ public class Main {
 	private static Logger log;
 	private static PluginContainer plugin;
 
-	private static Set<Portal> portalsList = new HashSet<>();
-	private static List<Player> playersList = new ArrayList<>();
-	
+	private static HashMap<Player, PortalBuilder> activeBuilders = new HashMap<>();
+
 	@Listener
     public void onPreInitialization(GamePreInitializationEvent event) {
 		game = event.getGame();
@@ -49,6 +47,8 @@ public class Main {
     @Listener
     public void onInitialization(GameInitializationEvent event) {
     	getGame().getEventManager().registerListeners(this, new EventManager());
+    	getGame().getEventManager().registerListeners(this, new SignEventManager());
+    	getGame().getEventManager().registerListeners(this, new PortalEventManager());
     	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
     }
 
@@ -101,11 +101,7 @@ public class Main {
 		}
 	}
 
-	public static Set<Portal> getPortalsList() {
-		return portalsList;
-	}
-
-	public static List<Player> getPlayersList() {
-		return playersList;
+	public static HashMap<Player, PortalBuilder> getActiveBuilders() {
+		return activeBuilders;
 	}
 }

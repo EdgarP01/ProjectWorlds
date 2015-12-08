@@ -1,22 +1,8 @@
-package com.gmail.trentech.pjw.managers;
+package com.gmail.trentech.pjw.commands;
 
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Texts;
-
-import com.gmail.trentech.pjw.commands.CMDCreate;
-import com.gmail.trentech.pjw.commands.CMDDelete;
-import com.gmail.trentech.pjw.commands.CMDDifficulty;
-import com.gmail.trentech.pjw.commands.CMDGamemode;
-import com.gmail.trentech.pjw.commands.CMDHardcore;
-import com.gmail.trentech.pjw.commands.CMDKeepSpawnLoaded;
-import com.gmail.trentech.pjw.commands.CMDLockTime;
-import com.gmail.trentech.pjw.commands.CMDLockWeather;
-import com.gmail.trentech.pjw.commands.CMDPortal;
-import com.gmail.trentech.pjw.commands.CMDProperties;
-import com.gmail.trentech.pjw.commands.CMDRespawn;
-import com.gmail.trentech.pjw.commands.CMDSetSpawn;
-import com.gmail.trentech.pjw.commands.CMDWorld;
 
 public class CommandManager {
 
