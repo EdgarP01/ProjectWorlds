@@ -9,6 +9,8 @@ import org.spongepowered.api.world.GeneratorTypes;
 import org.spongepowered.api.world.difficulty.Difficulties;
 import org.spongepowered.api.world.difficulty.Difficulty;
 
+import com.gmail.trentech.pjw.Main;
+
 public class Utils {
 
 	// Convenience method to avoid null or absent values
@@ -23,35 +25,25 @@ public class Utils {
 	
 	// Convenience method to avoid null or absent values
 	public static GameMode getGameMode(String gamemode){
-		switch(gamemode){
-		case "SURVIVAL": return GameModes.SURVIVAL;
-		case "ADVENTURE": return GameModes.ADVENTURE;
-		case "CREATIVE": return GameModes.CREATIVE;
-		case "SPECTATOR": return GameModes.SPECTATOR;
-		default: return GameModes.SURVIVAL;
+		if(Main.getGame().getRegistry().getType(GameMode.class, gamemode).isPresent()){
+			return Main.getGame().getRegistry().getType(GameMode.class, gamemode).get();
 		}
+		return GameModes.SURVIVAL;
 	}
 	
 	// Convenience method to avoid null or absent values
 	public static GeneratorType getGeneratorType(String type){
-		switch(type){
-		case "OVERWORLD": return GeneratorTypes.OVERWORLD;
-		case "END": return GeneratorTypes.END;
-		case "FLAT": return GeneratorTypes.FLAT;
-		case "NETHER": return GeneratorTypes.NETHER;
-		case "DEBUG": return GeneratorTypes.DEBUG;
-		default: return GeneratorTypes.DEFAULT;
+		if(Main.getGame().getRegistry().getType(GeneratorType.class, type).isPresent()){
+			return Main.getGame().getRegistry().getType(GeneratorType.class, type).get();
 		}
+		return GeneratorTypes.DEFAULT;
 	}
 	
 	// Convenience method to avoid null or absent values
 	public static Difficulty getGetDifficulty(String difficulty){
-		switch(difficulty){
-		case "EASY": return Difficulties.EASY;
-		case "HARD": return Difficulties.HARD;
-		case "NORMAL": return Difficulties.NORMAL;
-		case "PEACEFUL": return Difficulties.PEACEFUL;
-		default: return Difficulties.NORMAL;
+		if(Main.getGame().getRegistry().getType(Difficulty.class, difficulty).isPresent()){
+			return Main.getGame().getRegistry().getType(Difficulty.class, difficulty).get();
 		}
+		return Difficulties.NORMAL;
 	}
 }

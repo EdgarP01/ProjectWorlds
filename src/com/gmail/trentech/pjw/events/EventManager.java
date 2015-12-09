@@ -30,7 +30,7 @@ public class EventManager {
 		World worldDest = event.getToTransform().getExtent();
 		
 		if(worldSrc != worldDest){
-			GameMode gamemode = Main.getGame().getRegistry().getType(GameMode.class, new ConfigManager().getConfig().getNode("Worlds", worldDest.getName(), "Gamemode").getString()).get();
+			GameMode gamemode = Main.getGame().getRegistry().getType(GameMode.class, new ConfigManager("worlds.conf").getConfig().getNode("Worlds", worldDest.getName(), "Gamemode").getString()).get();
 			if(player.getGameModeData().type().get() != gamemode){
 				player.offer(Keys.GAME_MODE, gamemode);
 			}		
@@ -42,7 +42,7 @@ public class EventManager {
 	public void onChangeWorldWeatherEvent(ChangeWorldWeatherEvent event) {
 		World world = event.getTargetWorld();
 		
-		ConfigurationNode config = new ConfigManager().getConfig();
+		ConfigurationNode config = new ConfigManager("worlds.conf").getConfig();
 		
 		if(config.getNode("Worlds", world.getName(), "Weather", "Lock").getBoolean()){
 			Weather weather = Main.getGame().getRegistry().getType(Weather.class, config.getNode("Worlds", world.getName(), "Weather", "Set").getString()).get();

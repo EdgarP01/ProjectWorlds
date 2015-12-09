@@ -24,7 +24,7 @@ public class CMDPortal implements CommandExecutor {
 
 		if(!args.hasAny("name")) {
 			player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Right click the portal to remove"));
-			Main.getActiveBuilders().put(player, new PortalBuilder());
+			PortalBuilder.getActiveBuilders().put(player, new PortalBuilder());
 			return CommandResult.empty();
 		}
 		String worldName = args.<String>getOne("name").get();
@@ -35,7 +35,7 @@ public class CMDPortal implements CommandExecutor {
 		}
 		PortalBuilder builder = new PortalBuilder(worldName);
 
-		Main.getActiveBuilders().put(player, builder);
+		PortalBuilder.getActiveBuilders().put(player, builder);
 
 		player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Right click starting point"));
 

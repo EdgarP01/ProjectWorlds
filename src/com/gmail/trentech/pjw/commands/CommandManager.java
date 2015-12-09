@@ -19,14 +19,14 @@ public class CommandManager {
 	public CommandSpec cmdDelete = CommandSpec.builder()
 		    .description(Texts.of("delete world"))
 		    .permission("pjw.cmd.world.delete")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))))
+		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
 		    .executor(new CMDDelete())
 		    .build();
 	
 	public CommandSpec cmdPortal = CommandSpec.builder()
 		    .description(Texts.of("create world portal"))
 		    .permission("pjw.cmd.world.portal")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))))
+		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
 		    .executor(new CMDPortal())
 		    .build();
 	
@@ -61,7 +61,7 @@ public class CommandManager {
 	public CommandSpec cmdRespawn = CommandSpec.builder()
 		    .description(Texts.of("sets default respawn world"))
 		    .permission("pjw.cmd.world.respawn")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))))
+		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
 		    .executor(new CMDRespawn())
 		    .build();
 	
@@ -86,17 +86,23 @@ public class CommandManager {
 		    .executor(new CMDLockWeather())
 		    .build();
 	
-	public CommandSpec cmdProperties= CommandSpec.builder()
+	public CommandSpec cmdProperties = CommandSpec.builder()
 		    .description(Texts.of("view world properties"))
 		    .permission("pjw.cmd.world.properties")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))))
+		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
 		    .executor(new CMDProperties())
+		    .build();
+	
+	public CommandSpec cmdList = CommandSpec.builder()
+		    .description(Texts.of("list all worlds"))
+		    .permission("pjw.cmd.world.list")
+		    .executor(new CMDList())
 		    .build();
 
 	public CommandSpec cmdWorld = CommandSpec.builder()
 			.description(Texts.of("Base command"))
 			.permission("pjw.cmd.world")
-			.arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))))
+			.arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
 			.child(cmdCreate, "create", "cr")
 			.child(cmdDelete, "delete", "del")
 			.child(cmdProperties, "properties", "prop")
@@ -106,9 +112,10 @@ public class CommandManager {
 			.child(cmdSetSpawn, "setspawn", "spawn", "ss")
 			.child(cmdHardcore, "hardcore", "h")
 			.child(cmdRespawn, "respawn", "rs")
-			.child(cmdKeepSpawnLoaded, "keepspawnloaded", "ksl")
-			.child(cmdLockTime, "locktime", "lt")
-			.child(cmdLockWeather, "lockweather", "lw")
+			.child(cmdKeepSpawnLoaded, "keepspawnloaded", "keep", "ksl")
+			.child(cmdLockTime, "locktime", "time", "lt")
+			.child(cmdLockWeather, "lockweather", "weather",  "lw")
+			.child(cmdList, "list", "l")
 			.executor(new CMDWorld())
 			.build();
 }

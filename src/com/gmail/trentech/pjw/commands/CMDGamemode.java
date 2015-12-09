@@ -8,6 +8,7 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.ConfigManager;
@@ -30,9 +31,9 @@ public class CMDGamemode implements CommandExecutor {
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
 			return CommandResult.empty();
 		}
-		//World world = Main.getGame().getServer().getWorld(worldName).get();
+		World world = Main.getGame().getServer().getWorld(worldName).get();
 		
-		ConfigManager loader = new ConfigManager();
+		ConfigManager loader = new ConfigManager("worlds.conf");
 		ConfigurationNode config = loader.getConfig();
 		
 		if(!args.hasAny("value")) {
@@ -45,10 +46,10 @@ public class CMDGamemode implements CommandExecutor {
 		}
 		GameMode gamemode = Utils.getGameMode(args.<String>getOne("value").get().toUpperCase());
 
-		//world.getProperties().setGameMode(gamemode);
-
 		config.getNode("Worlds", worldName, "Gamemode").setValue(gamemode.getName().toUpperCase());
 		loader.save();
+		
+		world.getProperties().setGameMode(gamemode);
 		
 		src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set gamemode of world ", worldName, " to ", gamemode.getName().toUpperCase()));
 		

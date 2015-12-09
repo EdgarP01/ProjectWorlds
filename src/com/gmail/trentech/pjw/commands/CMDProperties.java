@@ -17,7 +17,7 @@ public class CMDProperties implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		ConfigurationNode config = new ConfigManager().getConfig();
+		ConfigurationNode config = new ConfigManager("worlds.conf").getConfig();
 		
 		String worldName;
 		if(args.hasAny("name")) {

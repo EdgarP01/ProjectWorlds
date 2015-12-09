@@ -31,7 +31,7 @@ public class CMDHardcore implements CommandExecutor {
 		}
 		World world = Main.getGame().getServer().getWorld(worldName).get();
 		
-		ConfigManager loader = new ConfigManager();
+		ConfigManager loader = new ConfigManager("worlds.conf");
 		ConfigurationNode config = loader.getConfig();
 		
 		if(!args.hasAny("value")) {

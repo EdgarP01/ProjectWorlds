@@ -50,7 +50,7 @@ public class CMDDelete implements CommandExecutor {
 
 		Main.getGame().getServer().deleteWorld(world.getProperties());	
 		
-		ConfigManager loader = new ConfigManager();
+		ConfigManager loader = new ConfigManager("worlds.conf");
 		ConfigurationNode config = loader.getConfig();
 
 		config.getNode("Worlds").removeChild(worldName);

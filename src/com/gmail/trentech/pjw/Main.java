@@ -1,19 +1,14 @@
 package com.gmail.trentech.pjw;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
-import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
-import org.spongepowered.api.event.game.state.GameStoppedServerEvent;
-import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
@@ -21,7 +16,6 @@ import com.gmail.trentech.pjw.commands.CommandManager;
 import com.gmail.trentech.pjw.events.EventManager;
 import com.gmail.trentech.pjw.events.PortalEventManager;
 import com.gmail.trentech.pjw.events.SignEventManager;
-import com.gmail.trentech.pjw.portal.PortalBuilder;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Resource;
 import com.gmail.trentech.pjw.utils.Tasks;
@@ -34,8 +28,6 @@ public class Main {
 	private static Game game;
 	private static Logger log;
 	private static PluginContainer plugin;
-
-	private static HashMap<Player, PortalBuilder> activeBuilders = new HashMap<>();
 
 	@Listener
     public void onPreInitialization(GamePreInitializationEvent event) {
@@ -53,30 +45,15 @@ public class Main {
     }
 
     @Listener
-    public void onPostInitialization(GamePostInitializationEvent event) {
-
-    }
-
-    @Listener
     public void onStartedServer(GameStartedServerEvent event) {
     	getLog().info("Initializing...");
     	
-    	ConfigManager configManager = new ConfigManager();
-    	configManager.init();
-    	
+    	new ConfigManager();
+    	new ConfigManager("worlds.conf");
+
     	loadWorlds();
     	
     	new Tasks().start();
-    }
-
-    @Listener
-	public void onStoppingServer(GameStoppingServerEvent event) {
-    	
-	}
-    
-    @Listener
-    public void onStoppedServer(GameStoppedServerEvent event) {
-
     }
 
     public static Logger getLog() {
@@ -99,9 +76,5 @@ public class Main {
 			String key = item.getKey().toString();
 			getGame().getServer().loadWorld(key);
 		}
-	}
-
-	public static HashMap<Player, PortalBuilder> getActiveBuilders() {
-		return activeBuilders;
 	}
 }

@@ -60,7 +60,7 @@ public class CMDCreate implements CommandExecutor {
 		World world = Main.getGame().getServer().getWorld(worldName).get();
 		WorldProperties properties = world.getProperties();
 		
-		ConfigManager loader = new ConfigManager();
+		ConfigManager loader = new ConfigManager("worlds.conf");
 		ConfigurationNode config = loader.getConfig();
 
 		config.getNode("Worlds", worldName, "UUID").setValue(world.getUniqueId().toString());
