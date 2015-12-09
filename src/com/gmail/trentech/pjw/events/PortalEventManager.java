@@ -34,7 +34,7 @@ public class PortalEventManager {
 	private static List<Player> creators = new ArrayList<>();
 	
 	@Listener
-	public void onChangeBlockEvent(ChangeBlockEvent event) {
+	public void onChangeBlockEvent(ChangeBlockEvent.Place event) {
 		if (!event.getCause().first(Player.class).isPresent()) {
 			return;
 		}
@@ -44,7 +44,7 @@ public class PortalEventManager {
 			creators.remove(player);
 			return;
 		}
-		
+
 		ConfigManager loader = new ConfigManager("portals.conf");
 
 		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
@@ -52,7 +52,37 @@ public class PortalEventManager {
 			String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
 
 			if(loader.portalExists(locationName)){
-				event.setCancelled(true);
+				if(!player.hasPermission("pjw.portal.place")){
+					player.sendMessage(Texts.of(TextColors.DARK_RED, "you do not have permission"));
+					event.setCancelled(true);
+				}
+			}
+		}
+	}
+	
+	@Listener
+	public void onChangeBlockEvent(ChangeBlockEvent.Break event) {
+		if (!event.getCause().first(Player.class).isPresent()) {
+			return;
+		}
+		Player player = event.getCause().first(Player.class).get();
+		
+		if(creators.contains(player)){
+			creators.remove(player);
+			return;
+		}
+
+		ConfigManager loader = new ConfigManager("portals.conf");
+
+		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
+			Location<World> location = transaction.getFinal().getLocation().get();		
+			String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+
+			if(loader.portalExists(locationName)){
+				if(!player.hasPermission("pjw.portal.break")){
+					player.sendMessage(Texts.of(TextColors.DARK_RED, "you do not have permission"));
+					event.setCancelled(true);
+				}
 			}
 		}
 	}
@@ -73,6 +103,11 @@ public class PortalEventManager {
 			return;
 		}		
 		String worldName = loader.getPortal(locationName);
+		
+		if(!player.hasPermission("pjw.portal.interact." + worldName)){
+			player.sendMessage(Texts.of(TextColors.DARK_RED, "you do not have permission"));
+			return;
+		}
 		
 		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
 			player.sendMessage(Texts.of(TextColors.DARK_RED, worldName, " does not exist"));

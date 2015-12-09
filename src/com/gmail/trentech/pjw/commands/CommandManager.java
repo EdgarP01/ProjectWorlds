@@ -98,11 +98,17 @@ public class CommandManager {
 		    .permission("pjw.cmd.world.list")
 		    .executor(new CMDList())
 		    .build();
+	
+	public CommandSpec cmdTeleport = CommandSpec.builder()
+		    .description(Texts.of("Teleport to world"))
+		    .permission("pjw.cmd.world.teleport")
+		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
+		    .executor(new CMDTeleport())
+		    .build();
 
 	public CommandSpec cmdWorld = CommandSpec.builder()
 			.description(Texts.of("Base command"))
 			.permission("pjw.cmd.world")
-			.arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
 			.child(cmdCreate, "create", "cr")
 			.child(cmdDelete, "delete", "del")
 			.child(cmdProperties, "properties", "prop")
@@ -116,6 +122,7 @@ public class CommandManager {
 			.child(cmdLockTime, "locktime", "time", "lt")
 			.child(cmdLockWeather, "lockweather", "weather",  "lw")
 			.child(cmdList, "list", "l")
+			.child(cmdTeleport, "teleport", "tp")
 			.executor(new CMDWorld())
 			.build();
 }
