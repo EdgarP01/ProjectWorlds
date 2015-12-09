@@ -26,7 +26,8 @@ public class CommandManager {
 	public CommandSpec cmdPortal = CommandSpec.builder()
 		    .description(Texts.of("create world portal"))
 		    .permission("pjw.cmd.world.portal")
-		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.string(Texts.of("point1"))),
+		    		GenericArguments.optional(GenericArguments.string(Texts.of("point2"))), GenericArguments.optional(GenericArguments.string(Texts.of("block"))), GenericArguments.optional(GenericArguments.string(Texts.of("world"))))
 		    .executor(new CMDPortal())
 		    .build();
 	
@@ -61,7 +62,7 @@ public class CommandManager {
 	public CommandSpec cmdRespawn = CommandSpec.builder()
 		    .description(Texts.of("sets default respawn world"))
 		    .permission("pjw.cmd.world.respawn")
-		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
+		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
 		    .executor(new CMDRespawn())
 		    .build();
 	
@@ -105,6 +106,20 @@ public class CommandManager {
 		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
 		    .executor(new CMDTeleport())
 		    .build();
+	
+	public CommandSpec cmdImport = CommandSpec.builder()
+		    .description(Texts.of("Teleport to world"))
+		    .permission("pjw.cmd.world.import")
+		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
+		    .executor(new CMDImport())
+		    .build();
+	
+	public CommandSpec cmdPvp = CommandSpec.builder()
+		    .description(Texts.of("Teleport to world"))
+		    .permission("pjw.cmd.world.pvp")
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
+		    .executor(new CMDPvp())
+		    .build();
 
 	public CommandSpec cmdWorld = CommandSpec.builder()
 			.description(Texts.of("Base command"))
@@ -123,6 +138,8 @@ public class CommandManager {
 			.child(cmdLockWeather, "lockweather", "weather",  "lw")
 			.child(cmdList, "list", "l")
 			.child(cmdTeleport, "teleport", "tp")
+			.child(cmdImport, "import", "i")
+			.child(cmdPvp, "pvp")
 			.executor(new CMDWorld())
 			.build();
 }

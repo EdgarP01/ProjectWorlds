@@ -20,13 +20,13 @@ public class Tasks {
 			@Override
             public void run() {			
 				for(World world : Main.getGame().getServer().getWorlds()){
-					ConfigurationNode timeNode = new ConfigManager().getConfig().getNode("Worlds", world.getName(), "Time");
+					ConfigurationNode timeNode = new ConfigManager("worlds.conf").getConfig().getNode("Worlds", world.getName(), "Time");
 					if(timeNode.getNode("Lock").getBoolean()){
 						long time = timeNode.getNode("Set").getLong();
 						world.getProperties().setWorldTime(time);
 					}
 					// TEMPORARY UNTIL WEATHER EVENT IMPLEMENTED
-					ConfigurationNode weatherNode = new ConfigManager().getConfig().getNode("Worlds", world.getName(), "Weather");
+					ConfigurationNode weatherNode = new ConfigManager("worlds.conf").getConfig().getNode("Worlds", world.getName(), "Weather");
 					if(weatherNode.getNode("Lock").getBoolean()){
 						String weather = weatherNode.getNode("Set").getString();
 						if(!world.getWeather().getName().equalsIgnoreCase(weather)){

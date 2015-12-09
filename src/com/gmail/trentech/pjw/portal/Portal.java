@@ -29,6 +29,15 @@ public class Portal implements Iterable<BlockSnapshot> {
 		this.y2 = Math.max(loc1.getBlockY(), loc2.getBlockY());
 		this.z2 = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
 	}
+	public Portal(String worldName, int x1, int y1, int z1, int x2, int y2, int z2) {
+		this.worldName = worldName;
+		this.x1 = Math.min(x1, x2);
+		this.y1 = Math.min(y1, y2);
+		this.z1 = Math.min(z1, z2);
+		this.x2 = Math.max(x1, x2);
+		this.y2 = Math.max(y1, y2);
+		this.z2 = Math.max(z1, z2);
+	}
 
 	private World getWorld() {
 		if (!Main.getGame().getServer().getWorld(worldName).isPresent()) {
@@ -38,7 +47,7 @@ public class Portal implements Iterable<BlockSnapshot> {
 	}
 
 	public Iterator<BlockSnapshot> iterator() {
-		return new CuboidIterator(this.getWorld(), this.x1, this.y1, this.z1, this.x2, this.y2, this.z2);
+		return new PortalIterator(this.getWorld(), this.x1, this.y1, this.z1, this.x2, this.y2, this.z2);
 	}
 
 	@Override
@@ -46,13 +55,13 @@ public class Portal implements Iterable<BlockSnapshot> {
 		return new String("Cuboid: " + this.worldName + "," + this.x1 + "," + this.y1 + "," + this.z1 + "=>" + this.x2 + "," + this.y2 + "," + this.z2);
 	}
 
-	public class CuboidIterator implements Iterator<BlockSnapshot> {
+	public class PortalIterator implements Iterator<BlockSnapshot> {
 		private World world;
 		private int baseX, baseY, baseZ;
 		private int x, y, z;
 		private int sizeX, sizeY, sizeZ;
 
-		public CuboidIterator(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
+		public PortalIterator(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
 			this.world = world;
 			this.baseX = x1;
 			this.baseY = y1;

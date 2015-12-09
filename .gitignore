@@ -1,5 +1,2 @@
-.classpath
-.project
-/.settings/
-/.git/
 /bin/
+.git

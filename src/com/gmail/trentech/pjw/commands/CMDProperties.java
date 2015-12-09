@@ -44,6 +44,8 @@ public class CMDProperties implements CommandExecutor {
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Dimension Type: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Dimension-Type").getString()));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Generator Type: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Generator-Type").getString()));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Difficulty: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Difficulty").getString()));
+		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "PVP: ", TextColors.GOLD, config.getNode("Worlds", worldName, "PVP").getString()));
+		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Respawn World: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Respawn-World").getString()));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "GameMode: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Gamemode").getString()));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Seed: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Seed").getString()));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Keep Spawn Loaded: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Keep-Spawn-Loaded").getString()));

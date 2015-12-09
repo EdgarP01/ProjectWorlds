@@ -25,8 +25,8 @@ public class CMDWorld implements CommandExecutor {
 		if(src.hasPermission("pjw.cmd.world.delete")) {
 			src.sendMessage(Texts.of(TextColors.GOLD, "/world delete"));
 		}
-		if(src.hasPermission("pjw.cmd.world.portal")) {
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world portal"));	
+		if(src.hasPermission("pjw.cmd.world.teleport")) {
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world import"));	
 		}
 		if(src.hasPermission("pjw.cmd.world.difficulty")) {
 			src.sendMessage(Texts.of(TextColors.GOLD, "/world difficulty"));	
@@ -36,6 +36,9 @@ public class CMDWorld implements CommandExecutor {
 		}
 		if(src.hasPermission("pjw.cmd.world.setspawn")) {
 			src.sendMessage(Texts.of(TextColors.GOLD, "/world setspawn"));	
+		}
+		if(src.hasPermission("pjw.cmd.world.teleport")) {
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world pvp"));	
 		}
 		if(src.hasPermission("pjw.cmd.world.respawn")) {
 			src.sendMessage(Texts.of(TextColors.GOLD, "/world respawn"));	
@@ -54,6 +57,9 @@ public class CMDWorld implements CommandExecutor {
 		}
 		if(src.hasPermission("pjw.cmd.world.list")) {
 			src.sendMessage(Texts.of(TextColors.GOLD, "/world list"));	
+		}
+		if(src.hasPermission("pjw.cmd.world.portal")) {
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world portal"));	
 		}
 		if(src.hasPermission("pjw.cmd.world.teleport")) {
 			src.sendMessage(Texts.of(TextColors.GOLD, "/world teleport"));	

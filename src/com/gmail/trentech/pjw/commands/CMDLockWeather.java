@@ -20,7 +20,7 @@ public class CMDLockWeather implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world lockweather <world>"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world lockweather <world> [true/false]"));
 			return CommandResult.empty();
 		}
 		String worldName = args.<String>getOne("name").get();
@@ -40,7 +40,8 @@ public class CMDLockWeather implements CommandExecutor {
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Weather Lock: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Weather", "Lock").getString()));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Weather Set: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Weather", "Set").getString()));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------\n"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world lockweather <world> [true/false]"));
 			return CommandResult.success();
 		}
 		String value = args.<String>getOne("value").get();
@@ -50,7 +51,7 @@ public class CMDLockWeather implements CommandExecutor {
 			bool = Boolean.parseBoolean(value);
 		}catch(Exception e){
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world lockweather <world> [value]"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world lockweather <world> [true/false]"));
 			return CommandResult.empty();	
 		}
 		
@@ -58,6 +59,8 @@ public class CMDLockWeather implements CommandExecutor {
 		if(bool){
 			config.getNode("Worlds", world.getName(), "Weather", "Set").setValue(world.getWeather().getName().toUpperCase());
 		}
+		
+		src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set weather lock of world ", worldName, " to ", value));
 
 		loader.save();
 		

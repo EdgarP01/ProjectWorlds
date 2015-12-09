@@ -22,7 +22,7 @@ public class CMDGamemode implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world gamemode <name> [value]"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world gamemode <world>"));
 			return CommandResult.empty();
 		}
 		String worldName = args.<String>getOne("name").get();
@@ -41,7 +41,8 @@ public class CMDGamemode implements CommandExecutor {
 			src.sendMessage(Texts.of(TextColors.GOLD, "                 ", worldName, " Properties:"));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "GameMode: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Gamemode").getString()));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------\n"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world gamemode <world> [value]"));
 			return CommandResult.success();
 		}
 		GameMode gamemode = Utils.getGameMode(args.<String>getOne("value").get().toUpperCase());

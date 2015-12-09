@@ -20,7 +20,7 @@ public class CMDTeleport implements CommandExecutor {
 
 		if(!args.hasAny("name")) {
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world teleport [world]"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world teleport <world>"));
 			return CommandResult.empty();
 		}
 		String worldName = args.<String>getOne("name").get();

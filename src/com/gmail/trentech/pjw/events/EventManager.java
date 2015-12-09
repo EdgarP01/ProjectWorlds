@@ -1,10 +1,13 @@
 package com.gmail.trentech.pjw.events;
 
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.event.entity.living.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.world.ChangeWorldWeatherEvent;
@@ -37,6 +40,30 @@ public class EventManager {
 		}
 	}
 	
+    @Listener
+    public void onDamageEntityEvent(DamageEntityEvent event) {
+    	if(!(event.getTargetEntity() instanceof Player)) {
+    		return;
+    	}
+    	Player victim = (Player) event.getTargetEntity();
+
+		if (!event.getCause().first(EntityDamageSource.class).isPresent()) {
+			return;
+		}		
+        EntityDamageSource damageSource = event.getCause().first(EntityDamageSource.class).get();
+
+        Entity source = damageSource.getSource();
+        if (!(source instanceof Player)) {
+        	return;
+        }
+
+        World world = victim.getWorld();
+        
+        if(!new ConfigManager("worlds.conf").getConfig().getNode("Worlds", world.getName(), "PVP").getBoolean()){
+        	event.setCancelled(true);
+        }
+    }
+	
 	// CURRENTLY NOT WORKING - TEMP SOLUTION IN TASKS CLASS
 	@Listener
 	public void onChangeWorldWeatherEvent(ChangeWorldWeatherEvent event) {
@@ -55,14 +82,21 @@ public class EventManager {
 		if(!(event.getTargetEntity() instanceof Player)){
 			return;
 		}
+		World world = event.getFromTransform().getExtent();
 
-		String worldName = new ConfigManager().getConfig().getNode("Options", "Respawn").getString();
-		
-		if(Main.getGame().getServer().getWorld(worldName).isPresent()){
-			World world = Main.getGame().getServer().getWorld(worldName).get();
+		String respawnWorldName = new ConfigManager("worlds.conf").getConfig().getNode("Worlds", world.getName(), "Respawn-World").getString();
 
-			Transform<World> transform = event.getToTransform().setLocation(world.getSpawnLocation());
-			event.setToTransform(transform);
+		if(!respawnWorldName.equalsIgnoreCase("NONE")){			
+			if(Main.getGame().getServer().getWorld(respawnWorldName).isPresent()){
+				World respawnWorld = Main.getGame().getServer().getWorld(respawnWorldName).get();
+				
+				Transform<World> transform = event.getToTransform().setLocation(respawnWorld.getSpawnLocation());
+				event.setToTransform(transform);
+			}
+			return;
 		}
+		
+		Transform<World> transform = event.getToTransform().setLocation(world.getSpawnLocation());
+		event.setToTransform(transform);
 	}
 }

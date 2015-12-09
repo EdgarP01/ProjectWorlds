@@ -40,7 +40,8 @@ public class CMDLockTime implements CommandExecutor {
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Time Lock: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Lock").getString()));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Time Set: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Set").getString()));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------\n"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world locktime <world> [true/false]"));
 			return CommandResult.success();
 		}
 		String value = args.<String>getOne("value").get();
@@ -50,7 +51,7 @@ public class CMDLockTime implements CommandExecutor {
 			bool = Boolean.parseBoolean(value);
 		}catch(Exception e){
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world keepspawnloaded <world> [value]"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world locktime <world> [true/false]"));
 			return CommandResult.empty();	
 		}
 		

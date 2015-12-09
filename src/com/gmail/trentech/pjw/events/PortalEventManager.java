@@ -1,12 +1,10 @@
 package com.gmail.trentech.pjw.events;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -31,7 +29,7 @@ import ninja.leaping.configurate.ConfigurationNode;
 
 public class PortalEventManager {
 
-	private static List<Player> creators = new ArrayList<>();
+	
 	
 	@Listener
 	public void onChangeBlockEvent(ChangeBlockEvent.Place event) {
@@ -40,8 +38,8 @@ public class PortalEventManager {
 		}
 		Player player = event.getCause().first(Player.class).get();
 		
-		if(creators.contains(player)){
-			creators.remove(player);
+		if(PortalBuilder.getCreators().contains(player)){
+			PortalBuilder.getCreators().remove(player);
 			return;
 		}
 
@@ -55,6 +53,9 @@ public class PortalEventManager {
 				if(!player.hasPermission("pjw.portal.place")){
 					player.sendMessage(Texts.of(TextColors.DARK_RED, "you do not have permission"));
 					event.setCancelled(true);
+				}else{
+					loader.removeLocation(locationName);
+					player.sendMessage(Texts.of(TextColors.DARK_RED, "Broke Portal"));
 				}
 			}
 		}
@@ -67,8 +68,8 @@ public class PortalEventManager {
 		}
 		Player player = event.getCause().first(Player.class).get();
 		
-		if(creators.contains(player)){
-			creators.remove(player);
+		if(PortalBuilder.getCreators().contains(player)){
+			PortalBuilder.getCreators().remove(player);
 			return;
 		}
 
@@ -82,6 +83,9 @@ public class PortalEventManager {
 				if(!player.hasPermission("pjw.portal.break")){
 					player.sendMessage(Texts.of(TextColors.DARK_RED, "you do not have permission"));
 					event.setCancelled(true);
+				}else{
+					loader.removeLocation(locationName);
+					player.sendMessage(Texts.of(TextColors.DARK_RED, "Broke Portal"));
 				}
 			}
 		}
@@ -134,14 +138,14 @@ public class PortalEventManager {
 		
 		PortalBuilder builder = PortalBuilder.getActiveBuilders().get(player);
 		
-        ConfigManager loader = new ConfigManager("portals.conf");
-		ConfigurationNode config = loader.getConfig();
+        ConfigManager loaderPortals = new ConfigManager("portals.conf");
+		ConfigurationNode configPortals = loaderPortals.getConfig();
 		
 		if(builder.getWorld() == null){
         	Location<World> location = event.getTargetBlock().getLocation().get();
         	String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
         	
-        	if(loader.removeLocation(locationName)){
+        	if(loaderPortals.removeLocation(locationName)){
 				PortalBuilder.getActiveBuilders().remove(player);
 				
                 player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Portal has been removed"));
@@ -163,33 +167,38 @@ public class PortalEventManager {
             }
             List<String> locations = portal.getLocations();
 
-            int size = new ConfigManager().getConfig().getNode("Options", "Size").getInt();
+            ConfigurationNode config = new ConfigManager().getConfig();
+            
+            int size = config.getNode("Options", "Portal", "Size").getInt();
             if(locations.size() > size){
             	player.sendMessage(Texts.of(TextColors.DARK_RED, "Portals cannot be larger than ", size, " blocks"));
             	return;
             }
             
-            creators.add(player);
+            PortalBuilder.getCreators().add(player);
             
             for(String loc : locations){
             	String[] info = loc.split("\\.");
 
             	Location<World> location = Main.getGame().getServer().getWorld(info[0]).get().getLocation(Integer.parseInt(info[1]), Integer.parseInt(info[2]), Integer.parseInt(info[3]));
-            	if(location.getBlockType() != BlockTypes.AIR){
-            		if(Main.getGame().getRegistry().getType(BlockType.class, new ConfigManager().getConfig().getNode("Options", "Portal-Frame").getString()).isPresent()){
-            			BlockType type = Main.getGame().getRegistry().getType(BlockType.class, new ConfigManager().getConfig().getNode("Options", "Portal-Frame").getString()).get();
-            			location.setBlock(Main.getGame().getRegistry().createBuilder(BlockState.Builder.class).blockType(type).build());
-            		}
-            	}else{
-            		location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.EXPLOSION_LARGE).build(), location.getPosition());
+            	
+            	if(config.getNode("Options", "Portal", "Replace-Frame").getBoolean()){	
+                	if(location.getBlockType() != BlockTypes.AIR){
+//                		if(Main.getGame().getRegistry().getType(BlockType.class, config.getNode("Options", "Portal", "Material").getString()).isPresent()){
+//                			BlockType type = Main.getGame().getRegistry().getType(BlockType.class, new ConfigManager().getConfig().getNode("Options", "Portal-Frame").getString()).get();
+//                			location.setBlock(Main.getGame().getRegistry().createBuilder(BlockState.Builder.class).blockType(type).build());
+//                		}
+            			location.setBlock(Main.getGame().getRegistry().createBuilder(BlockState.Builder.class).blockType(event.getTargetBlock().getState().getType()).build());
+                	}
             	}
+            	location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.EXPLOSION_LARGE).build(), location.getPosition());
             }
             
             String uuid = UUID.randomUUID().toString();
-            config.getNode("Portals", uuid, "Locations").setValue(locations);
-            config.getNode("Portals", uuid, "World").setValue(builder.getWorld());
+            configPortals.getNode("Portals", uuid, "Locations").setValue(locations);
+            configPortals.getNode("Portals", uuid, "World").setValue(builder.getWorld());
 
-            loader.save();
+            loaderPortals.save();
           
             player.sendMessage(Texts.of(TextColors.DARK_GREEN, "New portal created"));
 		}

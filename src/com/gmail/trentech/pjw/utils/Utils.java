@@ -1,5 +1,7 @@
 package com.gmail.trentech.pjw.utils;
 
+import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.world.DimensionType;
@@ -15,12 +17,10 @@ public class Utils {
 
 	// Convenience method to avoid null or absent values
 	public static DimensionType getDimensionType(String type){
-		switch(type){
-		case "OVERWORLD": return DimensionTypes.OVERWORLD;
-		case "END": return DimensionTypes.END;
-		case "NETHER": return DimensionTypes.NETHER;
-		default: return DimensionTypes.OVERWORLD;
+		if(Main.getGame().getRegistry().getType(DimensionType.class, type).isPresent()){
+			return Main.getGame().getRegistry().getType(DimensionType.class, type).get();
 		}
+		return DimensionTypes.OVERWORLD;
 	}
 	
 	// Convenience method to avoid null or absent values
@@ -40,10 +40,29 @@ public class Utils {
 	}
 	
 	// Convenience method to avoid null or absent values
-	public static Difficulty getGetDifficulty(String difficulty){
+	public static Difficulty getDifficulty(String difficulty){
 		if(Main.getGame().getRegistry().getType(Difficulty.class, difficulty).isPresent()){
 			return Main.getGame().getRegistry().getType(Difficulty.class, difficulty).get();
 		}
 		return Difficulties.NORMAL;
+	}
+	
+	// Convenience method to avoid null or absent values
+	public static BlockType getBlockType(String type){
+		if(Main.getGame().getRegistry().getType(BlockType.class, type).isPresent()){
+			return Main.getGame().getRegistry().getType(BlockType.class, type).get();
+		}
+		return BlockTypes.STONE;
+	}
+	
+	public static boolean isValidLocation(String[] coords){
+		for(String coord : coords){
+			try{
+				Integer.parseInt(coord);
+			}catch(Exception e){
+				return false;
+			}
+		}
+		return true;
 	}
 }

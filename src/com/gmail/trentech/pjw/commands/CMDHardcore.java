@@ -39,7 +39,8 @@ public class CMDHardcore implements CommandExecutor {
 			src.sendMessage(Texts.of(TextColors.GOLD, "                 ", worldName, " Properties:"));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Hardcore").getString()));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------\n"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world hardcore <world> [true/false]"));
 			return CommandResult.success();
 		}
 		String value = args.<String>getOne("value").get();
@@ -49,7 +50,7 @@ public class CMDHardcore implements CommandExecutor {
 			bool = Boolean.parseBoolean(value);
 		}catch(Exception e){
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world hardcore <world> [value]"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world hardcore <world> [true/false]"));
 			return CommandResult.empty();	
 		}
 		

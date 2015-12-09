@@ -1,6 +1,8 @@
 package com.gmail.trentech.pjw.portal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.world.Location;
@@ -12,6 +14,7 @@ public class PortalBuilder {
 	private Location<World> location;
 	
 	private static HashMap<Player, PortalBuilder> activeBuilders = new HashMap<>();
+	private static List<Player> creators = new ArrayList<>();
 
 	public PortalBuilder(String world) {
 		this.world = world;
@@ -35,6 +38,10 @@ public class PortalBuilder {
 
 	public static HashMap<Player, PortalBuilder> getActiveBuilders() {
 		return activeBuilders;
+	}
+
+	public static List<Player> getCreators() {
+		return creators;
 	}
 }
 

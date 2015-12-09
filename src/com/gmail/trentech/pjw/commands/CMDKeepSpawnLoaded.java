@@ -20,7 +20,7 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world keepspawnloaded <world> [value]"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world keepspawnloaded <world>"));
 			return CommandResult.empty();
 		}
 		String worldName = args.<String>getOne("name").get();
@@ -39,7 +39,8 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 			src.sendMessage(Texts.of(TextColors.GOLD, "                 ", worldName, " Properties:"));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Keep Spawn Loaded: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Hardcore").getString()));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------\n"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world keepspawnloaded <world> [true/false]"));
 			return CommandResult.success();
 		}
 		String value = args.<String>getOne("value").get();
@@ -49,7 +50,7 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 			bool = Boolean.parseBoolean(value);
 		}catch(Exception e){
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world keepspawnloaded <world> [value]"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world keepspawnloaded <world> [true/false]"));
 			return CommandResult.empty();	
 		}
 
