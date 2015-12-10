@@ -1,15 +1,14 @@
 package com.gmail.trentech.pjw.commands;
 
+import java.util.concurrent.ExecutionException;
+
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
@@ -28,36 +27,33 @@ public class CMDDelete implements CommandExecutor {
 		}
 		String worldName = args.<String>getOne("name").get();
 
-		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
+		if(Main.getGame().getServer().getWorld(worldName).isPresent()){
+			src.sendMessage(Texts.of(TextColors.DARK_RED, worldName, " must be unloaded before you can rename"));
 			return CommandResult.empty();
 		}
-		World world = Main.getGame().getServer().getWorld(worldName).get();
-		
-		for(Entity entity : world.getEntities()){
-			if(entity instanceof Player){
-				Player player = (Player) entity;
-				WorldProperties properties = Main.getGame().getServer().getDefaultWorld().get();
-				player.setLocationSafely(Main.getGame().getServer().getWorld(properties.getWorldName()).get().getSpawnLocation());
-				player.sendMessage(Texts.of(TextColors.GOLD, "World you were in is unloaded"));
+
+		for(WorldProperties worldInfo : Main.getGame().getServer().getUnloadedWorlds()){
+			if(worldInfo.getWorldName().equalsIgnoreCase(worldName)){
+				try {
+					if(Main.getGame().getServer().deleteWorld(worldInfo).get()){
+						ConfigManager loader = new ConfigManager("worlds.conf");
+						ConfigurationNode config = loader.getConfig();
+
+						config.getNode("Worlds", worldName).setValue(null);
+						loader.save();
+						
+						src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " deleted successfully"));
+						return CommandResult.success();
+					}
+				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		
-		if(!Main.getGame().getServer().unloadWorld(world)){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not unload ", worldName));
-			return CommandResult.empty();	
-		}
-
-		Main.getGame().getServer().deleteWorld(world.getProperties());	
+		src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not locate ", worldName));
 		
-		ConfigManager loader = new ConfigManager("worlds.conf");
-		ConfigurationNode config = loader.getConfig();
-
-		config.getNode("Worlds").removeChild(worldName);
-		loader.save();
-		
-		src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Deleted ", worldName));
-		return CommandResult.success();
+		return CommandResult.empty();
 	}
 
 }

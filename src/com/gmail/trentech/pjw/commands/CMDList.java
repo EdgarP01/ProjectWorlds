@@ -18,7 +18,7 @@ public class CMDList implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
-		src.sendMessage(Texts.of(TextColors.GOLD, "                        Worlds:"));
+		src.sendMessage(Texts.of(TextColors.GOLD, "                            Worlds"));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 		
 		for(World world : Main.getGame().getServer().getWorlds()){

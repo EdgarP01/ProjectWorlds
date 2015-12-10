@@ -108,17 +108,38 @@ public class CommandManager {
 		    .build();
 	
 	public CommandSpec cmdImport = CommandSpec.builder()
-		    .description(Texts.of("Teleport to world"))
+		    .description(Texts.of("Import a world"))
 		    .permission("pjw.cmd.world.import")
 		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
 		    .executor(new CMDImport())
 		    .build();
 	
 	public CommandSpec cmdPvp = CommandSpec.builder()
-		    .description(Texts.of("Teleport to world"))
+		    .description(Texts.of("Toggle PVP for world"))
 		    .permission("pjw.cmd.world.pvp")
 		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
 		    .executor(new CMDPvp())
+		    .build();
+	
+	public CommandSpec cmdCopy = CommandSpec.builder()
+		    .description(Texts.of("Copy a world"))
+		    .permission("pjw.cmd.world.copy")
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("old"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("new"))))
+		    .executor(new CMDCopy())
+		    .build();
+	
+	public CommandSpec cmdRename = CommandSpec.builder()
+		    .description(Texts.of("Rename a world"))
+		    .permission("pjw.cmd.world.rename")
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("old"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("new"))))
+		    .executor(new CMDRename())
+		    .build();
+	
+	public CommandSpec cmdUnload = CommandSpec.builder()
+		    .description(Texts.of("unload a world"))
+		    .permission("pjw.cmd.world.unload")
+		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
+		    .executor(new CMDUnload())
 		    .build();
 
 	public CommandSpec cmdWorld = CommandSpec.builder()
@@ -140,6 +161,9 @@ public class CommandManager {
 			.child(cmdTeleport, "teleport", "tp")
 			.child(cmdImport, "import", "i")
 			.child(cmdPvp, "pvp")
+			.child(cmdCopy, "copy", "cp")
+			.child(cmdRename, "rename", "rn")
+			.child(cmdUnload, "unload", "u")
 			.executor(new CMDWorld())
 			.build();
 }

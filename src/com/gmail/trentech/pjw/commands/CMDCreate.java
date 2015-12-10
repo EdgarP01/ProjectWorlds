@@ -1,5 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
+import java.util.Optional;
+
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -37,14 +39,14 @@ public class CMDCreate implements CommandExecutor {
 
 		if(!args.hasAny("type")) {
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.YELLOW, "/w c <name> <type> <generator> [seed]"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world create <world> <type> <generator> [seed]"));
 			return CommandResult.empty();
 		}
 		builder.dimensionType(Utils.getDimensionType(args.<String>getOne("type").get().toUpperCase()));
 		
 		if(!args.hasAny("generator")) {
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.YELLOW, "/w c <name> <type> <generator> [seed]"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world create <world> <type> <generator> [seed]"));
 		}
 		builder.generator(Utils.getGeneratorType(args.<String>getOne("generator").get().toUpperCase()));
 
@@ -55,7 +57,12 @@ public class CMDCreate implements CommandExecutor {
 			}catch(Exception e){}
 		}
 
-		builder.enabled(true).loadsOnStartup(true).build();
+		Optional<World> load = builder.enabled(true).loadsOnStartup(true).build();
+
+		if(!load.isPresent()){
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "something went wrong"));
+			return CommandResult.empty();
+		}
 		
 		World world = Main.getGame().getServer().getWorld(worldName).get();
 		WorldProperties properties = world.getProperties();

@@ -5,6 +5,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
@@ -25,6 +26,12 @@ public class CMDLockTime implements CommandExecutor {
 		}
 		String worldName = args.<String>getOne("name").get();
 		
+		if(worldName.equalsIgnoreCase("@w")){
+			if(src instanceof Player){
+				worldName = ((Player) src).getWorld().getName();
+			}
+		}
+		
 		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
 			return CommandResult.empty();
@@ -36,12 +43,10 @@ public class CMDLockTime implements CommandExecutor {
 
 		if(!args.hasAny("value")) {
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "                 ", worldName, " Properties:"));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Time Lock: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Lock").getString()));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Time Set: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Set").getString()));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------\n"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world locktime <world> [true/false]"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Command: ",TextColors.GOLD, "/world locktime <world> [true/false]"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 			return CommandResult.success();
 		}
 		String value = args.<String>getOne("value").get();

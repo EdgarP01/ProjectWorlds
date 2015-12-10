@@ -13,7 +13,7 @@ public class CMDWorld implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
-		src.sendMessage(Texts.of(TextColors.GOLD, "                       Command List:"));
+		src.sendMessage(Texts.of(TextColors.GOLD, "                       Command List"));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 		src.sendMessage(Texts.of(TextColors.GOLD, "/world [world]"));			
 		if(src.hasPermission("pjw.cmd.world.properties")) {

@@ -29,8 +29,6 @@ import ninja.leaping.configurate.ConfigurationNode;
 
 public class PortalEventManager {
 
-	
-	
 	@Listener
 	public void onChangeBlockEvent(ChangeBlockEvent.Place event) {
 		if (!event.getCause().first(Player.class).isPresent()) {
@@ -184,10 +182,6 @@ public class PortalEventManager {
             	
             	if(config.getNode("Options", "Portal", "Replace-Frame").getBoolean()){	
                 	if(location.getBlockType() != BlockTypes.AIR){
-//                		if(Main.getGame().getRegistry().getType(BlockType.class, config.getNode("Options", "Portal", "Material").getString()).isPresent()){
-//                			BlockType type = Main.getGame().getRegistry().getType(BlockType.class, new ConfigManager().getConfig().getNode("Options", "Portal-Frame").getString()).get();
-//                			location.setBlock(Main.getGame().getRegistry().createBuilder(BlockState.Builder.class).blockType(type).build());
-//                		}
             			location.setBlock(Main.getGame().getRegistry().createBuilder(BlockState.Builder.class).blockType(event.getTargetBlock().getState().getType()).build());
                 	}
             	}

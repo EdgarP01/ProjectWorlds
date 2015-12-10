@@ -16,6 +16,7 @@ import org.spongepowered.api.world.weather.Weather;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Utils;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
@@ -31,12 +32,10 @@ public class EventManager {
 		
 		World worldSrc = event.getFromTransform().getExtent();
 		World worldDest = event.getToTransform().getExtent();
-		
-		if(worldSrc != worldDest){
-			GameMode gamemode = Main.getGame().getRegistry().getType(GameMode.class, new ConfigManager("worlds.conf").getConfig().getNode("Worlds", worldDest.getName(), "Gamemode").getString()).get();
-			if(player.getGameModeData().type().get() != gamemode){
-				player.offer(Keys.GAME_MODE, gamemode);
-			}		
+
+		if(worldSrc != worldDest){	
+			GameMode gamemode = Utils.getGameMode(new ConfigManager("worlds.conf").getConfig().getNode("Worlds", worldDest.getName(), "Gamemode").getString());
+			player.offer(Keys.GAME_MODE, gamemode);
 		}
 	}
 	
