@@ -25,6 +25,9 @@ public class CMDWorld implements CommandExecutor {
 		if(src.hasPermission("pjw.cmd.world.delete")) {
 			src.sendMessage(Texts.of(TextColors.GOLD, "/world delete"));
 		}
+		if(src.hasPermission("pjw.cmd.world.load")) {
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world load"));	
+		}
 		if(src.hasPermission("pjw.cmd.world.teleport")) {
 			src.sendMessage(Texts.of(TextColors.GOLD, "/world import"));	
 		}
