@@ -142,6 +142,13 @@ public class CommandManager {
 		    .executor(new CMDUnload())
 		    .build();
 
+	public CommandSpec cmdLoad = CommandSpec.builder()
+		    .description(Texts.of("load a world"))
+		    .permission("pjw.cmd.world.load")
+		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
+		    .executor(new CMDLoad())
+		    .build();
+	
 	public CommandSpec cmdWorld = CommandSpec.builder()
 			.description(Texts.of("Base command"))
 			.permission("pjw.cmd.world")
@@ -164,6 +171,7 @@ public class CommandManager {
 			.child(cmdCopy, "copy", "cp")
 			.child(cmdRename, "rename", "rn")
 			.child(cmdUnload, "unload", "u")
+			.child(cmdLoad, "load", "ld")
 			.executor(new CMDWorld())
 			.build();
 }

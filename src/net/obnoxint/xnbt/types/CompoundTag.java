@@ -22,7 +22,8 @@ public class CompoundTag extends AbstractCompoundTag {
         if (value == null) {
             throw new NullPointerException();
         }
-        return getPayload().put(value.getHeader().getName(), value);
+        //return getPayload().put(value.getHeader().getName(), value);
+        return super.getPayload().put(value.getHeader().getName(), value); 
     }
 
     @Override

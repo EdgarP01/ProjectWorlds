@@ -25,7 +25,7 @@ public class CMDImport implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world load <world>"));
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world import <world>"));
 			return CommandResult.empty();
 		}
 
@@ -47,7 +47,7 @@ public class CMDImport implements CommandExecutor {
 		Optional<World> load = Main.getGame().getServer().loadWorld(worldName);
 		
 		if(!load.isPresent()){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not world ", worldName));
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not load ", worldName));
 			return CommandResult.empty();
 		}
 		

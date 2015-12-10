@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -58,38 +57,35 @@ public class IOManager {
 		
 		return Collections.max(ids) + 1;
 	}
-	
+
 	public static void init(String worldName) throws IOException{
 		File dataFile = new File(Main.getGame().getSavesDirectory() + "/" + Main.getGame().getServer().getDefaultWorld().get().getWorldName() + "/" + worldName, "level_sponge.dat");
 
-		LinkedHashMap<String, NBTTag> mapSpongeData = new LinkedHashMap<>();
+		CompoundTag compoundSpongeData = new CompoundTag("SpongeData", null);
 
-		mapSpongeData.put("enabled", new ByteTag("enabled", (byte) 1));
-		mapSpongeData.put("keepSpawnLocked", new ByteTag("keepSpawnLocked", (byte) 1));
-		mapSpongeData.put("loadOnStartup", new ByteTag("loadOnStartup", (byte) 1));
-		mapSpongeData.put("dimensionId", new IntegerTag("dimensionId", getDimenionId()));
-		mapSpongeData.put("uuid_least", new LongTag("uuid_least", -6732046318667659594L));
-		mapSpongeData.put("uuid_most", new LongTag("uuid_most", 9143053678590905554L));
-		mapSpongeData.put("dimensionType", new StringTag("dimensionType", "net.minecraft.world.WorldProviderSurface"));
-		mapSpongeData.put("LevelName", new StringTag("LevelName", worldName));
-		mapSpongeData.put("generatorModifiers", new ListTag("generatorModifiers", null));
+		compoundSpongeData.put(new ByteTag("enabled", (byte) 1));
+		compoundSpongeData.put(new ByteTag("keepSpawnLocked", (byte) 1));
+		compoundSpongeData.put(new ByteTag("loadOnStartup", (byte) 1));
+		compoundSpongeData.put(new IntegerTag("dimensionId", getDimenionId()));
+		compoundSpongeData.put(new LongTag("uuid_least", -6732046318667659594L));
+		compoundSpongeData.put(new LongTag("uuid_most", 9143053678590905554L));
+		compoundSpongeData.put(new StringTag("dimensionType", "net.minecraft.world.WorldProviderSurface"));
+		compoundSpongeData.put(new StringTag("LevelName", worldName));
+		compoundSpongeData.put(new ListTag("generatorModifiers", null));
+
+		CompoundTag compoundPlayerId = new CompoundTag("", null);
 		
-		LinkedHashMap<String, NBTTag> mapPlayerId = new LinkedHashMap<>();
-		
-		mapPlayerId.put("uuid_least", new LongTag("uuid_least", -7628444587550319768L));
-		mapPlayerId.put("uuid_most", new LongTag("uuid_most", 4244735002832685980L));
-		
-		CompoundTag compoundPlayerId = new CompoundTag("", mapPlayerId);
+		compoundPlayerId.put(new LongTag("uuid_least", -7628444587550319768L));
+		compoundPlayerId.put(new LongTag("uuid_most", 4244735002832685980L));
+
 		List<NBTTag> listPlayerId = new ArrayList<>();
 		listPlayerId.add(compoundPlayerId);
 		
-		mapSpongeData.put("PlayerIdTable", new ListTag("PlayerIdTable", listPlayerId));
+		compoundSpongeData.put(new ListTag("PlayerIdTable", listPlayerId));
+
+		CompoundTag compoundRoot = new CompoundTag("", null);
 		
-		CompoundTag compoundSpongeData = new CompoundTag("SpongeData", mapSpongeData);
-		LinkedHashMap<String, NBTTag> mapRoot = new LinkedHashMap<>();
-		mapRoot.put("SpongeData", compoundSpongeData);
-		
-		CompoundTag compoundRoot = new CompoundTag("", mapRoot);
+		compoundRoot.put(compoundSpongeData);
 
 		List<NBTTag> list = new ArrayList<>();
 		
@@ -97,5 +93,4 @@ public class IOManager {
 
 		XNBT.writeToFile(list, dataFile);
 	}
-
 }
