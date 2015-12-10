@@ -25,6 +25,15 @@ public class CMDWorld implements CommandExecutor {
 		if(src.hasPermission("pjw.cmd.world.delete")) {
 			src.sendMessage(Texts.of(TextColors.GOLD, "/world delete"));
 		}
+		if(src.hasPermission("pjw.cmd.world.rename")) {
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world rename"));	
+		}
+		if(src.hasPermission("pjw.cmd.world.unload")) {
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world unload"));	
+		}
+		if(src.hasPermission("pjw.cmd.world.copy")) {
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world copy"));	
+		}
 		if(src.hasPermission("pjw.cmd.world.teleport")) {
 			src.sendMessage(Texts.of(TextColors.GOLD, "/world import"));	
 		}
@@ -37,7 +46,7 @@ public class CMDWorld implements CommandExecutor {
 		if(src.hasPermission("pjw.cmd.world.setspawn")) {
 			src.sendMessage(Texts.of(TextColors.GOLD, "/world setspawn"));	
 		}
-		if(src.hasPermission("pjw.cmd.world.teleport")) {
+		if(src.hasPermission("pjw.cmd.world.pvp")) {
 			src.sendMessage(Texts.of(TextColors.GOLD, "/world pvp"));	
 		}
 		if(src.hasPermission("pjw.cmd.world.respawn")) {
