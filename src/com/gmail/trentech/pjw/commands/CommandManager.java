@@ -149,6 +149,13 @@ public class CommandManager {
 		    .executor(new CMDLoad())
 		    .build();
 	
+	public CommandSpec cmdGamerule = CommandSpec.builder()
+		    .description(Texts.of("edit gamerules of world"))
+		    .permission("pjw.cmd.world.gamerule")
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.string(Texts.of("rule"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
+		    .executor(new CMDGamerule())
+		    .build();
+	
 	public CommandSpec cmdWorld = CommandSpec.builder()
 			.description(Texts.of("Base command"))
 			.permission("pjw.cmd.world")
@@ -172,6 +179,7 @@ public class CommandManager {
 			.child(cmdRename, "rename", "rn")
 			.child(cmdUnload, "unload", "u")
 			.child(cmdLoad, "load", "ld")
+			.child(cmdGamerule, "gamerule", "gr")
 			.executor(new CMDWorld())
 			.build();
 }
