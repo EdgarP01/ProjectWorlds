@@ -31,6 +31,11 @@ public class CMDUnload implements CommandExecutor {
 			}
 		}
 		
+		if(Main.getGame().getServer().getDefaultWorld().get().getWorldName().equalsIgnoreCase(worldName)){
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "Default world cannot be unloaded"));
+			return CommandResult.empty();
+		}
+		
 		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
 			return CommandResult.empty();

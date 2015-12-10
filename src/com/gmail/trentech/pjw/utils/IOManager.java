@@ -22,7 +22,7 @@ import net.obnoxint.xnbt.types.StringTag;
 
 public class IOManager {
 
-	private static int getDimenionId() throws IOException{
+	private static int generateDimenionId() throws IOException{
 		List<Integer> ids = new ArrayList<>();
 		
 		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
@@ -57,6 +57,63 @@ public class IOManager {
 		
 		return Collections.max(ids) + 1;
 	}
+	
+	public static boolean dimensionIdExists(int dimensionId) throws IOException{
+		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
+		
+		for(World world : Main.getGame().getServer().getWorlds()){
+			if(!world.getName().equalsIgnoreCase(defaultWorld)){
+				File dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld + "/" + world.getName(), "level_sponge.dat");
+				
+				for (NBTTag root : XNBT.readFromFile(dataFile)) {
+					CompoundTag compoundRoot = (CompoundTag) root;
+					
+					for(Entry<String, NBTTag> rootItem :compoundRoot.entrySet()){
+						if(rootItem.getKey().equalsIgnoreCase("SpongeData")){
+							CompoundTag compoundSpongeData = (CompoundTag) rootItem.getValue();
+							
+							for(Entry<String, NBTTag> tag :compoundSpongeData.entrySet()){
+								if(tag.getKey().equalsIgnoreCase("dimensionId")){
+									int id = (Integer)tag.getValue().getPayload();
+									if(id == dimensionId){
+										return true;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	public static int getDimenionId(String worldName) throws IOException{
+		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
+
+		File dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld + "/" + worldName, "level_sponge.dat");
+		
+		if(!dataFile.exists()){
+			return 0;
+		}
+		
+		for (NBTTag root : XNBT.readFromFile(dataFile)) {
+			CompoundTag compoundRoot = (CompoundTag) root;
+			
+			for(Entry<String, NBTTag> rootItem :compoundRoot.entrySet()){
+				if(rootItem.getKey().equalsIgnoreCase("SpongeData")){
+					CompoundTag compoundSpongeData = (CompoundTag) rootItem.getValue();
+					
+					for(Entry<String, NBTTag> tag :compoundSpongeData.entrySet()){
+						if(tag.getKey().equalsIgnoreCase("dimensionId")){
+							return (Integer)tag.getValue().getPayload();
+						}
+					}
+				}
+			}
+		}
+		return 0;
+	}
 
 	public static void init(String worldName) throws IOException{
 		File dataFile = new File(Main.getGame().getSavesDirectory() + "/" + Main.getGame().getServer().getDefaultWorld().get().getWorldName() + "/" + worldName, "level_sponge.dat");
@@ -66,7 +123,7 @@ public class IOManager {
 		compoundSpongeData.put(new ByteTag("enabled", (byte) 1));
 		compoundSpongeData.put(new ByteTag("keepSpawnLocked", (byte) 1));
 		compoundSpongeData.put(new ByteTag("loadOnStartup", (byte) 1));
-		compoundSpongeData.put(new IntegerTag("dimensionId", getDimenionId()));
+		compoundSpongeData.put(new IntegerTag("dimensionId", generateDimenionId()));
 		compoundSpongeData.put(new LongTag("uuid_least", -6732046318667659594L));
 		compoundSpongeData.put(new LongTag("uuid_most", 9143053678590905554L));
 		compoundSpongeData.put(new StringTag("dimensionType", "net.minecraft.world.WorldProviderSurface"));

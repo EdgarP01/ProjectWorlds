@@ -1,5 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 import org.spongepowered.api.command.CommandException;
@@ -14,6 +16,7 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.IOManager;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
@@ -33,43 +36,77 @@ public class CMDLoad implements CommandExecutor {
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "World ", worldName, " is already loaded"));
 			return CommandResult.empty();
 		}
+
+		if(!new File(Main.getGame().getSavesDirectory() + "/" + Main.getGame().getServer().getDefaultWorld().get().getWorldName() + "/" + worldName).exists()){
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not locate ", worldName));
+			return CommandResult.empty();
+		}
 		
 		for(WorldProperties world : Main.getGame().getServer().getUnloadedWorlds()){
 			if(world.getWorldName().equalsIgnoreCase(worldName)){
-				Optional<World> load = Main.getGame().getServer().loadWorld(worldName);
-				
-				if(!load.isPresent()){
-					src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not load ", worldName));
-					return CommandResult.empty();
+				try {
+					if(IOManager.dimensionIdExists(IOManager.getDimenionId(worldName))){
+						IOManager.init(worldName);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-				
-				ConfigManager loader = new ConfigManager("worlds.conf");
-				ConfigurationNode config = loader.getConfig();
-				
-				if(config.getNode("Worlds", worldName).getString() == null){
-					WorldProperties properties = load.get().getProperties();
-					
-					config.getNode("Worlds", worldName, "UUID").setValue(world.getUniqueId().toString());
-					config.getNode("Worlds", worldName, "Dimension-Type").setValue(properties.getDimensionType().getName().toUpperCase());
-					config.getNode("Worlds", worldName, "Generator-Type").setValue(properties.getGeneratorType().getName().toUpperCase());
-					config.getNode("Worlds", worldName, "Seed").setValue(properties.getSeed());
-					config.getNode("Worlds", worldName, "Difficulty").setValue(properties.getDifficulty().getName().toUpperCase());
-					config.getNode("Worlds", worldName, "Gamemode").setValue(properties.getGameMode().getName().toUpperCase());
-					config.getNode("Worlds", worldName, "Keep-Spawn-Loaded").setValue(false);
-					config.getNode("Worlds", worldName, "Hardcore").setValue(false);
-					config.getNode("Worlds", worldName, "Time", "Lock").setValue(false);
-					config.getNode("Worlds", worldName, "Time", "Set").setValue(6000);
-					config.getNode("Worlds", worldName, "Weather", "Lock").setValue(false);
-					config.getNode("Worlds", worldName, "Weather", "Set").setValue("CLEAR");	
 
-					loader.save();
+				if(load(worldName)){
+					src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " loaded successfully"));
+					return CommandResult.success();
 				}
-				src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " loaded successfully"));				
-				return CommandResult.success();				
+				
+				src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not load ", worldName));
+				return CommandResult.empty();
 			}
 		}
-		src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not locate ", worldName));
+
+		try {
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "[WARNING]", TextColors.GOLD, "Converting world to Sponge. This could break something"));
+			IOManager.init(worldName);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if(load(worldName)){
+			src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " loaded successfully"));
+			return CommandResult.success();
+		}
+		
+		src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not load ", worldName));
 		return CommandResult.empty();
+	}
+	
+	private boolean load(String worldName){
+		Optional<World> load = Main.getGame().getServer().loadWorld(worldName);
+		
+		if(!load.isPresent()){
+			return false;
+		}
+		
+		World world = load.get();
+		WorldProperties properties = world.getProperties();
+		
+		ConfigManager loader = new ConfigManager("worlds.conf");
+		ConfigurationNode config = loader.getConfig();
+
+		config.getNode("Worlds", worldName, "UUID").setValue(world.getUniqueId().toString());
+		config.getNode("Worlds", worldName, "Dimension-Type").setValue(properties.getDimensionType().getName().toUpperCase());
+		config.getNode("Worlds", worldName, "Generator-Type").setValue(properties.getGeneratorType().getName().toUpperCase());
+		config.getNode("Worlds", worldName, "Seed").setValue(properties.getSeed());
+		config.getNode("Worlds", worldName, "Difficulty").setValue(properties.getDifficulty().getName().toUpperCase());
+		config.getNode("Worlds", worldName, "Gamemode").setValue(properties.getGameMode().getName().toUpperCase());
+		config.getNode("Worlds", worldName, "Keep-Spawn-Loaded").setValue(false);
+		config.getNode("Worlds", worldName, "Hardcore").setValue(false);
+		config.getNode("Worlds", worldName, "Time", "Lock").setValue(false);
+		config.getNode("Worlds", worldName, "Time", "Set").setValue(6000);
+		config.getNode("Worlds", worldName, "Weather", "Lock").setValue(false);
+		config.getNode("Worlds", worldName, "Weather", "Set").setValue("CLEAR");	
+
+		loader.save();
+
+		return true;
 	}
 
 }
