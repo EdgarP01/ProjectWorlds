@@ -115,6 +115,45 @@ public class IOManager {
 		return 0;
 	}
 
+	private static void level(String worldName) throws IOException{
+		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
+
+		File dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld + "/" + worldName, "level.dat");
+		
+		if(!dataFile.exists()){
+			return;
+		}
+		CompoundTag compoundData = new CompoundTag("Data", null);
+		
+		for (NBTTag root : XNBT.readFromFile(dataFile)) {
+			CompoundTag compoundRoot = (CompoundTag) root;
+			
+			for(Entry<String, NBTTag> rootItem :compoundRoot.entrySet()){
+				if(rootItem.getKey().equalsIgnoreCase("Data")){
+					CompoundTag compoundSpongeData = (CompoundTag) rootItem.getValue();
+					
+					for(Entry<String, NBTTag> tag :compoundSpongeData.entrySet()){
+						if(tag.getKey().equalsIgnoreCase("LevelName")){
+							compoundData.put(new StringTag("LevelName", worldName));
+						}else{
+							compoundData.put(tag.getValue());
+						}		
+					}
+				}
+			}
+		}
+		
+		CompoundTag compoundRoot = new CompoundTag("", null);
+		
+		compoundRoot.put(compoundData);
+
+		List<NBTTag> list = new ArrayList<>();
+		
+		list.add(compoundRoot);
+
+		XNBT.writeToFile(list, dataFile);
+	}
+	
 	public static void init(String worldName) throws IOException{
 		File dataFile = new File(Main.getGame().getSavesDirectory() + "/" + Main.getGame().getServer().getDefaultWorld().get().getWorldName() + "/" + worldName, "level_sponge.dat");
 
@@ -149,5 +188,7 @@ public class IOManager {
 		list.add(compoundRoot);
 
 		XNBT.writeToFile(list, dataFile);
+		
+		level(worldName);
 	}
 }

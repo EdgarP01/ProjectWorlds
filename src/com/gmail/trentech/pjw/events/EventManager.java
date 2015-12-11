@@ -11,7 +11,9 @@ import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.event.entity.living.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.world.ChangeWorldWeatherEvent;
+import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.storage.WorldProperties;
 import org.spongepowered.api.world.weather.Weather;
 
 import com.gmail.trentech.pjw.Main;
@@ -21,6 +23,33 @@ import com.gmail.trentech.pjw.utils.Utils;
 import ninja.leaping.configurate.ConfigurationNode;
 
 public class EventManager {
+	
+	@Listener
+	public void onLoadWorldEvent(LoadWorldEvent event){
+		World world = event.getTargetWorld();
+		
+		WorldProperties properties = world.getProperties();
+		
+		ConfigManager loader = new ConfigManager("worlds.conf");
+		ConfigurationNode config = loader.getConfig();
+		
+		if(config.getNode("Worlds", world.getName()).getString() == null){
+			config.getNode("Worlds", world.getName(), "UUID").setValue(world.getUniqueId().toString());
+			config.getNode("Worlds", world.getName(), "Dimension-Type").setValue(properties.getDimensionType().getName().toUpperCase());
+			config.getNode("Worlds", world.getName(), "Generator-Type").setValue(properties.getGeneratorType().getName().toUpperCase());
+			config.getNode("Worlds", world.getName(), "Seed").setValue(properties.getSeed());
+			config.getNode("Worlds", world.getName(), "Difficulty").setValue(properties.getDifficulty().getName().toUpperCase());
+			config.getNode("Worlds", world.getName(), "Gamemode").setValue(properties.getGameMode().getName().toUpperCase());
+			config.getNode("Worlds", world.getName(), "Keep-Spawn-Loaded").setValue(false);
+			config.getNode("Worlds", world.getName(), "Hardcore").setValue(false);
+			config.getNode("Worlds", world.getName(), "Time", "Lock").setValue(false);
+			config.getNode("Worlds", world.getName(), "Time", "Set").setValue(6000);
+			config.getNode("Worlds", world.getName(), "Weather", "Lock").setValue(false);
+			config.getNode("Worlds", world.getName(), "Weather", "Set").setValue("CLEAR");	
+
+			loader.save();
+		}
+	}
 	
 	// TEMPORARY FIX FOR WORLD SPECIFIC GAMEMODES - DOES NOT ALWAYS WORK
 	@Listener

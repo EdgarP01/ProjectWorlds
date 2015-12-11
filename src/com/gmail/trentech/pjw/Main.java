@@ -77,10 +77,5 @@ public class Main {
 				getLog().warn("Failed to load " + world.getWorldName());
 			}
 		}
-//		Map<Object, ? extends CommentedConfigurationNode> worlds = new ConfigManager().getConfig().getNode("Worlds").getChildrenMap();
-//		for(Entry<Object, ? extends CommentedConfigurationNode> item : worlds.entrySet()){
-//			String key = item.getKey().toString();
-//			getGame().getServer().loadWorld(key);
-//		}
 	}
 }

@@ -11,7 +11,6 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
@@ -69,19 +68,12 @@ public class CMDCopy implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
-		Optional<World> load = Main.getGame().getServer().loadWorld(newWorldName);
-		if(!load.isPresent()){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not load ", newWorldName));
-			return CommandResult.empty();
-		}
-
-		World world = load.get();
-		WorldProperties properties = world.getProperties();
+		WorldProperties properties = Main.getGame().getServer().getWorldProperties(newWorldName).get();
 		
 		ConfigManager loader = new ConfigManager("worlds.conf");
 		ConfigurationNode config = loader.getConfig();
 
-		config.getNode("Worlds", newWorldName, "UUID").setValue(world.getUniqueId().toString());
+		config.getNode("Worlds", newWorldName, "UUID").setValue(properties.getUniqueId().toString());
 		config.getNode("Worlds", newWorldName, "Dimension-Type").setValue(properties.getDimensionType().getName().toUpperCase());
 		config.getNode("Worlds", newWorldName, "Generator-Type").setValue(properties.getGeneratorType().getName().toUpperCase());
 		config.getNode("Worlds", newWorldName, "Seed").setValue(properties.getSeed());

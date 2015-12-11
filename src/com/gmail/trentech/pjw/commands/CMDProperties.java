@@ -8,7 +8,6 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
 
 import com.gmail.trentech.pjw.utils.ConfigManager;
 
@@ -39,7 +38,7 @@ public class CMDProperties implements CommandExecutor {
 		}
 		
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
-		src.sendMessage(Texts.of(TextColors.GOLD, TextStyles.UNDERLINE, "                    World Properties"));
+		src.sendMessage(Texts.of(TextColors.GOLD, "                    World Properties"));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Name: ", TextColors.GOLD, worldName));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "UUID: ", TextColors.GOLD, config.getNode("Worlds", worldName, "UUID").getString()));

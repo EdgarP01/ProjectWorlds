@@ -26,46 +26,29 @@ public class CMDImport implements CommandExecutor {
 //				return CommandResult.empty();
 //			}
 //		}
-//
-//		try {
-//			IOManager.init(worldName);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//
-//		Optional<World> load = Main.getGame().getServer().loadWorld(worldName);
 //		
-//		if(!load.isPresent()){
-//			src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not load ", worldName));
+//		File worldDirectory = new File(Main.getGame().getSavesDirectory() + "/" + Main.getGame().getServer().getDefaultWorld().get().getWorldName() + "/" + worldName);
+//		if(!worldDirectory.exists()){
+//			src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not locate ", worldName));
 //			return CommandResult.empty();
 //		}
-//		
-//		World world = load.get();
-//		WorldProperties properties = world.getProperties();
-//		
-//		ConfigManager loader = new ConfigManager("worlds.conf");
-//		ConfigurationNode config = loader.getConfig();
 //
-//		config.getNode("Worlds", worldName, "UUID").setValue(world.getUniqueId().toString());
-//		config.getNode("Worlds", worldName, "Dimension-Type").setValue(properties.getDimensionType().getName().toUpperCase());
-//		config.getNode("Worlds", worldName, "Generator-Type").setValue(properties.getGeneratorType().getName().toUpperCase());
-//		config.getNode("Worlds", worldName, "Seed").setValue(properties.getSeed());
-//		config.getNode("Worlds", worldName, "Difficulty").setValue(properties.getDifficulty().getName().toUpperCase());
-//		config.getNode("Worlds", worldName, "Gamemode").setValue(properties.getGameMode().getName().toUpperCase());
-//		config.getNode("Worlds", worldName, "Keep-Spawn-Loaded").setValue(false);
-//		config.getNode("Worlds", worldName, "Hardcore").setValue(false);
-//		config.getNode("Worlds", worldName, "Time", "Lock").setValue(false);
-//		config.getNode("Worlds", worldName, "Time", "Set").setValue(6000);
-//		config.getNode("Worlds", worldName, "Weather", "Lock").setValue(false);
-//		config.getNode("Worlds", worldName, "Weather", "Set").setValue("CLEAR");	
-//
-//		loader.save();
+//		File dataFile = new File(worldDirectory.getAbsolutePath(), "level_sponge.dat");
+//		if(!dataFile.exists()){
+//			try {
+//				src.sendMessage(Texts.of(TextColors.DARK_RED, "[WARNING]", TextColors.GOLD, " Converting world to Sponge. This could break something"));
+//				IOManager.init(worldName);
+//				src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " imported successfully"));
+//				return CommandResult.success();
+//			} catch (IOException e) {
+//				src.sendMessage(Texts.of(TextColors.DARK_RED, "Failed to convert world"));
+//				e.printStackTrace();
+//				return CommandResult.empty();
+//			}
+//		}
 //
 //		src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " imported successfully"));
-		
 		src.sendMessage(Texts.of(TextColors.DARK_RED, "import has been deprecated. use ", TextColors.GOLD, "/world load"));
-		
 		return CommandResult.success();
 	}
-
 }

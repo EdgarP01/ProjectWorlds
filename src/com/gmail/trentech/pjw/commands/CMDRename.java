@@ -7,9 +7,9 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
@@ -27,6 +27,12 @@ public class CMDRename implements CommandExecutor {
 			return CommandResult.empty();
 		}
 		String oldWorldName = args.<String>getOne("old").get();
+
+		if(oldWorldName.equalsIgnoreCase("@w")){
+			if(src instanceof Player){
+				oldWorldName = ((Player) src).getWorld().getName();
+			}
+		}
 		
 		if(Main.getGame().getServer().getWorld(oldWorldName).isPresent()){
 			src.sendMessage(Texts.of(TextColors.DARK_RED, oldWorldName, " must be unloaded before you can rename"));
@@ -57,15 +63,8 @@ public class CMDRename implements CommandExecutor {
 					return CommandResult.empty();
 				}
 
-				Optional<World> load = Main.getGame().getServer().loadWorld(newWorldName);
-				if(!load.isPresent()){
-					src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not load ", newWorldName));
-					return CommandResult.empty();
-				}
-
-				World world = load.get();
-				WorldProperties properties = world.getProperties();
-
+				WorldProperties properties = Main.getGame().getServer().getWorldProperties(newWorldName).get();
+				
 				ConfigManager loader = new ConfigManager("worlds.conf");
 				ConfigurationNode config = loader.getConfig();
 

@@ -12,13 +12,9 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
-import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.IOManager;
-
-import ninja.leaping.configurate.ConfigurationNode;
 
 public class CMDLoad implements CommandExecutor {
 
@@ -37,76 +33,43 @@ public class CMDLoad implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
-		if(!new File(Main.getGame().getSavesDirectory() + "/" + Main.getGame().getServer().getDefaultWorld().get().getWorldName() + "/" + worldName).exists()){
+		File worldDirectory = new File(Main.getGame().getSavesDirectory() + "/" + Main.getGame().getServer().getDefaultWorld().get().getWorldName() + "/" + worldName);
+		if(!worldDirectory.exists()){
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not locate ", worldName));
 			return CommandResult.empty();
 		}
-		
-		for(WorldProperties world : Main.getGame().getServer().getUnloadedWorlds()){
-			if(world.getWorldName().equalsIgnoreCase(worldName)){
-				try {
-					if(IOManager.dimensionIdExists(IOManager.getDimenionId(worldName))){
-						IOManager.init(worldName);
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 
-				if(load(worldName)){
-					src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " loaded successfully"));
-					return CommandResult.success();
-				}
-				
-				src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not load ", worldName));
+		File dataFile = new File(worldDirectory.getAbsolutePath(), "level_sponge.dat");
+		if(!dataFile.exists()){
+			try {
+				src.sendMessage(Texts.of(TextColors.DARK_RED, "[WARNING]", TextColors.GOLD, " Converting world to Sponge. This could break something"));
+				IOManager.init(worldName);
+			} catch (IOException e) {
+				src.sendMessage(Texts.of(TextColors.DARK_RED, "Failed to convert world"));
+				e.printStackTrace();
 				return CommandResult.empty();
 			}
 		}
-
-		try {
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "[WARNING]", TextColors.GOLD, "Converting world to Sponge. This could break something"));
-			IOManager.init(worldName);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		if(load(worldName)){
-			src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " loaded successfully"));
-			return CommandResult.success();
-		}
 		
-		src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not load ", worldName));
-		return CommandResult.empty();
-	}
-	
-	private boolean load(String worldName){
+		try {
+			if(IOManager.dimensionIdExists(IOManager.getDimenionId(worldName))){
+				src.sendMessage(Texts.of(TextColors.DARK_RED, "[WARNING]", TextColors.GOLD, " World contains dimension id comflict. attempting to repair."));
+				IOManager.init(worldName);
+			}
+		} catch (IOException e) {
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "Failed to repair world"));
+			e.printStackTrace();
+			return CommandResult.empty();
+		}
+
 		Optional<World> load = Main.getGame().getServer().loadWorld(worldName);
 		
 		if(!load.isPresent()){
-			return false;
-		}
-		
-		World world = load.get();
-		WorldProperties properties = world.getProperties();
-		
-		ConfigManager loader = new ConfigManager("worlds.conf");
-		ConfigurationNode config = loader.getConfig();
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not load ", worldName));
+			return CommandResult.empty();
+		}	
 
-		config.getNode("Worlds", worldName, "UUID").setValue(world.getUniqueId().toString());
-		config.getNode("Worlds", worldName, "Dimension-Type").setValue(properties.getDimensionType().getName().toUpperCase());
-		config.getNode("Worlds", worldName, "Generator-Type").setValue(properties.getGeneratorType().getName().toUpperCase());
-		config.getNode("Worlds", worldName, "Seed").setValue(properties.getSeed());
-		config.getNode("Worlds", worldName, "Difficulty").setValue(properties.getDifficulty().getName().toUpperCase());
-		config.getNode("Worlds", worldName, "Gamemode").setValue(properties.getGameMode().getName().toUpperCase());
-		config.getNode("Worlds", worldName, "Keep-Spawn-Loaded").setValue(false);
-		config.getNode("Worlds", worldName, "Hardcore").setValue(false);
-		config.getNode("Worlds", worldName, "Time", "Lock").setValue(false);
-		config.getNode("Worlds", worldName, "Time", "Set").setValue(6000);
-		config.getNode("Worlds", worldName, "Weather", "Lock").setValue(false);
-		config.getNode("Worlds", worldName, "Weather", "Set").setValue("CLEAR");	
-
-		loader.save();
-
-		return true;
+		src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " loaded successfully"));
+		return CommandResult.success();
 	}
-
 }
