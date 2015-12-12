@@ -10,9 +10,10 @@ public class CommandManager {
 		    .description(Texts.of("Create new world"))
 		    .permission("pjw.cmd.world.create")	    
 		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))),
-		    		GenericArguments.optional(GenericArguments.string(Texts.of("type"))),
-		    		GenericArguments.optional(GenericArguments.string(Texts.of("generator"))),
-		    		GenericArguments.optional(GenericArguments.string(Texts.of("seed"))))
+		    		GenericArguments.optional(GenericArguments.string(Texts.of("arg0"))),
+		    		GenericArguments.optional(GenericArguments.string(Texts.of("arg1"))),
+		    		GenericArguments.optional(GenericArguments.string(Texts.of("arg2"))),
+		    		GenericArguments.optional(GenericArguments.string(Texts.of("arg3"))))
 		    .executor(new CMDCreate())
 		    .build();
 	
@@ -107,13 +108,6 @@ public class CommandManager {
 		    .executor(new CMDTeleport())
 		    .build();
 	
-	public CommandSpec cmdImport = CommandSpec.builder()
-		    .description(Texts.of("Import a world"))
-		    .permission("pjw.cmd.world.import")
-		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
-		    .executor(new CMDImport())
-		    .build();
-	
 	public CommandSpec cmdPvp = CommandSpec.builder()
 		    .description(Texts.of("Toggle PVP for world"))
 		    .permission("pjw.cmd.world.pvp")
@@ -173,7 +167,6 @@ public class CommandManager {
 			.child(cmdLockWeather, "lockweather", "weather",  "lw")
 			.child(cmdList, "list", "l")
 			.child(cmdTeleport, "teleport", "tp")
-			.child(cmdImport, "import", "i")
 			.child(cmdPvp, "pvp")
 			.child(cmdCopy, "copy", "cp")
 			.child(cmdRename, "rename", "rn")

@@ -5,6 +5,7 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
+import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
@@ -18,7 +19,6 @@ import org.spongepowered.api.world.weather.Weather;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.ConfigManager;
-import com.gmail.trentech.pjw.utils.Utils;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
@@ -34,14 +34,9 @@ public class EventManager {
 		ConfigurationNode config = loader.getConfig();
 		
 		if(config.getNode("Worlds", world.getName()).getString() == null){
-			config.getNode("Worlds", world.getName(), "UUID").setValue(world.getUniqueId().toString());
-			config.getNode("Worlds", world.getName(), "Dimension-Type").setValue(properties.getDimensionType().getName().toUpperCase());
-			config.getNode("Worlds", world.getName(), "Generator-Type").setValue(properties.getGeneratorType().getName().toUpperCase());
-			config.getNode("Worlds", world.getName(), "Seed").setValue(properties.getSeed());
-			config.getNode("Worlds", world.getName(), "Difficulty").setValue(properties.getDifficulty().getName().toUpperCase());
+			config.getNode("Worlds", world.getName(), "PVP").setValue(true);
+			config.getNode("Worlds", world.getName(), "Respawn-World").setValue("NONE");
 			config.getNode("Worlds", world.getName(), "Gamemode").setValue(properties.getGameMode().getName().toUpperCase());
-			config.getNode("Worlds", world.getName(), "Keep-Spawn-Loaded").setValue(false);
-			config.getNode("Worlds", world.getName(), "Hardcore").setValue(false);
 			config.getNode("Worlds", world.getName(), "Time", "Lock").setValue(false);
 			config.getNode("Worlds", world.getName(), "Time", "Set").setValue(6000);
 			config.getNode("Worlds", world.getName(), "Weather", "Lock").setValue(false);
@@ -62,8 +57,12 @@ public class EventManager {
 		World worldSrc = event.getFromTransform().getExtent();
 		World worldDest = event.getToTransform().getExtent();
 
-		if(worldSrc != worldDest){	
-			GameMode gamemode = Utils.getGameMode(new ConfigManager("worlds.conf").getConfig().getNode("Worlds", worldDest.getName(), "Gamemode").getString());
+		if(worldSrc != worldDest){
+			GameMode gamemode = GameModes.SURVIVAL;
+			if(Main.getGame().getRegistry().getType(GameMode.class, new ConfigManager("worlds.conf").getConfig().getNode("Worlds", worldDest.getName(), "Gamemode").getString()).isPresent()){
+				gamemode = Main.getGame().getRegistry().getType(GameMode.class, new ConfigManager("worlds.conf").getConfig().getNode("Worlds", worldDest.getName(), "Gamemode").getString()).get();
+			}
+
 			player.offer(Keys.GAME_MODE, gamemode);
 		}
 	}

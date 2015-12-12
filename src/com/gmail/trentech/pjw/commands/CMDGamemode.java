@@ -7,13 +7,15 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
+import org.spongepowered.api.entity.living.player.gamemode.GameModes;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.ConfigManager;
-import com.gmail.trentech.pjw.utils.Utils;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
@@ -22,8 +24,7 @@ public class CMDGamemode implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world gamemode <world>"));
+			src.sendMessage(invalidArg());
 			return CommandResult.empty();
 		}
 		String worldName = args.<String>getOne("name").get();
@@ -46,12 +47,15 @@ public class CMDGamemode implements CommandExecutor {
 		if(!args.hasAny("value")) {
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "GameMode: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Gamemode").getString()));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Command: ",TextColors.GOLD, "/world gamemode <world> [value]"));
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Command: ",invalidArg()));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 			return CommandResult.success();
 		}
 
-		GameMode gamemode = Utils.getGameMode(args.<String>getOne("value").get().toUpperCase());
+		GameMode gamemode = GameModes.SURVIVAL;
+		if(Main.getGame().getRegistry().getType(GameMode.class, args.<String>getOne("value").get().toUpperCase()).isPresent()){
+			gamemode = Main.getGame().getRegistry().getType(GameMode.class, args.<String>getOne("value").get().toUpperCase()).get();
+		}
 
 		config.getNode("Worlds", worldName, "Gamemode").setValue(gamemode.getName().toUpperCase());
 		loader.save();
@@ -63,4 +67,10 @@ public class CMDGamemode implements CommandExecutor {
 		return CommandResult.success();
 	}
 
+	private Text invalidArg(){
+		Text t1 = Texts.of(TextColors.GOLD, "/world gamemode ");
+		Text t2 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("<world> ")).build();
+		Text t3 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("SURVIVAL\nCREATIVE\nADVENTURE\nSPECTATOR"))).append(Texts.of("[value]")).build();
+		return Texts.of(t1,t2,t3);
+	}
 }

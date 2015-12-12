@@ -21,7 +21,6 @@ public class CMDDelete implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
 			src.sendMessage(Texts.of(TextColors.GOLD, "/world delete <world>"));
 			return CommandResult.empty();
 		}

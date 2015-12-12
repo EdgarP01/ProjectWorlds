@@ -8,6 +8,8 @@ import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.data.value.mutable.ListValue;
+import org.spongepowered.api.effect.particle.ParticleEffect;
+import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
@@ -56,6 +58,7 @@ public class SignEventManager {
 		lines.set(0, Texts.of(TextColors.DARK_BLUE, "[Portal]"));
 
 		event.getText().set(lines);
+		event.getTargetTile().getLocation().getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.EXPLOSION_NORMAL).build(), event.getTargetTile().getLocation().getPosition().add(0, 1, 0));
 	}
 
 	@Listener

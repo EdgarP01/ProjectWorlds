@@ -9,7 +9,9 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
 
@@ -21,8 +23,7 @@ public class CMDLoad implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world load <world>"));
+			src.sendMessage(invalidArg());
 			return CommandResult.empty();
 		}
 
@@ -71,5 +72,11 @@ public class CMDLoad implements CommandExecutor {
 
 		src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " loaded successfully"));
 		return CommandResult.success();
+	}
+	
+	private Text invalidArg(){
+		Text t1 = Texts.of(TextColors.GOLD, "/world load ");
+		Text t2 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("<world> ")).build();
+		return Texts.of(t1,t2);
 	}
 }

@@ -6,9 +6,13 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 
 import ninja.leaping.configurate.ConfigurationNode;
@@ -24,8 +28,9 @@ public class CMDProperties implements CommandExecutor {
 			worldName = args.<String>getOne("name").get();
 		}else{
 			if(!(src instanceof Player)){
-				src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-				src.sendMessage(Texts.of(TextColors.GOLD, "/world properties [world]"));
+				Text t1 = Texts.of(TextColors.GOLD, "/world properties ");
+				Text t2 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("[world] ")).build();
+				src.sendMessage(Texts.of(t1,t2));
 				return CommandResult.empty();
 			}
 			Player player = (Player) src;		
@@ -36,21 +41,34 @@ public class CMDProperties implements CommandExecutor {
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
 			return CommandResult.empty();
 		}
+		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
+			return CommandResult.empty();
+		}
+		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
 		
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 		src.sendMessage(Texts.of(TextColors.GOLD, "                    World Properties"));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Name: ", TextColors.GOLD, worldName));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "UUID: ", TextColors.GOLD, config.getNode("Worlds", worldName, "UUID").getString()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Dimension Type: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Dimension-Type").getString()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Generator Type: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Generator-Type").getString()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Difficulty: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Difficulty").getString()));
+		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "UUID: ", TextColors.GOLD, properties.getUniqueId().toString()));
+		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Dimension Type: ", TextColors.GOLD, properties.getDimensionType().getName().toUpperCase()));
+		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Generator Type: ", TextColors.GOLD, properties.getGeneratorType().getName().toUpperCase()));
+		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Difficulty: ", TextColors.GOLD, properties.getDifficulty().getName().toUpperCase()));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "PVP: ", TextColors.GOLD, config.getNode("Worlds", worldName, "PVP").getString()));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Respawn World: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Respawn-World").getString()));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "GameMode: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Gamemode").getString()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Seed: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Seed").getString()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Keep Spawn Loaded: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Keep-Spawn-Loaded").getString()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Hardcore").getString()));
+		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Seed: ", TextColors.GOLD, properties.getSeed()));
+		if(properties.doesKeepSpawnLoaded()){
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Keep Spawn Loaded: ", TextColors.GOLD, "true"));
+		}else{
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Keep Spawn Loaded: ", TextColors.GOLD, "false"));
+		}
+		if(properties.isHardcore()){
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, "true"));
+		}else{
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, "false"));
+		}
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Time:"));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "    - Lock: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Lock").getString()));
 		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "    - Set: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Set").getString()));

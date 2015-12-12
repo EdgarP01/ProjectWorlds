@@ -154,6 +154,7 @@ public class PortalEventManager {
 			PortalBuilder.getActiveBuilders().put(player, builder);
 			
 			player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Starting point selected"));
+			event.getTargetBlock().getLocation().get().getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.REDSTONE).build(), event.getTargetBlock().getLocation().get().getPosition().add(0, 1, 0));
 		}else{
 			Portal portal = new Portal(builder.getLocation(), event.getTargetBlock().getLocation().get());
 
@@ -185,7 +186,7 @@ public class PortalEventManager {
             			location.setBlock(Main.getGame().getRegistry().createBuilder(BlockState.Builder.class).blockType(event.getTargetBlock().getState().getType()).build());
                 	}
             	}
-            	location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.EXPLOSION_LARGE).build(), location.getPosition());
+            	location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.EXPLOSION_LARGE).build(), location.getPosition().add(0, 1, 0));
             }
             
             String uuid = UUID.randomUUID().toString();

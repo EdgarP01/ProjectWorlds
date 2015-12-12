@@ -6,22 +6,20 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
-
-import ninja.leaping.configurate.ConfigurationNode;
 
 public class CMDHardcore implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world hardcore <world>"));
+			src.sendMessage(invalidArg());
 			return CommandResult.empty();
 		}
 		String worldName = args.<String>getOne("name").get();
@@ -37,14 +35,15 @@ public class CMDHardcore implements CommandExecutor {
 			return CommandResult.empty();
 		}
 		World world = Main.getGame().getServer().getWorld(worldName).get();
-		
-		ConfigManager loader = new ConfigManager("worlds.conf");
-		ConfigurationNode config = loader.getConfig();
-		
+
 		if(!args.hasAny("value")) {
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Hardcore").getString()));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Command: ",TextColors.GOLD, "/world hardcore <world> [true/false]"));
+			if(world.getProperties().isHardcore()){
+				src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, "true"));
+			}else{
+				src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, "false"));
+			}
+			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Command: ", invalidArg()));
 			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
 			
 			return CommandResult.success();
@@ -55,20 +54,22 @@ public class CMDHardcore implements CommandExecutor {
 		try{
 			bool = Boolean.parseBoolean(value);
 		}catch(Exception e){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Invalid Argument\n"));
-			src.sendMessage(Texts.of(TextColors.GOLD, "/world hardcore <world> [true/false]"));
+			src.sendMessage(invalidArg());
 			return CommandResult.empty();	
 		}
-		
+
 		world.getProperties().setHardcore(bool);
-		
-		config.getNode("Worlds", world.getName(), "Hardcore").setValue(true);
-		
+
 		src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set hardcore of world ", worldName, " to ", value));
 
-		loader.save();
-		
 		return CommandResult.success();
+	}
+	
+	private Text invalidArg(){
+		Text t1 = Texts.of(TextColors.GOLD, "/world hardcore ");
+		Text t2 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("<world> ")).build();
+		Text t3 = Texts.of(TextColors.GOLD, "[true/false]");
+		return Texts.of(t1,t2,t3);
 	}
 
 }

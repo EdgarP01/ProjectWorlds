@@ -1,5 +1,6 @@
 package com.gmail.trentech.pjw;
 
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -8,15 +9,19 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
+import org.spongepowered.api.extra.skylands.SkylandsWorldGeneratorModifier;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.commands.CommandManager;
 import com.gmail.trentech.pjw.events.EventManager;
 import com.gmail.trentech.pjw.events.PortalEventManager;
 import com.gmail.trentech.pjw.events.SignEventManager;
+import com.gmail.trentech.pjw.modifiers.Modifiers;
+import com.gmail.trentech.pjw.modifiers.voidd.VoidWorldGeneratorModifier;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Resource;
 import com.gmail.trentech.pjw.utils.Tasks;
@@ -41,12 +46,19 @@ public class Main {
     	getGame().getEventManager().registerListeners(this, new SignEventManager());
     	getGame().getEventManager().registerListeners(this, new PortalEventManager());
     	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
+    	
+    	Modifiers.put("SKY",  new SkylandsWorldGeneratorModifier());
+    	Modifiers.put("VOID",  new VoidWorldGeneratorModifier());
+    	
+    	for(Entry<String, WorldGeneratorModifier> entry : Modifiers.getAll().entrySet()){
+    		getGame().getRegistry().registerWorldGeneratorModifier(entry.getValue());
+    	}
     }
 
     @Listener
     public void onStartedServer(GameStartedServerEvent event) {
     	getLog().info("Initializing...");
-    	
+
     	new ConfigManager();
     	new ConfigManager("worlds.conf");
 
@@ -66,7 +78,7 @@ public class Main {
 	public static PluginContainer getPlugin() {
 		return plugin;
 	}
-	
+
 	private void loadWorlds(){
 		getLog().info("Loading worlds...");
 		for(WorldProperties world : getGame().getServer().getUnloadedWorlds()){
