@@ -104,7 +104,7 @@ public class CommandManager {
 	public CommandSpec cmdTeleport = CommandSpec.builder()
 		    .description(Texts.of("Teleport to world"))
 		    .permission("pjw.cmd.world.teleport")
-		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("arg0"))), GenericArguments.optional(GenericArguments.string(Texts.of("arg1"))), GenericArguments.optional(GenericArguments.string(Texts.of("arg1"))))
 		    .executor(new CMDTeleport())
 		    .build();
 	

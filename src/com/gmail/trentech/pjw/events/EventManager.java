@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.events;
 
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.mutable.entity.JoinData;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
@@ -11,6 +12,7 @@ import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.event.entity.living.player.RespawnPlayerEvent;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.world.ChangeWorldWeatherEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.world.World;
@@ -23,6 +25,25 @@ import com.gmail.trentech.pjw.utils.ConfigManager;
 import ninja.leaping.configurate.ConfigurationNode;
 
 public class EventManager {
+	
+	@Listener
+	public void onPlayerJoin(ClientConnectionEvent.Join event) {
+	    Player player = event.getTargetEntity();
+	    
+	    // NOT IMPLEMENTED YET
+		if(player.get(JoinData.class).isPresent()){
+			return;
+		}
+		
+		String worldName = new ConfigManager().getConfig().getNode("Options", "Join-Spawn").getString();
+		
+		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
+			return;
+		}
+		World world = Main.getGame().getServer().getWorld(worldName).get();
+		
+		player.setLocationSafely(world.getSpawnLocation());
+	}
 	
 	@Listener
 	public void onLoadWorldEvent(LoadWorldEvent event){
