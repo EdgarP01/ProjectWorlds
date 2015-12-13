@@ -17,7 +17,9 @@ import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.commands.CommandManager;
+import com.gmail.trentech.pjw.events.ButtonEventManager;
 import com.gmail.trentech.pjw.events.EventManager;
+import com.gmail.trentech.pjw.events.PlateEventManager;
 import com.gmail.trentech.pjw.events.PortalEventManager;
 import com.gmail.trentech.pjw.events.SignEventManager;
 import com.gmail.trentech.pjw.modifiers.Modifiers;
@@ -45,6 +47,9 @@ public class Main {
     	getGame().getEventManager().registerListeners(this, new EventManager());
     	getGame().getEventManager().registerListeners(this, new SignEventManager());
     	getGame().getEventManager().registerListeners(this, new PortalEventManager());
+    	getGame().getEventManager().registerListeners(this, new ButtonEventManager());
+    	getGame().getEventManager().registerListeners(this, new PlateEventManager());
+    	
     	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
     	
     	Modifiers.put("SKY",  new SkylandsWorldGeneratorModifier());

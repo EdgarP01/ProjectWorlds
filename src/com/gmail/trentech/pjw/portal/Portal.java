@@ -98,7 +98,7 @@ public class Portal implements Iterable<BlockSnapshot> {
 
 	    	ConfigManager loader = new ConfigManager("portals.conf");
 			
-			if(loader.portalExists(locationName)){
+			if(loader.getPortal(locationName) != null){
 				return null;
 			}
 			

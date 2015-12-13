@@ -150,6 +150,20 @@ public class CommandManager {
 		    .executor(new CMDGamerule())
 		    .build();
 	
+	public CommandSpec cmdButton = CommandSpec.builder()
+		    .description(Texts.of("place a teleport button"))
+		    .permission("pjw.cmd.world.button")
+		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
+		    .executor(new CMDButton())
+		    .build();
+	
+	public CommandSpec cmdPlate = CommandSpec.builder()
+		    .description(Texts.of("place a teleport pressure plate"))
+		    .permission("pjw.cmd.world.plate")
+		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
+		    .executor(new CMDPlate())
+		    .build();
+	
 	public CommandSpec cmdWorld = CommandSpec.builder()
 			.description(Texts.of("Base command"))
 			.permission("pjw.cmd.world")
@@ -173,6 +187,8 @@ public class CommandManager {
 			.child(cmdUnload, "unload", "u")
 			.child(cmdLoad, "load", "ld")
 			.child(cmdGamerule, "gamerule", "gr")
+			.child(cmdButton, "button", "b")
+			.child(cmdPlate, "plate", "pl")
 			.executor(new CMDWorld())
 			.build();
 }

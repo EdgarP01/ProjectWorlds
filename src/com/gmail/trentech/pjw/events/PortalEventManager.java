@@ -47,12 +47,12 @@ public class PortalEventManager {
 			Location<World> location = transaction.getFinal().getLocation().get();		
 			String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
 
-			if(loader.portalExists(locationName)){
+			if(loader.getPortal(locationName) != null){
 				if(!player.hasPermission("pjw.portal.place")){
 					player.sendMessage(Texts.of(TextColors.DARK_RED, "you do not have permission"));
 					event.setCancelled(true);
 				}else{
-					loader.removeLocation(locationName);
+					loader.removePortalLocation(locationName);
 					player.sendMessage(Texts.of(TextColors.DARK_RED, "Broke Portal"));
 				}
 			}
@@ -77,12 +77,12 @@ public class PortalEventManager {
 			Location<World> location = transaction.getFinal().getLocation().get();		
 			String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
 
-			if(loader.portalExists(locationName)){
+			if(loader.getPortal(locationName) != null){
 				if(!player.hasPermission("pjw.portal.break")){
 					player.sendMessage(Texts.of(TextColors.DARK_RED, "you do not have permission"));
 					event.setCancelled(true);
 				}else{
-					loader.removeLocation(locationName);
+					loader.removePortalLocation(locationName);
 					player.sendMessage(Texts.of(TextColors.DARK_RED, "Broke Portal"));
 				}
 			}
@@ -143,7 +143,7 @@ public class PortalEventManager {
         	Location<World> location = event.getTargetBlock().getLocation().get();
         	String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
         	
-        	if(loaderPortals.removeLocation(locationName)){
+        	if(loaderPortals.removePortalLocation(locationName)){
 				PortalBuilder.getActiveBuilders().remove(player);
 				
                 player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Portal has been removed"));
