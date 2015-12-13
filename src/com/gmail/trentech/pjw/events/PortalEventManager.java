@@ -15,12 +15,15 @@ import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.text.title.Titles;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.commands.CMDYes;
 import com.gmail.trentech.pjw.portal.Portal;
 import com.gmail.trentech.pjw.portal.PortalBuilder;
 import com.gmail.trentech.pjw.utils.ConfigManager;
@@ -118,7 +121,11 @@ public class PortalEventManager {
 		
 		World world = Main.getGame().getServer().getWorld(worldName).get();
 		
-		player.setLocationSafely(world.getSpawnLocation());
+		if(!player.setLocationSafely(world.getSpawnLocation())){
+			CMDYes.players.put(player, world.getSpawnLocation());
+			player.sendMessage(Texts.builder().color(TextColors.DARK_RED).append(Texts.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.runCommand("/yes")).append(Texts.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
+			return;
+		}
 		
 		player.sendTitle(Titles.of(Texts.of(TextColors.GOLD, world.getName()), Texts.of(TextColors.DARK_PURPLE, "x: ", world.getSpawnLocation().getBlockX(), ", y: ", world.getSpawnLocation().getBlockY(),", z: ", world.getSpawnLocation().getBlockZ())));
 	}

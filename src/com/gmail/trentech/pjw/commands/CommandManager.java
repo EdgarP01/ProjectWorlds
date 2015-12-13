@@ -164,6 +164,10 @@ public class CommandManager {
 		    .executor(new CMDPlate())
 		    .build();
 	
+	public CommandSpec cmdYes = CommandSpec.builder()
+		    .executor(new CMDYes())
+		    .build();
+	
 	public CommandSpec cmdWorld = CommandSpec.builder()
 			.description(Texts.of("Base command"))
 			.permission("pjw.cmd.world")

@@ -10,6 +10,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.text.title.Titles;
 import org.spongepowered.api.world.World;
 
@@ -19,7 +20,6 @@ public class CMDTeleport implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-
 		if(!args.hasAny("arg0")) {
 			Text t1 = Texts.of(TextColors.GOLD, "/world teleport ");
 			Text t2 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Enter the player you want to teleport"))).append(Texts.of("[player] ")).build();
@@ -93,9 +93,10 @@ public class CMDTeleport implements CommandExecutor {
 		}
 
 		if(((Player) src) != player){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Teleport Failed"));
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "Failed to teleport ", player.getName()));
 		}else{
-			player.sendMessage(Texts.of(TextColors.DARK_RED, "Teleport Failed"));
+			CMDYes.players.put(player, world.getSpawnLocation());
+			player.sendMessage(Texts.builder().color(TextColors.DARK_RED).append(Texts.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.runCommand("/yes")).append(Texts.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
 		}
 		
 		return CommandResult.empty();

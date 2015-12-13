@@ -70,6 +70,12 @@ public class CMDWorld implements CommandExecutor {
 		if(src.hasPermission("pjw.cmd.world.portal")) {
 			src.sendMessage(Texts.of(TextColors.GOLD, "/world portal"));	
 		}
+		if(src.hasPermission("pjw.cmd.world.plate")) {
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world plate"));	
+		}
+		if(src.hasPermission("pjw.cmd.world.button")) {
+			src.sendMessage(Texts.of(TextColors.GOLD, "/world button"));	
+		}
 		if(src.hasPermission("pjw.cmd.world.teleport")) {
 			src.sendMessage(Texts.of(TextColors.GOLD, "/world teleport"));	
 		}

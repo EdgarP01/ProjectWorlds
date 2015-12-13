@@ -1,8 +1,12 @@
 package com.gmail.trentech.pjw.commands;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
 
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -13,10 +17,12 @@ import org.spongepowered.api.text.TextBuilder;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.DimensionType;
 import org.spongepowered.api.world.DimensionTypes;
 import org.spongepowered.api.world.GeneratorType;
 import org.spongepowered.api.world.GeneratorTypes;
+import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.WorldBuilder;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
@@ -77,7 +83,29 @@ public class CMDCreate implements CommandExecutor {
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "something went wrong"));
 			return CommandResult.empty();
 		}
-	
+
+		World world = load.get();
+		
+		List<Location<World>> list = new ArrayList<>();
+		
+		Location<World> center = world.getSpawnLocation();
+		Location<World> south = center.getRelative(Direction.SOUTH);
+		Location<World> north = center.getRelative(Direction.NORTH);
+		
+		list.add(center);
+		list.add(south);
+		list.add(north);
+		list.add(center.getRelative(Direction.EAST));
+		list.add(center.getRelative(Direction.WEST));
+		list.add(south.getRelative(Direction.EAST));
+		list.add(south.getRelative(Direction.WEST));
+		list.add(north.getRelative(Direction.EAST));
+		list.add(north.getRelative(Direction.WEST));
+
+		for(Location<World> location : list){
+			location.setBlock(Main.getGame().getRegistry().createBuilder(BlockState.Builder.class).blockType(BlockTypes.STONE).build());
+		}
+		
 		src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " created successfully"));
 		return CommandResult.success();
 	}
