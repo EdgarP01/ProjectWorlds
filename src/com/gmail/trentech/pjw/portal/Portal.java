@@ -8,14 +8,12 @@ import java.util.UUID;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.effect.particle.ParticleEffect;
-import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import com.flowpowered.math.vector.Vector3d;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Resource;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
@@ -145,13 +143,8 @@ public class Portal implements Iterable<BlockSnapshot> {
             		location.setBlock(block);
             	}
         	}
-            location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(5).build(), location.getPosition().add(.2,.2,.4));
-            location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(5).build(), location.getPosition().add(.3,.8,.2));
-            location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(5).build(), location.getPosition().add(.7,.6,.9));
-            location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(5).build(), location.getPosition().add(.6,.3,.6));
-            location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(5).build(), location.getPosition().add(.4,.9,.5));
-
-        	//location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.EXPLOSION_LARGE).build(), location.getPosition().add(.5,.5,.5));
+        	
+        	Resource.spawnParticles(location, 1.0, false);
         }
         
         String uuid = UUID.randomUUID().toString();

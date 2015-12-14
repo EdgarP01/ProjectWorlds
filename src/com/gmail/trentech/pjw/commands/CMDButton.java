@@ -10,7 +10,7 @@ import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.events.ButtonEventManager;
+import com.gmail.trentech.pjw.listeners.ButtonEventManager;
 
 public class CMDButton implements CommandExecutor {
 

@@ -10,7 +10,7 @@ import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.events.PlateEventManager;
+import com.gmail.trentech.pjw.listeners.PlateEventManager;
 
 public class CMDPlate implements CommandExecutor {
 

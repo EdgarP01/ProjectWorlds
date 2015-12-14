@@ -10,13 +10,11 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
-import org.spongepowered.api.text.title.Titles;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.Resource;
+import com.gmail.trentech.pjw.events.TeleportEvent;
 
 public class CMDTeleport implements CommandExecutor {
 
@@ -73,38 +71,24 @@ public class CMDTeleport implements CommandExecutor {
 		}
 		World world = Main.getGame().getServer().getWorld(worldName).get();
 
-		Location<World> playerLocation = player.getLocation();
-		
-		boolean result = true;
+		Location<World> dest = world.getSpawnLocation();
+
 		if(isValidLocation(coords)){
 			String[] location = coords.split(",");
-			if(!player.setLocationSafely(world.getLocation(Integer.parseInt(location[0]), Integer.parseInt(location[1]), Integer.parseInt(location[2])))){
-				result = false;
-			}
-		}else{
-			if(!player.setLocationSafely(world.getSpawnLocation())){
-				result = false;
-			}
+			dest = world.getLocation(Integer.parseInt(location[0]), Integer.parseInt(location[1]), Integer.parseInt(location[2]));
 		}
 
-		if(result){
+		boolean result = Main.getGame().getEventManager().post(new TeleportEvent(player, player.getLocation(), dest));
+		
+		if(!result){
 			if(((Player) src) != player){
 				src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Teleported ", player.getName(), " to ", world.getName()));
 			}
-			
-			player.sendTitle(Titles.of(Texts.of(TextColors.GOLD, world.getName()), Texts.of(TextColors.DARK_PURPLE, "x: ", player.getLocation().getBlockX(), ", y: ", player.getLocation().getBlockY(),", z: ", player.getLocation().getBlockZ())));
-			
-			Resource.particles(playerLocation);
-			Resource.particles(player.getLocation());
-			
 			return CommandResult.success();
 		}
-
+		
 		if(((Player) src) != player){
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "Failed to teleport ", player.getName()));
-		}else{
-			CMDYes.players.put(player, world.getSpawnLocation());
-			player.sendMessage(Texts.builder().color(TextColors.DARK_RED).append(Texts.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.runCommand("/yes")).append(Texts.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
 		}
 		
 		return CommandResult.empty();

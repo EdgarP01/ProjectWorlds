@@ -1,4 +1,4 @@
-package com.gmail.trentech.pjw.events;
+package com.gmail.trentech.pjw.listeners;
 
 import java.util.Optional;
 
@@ -17,16 +17,12 @@ import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
-import org.spongepowered.api.text.title.Titles;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.commands.CMDYes;
-import com.gmail.trentech.pjw.utils.Resource;
+import com.gmail.trentech.pjw.events.TeleportEvent;
 
 public class SignEventManager {
 	
@@ -106,18 +102,19 @@ public class SignEventManager {
 			return;
 		}
 		
-		Location<World> playerLocation = player.getLocation();
-		
-		if(!player.setLocationSafely(world.getSpawnLocation())){
-			CMDYes.players.put(player, world.getSpawnLocation());
-			player.sendMessage(Texts.builder().color(TextColors.DARK_RED).append(Texts.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.runCommand("/yes")).append(Texts.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
-			return;
-		}
-
-		Resource.particles(playerLocation);
-		Resource.particles(player.getLocation());
-		
-		player.sendTitle(Titles.of(Texts.of(TextColors.GOLD, world.getName()), Texts.of(TextColors.DARK_PURPLE, "x: ", world.getSpawnLocation().getBlockX(), ", y: ", world.getSpawnLocation().getBlockY(),", z: ", world.getSpawnLocation().getBlockZ())));
+		Main.getGame().getEventManager().post(new TeleportEvent(player, player.getLocation(), world.getSpawnLocation()));
+//		Location<World> playerLocation = player.getLocation();
+//		
+//		if(!player.setLocationSafely(world.getSpawnLocation())){
+//			CMDYes.players.put(player, world.getSpawnLocation());
+//			player.sendMessage(Texts.builder().color(TextColors.DARK_RED).append(Texts.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.runCommand("/yes")).append(Texts.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
+//			return;
+//		}
+//
+//		Resource.particles(playerLocation);
+//		Resource.particles(player.getLocation());
+//		
+//		player.sendTitle(Titles.of(Texts.of(TextColors.GOLD, world.getName()), Texts.of(TextColors.DARK_PURPLE, "x: ", world.getSpawnLocation().getBlockX(), ", y: ", world.getSpawnLocation().getBlockY(),", z: ", world.getSpawnLocation().getBlockZ())));
 	}
 	
 	@Listener

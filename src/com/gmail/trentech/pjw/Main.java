@@ -17,11 +17,11 @@ import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.commands.CommandManager;
-import com.gmail.trentech.pjw.events.ButtonEventManager;
-import com.gmail.trentech.pjw.events.EventManager;
-import com.gmail.trentech.pjw.events.PlateEventManager;
-import com.gmail.trentech.pjw.events.PortalEventManager;
-import com.gmail.trentech.pjw.events.SignEventManager;
+import com.gmail.trentech.pjw.listeners.ButtonEventManager;
+import com.gmail.trentech.pjw.listeners.EventManager;
+import com.gmail.trentech.pjw.listeners.PlateEventManager;
+import com.gmail.trentech.pjw.listeners.PortalEventManager;
+import com.gmail.trentech.pjw.listeners.SignEventManager;
 import com.gmail.trentech.pjw.modifiers.Modifiers;
 import com.gmail.trentech.pjw.modifiers.voidd.VoidWorldGeneratorModifier;
 import com.gmail.trentech.pjw.utils.ConfigManager;
