@@ -46,8 +46,8 @@ public class SignEventManager {
 			return;
 		}
 
-		if(!player.hasPermission("pjw.sign.place")) {
-			player.sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to place portal signs"));
+		if(!player.hasPermission("pjw.sign.place." + player.getWorld().getName())) {
+			player.sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to place portal signs in this world"));
 			event.setCancelled(true);
 			return;
 		}

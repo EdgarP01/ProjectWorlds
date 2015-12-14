@@ -23,8 +23,41 @@ import com.gmail.trentech.pjw.portal.Portal;
 import com.gmail.trentech.pjw.portal.PortalBuilder;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 
+import ninja.leaping.configurate.ConfigurationNode;
+
 public class PortalEventManager {
 
+	@Listener
+	public void onPortalConstructEvent(PortalConstructEvent event){
+		Player player = event.getPlayer();
+		
+		if(!player.hasPermission("pjw.portal.create." + event.getWorldName())){
+        	event.getPlayer().sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to create portals in this world"));
+        	event.setCancelled(true);
+        	return;
+		}
+		
+        if(event.getLocations() == null){
+        	player.sendMessage(Texts.of(TextColors.DARK_RED, "Portals cannot over lap over portals"));
+        	event.setCancelled(true);
+        	return;
+        }
+        
+        ConfigurationNode config = new ConfigManager().getConfig();
+        
+        int size = config.getNode("Options", "Portal", "Size").getInt();
+        if(event.getLocations().size() > size){
+        	player.sendMessage(Texts.of(TextColors.DARK_RED, "Portals cannot be larger than ", size, " blocks"));
+        	event.setCancelled(true);
+        	return;
+        }
+        
+        PortalBuilder.getActiveBuilders().remove(player);
+        PortalBuilder.getCreators().add(player);
+        
+        player.sendMessage(Texts.of(TextColors.DARK_GREEN, "New portal created"));
+	}
+	
 	@Listener
 	public void onChangeBlockEvent(ChangeBlockEvent.Place event) {
 		if (!event.getCause().first(Player.class).isPresent()) {
@@ -155,9 +188,12 @@ public class PortalEventManager {
 			player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Starting point selected"));
 			event.getTargetBlock().getLocation().get().getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.REDSTONE).build(), event.getTargetBlock().getLocation().get().getPosition().add(0, 1, 0));
 		}else{
-			Portal portal = new Portal(player, event.getTargetBlock().getState().getType(), builder.getWorld(), builder.getLocation(), event.getTargetBlock().getLocation().get());
+			Portal portal = new Portal(event.getTargetBlock().getState().getType(), builder.getWorld(), builder.getLocation(), event.getTargetBlock().getLocation().get());
 
-			portal.build();
+			boolean portalConstructEvent = Main.getGame().getEventManager().post(new PortalConstructEvent(player, portal.getLocations(), builder.getWorld()));
+			if(!portalConstructEvent) {
+				portal.build();
+			}
 		}
 	}
 }

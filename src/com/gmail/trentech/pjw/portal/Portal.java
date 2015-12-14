@@ -11,9 +11,6 @@ import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -26,17 +23,17 @@ public class Portal implements Iterable<BlockSnapshot> {
 
 	protected final String worldName;
 	protected final String worldDest;
-	protected final Player player;
+
 	protected BlockType blockType = BlockTypes.STONE;
 	protected final int x1, y1, z1;
 	protected final int x2, y2, z2;
 
-	public Portal(Player player, BlockType blockType, String worldDest, Location<World> loc1, Location<World> loc2) {
+	public Portal(BlockType blockType, String worldDest, Location<World> loc1, Location<World> loc2) {
 		if (!loc1.getExtent().equals(loc2.getExtent())){
 			throw new IllegalArgumentException("Locations must be on the same world");
 		}
 		this.worldDest = worldDest;
-		this.player = player;
+
 		if(blockType != null){
 			this.blockType = blockType;
 		}
@@ -50,8 +47,7 @@ public class Portal implements Iterable<BlockSnapshot> {
 		this.z2 = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
 	}
 	
-	public Portal(Player player, BlockType blockType, String worldName, String worldDest, int x1, int y1, int z1, int x2, int y2, int z2) {
-		this.player = player;
+	public Portal(BlockType blockType, String worldName, String worldDest, int x1, int y1, int z1, int x2, int y2, int z2) {
 		if(blockType != null){
 			this.blockType = blockType;
 		}
@@ -133,34 +129,16 @@ public class Portal implements Iterable<BlockSnapshot> {
 	    return locations;
 	}
 	
-	public boolean build(){
+	public void build(){
 
-		if(blockType == null){
-			blockType = BlockTypes.STONE;
-		}
-		
-		PortalBuilder.getActiveBuilders().remove(player);
-		
-        if(getLocations() == null){
-        	player.sendMessage(Texts.of(TextColors.DARK_RED, "Portals cannot over lap over portals"));
-            return false;
-        }
         List<String> locations = getLocations();
-
-        ConfigurationNode config = new ConfigManager().getConfig();
-        
-        int size = config.getNode("Options", "Portal", "Size").getInt();
-        if(locations.size() > size){
-        	player.sendMessage(Texts.of(TextColors.DARK_RED, "Portals cannot be larger than ", size, " blocks"));
-        	return false;
-        }
-        
-        PortalBuilder.getCreators().add(player);
 
         for(String loc : locations){
         	String[] info = loc.split("\\.");
 
         	Location<World> location = Main.getGame().getServer().getWorld(info[0]).get().getLocation(Integer.parseInt(info[1]), Integer.parseInt(info[2]), Integer.parseInt(info[3]));
+        	
+        	ConfigurationNode config = new ConfigManager().getConfig();
         	
         	if(config.getNode("Options", "Portal", "Replace-Frame").getBoolean()){	
             	if(location.getBlockType() != BlockTypes.AIR){
@@ -179,10 +157,6 @@ public class Portal implements Iterable<BlockSnapshot> {
         configPortals.getNode("Portals", uuid, "World").setValue(worldDest);
 
         loaderPortals.save();
-      
-        player.sendMessage(Texts.of(TextColors.DARK_GREEN, "New portal created"));
-        
-		return true;
 	}
 
 }

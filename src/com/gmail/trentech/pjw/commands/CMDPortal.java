@@ -14,6 +14,7 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.events.PortalConstructEvent;
 import com.gmail.trentech.pjw.portal.Portal;
 import com.gmail.trentech.pjw.portal.PortalBuilder;
 
@@ -70,9 +71,12 @@ public class CMDPortal implements CommandExecutor {
 				worldPlace = args.<String>getOne("world").get();
 			}
 			
-			Portal portal = new Portal(player, block, worldPlace, worldName, Integer.parseInt(point1[0]), Integer.parseInt(point1[1]), Integer.parseInt(point1[2]), Integer.parseInt(point2[0]), Integer.parseInt(point2[1]), Integer.parseInt(point2[2]));
+			Portal portal = new Portal(block, worldPlace, worldName, Integer.parseInt(point1[0]), Integer.parseInt(point1[1]), Integer.parseInt(point1[2]), Integer.parseInt(point2[0]), Integer.parseInt(point2[1]), Integer.parseInt(point2[2]));
 			
-			portal.build();
+			boolean portalConstructEvent = Main.getGame().getEventManager().post(new PortalConstructEvent(player, portal.getLocations(), worldName));
+			if(!portalConstructEvent) {
+				portal.build();
+			}
 
 			return CommandResult.success();
 		}

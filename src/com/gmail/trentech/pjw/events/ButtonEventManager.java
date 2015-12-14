@@ -126,8 +126,14 @@ public class ButtonEventManager {
 		}
 
 		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
-			if((transaction.getFinal().getState().getType() == BlockTypes.WOODEN_BUTTON) || (transaction.getFinal().getState().getType() == BlockTypes.STONE_BUTTON)){				
-				Location<World> location = transaction.getFinal().getLocation().get();		
+			if((transaction.getFinal().getState().getType() == BlockTypes.WOODEN_BUTTON) || (transaction.getFinal().getState().getType() == BlockTypes.STONE_BUTTON)){
+				Location<World> location = transaction.getFinal().getLocation().get();
+				
+				if(!player.hasPermission("pjw.button.place." + location.getExtent().getName())){
+		        	player.sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to create teleport buttons in this world"));
+		        	return;
+				}
+				
 				String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
 
 	            ConfigManager loader = new ConfigManager("portals.conf");

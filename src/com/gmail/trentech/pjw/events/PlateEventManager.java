@@ -131,7 +131,13 @@ public class PlateEventManager {
 
 		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
 			if((transaction.getFinal().getState().getType() == BlockTypes.HEAVY_WEIGHTED_PRESSURE_PLATE) || (transaction.getFinal().getState().getType() == BlockTypes.LIGHT_WEIGHTED_PRESSURE_PLATE) || (transaction.getFinal().getState().getType() == BlockTypes.STONE_PRESSURE_PLATE) || (transaction.getFinal().getState().getType() == BlockTypes.WOODEN_PRESSURE_PLATE)){		
-				Location<World> location = transaction.getFinal().getLocation().get();		
+				Location<World> location = transaction.getFinal().getLocation().get();
+				
+				if(!player.hasPermission("pjw.button.place." + location.getExtent().getName())){
+		        	player.sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to create teleport pressure playes in this world"));
+		        	return;
+				}
+				
 				String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
 
 	            ConfigManager loader = new ConfigManager("portals.conf");
