@@ -11,12 +11,10 @@ public class PortalConstructEvent extends AbstractEvent implements Cancellable {
 	private boolean cancelled = false;
 	private Player player;
 	private List<String> locations;
-	private String worldName;
 	
-	public PortalConstructEvent(Player player, List<String> locations, String worldName){
+	public PortalConstructEvent(Player player, List<String> locations){
 		this.player = player;
 		this.locations = locations;
-		this.worldName = worldName;
 	}
 	
 	@Override
@@ -35,9 +33,5 @@ public class PortalConstructEvent extends AbstractEvent implements Cancellable {
 
 	public Player getPlayer() {
 		return player;
-	}
-
-	public String getWorldName() {
-		return worldName;
 	}
 }

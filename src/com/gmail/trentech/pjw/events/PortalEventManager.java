@@ -31,7 +31,7 @@ public class PortalEventManager {
 	public void onPortalConstructEvent(PortalConstructEvent event){
 		Player player = event.getPlayer();
 		
-		if(!player.hasPermission("pjw.portal.create." + event.getWorldName())){
+		if(!player.hasPermission("pjw.portal.create." + player.getWorld().getName())){
         	event.getPlayer().sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to create portals in this world"));
         	event.setCancelled(true);
         	return;
@@ -190,7 +190,7 @@ public class PortalEventManager {
 		}else{
 			Portal portal = new Portal(event.getTargetBlock().getState().getType(), builder.getWorld(), builder.getLocation(), event.getTargetBlock().getLocation().get());
 
-			boolean portalConstructEvent = Main.getGame().getEventManager().post(new PortalConstructEvent(player, portal.getLocations(), builder.getWorld()));
+			boolean portalConstructEvent = Main.getGame().getEventManager().post(new PortalConstructEvent(player, portal.getLocations()));
 			if(!portalConstructEvent) {
 				portal.build();
 			}

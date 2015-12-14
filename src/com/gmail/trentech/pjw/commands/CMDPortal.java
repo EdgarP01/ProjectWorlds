@@ -73,7 +73,7 @@ public class CMDPortal implements CommandExecutor {
 			
 			Portal portal = new Portal(block, worldPlace, worldName, Integer.parseInt(point1[0]), Integer.parseInt(point1[1]), Integer.parseInt(point1[2]), Integer.parseInt(point2[0]), Integer.parseInt(point2[1]), Integer.parseInt(point2[2]));
 			
-			boolean portalConstructEvent = Main.getGame().getEventManager().post(new PortalConstructEvent(player, portal.getLocations(), worldName));
+			boolean portalConstructEvent = Main.getGame().getEventManager().post(new PortalConstructEvent(player, portal.getLocations()));
 			if(!portalConstructEvent) {
 				portal.build();
 			}
