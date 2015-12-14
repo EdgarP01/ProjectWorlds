@@ -1,11 +1,16 @@
 package com.gmail.trentech.pjw.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.service.pagination.PaginationBuilder;
+import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
@@ -39,10 +44,17 @@ public class CMDDifficulty implements CommandExecutor {
 		World world = Main.getGame().getServer().getWorld(worldName).get();
 
 		if(!args.hasAny("value")) {
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Difficulty: ", TextColors.GOLD, world.getProperties().getDifficulty().getName().toUpperCase()));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Command: ", invalidArg()));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+			
+			pages.title(Texts.builder().color(TextColors.DARK_PURPLE).append(Texts.of(TextColors.GOLD, world.getName().toUpperCase())).build());
+			
+			List<Text> list = new ArrayList<>();
+			list.add(Texts.of(TextColors.DARK_PURPLE, "Difficulty: ", TextColors.GOLD, world.getProperties().getDifficulty().getName().toUpperCase()));
+			list.add(Texts.of(TextColors.DARK_PURPLE, "Command: ", invalidArg()));
+			
+			pages.contents(list);
+			
+			pages.sendTo(src);
 			
 			return CommandResult.success();
 		}

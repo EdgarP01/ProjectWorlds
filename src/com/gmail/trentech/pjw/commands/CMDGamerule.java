@@ -1,5 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.spongepowered.api.command.CommandException;
@@ -8,8 +10,9 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.service.pagination.PaginationBuilder;
+import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.TextBuilder;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
@@ -40,14 +43,23 @@ public class CMDGamerule implements CommandExecutor {
 		World world = Main.getGame().getServer().getWorld(worldName).get();
 		
 		if(!args.hasAny("rule")) {
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
-			TextBuilder builder = Texts.builder();
+			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+			
+			pages.title(Texts.builder().color(TextColors.DARK_PURPLE).append(Texts.of(TextColors.GOLD, world.getName().toUpperCase())).build());
+			
+			List<Text> list = new ArrayList<>();
+			
 			for(Entry<String, String> gamerule : world.getGameRules().entrySet()){
-				src.sendMessage(Texts.of(TextColors.DARK_PURPLE, gamerule.getKey(), ": ", TextColors.GOLD, gamerule.getValue()));
-				builder.append(Texts.of(gamerule.getKey() + "\n")); 
+				list.add(Texts.of(TextColors.DARK_PURPLE, gamerule.getKey(), ": ", TextColors.GOLD, gamerule.getValue()));
+
 			}
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "\nCommand: ",invalidArg()));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+
+			list.add(Texts.of(TextColors.DARK_PURPLE, "Command: ", invalidArg()));
+			
+			pages.contents(list);
+			
+			pages.sendTo(src);
+
 			return CommandResult.empty();
 		}
 		String rule = args.<String>getOne("rule").get();
@@ -58,11 +70,18 @@ public class CMDGamerule implements CommandExecutor {
 		}
 		
 		if(!args.hasAny("value")) {
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, rule, ": ", TextColors.GOLD, world.getGameRule(rule).get()));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Command: ",invalidArg()));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 			
+			pages.title(Texts.builder().color(TextColors.DARK_PURPLE).append(Texts.of(TextColors.GOLD, world.getName().toUpperCase())).build());
+			
+			List<Text> list = new ArrayList<>();
+			list.add(Texts.of(TextColors.DARK_PURPLE, rule, ": ", TextColors.GOLD, world.getGameRule(rule).get()));
+			list.add(Texts.of(TextColors.DARK_PURPLE, "Command: ", invalidArg()));
+			
+			pages.contents(list);
+			
+			pages.sendTo(src);
+
 			return CommandResult.success();
 		}
 		String value = args.<String>getOne("value").get();

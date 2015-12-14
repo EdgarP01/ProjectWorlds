@@ -40,7 +40,7 @@ public class CMDSetSpawn implements CommandExecutor {
 			return CommandResult.success();
 		}
 		
-		String[] values = args.<String>getOne("value").get().split(", ");
+		String[] values = args.<String>getOne("value").get().split(",");
 
 		world.getProperties().setSpawnPosition(new Vector3i().add(Integer.parseInt(values[0]), Integer.parseInt(values[1]), Integer.parseInt(values[2])));
 		

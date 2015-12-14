@@ -168,6 +168,13 @@ public class CommandManager {
 		    .executor(new CMDYes())
 		    .build();
 	
+	public CommandSpec cmdHelp = CommandSpec.builder()
+		    .description(Texts.of("i need help"))
+		    .permission("pjw.cmd.world")
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("command"))))
+		    .executor(new CMDHelp())
+		    .build();
+	
 	public CommandSpec cmdWorld = CommandSpec.builder()
 			.description(Texts.of("Base command"))
 			.permission("pjw.cmd.world")
@@ -193,6 +200,7 @@ public class CommandManager {
 			.child(cmdGamerule, "gamerule", "gr")
 			.child(cmdButton, "button", "b")
 			.child(cmdPlate, "plate", "pl")
+			.child(cmdHelp, "help", "hp")
 			.executor(new CMDWorld())
 			.build();
 }

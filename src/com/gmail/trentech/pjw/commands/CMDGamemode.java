@@ -1,5 +1,8 @@
 package com.gmail.trentech.pjw.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -8,6 +11,8 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
+import org.spongepowered.api.service.pagination.PaginationBuilder;
+import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
@@ -45,11 +50,17 @@ public class CMDGamemode implements CommandExecutor {
 		ConfigurationNode config = loader.getConfig();
 		
 		if(!args.hasAny("value")) {
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "GameMode: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Gamemode").getString()));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Command: ",invalidArg()));
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
-			return CommandResult.success();
+			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+			
+			pages.title(Texts.builder().color(TextColors.DARK_PURPLE).append(Texts.of(TextColors.GOLD, world.getName().toUpperCase())).build());
+			
+			List<Text> list = new ArrayList<>();
+			list.add(Texts.of(TextColors.DARK_PURPLE, "GameMode: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Gamemode").getString()));
+			list.add(Texts.of(TextColors.DARK_PURPLE, "Command: ", invalidArg()));
+			
+			pages.contents(list);
+			
+			pages.sendTo(src);
 		}
 
 		GameMode gamemode = GameModes.SURVIVAL;

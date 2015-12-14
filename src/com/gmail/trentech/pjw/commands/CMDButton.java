@@ -39,5 +39,4 @@ public class CMDButton implements CommandExecutor {
 
 		return CommandResult.success();
 	}
-
 }

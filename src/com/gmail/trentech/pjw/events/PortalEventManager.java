@@ -1,11 +1,6 @@
 package com.gmail.trentech.pjw.events;
 
-import java.util.List;
-import java.util.UUID;
-
 import org.spongepowered.api.block.BlockSnapshot;
-import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
@@ -27,8 +22,6 @@ import com.gmail.trentech.pjw.commands.CMDYes;
 import com.gmail.trentech.pjw.portal.Portal;
 import com.gmail.trentech.pjw.portal.PortalBuilder;
 import com.gmail.trentech.pjw.utils.ConfigManager;
-
-import ninja.leaping.configurate.ConfigurationNode;
 
 public class PortalEventManager {
 
@@ -144,8 +137,7 @@ public class PortalEventManager {
 		PortalBuilder builder = PortalBuilder.getActiveBuilders().get(player);
 		
         ConfigManager loaderPortals = new ConfigManager("portals.conf");
-		ConfigurationNode configPortals = loaderPortals.getConfig();
-		
+
 		if(builder.getWorld() == null){
         	Location<World> location = event.getTargetBlock().getLocation().get();
         	String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
@@ -163,46 +155,9 @@ public class PortalEventManager {
 			player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Starting point selected"));
 			event.getTargetBlock().getLocation().get().getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.REDSTONE).build(), event.getTargetBlock().getLocation().get().getPosition().add(0, 1, 0));
 		}else{
-			Portal portal = new Portal(builder.getLocation(), event.getTargetBlock().getLocation().get());
+			Portal portal = new Portal(player, event.getTargetBlock().getState().getType(), builder.getWorld(), builder.getLocation(), event.getTargetBlock().getLocation().get());
 
-			PortalBuilder.getActiveBuilders().remove(player);
-			
-            if(portal.getLocations() == null){
-                player.sendMessage(Texts.of(TextColors.DARK_RED, "Portals cannot over lap over portals"));
-            	return;
-            }
-            List<String> locations = portal.getLocations();
-
-            ConfigurationNode config = new ConfigManager().getConfig();
-            
-            int size = config.getNode("Options", "Portal", "Size").getInt();
-            if(locations.size() > size){
-            	player.sendMessage(Texts.of(TextColors.DARK_RED, "Portals cannot be larger than ", size, " blocks"));
-            	return;
-            }
-            
-            PortalBuilder.getCreators().add(player);
-            
-            for(String loc : locations){
-            	String[] info = loc.split("\\.");
-
-            	Location<World> location = Main.getGame().getServer().getWorld(info[0]).get().getLocation(Integer.parseInt(info[1]), Integer.parseInt(info[2]), Integer.parseInt(info[3]));
-            	
-            	if(config.getNode("Options", "Portal", "Replace-Frame").getBoolean()){	
-                	if(location.getBlockType() != BlockTypes.AIR){
-            			location.setBlock(Main.getGame().getRegistry().createBuilder(BlockState.Builder.class).blockType(event.getTargetBlock().getState().getType()).build());
-                	}
-            	}
-            	location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.EXPLOSION_LARGE).build(), location.getPosition().add(0, 1, 0));
-            }
-            
-            String uuid = UUID.randomUUID().toString();
-            configPortals.getNode("Portals", uuid, "Locations").setValue(locations);
-            configPortals.getNode("Portals", uuid, "World").setValue(builder.getWorld());
-
-            loaderPortals.save();
-          
-            player.sendMessage(Texts.of(TextColors.DARK_GREEN, "New portal created"));
+			portal.build();
 		}
 	}
 }

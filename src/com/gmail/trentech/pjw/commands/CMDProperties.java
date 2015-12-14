@@ -1,11 +1,16 @@
 package com.gmail.trentech.pjw.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.service.pagination.PaginationBuilder;
+import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
@@ -47,36 +52,41 @@ public class CMDProperties implements CommandExecutor {
 		}
 		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
 		
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
-		src.sendMessage(Texts.of(TextColors.GOLD, "                    World Properties"));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Name: ", TextColors.GOLD, worldName));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "UUID: ", TextColors.GOLD, properties.getUniqueId().toString()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Dimension Type: ", TextColors.GOLD, properties.getDimensionType().getName().toUpperCase()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Generator Type: ", TextColors.GOLD, properties.getGeneratorType().getName().toUpperCase()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Difficulty: ", TextColors.GOLD, properties.getDifficulty().getName().toUpperCase()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "PVP: ", TextColors.GOLD, config.getNode("Worlds", worldName, "PVP").getString()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Respawn World: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Respawn-World").getString()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "GameMode: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Gamemode").getString()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Seed: ", TextColors.GOLD, properties.getSeed()));
+		PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+		
+		pages.title(Texts.builder().color(TextColors.DARK_PURPLE).append(Texts.of(TextColors.GOLD, "SETTINGS")).build());
+		
+		List<Text> list = new ArrayList<>();
+		list.add(Texts.of(TextColors.DARK_PURPLE, "Name: ", TextColors.GOLD, worldName));
+		list.add(Texts.of(TextColors.DARK_PURPLE, "UUID: ", TextColors.GOLD, properties.getUniqueId().toString()));
+		list.add(Texts.of(TextColors.DARK_PURPLE, "Dimension Type: ", TextColors.GOLD, properties.getDimensionType().getName().toUpperCase()));
+		list.add(Texts.of(TextColors.DARK_PURPLE, "Generator Type: ", TextColors.GOLD, properties.getGeneratorType().getName().toUpperCase()));
+		list.add(Texts.of(TextColors.DARK_PURPLE, "Difficulty: ", TextColors.GOLD, properties.getDifficulty().getName().toUpperCase()));
+		list.add(Texts.of(TextColors.DARK_PURPLE, "PVP: ", TextColors.GOLD, config.getNode("Worlds", worldName, "PVP").getString()));
+		list.add(Texts.of(TextColors.DARK_PURPLE, "Respawn World: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Respawn-World").getString()));
+		list.add(Texts.of(TextColors.DARK_PURPLE, "GameMode: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Gamemode").getString()));
+		list.add(Texts.of(TextColors.DARK_PURPLE, "Seed: ", TextColors.GOLD, properties.getSeed()));
 		if(properties.doesKeepSpawnLoaded()){
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Keep Spawn Loaded: ", TextColors.GOLD, "true"));
+			list.add(Texts.of(TextColors.DARK_PURPLE, "Keep Spawn Loaded: ", TextColors.GOLD, "true"));
 		}else{
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Keep Spawn Loaded: ", TextColors.GOLD, "false"));
+			list.add(Texts.of(TextColors.DARK_PURPLE, "Keep Spawn Loaded: ", TextColors.GOLD, "false"));
 		}
 		if(properties.isHardcore()){
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, "true"));
+			list.add(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, "true"));
 		}else{
-			src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, "false"));
+			list.add(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, "false"));
 		}
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Time:"));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "    - Lock: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Lock").getString()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "    - Set: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Set").getString()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "Weather:"));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "    - Lock: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Weather", "Lock").getString()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "    - Set: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Weather", "Set").getString()));
-		src.sendMessage(Texts.of(TextColors.DARK_PURPLE, "-----------------------------------------"));
+		list.add(Texts.of(TextColors.DARK_PURPLE, "Time:"));
+		list.add(Texts.of(TextColors.DARK_PURPLE, "    - Lock: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Lock").getString()));
+		list.add(Texts.of(TextColors.DARK_PURPLE, "    - Set: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Set").getString()));
+		list.add(Texts.of(TextColors.DARK_PURPLE, "Weather:"));
+		list.add(Texts.of(TextColors.DARK_PURPLE, "    - Lock: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Weather", "Lock").getString()));
+		list.add(Texts.of(TextColors.DARK_PURPLE, "    - Set: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Weather", "Set").getString()));
 		
+		pages.contents(list);
+		
+		pages.sendTo(src);
+
 		return CommandResult.success();
 	}
 
