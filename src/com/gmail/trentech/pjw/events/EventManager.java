@@ -25,7 +25,7 @@ import com.gmail.trentech.pjw.utils.ConfigManager;
 import ninja.leaping.configurate.ConfigurationNode;
 
 public class EventManager {
-	
+
 	@Listener
 	public void onPlayerJoin(ClientConnectionEvent.Join event) {
 	    Player player = event.getTargetEntity();
@@ -69,7 +69,7 @@ public class EventManager {
 	
 	// TEMPORARY FIX FOR WORLD SPECIFIC GAMEMODES - DOES NOT ALWAYS WORK
 	@Listener
-	public void onDisplaceEntityEvent(DisplaceEntityEvent.TargetPlayer event) {
+	public void onDisplaceEntityEvent(DisplaceEntityEvent event) {
 		if(!(event.getTargetEntity() instanceof Player)){
 			return;
 		}

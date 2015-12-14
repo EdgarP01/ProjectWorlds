@@ -12,9 +12,11 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.text.title.Titles;
+import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.Resource;
 
 public class CMDTeleport implements CommandExecutor {
 
@@ -71,6 +73,8 @@ public class CMDTeleport implements CommandExecutor {
 		}
 		World world = Main.getGame().getServer().getWorld(worldName).get();
 
+		Location<World> playerLocation = player.getLocation();
+		
 		boolean result = true;
 		if(isValidLocation(coords)){
 			String[] location = coords.split(",");
@@ -87,7 +91,11 @@ public class CMDTeleport implements CommandExecutor {
 			if(((Player) src) != player){
 				src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Teleported ", player.getName(), " to ", world.getName()));
 			}
+			
 			player.sendTitle(Titles.of(Texts.of(TextColors.GOLD, world.getName()), Texts.of(TextColors.DARK_PURPLE, "x: ", player.getLocation().getBlockX(), ", y: ", player.getLocation().getBlockY(),", z: ", player.getLocation().getBlockZ())));
+			
+			Resource.particles(playerLocation);
+			Resource.particles(player.getLocation());
 			
 			return CommandResult.success();
 		}

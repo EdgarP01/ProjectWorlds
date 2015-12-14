@@ -26,6 +26,7 @@ import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.commands.CMDYes;
+import com.gmail.trentech.pjw.utils.Resource;
 
 public class SignEventManager {
 	
@@ -105,12 +106,17 @@ public class SignEventManager {
 			return;
 		}
 		
+		Location<World> playerLocation = player.getLocation();
+		
 		if(!player.setLocationSafely(world.getSpawnLocation())){
 			CMDYes.players.put(player, world.getSpawnLocation());
 			player.sendMessage(Texts.builder().color(TextColors.DARK_RED).append(Texts.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.runCommand("/yes")).append(Texts.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
 			return;
 		}
 
+		Resource.particles(playerLocation);
+		Resource.particles(player.getLocation());
+		
 		player.sendTitle(Titles.of(Texts.of(TextColors.GOLD, world.getName()), Texts.of(TextColors.DARK_PURPLE, "x: ", world.getSpawnLocation().getBlockX(), ", y: ", world.getSpawnLocation().getBlockY(),", z: ", world.getSpawnLocation().getBlockZ())));
 	}
 	

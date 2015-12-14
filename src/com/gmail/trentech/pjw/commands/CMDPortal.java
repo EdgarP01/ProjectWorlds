@@ -1,5 +1,6 @@
 package com.gmail.trentech.pjw.commands;
 
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandException;
@@ -59,11 +60,12 @@ public class CMDPortal implements CommandExecutor {
 				return CommandResult.empty();
 			}
 			
-			BlockType block = BlockTypes.STONE;
+			BlockType blockType = BlockTypes.STONE;
 			if(Main.getGame().getRegistry().getType(BlockType.class, args.<String>getOne("block").get()).isPresent()){
-				block = Main.getGame().getRegistry().getType(BlockType.class, args.<String>getOne("block").get()).get();
+				blockType = Main.getGame().getRegistry().getType(BlockType.class, args.<String>getOne("block").get()).get();
 			}
-
+			BlockState block = BlockState.builder().blockType(blockType).build();
+			
 			String worldPlace;
 			if(!args.hasAny("world")) {
 				worldPlace = player.getWorld().getName();

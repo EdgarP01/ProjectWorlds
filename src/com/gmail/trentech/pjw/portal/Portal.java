@@ -7,13 +7,13 @@ import java.util.UUID;
 
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import com.flowpowered.math.vector.Vector3d;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 
@@ -24,18 +24,18 @@ public class Portal implements Iterable<BlockSnapshot> {
 	protected final String worldName;
 	protected final String worldDest;
 
-	protected BlockType blockType = BlockTypes.STONE;
+	protected BlockState block = BlockState.builder().blockType(BlockTypes.STONE).build();
 	protected final int x1, y1, z1;
 	protected final int x2, y2, z2;
 
-	public Portal(BlockType blockType, String worldDest, Location<World> loc1, Location<World> loc2) {
+	public Portal(BlockState block, String worldDest, Location<World> loc1, Location<World> loc2) {
 		if (!loc1.getExtent().equals(loc2.getExtent())){
 			throw new IllegalArgumentException("Locations must be on the same world");
 		}
 		this.worldDest = worldDest;
 
-		if(blockType != null){
-			this.blockType = blockType;
+		if(block != null){
+			this.block = block;
 		}
 		
 		this.worldName = loc1.getExtent().getName();
@@ -47,9 +47,9 @@ public class Portal implements Iterable<BlockSnapshot> {
 		this.z2 = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
 	}
 	
-	public Portal(BlockType blockType, String worldName, String worldDest, int x1, int y1, int z1, int x2, int y2, int z2) {
-		if(blockType != null){
-			this.blockType = blockType;
+	public Portal(BlockState block, String worldName, String worldDest, int x1, int y1, int z1, int x2, int y2, int z2) {
+		if(block != null){
+			this.block = block;
 		}
 		this.worldName = worldName;
 		this.worldDest = worldDest;
@@ -142,10 +142,16 @@ public class Portal implements Iterable<BlockSnapshot> {
         	
         	if(config.getNode("Options", "Portal", "Replace-Frame").getBoolean()){	
             	if(location.getBlockType() != BlockTypes.AIR){
-        			location.setBlock(Main.getGame().getRegistry().createBuilder(BlockState.Builder.class).blockType(blockType).build());
+            		location.setBlock(block);
             	}
         	}
-        	location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.EXPLOSION_LARGE).build(), location.getPosition());
+            location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(5).build(), location.getPosition().add(.2,.2,.4));
+            location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(5).build(), location.getPosition().add(.3,.8,.2));
+            location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(5).build(), location.getPosition().add(.7,.6,.9));
+            location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(5).build(), location.getPosition().add(.6,.3,.6));
+            location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(5).build(), location.getPosition().add(.4,.9,.5));
+
+        	//location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class).type(ParticleTypes.EXPLOSION_LARGE).build(), location.getPosition().add(.5,.5,.5));
         }
         
         String uuid = UUID.randomUUID().toString();
