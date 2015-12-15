@@ -26,7 +26,7 @@ import org.spongepowered.api.world.storage.WorldProperties;
 import org.spongepowered.api.world.weather.Weather;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.commands.CMDYes;
+import com.gmail.trentech.pjw.commands.CMDTeleport;
 import com.gmail.trentech.pjw.events.TeleportEvent;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Resource;
@@ -46,8 +46,8 @@ public class EventManager {
 			return;
 		}
 		if(!player.setLocationSafely(dest)){
-			CMDYes.players.put(player, dest);
-			player.sendMessage(Texts.builder().color(TextColors.DARK_RED).append(Texts.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.runCommand("/yes")).append(Texts.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
+			CMDTeleport.players.put(player, dest);
+			player.sendMessage(Texts.builder().color(TextColors.DARK_RED).append(Texts.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.runCommand("/world teleport confirm")).append(Texts.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
 			return;
 		}
 		if(new ConfigManager().getConfig().getNode("Options", "Show-Particles").getBoolean()){

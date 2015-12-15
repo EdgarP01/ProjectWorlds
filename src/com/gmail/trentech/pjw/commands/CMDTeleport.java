@@ -1,5 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
+import java.util.HashMap;
+
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -10,6 +12,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.title.Titles;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -18,6 +21,8 @@ import com.gmail.trentech.pjw.events.TeleportEvent;
 
 public class CMDTeleport implements CommandExecutor {
 
+	public static HashMap<Player, Location<World>> players = new HashMap<>();
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("arg0")) {
@@ -29,7 +34,26 @@ public class CMDTeleport implements CommandExecutor {
 
 			return CommandResult.empty();
 		}
-		String playerName = args.<String>getOne("arg0").get();
+		String arg0 = args.<String>getOne("arg0").get();
+		
+		if(arg0.equalsIgnoreCase("confirm")){
+			if(!(src instanceof Player)){
+				return CommandResult.success();
+			}
+			Player player = (Player) src;
+			
+			if(!players.containsKey(player)){
+				return CommandResult.success();
+			}
+			Location<World> location = players.get(player);
+			
+			player.setLocation(location);
+			player.sendTitle(Titles.of(Texts.of(TextColors.GOLD, location.getExtent().getName()), Texts.of(TextColors.DARK_PURPLE, "x: ", location.getExtent().getSpawnLocation().getBlockX(), ", y: ", location.getExtent().getSpawnLocation().getBlockY(),", z: ", location.getExtent().getSpawnLocation().getBlockZ())));
+			
+			players.remove(player);
+			
+			return CommandResult.success();
+		}
 		
 		String worldName = args.<String>getOne("arg0").get();
 		
@@ -38,7 +62,7 @@ public class CMDTeleport implements CommandExecutor {
 				src.sendMessage(Texts.of(TextColors.DARK_RED, "Must be a player"));
 				return CommandResult.empty();
 			}
-			playerName = ((Player) src).getName();
+			arg0 = ((Player) src).getName();
 		}else{
 			worldName = args.<String>getOne("arg1").get();
 		}
@@ -47,11 +71,11 @@ public class CMDTeleport implements CommandExecutor {
 			worldName = worldName.replace("@w", ((Player) src).getWorld().getName());
 		}
 		
-		if(!Main.getGame().getServer().getPlayer(playerName).isPresent()){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Player ", playerName, " does not exist"));
+		if(!Main.getGame().getServer().getPlayer(arg0).isPresent()){
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "Player ", arg0, " does not exist"));
 			return CommandResult.empty();
 		}
-		Player player = Main.getGame().getServer().getPlayer(playerName).get();
+		Player player = Main.getGame().getServer().getPlayer(arg0).get();
 		
 		if((((Player) src) != player) && !src.hasPermission("pjw.cmd.world.teleport.others")){
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to teleport others"));

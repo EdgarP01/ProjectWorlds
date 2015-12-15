@@ -24,9 +24,17 @@ public class CommandManager {
 		    .executor(new CMDDelete())
 		    .build();
 	
+	public CommandSpec cmdShow = CommandSpec.builder()
+		    .description(Texts.of("Fills all portal regions to make them temporarly visible"))
+		    .permission("pjw.cmd.world.portal.show")
+		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
+		    .executor(new CMDShow())
+		    .build();
+	
 	public CommandSpec cmdPortal = CommandSpec.builder()
 		    .description(Texts.of("create world portal"))
 		    .permission("pjw.cmd.world.portal")
+		    .child(cmdShow, "Show", "s")
 		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.string(Texts.of("point1"))),
 		    		GenericArguments.optional(GenericArguments.string(Texts.of("point2"))), GenericArguments.optional(GenericArguments.string(Texts.of("block"))), GenericArguments.optional(GenericArguments.string(Texts.of("world"))))
 		    .executor(new CMDPortal())
@@ -163,11 +171,7 @@ public class CommandManager {
 		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
 		    .executor(new CMDPlate())
 		    .build();
-	
-	public CommandSpec cmdYes = CommandSpec.builder()
-		    .executor(new CMDYes())
-		    .build();
-	
+
 	public CommandSpec cmdHelp = CommandSpec.builder()
 		    .description(Texts.of("i need help"))
 		    .permission("pjw.cmd.world")

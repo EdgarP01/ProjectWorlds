@@ -3,6 +3,7 @@ package com.gmail.trentech.pjw.utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import com.gmail.trentech.pjw.Main;
@@ -149,6 +150,21 @@ public class ConfigManager {
 			}
 		}
 		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getAllLocations(){
+		List<String> list = new ArrayList<>();
+		
+		for(Entry<Object, ? extends ConfigurationNode> node : config.getNode("Portals").getChildrenMap().entrySet()){
+			String uuid = node.getKey().toString();
+			Object object = config.getNode("Portals", uuid, "Locations").getValue();
+
+	    	if(object instanceof ArrayList) {
+	    		list.addAll((ArrayList<String>) object);
+	    	}
+		}
+		return list;
 	}
 
 }

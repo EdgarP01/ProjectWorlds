@@ -13,6 +13,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.commands.CMDShow;
 import com.gmail.trentech.pjw.events.PortalConstructEvent;
 import com.gmail.trentech.pjw.events.TeleportEvent;
 import com.gmail.trentech.pjw.portal.Portal;
@@ -66,6 +67,10 @@ public class PortalEventManager {
 			return;
 		}
 
+		if(CMDShow.show.contains(player)){
+			return;
+		}
+
 		ConfigManager loader = new ConfigManager("portals.conf");
 
 		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
@@ -93,6 +98,10 @@ public class PortalEventManager {
 		
 		if(PortalBuilder.getCreators().contains(player)){
 			PortalBuilder.getCreators().remove(player);
+			return;
+		}
+
+		if(CMDShow.show.contains(player)){
 			return;
 		}
 

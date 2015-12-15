@@ -51,7 +51,6 @@ public class Main {
     	getGame().getEventManager().registerListeners(this, new PlateEventManager());
     	
     	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
-    	getGame().getCommandManager().register(this, new CommandManager().cmdYes, "yes", "y");
     	
     	Modifiers.put("SKY",  new SkylandsWorldGeneratorModifier());
     	Modifiers.put("VOID",  new VoidWorldGeneratorModifier());
@@ -66,7 +65,6 @@ public class Main {
     	getLog().info("Initializing...");
 
     	new ConfigManager();
-    	new ConfigManager("worlds.conf");
 
     	loadWorlds();
     	
