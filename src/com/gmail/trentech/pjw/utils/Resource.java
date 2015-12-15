@@ -13,10 +13,11 @@ import com.gmail.trentech.pjw.Main;
 public class Resource {
 
 	public final static String NAME = "Project Worlds";
-	public final static String VERSION = "0.5.15";
+	public final static String VERSION = "0.5.16";
 	public final static String ID = "Project Worlds";
 
 	public static void spawnParticles(Location<World> location, double range, boolean sub){
+		
 		Random random = new Random();
 		
 		for(int i = 0; i < 5; i++){

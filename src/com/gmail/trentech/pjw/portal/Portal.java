@@ -144,7 +144,9 @@ public class Portal implements Iterable<BlockSnapshot> {
             	}
         	}
         	
-        	Resource.spawnParticles(location, 1.0, false);
+    		if(new ConfigManager().getConfig().getNode("Options", "Show-Particles").getBoolean()){
+    			Resource.spawnParticles(location, 1.0, false);
+    		}
         }
         
         String uuid = UUID.randomUUID().toString();

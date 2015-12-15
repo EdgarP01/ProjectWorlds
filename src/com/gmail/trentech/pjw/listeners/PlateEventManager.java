@@ -133,7 +133,9 @@ public class PlateEventManager {
 
 	            loader.save();
 	          
-	            Resource.spawnParticles(location, 1.0, false);
+	    		if(new ConfigManager().getConfig().getNode("Options", "Show-Particles").getBoolean()){
+	    			Resource.spawnParticles(location, 1.0, false);
+	    		}
 	            
 	            player.sendMessage(Texts.of(TextColors.DARK_GREEN, "New teleport pressure plate created"));
 	            
