@@ -13,7 +13,6 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.commands.CMDShow;
 import com.gmail.trentech.pjw.events.PortalConstructEvent;
 import com.gmail.trentech.pjw.events.TeleportEvent;
 import com.gmail.trentech.pjw.portal.Portal;
@@ -67,9 +66,9 @@ public class PortalEventManager {
 			return;
 		}
 
-		if(CMDShow.show.contains(player)){
-			return;
-		}
+//		if(CMDShow.show.contains(player)){
+//			return;
+//		}
 
 		ConfigManager loader = new ConfigManager("portals.conf");
 
@@ -77,15 +76,18 @@ public class PortalEventManager {
 			Location<World> location = transaction.getFinal().getLocation().get();		
 			String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
 
-			if(loader.getPortal(locationName) != null){
-				if(!player.hasPermission("pjw.portal.place")){
-					player.sendMessage(Texts.of(TextColors.DARK_RED, "you do not have permission"));
-					event.setCancelled(true);
-				}else{
-					loader.removePortalLocation(locationName);
-					player.sendMessage(Texts.of(TextColors.DARK_RED, "Broke Portal"));
-				}
+			if(loader.getPortal(locationName) == null){
+				continue;
 			}
+			
+			if(!player.hasPermission("pjw.portal.place")){
+				player.sendMessage(Texts.of(TextColors.DARK_RED, "you do not have permission"));
+				event.setCancelled(true);
+			}
+//			else{
+//				loader.removePortalLocation(locationName);
+//				player.sendMessage(Texts.of(TextColors.DARK_RED, "Broke Portal"));
+//			}
 		}
 	}
 	
@@ -95,15 +97,15 @@ public class PortalEventManager {
 			return;
 		}
 		Player player = event.getCause().first(Player.class).get();
-		
+
 		if(PortalBuilder.getCreators().contains(player)){
 			PortalBuilder.getCreators().remove(player);
 			return;
 		}
 
-		if(CMDShow.show.contains(player)){
-			return;
-		}
+//		if(CMDShow.show.contains(player)){
+//			return;
+//		}
 
 		ConfigManager loader = new ConfigManager("portals.conf");
 
@@ -111,15 +113,18 @@ public class PortalEventManager {
 			Location<World> location = transaction.getFinal().getLocation().get();		
 			String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
 
-			if(loader.getPortal(locationName) != null){
-				if(!player.hasPermission("pjw.portal.break")){
-					player.sendMessage(Texts.of(TextColors.DARK_RED, "you do not have permission"));
-					event.setCancelled(true);
-				}else{
-					loader.removePortalLocation(locationName);
-					player.sendMessage(Texts.of(TextColors.DARK_RED, "Broke Portal"));
-				}
+			if(loader.getPortal(locationName) == null){
+				continue;
 			}
+			
+			if(!player.hasPermission("pjw.portal.break")){
+				player.sendMessage(Texts.of(TextColors.DARK_RED, "you do not have permission"));
+				event.setCancelled(true);
+			}
+//			else{
+//				loader.removePortalLocation(locationName);
+//				player.sendMessage(Texts.of(TextColors.DARK_RED, "Broke Portal"));
+//			}
 		}
 	}
 

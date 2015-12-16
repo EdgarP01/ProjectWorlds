@@ -76,9 +76,9 @@ public class CMDProperties implements CommandExecutor {
 		}else{
 			list.add(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, "false"));
 		}
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Time:"));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "    - Lock: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Lock").getString()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "    - Set: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Set").getString()));
+		//list.add(Texts.of(TextColors.DARK_PURPLE, "Time:"));
+		//list.add(Texts.of(TextColors.DARK_PURPLE, "    - Lock: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Lock").getString()));
+		//list.add(Texts.of(TextColors.DARK_PURPLE, "    - Set: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Time", "Set").getString()));
 		list.add(Texts.of(TextColors.DARK_PURPLE, "Weather:"));
 		list.add(Texts.of(TextColors.DARK_PURPLE, "    - Lock: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Weather", "Lock").getString()));
 		list.add(Texts.of(TextColors.DARK_PURPLE, "    - Set: ", TextColors.GOLD, config.getNode("Worlds", worldName, "Weather", "Set").getString()));

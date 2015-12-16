@@ -51,7 +51,6 @@ public class CMDGamerule implements CommandExecutor {
 			
 			for(Entry<String, String> gamerule : world.getGameRules().entrySet()){
 				list.add(Texts.of(TextColors.DARK_PURPLE, gamerule.getKey(), ": ", TextColors.GOLD, gamerule.getValue()));
-
 			}
 
 			list.add(Texts.of(TextColors.DARK_PURPLE, "Command: ", invalidArg()));

@@ -91,15 +91,17 @@ public class PlateEventManager {
 			Location<World> location = transaction.getFinal().getLocation().get();		
 			String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
 
-			if(config.getNode("Plates", locationName, "World").getString() != null){
-				if(!player.hasPermission("pjw.plate.break")){
-					player.sendMessage(Texts.of(TextColors.DARK_RED, "you do not have permission"));
-					event.setCancelled(true);
-				}else{
-					config.getNode("Plates", locationName).setValue(null);
-					loader.save();
-					player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Broke teleport pressure plate"));
-				}
+			if(config.getNode("Plates", locationName, "World").getString() == null){
+				continue;
+			}
+			
+			if(!player.hasPermission("pjw.plate.break")){
+				player.sendMessage(Texts.of(TextColors.DARK_RED, "you do not have permission"));
+				event.setCancelled(true);
+			}else{
+				config.getNode("Plates", locationName).setValue(null);
+				loader.save();
+				player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Broke teleport pressure plate"));
 			}
 		}
 	}
@@ -116,31 +118,33 @@ public class PlateEventManager {
 		}
 
 		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
-			if((transaction.getFinal().getState().getType().getName().toUpperCase().contains("_PRESSURE_PLATE"))){		
-				Location<World> location = transaction.getFinal().getLocation().get();
-				
-				if(!player.hasPermission("pjw.button.place." + location.getExtent().getName())){
-		        	player.sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to create teleport pressure playes in this world"));
-		        	return;
-				}
-				
-				String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
-
-	            ConfigManager loader = new ConfigManager("portals.conf");
-	            ConfigurationNode config = loader.getConfig();
-
-	            config.getNode("Plates", locationName, "World").setValue(creators.get(player));
-
-	            loader.save();
-	          
-	    		if(new ConfigManager().getConfig().getNode("Options", "Show-Particles").getBoolean()){
-	    			Resource.spawnParticles(location, 1.0, false);
-	    		}
-	            
-	            player.sendMessage(Texts.of(TextColors.DARK_GREEN, "New teleport pressure plate created"));
-	            
-	            creators.remove(player);
+			if(!(transaction.getFinal().getState().getType().getName().toUpperCase().contains("_PRESSURE_PLATE"))){		
+				continue;
 			}
+			
+			Location<World> location = transaction.getFinal().getLocation().get();
+			
+			if(!player.hasPermission("pjw.button.place." + location.getExtent().getName())){
+	        	player.sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to create teleport pressure playes in this world"));
+	        	return;
+			}
+			
+			String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+
+            ConfigManager loader = new ConfigManager("portals.conf");
+            ConfigurationNode config = loader.getConfig();
+
+            config.getNode("Plates", locationName, "World").setValue(creators.get(player));
+
+            loader.save();
+          
+    		if(new ConfigManager().getConfig().getNode("Options", "Show-Particles").getBoolean()){
+    			Resource.spawnParticles(location, 1.0, false);
+    		}
+            
+            player.sendMessage(Texts.of(TextColors.DARK_GREEN, "New teleport pressure plate created"));
+            
+            creators.remove(player);
 		}
 	}
 }

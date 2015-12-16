@@ -68,16 +68,11 @@ public class CMDRename implements CommandExecutor {
 				ConfigManager loader = new ConfigManager("worlds.conf");
 				ConfigurationNode config = loader.getConfig();
 
-				config.getNode("Worlds", newWorldName, "UUID").setValue(properties.getUniqueId().toString());
-				config.getNode("Worlds", newWorldName, "Dimension-Type").setValue(properties.getDimensionType().getName().toUpperCase());
-				config.getNode("Worlds", newWorldName, "Generator-Type").setValue(properties.getGeneratorType().getName().toUpperCase());
-				config.getNode("Worlds", newWorldName, "Seed").setValue(properties.getSeed());
-				config.getNode("Worlds", newWorldName, "Difficulty").setValue(properties.getDifficulty().getName().toUpperCase());
 				config.getNode("Worlds", newWorldName, "Gamemode").setValue(properties.getGameMode().getName().toUpperCase());
-				config.getNode("Worlds", newWorldName, "Keep-Spawn-Loaded").setValue(config.getNode("Worlds", oldWorldName, "Keep-Spawn-Loaded").getBoolean());
-				config.getNode("Worlds", newWorldName, "Hardcore").setValue(config.getNode("Worlds", oldWorldName, "Hardcore").getBoolean());
-				config.getNode("Worlds", newWorldName, "Time", "Lock").setValue(config.getNode("Worlds", oldWorldName, "Time", "Lock").getBoolean());
-				config.getNode("Worlds", newWorldName, "Time", "Set").setValue(config.getNode("Worlds", oldWorldName, "Time", "Set").getString());
+				config.getNode("Worlds", newWorldName, "PVP").setValue(config.getNode("Worlds", oldWorldName, "PVP").getBoolean());
+				config.getNode("Worlds", newWorldName, "Respawn-World").setValue(config.getNode("Worlds", oldWorldName, "Respawn-World").getString());
+				//config.getNode("Worlds", newWorldName, "Time", "Lock").setValue(config.getNode("Worlds", oldWorldName, "Time", "Lock").getBoolean());
+				//config.getNode("Worlds", newWorldName, "Time", "Set").setValue(config.getNode("Worlds", oldWorldName, "Time", "Set").getString());
 				config.getNode("Worlds", newWorldName, "Weather", "Lock").setValue(config.getNode("Worlds", oldWorldName, "Weather", "Lock").getBoolean());
 				config.getNode("Worlds", newWorldName, "Weather", "Set").setValue(config.getNode("Worlds", oldWorldName, "Weather", "Set").getString());
 				

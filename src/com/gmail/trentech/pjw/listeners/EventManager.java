@@ -10,6 +10,7 @@ import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
+import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.event.entity.living.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.world.ChangeWorldWeatherEvent;
@@ -59,19 +60,6 @@ public class EventManager {
 		}
 
 		player.sendTitle(Titles.of(Texts.of(TextColors.GOLD, dest.getExtent().getName()), Texts.of(TextColors.DARK_PURPLE, "x: ", dest.getExtent().getSpawnLocation().getBlockX(), ", y: ", dest.getExtent().getSpawnLocation().getBlockY(),", z: ", dest.getExtent().getSpawnLocation().getBlockZ())));
-
-		if(event.getSrc().getExtent() == event.getDest().getExtent()){
-			return;
-		}
-		
-		// TEMPORARY FIX FOR WORLD SPECIFIC GAMEMODES - STILL NOT WORKING
-		String gm = new ConfigManager("worlds.conf").getConfig().getNode("Worlds", event.getDest().getExtent().getName(), "Gamemode").getString();
-		GameMode gamemode = GameModes.SURVIVAL;
-		if(Main.getGame().getRegistry().getType(GameMode.class, gm).isPresent()){
-			gamemode = Main.getGame().getRegistry().getType(GameMode.class, gm).get();
-		}
-
-		player.offer(Keys.GAME_MODE, gamemode);
 	}
 	
 	@Listener
@@ -104,37 +92,36 @@ public class EventManager {
 		
 		if(config.getNode("Worlds", world.getName()).getString() == null){
 			config.getNode("Worlds", world.getName(), "PVP").setValue(true);
-			config.getNode("Worlds", world.getName(), "Respawn-World").setValue("NONE");
+			config.getNode("Worlds", world.getName(), "Respawn-World").setValue(Main.getGame().getServer().getDefaultWorld().get().getWorldName());
 			config.getNode("Worlds", world.getName(), "Gamemode").setValue(properties.getGameMode().getName().toUpperCase());
-			config.getNode("Worlds", world.getName(), "Time", "Lock").setValue(false);
-			config.getNode("Worlds", world.getName(), "Time", "Set").setValue(6000);
+			//config.getNode("Worlds", world.getName(), "Time", "Lock").setValue(false);
+			//config.getNode("Worlds", world.getName(), "Time", "Set").setValue(6000);
 			config.getNode("Worlds", world.getName(), "Weather", "Lock").setValue(false);
 			config.getNode("Worlds", world.getName(), "Weather", "Set").setValue("CLEAR");	
 
 			loader.save();
 		}
 	}
-	
-	// TEMPORARY FIX FOR WORLD SPECIFIC GAMEMODES - DOES NOT ALWAYS WORK
-//	@Listener
-//	public void onDisplaceEntityEvent(DisplaceEntityEvent event) {
-//		if(!(event.getTargetEntity() instanceof Player)){
-//			return;
-//		}
-//		Player player = (Player) event.getTargetEntity();
-//		
-//		World worldSrc = event.getFromTransform().getExtent();
-//		World worldDest = event.getToTransform().getExtent();
-//
-//		if(worldSrc != worldDest){
-//			GameMode gamemode = GameModes.SURVIVAL;
-//			if(Main.getGame().getRegistry().getType(GameMode.class, new ConfigManager("worlds.conf").getConfig().getNode("Worlds", worldDest.getName(), "Gamemode").getString()).isPresent()){
-//				gamemode = Main.getGame().getRegistry().getType(GameMode.class, new ConfigManager("worlds.conf").getConfig().getNode("Worlds", worldDest.getName(), "Gamemode").getString()).get();
-//			}
-//			System.out.println("DisplaceEntityEvent GAMEMODE");
-//			player.offer(Keys.GAME_MODE, gamemode);
-//		}
-//	}
+
+	@Listener
+	public void onDisplaceEntityEvent(DisplaceEntityEvent.TargetPlayer event) {
+		if(!(event.getTargetEntity() instanceof Player)){
+			return;
+		}
+		Player player = (Player) event.getTargetEntity();
+
+		World worldSrc = event.getFromTransform().getExtent();
+		World worldDest = event.getToTransform().getExtent();
+
+		if(worldSrc != worldDest){
+			GameMode gamemode = GameModes.SURVIVAL;
+			if(Main.getGame().getRegistry().getType(GameMode.class, new ConfigManager("worlds.conf").getConfig().getNode("Worlds", worldDest.getName(), "Gamemode").getString()).isPresent()){
+				gamemode = Main.getGame().getRegistry().getType(GameMode.class, new ConfigManager("worlds.conf").getConfig().getNode("Worlds", worldDest.getName(), "Gamemode").getString()).get();
+			}
+
+			player.offer(Keys.GAME_MODE, gamemode);
+		}
+	}
 	
     @Listener
     public void onDamageEntityEvent(DamageEntityEvent event) {

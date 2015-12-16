@@ -90,15 +90,17 @@ public class ButtonEventManager {
 			Location<World> location = transaction.getFinal().getLocation().get();		
 			String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
 
-			if(config.getNode("Buttons", locationName, "World").getString() != null){
-				if(!player.hasPermission("pjw.button.break")){
-					player.sendMessage(Texts.of(TextColors.DARK_RED, "you do not have permission"));
-					event.setCancelled(true);
-				}else{
-					config.getNode("Buttons", locationName).setValue(null);
-					loader.save();
-					player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Broke teleport button"));
-				}
+			if(config.getNode("Buttons", locationName, "World").getString() == null){
+				continue;
+			}
+			
+			if(!player.hasPermission("pjw.button.break")){
+				player.sendMessage(Texts.of(TextColors.DARK_RED, "you do not have permission"));
+				event.setCancelled(true);
+			}else{
+				config.getNode("Buttons", locationName).setValue(null);
+				loader.save();
+				player.sendMessage(Texts.of(TextColors.DARK_GREEN, "Broke teleport button"));
 			}
 		}
 	}
@@ -115,31 +117,33 @@ public class ButtonEventManager {
 		}
 
 		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
-			if((transaction.getFinal().getState().getType().getName().toUpperCase().contains("_BUTTON"))){
-				Location<World> location = transaction.getFinal().getLocation().get();
-
-				if(!player.hasPermission("pjw.button.place." + location.getExtent().getName())){
-		        	player.sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to create teleport buttons in this world"));
-		        	return;
-				}
-
-				String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
-
-	            ConfigManager loader = new ConfigManager("portals.conf");
-	            ConfigurationNode config = loader.getConfig();
-
-	            config.getNode("Buttons", locationName, "World").setValue(creators.get(player));
-
-	            loader.save();
-	            
-	    		if(new ConfigManager().getConfig().getNode("Options", "Show-Particles").getBoolean()){
-	    			Resource.spawnParticles(location, 1.0, false);
-	    		}
-
-	            player.sendMessage(Texts.of(TextColors.DARK_GREEN, "New teleport button created"));
-	            
-	            creators.remove(player);
+			if(!(transaction.getFinal().getState().getType().getName().toUpperCase().contains("_BUTTON"))){
+				continue;
 			}
+			
+			Location<World> location = transaction.getFinal().getLocation().get();
+
+			if(!player.hasPermission("pjw.button.place." + location.getExtent().getName())){
+	        	player.sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to create teleport buttons in this world"));
+	        	return;
+			}
+
+			String locationName = location.getExtent().getName() + "." + location.getBlockX() + "." + location.getBlockY() + "." + location.getBlockZ();
+
+            ConfigManager loader = new ConfigManager("portals.conf");
+            ConfigurationNode config = loader.getConfig();
+
+            config.getNode("Buttons", locationName, "World").setValue(creators.get(player));
+
+            loader.save();
+            
+    		if(new ConfigManager().getConfig().getNode("Options", "Show-Particles").getBoolean()){
+    			Resource.spawnParticles(location, 1.0, false);
+    		}
+
+            player.sendMessage(Texts.of(TextColors.DARK_GREEN, "New teleport button created"));
+            
+            creators.remove(player);
 		}
 	}
 }

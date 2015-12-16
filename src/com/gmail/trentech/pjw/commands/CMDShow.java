@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
@@ -27,7 +27,7 @@ import com.gmail.trentech.pjw.utils.ConfigManager;
 //BROKEN
 public class CMDShow implements CommandExecutor {
 
-	public static List<Player> show = new ArrayList<>();
+	private static List<Player> show = new ArrayList<>();
 	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -55,9 +55,9 @@ public class CMDShow implements CommandExecutor {
 		ConfigManager loader = new ConfigManager("portals.conf");
 		
 		HashMap<Location<World>, BlockSnapshot> hash = new HashMap<>();
-		
+
 		List<String> locations = loader.getAllLocations();
-		
+
 		show.add(player);
 		
 		for(String node : locations){
@@ -79,38 +79,35 @@ public class CMDShow implements CommandExecutor {
 			int z = Integer.parseInt(split[3]);
 
 			Location<World> location = world.getLocation(x, y, z);
-			
+			 
+
 			hash.put(location, location.createSnapshot());
 
 			location.setBlock(BlockState.builder().blockType(BlockTypes.BEDROCK).build());
 		}
-
-		Timer timer = new Timer();
 		
+		Timer timer = new Timer();
+
 		timer.schedule( 
-	        new java.util.TimerTask() {
+	        new TimerTask() {
 	            @Override
 	            public void run() {
-	            	Set<Entry<Location<World>, BlockSnapshot>> set = hash.entrySet();
-	            	synchronized (set) {
-		            	for(Entry<Location<World>, BlockSnapshot> data : set){
-		            		Location<World> location = data.getKey();
-		            		BlockSnapshot block = data.getValue();
-		            		location.setBlock(block.getState());
-		            	}
+	            	for(Entry<Location<World>, BlockSnapshot> item : hash.entrySet()){
+	            		item.getKey().setBlock(item.getValue().getExtendedState());
 	            	}
-	        		new Timer().schedule( 
-	        		        new java.util.TimerTask() {
-	        		            @Override
-	        		            public void run() {
-	        		            	show.remove(player);
-	        		            }
-	        		        }, 
-	        		        2000
-	        		);
+	            	show.remove(player);
+//	        		new Timer().schedule( 
+//        		        new java.util.TimerTask() {
+//        		            @Override
+//        		            public void run() {
+//        		            	show.remove(player);
+//        		            }
+//        		        }, 
+//        		        2000
+//	        		);
 	            }
 	        },5000);
-
+		
 		return CommandResult.success();
 	}
 }

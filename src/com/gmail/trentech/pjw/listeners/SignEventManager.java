@@ -118,17 +118,20 @@ public class SignEventManager {
 	    SignData signData = null;
 	    for(Transaction<BlockSnapshot> blockTransaction : event.getTransactions()){
 	    	Optional<Location<World>> blockOptional = blockTransaction.getOriginal().getLocation();	    	
-	    	if(blockOptional.isPresent()){
-	    		
-	    		Location<World> block = blockOptional.get();
-	    		if(block.getBlock().getType().equals(BlockTypes.WALL_SIGN) || block.getBlock().getType().equals(BlockTypes.STANDING_SIGN)){
-    				Optional<SignData> signDataOptional = block.getOrCreate(SignData.class);
-    				if(signDataOptional.isPresent()){
-    					signData = signDataOptional.get();
-    					break;
-    				}
-	    		}
+	    	if(!blockOptional.isPresent()){
+	    		continue;
 	    	}
+    		Location<World> block = blockOptional.get();
+    		
+    		if(!(block.getBlock().getType().equals(BlockTypes.WALL_SIGN) && block.getBlock().getType().equals(BlockTypes.STANDING_SIGN))){
+    			continue;
+    		}	
+			Optional<SignData> signDataOptional = block.getOrCreate(SignData.class);
+			
+			if(signDataOptional.isPresent()){
+				signData = signDataOptional.get();
+				break;
+			}
 	    }
 
 	    if(signData == null){

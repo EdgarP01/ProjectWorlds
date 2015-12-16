@@ -32,21 +32,23 @@ public class CMDDelete implements CommandExecutor {
 		}
 
 		for(WorldProperties worldInfo : Main.getGame().getServer().getUnloadedWorlds()){
-			if(worldInfo.getWorldName().equalsIgnoreCase(worldName)){
-				try {
-					if(Main.getGame().getServer().deleteWorld(worldInfo).get()){
-						ConfigManager loader = new ConfigManager("worlds.conf");
-						ConfigurationNode config = loader.getConfig();
+			if(!worldInfo.getWorldName().equalsIgnoreCase(worldName)){
+				continue;
+			}
+			
+			try {
+				if(Main.getGame().getServer().deleteWorld(worldInfo).get()){
+					ConfigManager loader = new ConfigManager("worlds.conf");
+					ConfigurationNode config = loader.getConfig();
 
-						config.getNode("Worlds", worldName).setValue(null);
-						loader.save();
-						
-						src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " deleted successfully"));
-						return CommandResult.success();
-					}
-				} catch (InterruptedException | ExecutionException e) {
-					e.printStackTrace();
+					config.getNode("Worlds", worldName).setValue(null);
+					loader.save();
+					
+					src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " deleted successfully"));
+					return CommandResult.success();
 				}
+			} catch (InterruptedException | ExecutionException e) {
+				e.printStackTrace();
 			}
 		}
 		

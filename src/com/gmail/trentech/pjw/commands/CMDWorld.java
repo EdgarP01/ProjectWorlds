@@ -79,10 +79,10 @@ public class CMDWorld implements CommandExecutor {
 			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help hardcore")).append(Texts.of("/world hardcore")).build());
 		}
-		if(src.hasPermission("pjw.cmd.world.locktime")) {
-			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))
-					.onClick(TextActions.runCommand("/world help locktime")).append(Texts.of("/world locktime")).build());
-		}
+//		if(src.hasPermission("pjw.cmd.world.locktime")) {
+//			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))
+//					.onClick(TextActions.runCommand("/world help locktime")).append(Texts.of("/world locktime")).build());
+//		}
 		if(src.hasPermission("pjw.cmd.world.lockweather")) {
 			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help lockweather")).append(Texts.of("/world lockweather")).build());

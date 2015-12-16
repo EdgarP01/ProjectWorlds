@@ -45,10 +45,12 @@ public class CMDCopy implements CommandExecutor {
 		String newWorldName = args.<String>getOne("new").get();
 		
 		for(WorldProperties world : Main.getGame().getServer().getAllWorldProperties()){
-			if(world.getWorldName().equalsIgnoreCase(newWorldName)){
-				src.sendMessage(Texts.of(TextColors.DARK_RED, newWorldName, " already exists"));
-				return CommandResult.empty();
+			if(!world.getWorldName().equalsIgnoreCase(newWorldName)){
+				continue;
 			}
+			
+			src.sendMessage(Texts.of(TextColors.DARK_RED, newWorldName, " already exists"));
+			return CommandResult.empty();
 		}
 		
 		if(!Main.getGame().getServer().getWorld(oldWorldName).isPresent()){
@@ -76,8 +78,8 @@ public class CMDCopy implements CommandExecutor {
 		config.getNode("Worlds", newWorldName, "Gamemode").setValue(properties.getGameMode().getName().toUpperCase());
 		config.getNode("Worlds", newWorldName, "PVP").setValue(config.getNode("Worlds", oldWorldName, "PVP").getBoolean());
 		config.getNode("Worlds", newWorldName, "Respawn-World").setValue(config.getNode("Worlds", oldWorldName, "Respawn-World").getString());
-		config.getNode("Worlds", newWorldName, "Time", "Lock").setValue(config.getNode("Worlds", oldWorldName, "Time", "Lock").getBoolean());
-		config.getNode("Worlds", newWorldName, "Time", "Set").setValue(config.getNode("Worlds", oldWorldName, "Time", "Set").getString());
+		//config.getNode("Worlds", newWorldName, "Time", "Lock").setValue(config.getNode("Worlds", oldWorldName, "Time", "Lock").getBoolean());
+		//config.getNode("Worlds", newWorldName, "Time", "Set").setValue(config.getNode("Worlds", oldWorldName, "Time", "Set").getString());
 		config.getNode("Worlds", newWorldName, "Weather", "Lock").setValue(config.getNode("Worlds", oldWorldName, "Weather", "Lock").getBoolean());
 		config.getNode("Worlds", newWorldName, "Weather", "Set").setValue(config.getNode("Worlds", oldWorldName, "Weather", "Set").getString());	
 

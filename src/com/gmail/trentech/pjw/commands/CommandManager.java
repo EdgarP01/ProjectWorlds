@@ -36,7 +36,8 @@ public class CommandManager {
 		    .permission("pjw.cmd.world.portal")
 		    .child(cmdShow, "Show", "s")
 		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.string(Texts.of("point1"))),
-		    		GenericArguments.optional(GenericArguments.string(Texts.of("point2"))), GenericArguments.optional(GenericArguments.string(Texts.of("block"))), GenericArguments.optional(GenericArguments.string(Texts.of("world"))))
+		    		GenericArguments.optional(GenericArguments.string(Texts.of("point2"))), GenericArguments.optional(GenericArguments.string(Texts.of("block"))), 
+		    		GenericArguments.optional(GenericArguments.string(Texts.of("world"))))
 		    .executor(new CMDPortal())
 		    .build();
 	
@@ -71,7 +72,7 @@ public class CommandManager {
 	public CommandSpec cmdRespawn = CommandSpec.builder()
 		    .description(Texts.of("sets default respawn world"))
 		    .permission("pjw.cmd.world.respawn")
-		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
 		    .executor(new CMDRespawn())
 		    .build();
 	
@@ -82,12 +83,12 @@ public class CommandManager {
 		    .executor(new CMDKeepSpawnLoaded())
 		    .build();
 	
-	public CommandSpec cmdLockTime = CommandSpec.builder()
-		    .description(Texts.of("toggle lock time of world"))
-		    .permission("pjw.cmd.world.time")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
-		    .executor(new CMDLockTime())
-		    .build();
+//	public CommandSpec cmdLockTime = CommandSpec.builder()
+//		    .description(Texts.of("toggle lock time of world"))
+//		    .permission("pjw.cmd.world.time")
+//		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
+//		    .executor(new CMDLockTime())
+//		    .build();
 	
 	public CommandSpec cmdLockWeather = CommandSpec.builder()
 		    .description(Texts.of("toggle lock weather of world"))
@@ -112,7 +113,8 @@ public class CommandManager {
 	public CommandSpec cmdTeleport = CommandSpec.builder()
 		    .description(Texts.of("Teleport to world"))
 		    .permission("pjw.cmd.world.teleport")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("arg0"))), GenericArguments.optional(GenericArguments.string(Texts.of("arg1"))), GenericArguments.optional(GenericArguments.string(Texts.of("arg1"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("arg0"))), GenericArguments.optional(GenericArguments.string(Texts.of("arg1"))),
+		    		GenericArguments.optional(GenericArguments.string(Texts.of("arg1"))))
 		    .executor(new CMDTeleport())
 		    .build();
 	
@@ -154,7 +156,8 @@ public class CommandManager {
 	public CommandSpec cmdGamerule = CommandSpec.builder()
 		    .description(Texts.of("edit gamerules of world"))
 		    .permission("pjw.cmd.world.gamerule")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.string(Texts.of("rule"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.string(Texts.of("rule"))),
+		    		GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
 		    .executor(new CMDGamerule())
 		    .build();
 	
@@ -192,7 +195,7 @@ public class CommandManager {
 			.child(cmdHardcore, "hardcore", "h")
 			.child(cmdRespawn, "respawn", "rs")
 			.child(cmdKeepSpawnLoaded, "keepspawnloaded", "keep", "ksl")
-			.child(cmdLockTime, "locktime", "time", "lt")
+			//.child(cmdLockTime, "locktime", "time", "lt")
 			.child(cmdLockWeather, "lockweather", "weather",  "lw")
 			.child(cmdList, "list", "l")
 			.child(cmdTeleport, "teleport", "tp")

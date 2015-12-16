@@ -36,5 +36,5 @@ public class Tasks {
 				}
             }
         }).submit(Main.getPlugin());
-	}    
+	}
 }

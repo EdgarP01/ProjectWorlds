@@ -86,7 +86,7 @@ public class CMDCreate implements CommandExecutor {
 		}
 
 		World world = load.get();
-
+		
 		createPlatform(world.getSpawnLocation().getRelative(Direction.DOWN));
 		
 		src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " created successfully"));
