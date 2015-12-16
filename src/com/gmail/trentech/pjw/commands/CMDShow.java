@@ -1,20 +1,15 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import org.spongepowered.api.block.BlockSnapshot;
-import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.effect.particle.ParticleEffect;
+import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
@@ -24,43 +19,26 @@ import org.spongepowered.api.world.World;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 
-//BROKEN
 public class CMDShow implements CommandExecutor {
 
-	private static List<Player> show = new ArrayList<>();
-	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!(src instanceof Player)){
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "Must be a player"));
 			return CommandResult.empty();
 		}
-		Player player = (Player) src;
-		
-		if(show.contains(player)){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Slow down"));
-			return CommandResult.empty();
-		}
-		
+
 		String worldName = null;
 		if(args.hasAny("name")) {
 			worldName = args.<String>getOne("name").get();
-			if(worldName.equalsIgnoreCase("@w")){
-				if(src instanceof Player){
-					worldName = player.getWorld().getName();
-				}
-			}
 		}
 
 		ConfigManager loader = new ConfigManager("portals.conf");
-		
-		HashMap<Location<World>, BlockSnapshot> hash = new HashMap<>();
 
-		List<String> locations = loader.getAllLocations();
-
-		show.add(player);
+		List<String> locationNames = loader.getAllLocations();
+		List<Location<World>> locations = new ArrayList<>();
 		
-		for(String node : locations){
+		for(String node : locationNames){
 			String[] split = node.split("\\.");
 			
 			if(worldName != null){
@@ -79,35 +57,15 @@ public class CMDShow implements CommandExecutor {
 			int z = Integer.parseInt(split[3]);
 
 			Location<World> location = world.getLocation(x, y, z);
-			 
-
-			hash.put(location, location.createSnapshot());
-
-			location.setBlock(BlockState.builder().blockType(BlockTypes.BEDROCK).build());
+			
+			locations.add(location);
 		}
 		
-		Timer timer = new Timer();
+		for(Location<World> location : locations){
+			location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
+					.type(ParticleTypes.BARRIER).count(1).build(), location.getPosition().add(.5,.5,.5));
+		}
 
-		timer.schedule( 
-	        new TimerTask() {
-	            @Override
-	            public void run() {
-	            	for(Entry<Location<World>, BlockSnapshot> item : hash.entrySet()){
-	            		item.getKey().setBlock(item.getValue().getExtendedState());
-	            	}
-	            	show.remove(player);
-//	        		new Timer().schedule( 
-//        		        new java.util.TimerTask() {
-//        		            @Override
-//        		            public void run() {
-//        		            	show.remove(player);
-//        		            }
-//        		        }, 
-//        		        2000
-//	        		);
-	            }
-	        },5000);
-		
 		return CommandResult.success();
 	}
 }

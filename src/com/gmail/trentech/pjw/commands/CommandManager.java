@@ -9,11 +9,11 @@ public class CommandManager {
 	public CommandSpec cmdCreate = CommandSpec.builder()
 		    .description(Texts.of("Create new world"))
 		    .permission("pjw.cmd.world.create")	    
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))),
-		    		GenericArguments.optional(GenericArguments.string(Texts.of("arg0"))),
-		    		GenericArguments.optional(GenericArguments.string(Texts.of("arg1"))),
-		    		GenericArguments.optional(GenericArguments.string(Texts.of("arg2"))),
-		    		GenericArguments.optional(GenericArguments.string(Texts.of("arg3"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name")))
+		    		,GenericArguments.optional(GenericArguments.string(Texts.of("arg0")))
+		    		,GenericArguments.optional(GenericArguments.string(Texts.of("arg1")))
+		    		,GenericArguments.optional(GenericArguments.string(Texts.of("arg2")))
+		    		,GenericArguments.optional(GenericArguments.string(Texts.of("arg3"))))
 		    .executor(new CMDCreate())
 		    .build();
 	
@@ -35,9 +35,9 @@ public class CommandManager {
 		    .description(Texts.of("create world portal"))
 		    .permission("pjw.cmd.world.portal")
 		    .child(cmdShow, "Show", "s")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.string(Texts.of("point1"))),
-		    		GenericArguments.optional(GenericArguments.string(Texts.of("point2"))), GenericArguments.optional(GenericArguments.string(Texts.of("block"))), 
-		    		GenericArguments.optional(GenericArguments.string(Texts.of("world"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.string(Texts.of("point1")))
+		    		,GenericArguments.optional(GenericArguments.string(Texts.of("point2"))), GenericArguments.optional(GenericArguments.string(Texts.of("block")))
+		    		,GenericArguments.optional(GenericArguments.string(Texts.of("world"))))
 		    .executor(new CMDPortal())
 		    .build();
 	
@@ -47,14 +47,7 @@ public class CommandManager {
 		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.string(Texts.of("value"))))
 		    .executor(new CMDDifficulty())
 		    .build();
-	
-//	public CommandSpec cmdGamemode = CommandSpec.builder()
-//		    .description(Texts.of("set gamemode of world"))
-//		    .permission("pjw.cmd.world.gamemode")
-//		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.string(Texts.of("value"))))
-//		    .executor(new CMDGamemode())
-//		    .build();
-	
+
 	public CommandSpec cmdSetSpawn = CommandSpec.builder()
 		    .description(Texts.of("set spawn of world"))
 		    .permission("pjw.cmd.world.setspawn")
@@ -68,14 +61,7 @@ public class CommandManager {
 		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
 		    .executor(new CMDHardcore())
 		    .build();
-	
-//	public CommandSpec cmdRespawn = CommandSpec.builder()
-//		    .description(Texts.of("sets default respawn world"))
-//		    .permission("pjw.cmd.world.respawn")
-//		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
-//		    .executor(new CMDRespawn())
-//		    .build();
-	
+
 	public CommandSpec cmdKeepSpawnLoaded = CommandSpec.builder()
 		    .description(Texts.of("toggle keep world spawn loaded"))
 		    .permission("pjw.cmd.world.keeploaded")
@@ -83,13 +69,6 @@ public class CommandManager {
 		    .executor(new CMDKeepSpawnLoaded())
 		    .build();
 
-//	public CommandSpec cmdLockWeather = CommandSpec.builder()
-//		    .description(Texts.of("toggle lock weather of world"))
-//		    .permission("pjw.cmd.world.weather")
-//		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
-//		    .executor(new CMDLockWeather())
-//		    .build();
-	
 	public CommandSpec cmdProperties = CommandSpec.builder()
 		    .description(Texts.of("view world properties"))
 		    .permission("pjw.cmd.world.properties")
@@ -106,18 +85,11 @@ public class CommandManager {
 	public CommandSpec cmdTeleport = CommandSpec.builder()
 		    .description(Texts.of("Teleport to world"))
 		    .permission("pjw.cmd.world.teleport")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("arg0"))), GenericArguments.optional(GenericArguments.string(Texts.of("arg1"))),
-		    		GenericArguments.optional(GenericArguments.string(Texts.of("arg1"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("arg0"))), GenericArguments.optional(GenericArguments.string(Texts.of("arg1")))
+		    		,GenericArguments.optional(GenericArguments.string(Texts.of("arg1"))))
 		    .executor(new CMDTeleport())
 		    .build();
-	
-//	public CommandSpec cmdPvp = CommandSpec.builder()
-//		    .description(Texts.of("Toggle PVP for world"))
-//		    .permission("pjw.cmd.world.pvp")
-//		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("value"))))
-//		    .executor(new CMDPvp())
-//		    .build();
-	
+
 	public CommandSpec cmdCopy = CommandSpec.builder()
 		    .description(Texts.of("Copy a world"))
 		    .permission("pjw.cmd.world.copy")
@@ -149,8 +121,12 @@ public class CommandManager {
 	public CommandSpec cmdGamerule = CommandSpec.builder()
 		    .description(Texts.of("edit gamerules of world"))
 		    .permission("pjw.cmd.world.gamerule")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.string(Texts.of("rule"))),
-		    		GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("value"))))
+		    //.child(cmdDiffculty, "difficulty")
+			//.child(cmdHardcore, "hardcore", "h")
+			//.child(cmdKeepSpawnLoaded, "keepspawnloaded")
+		    .arguments(GenericArguments.optional(GenericArguments.optional(GenericArguments.string(Texts.of("name")))
+		    		,GenericArguments.string(Texts.of("rule")))
+		    		,GenericArguments.optional(GenericArguments.string(Texts.of("value"))))
 		    .executor(new CMDGamerule())
 		    .build();
 	
@@ -183,19 +159,15 @@ public class CommandManager {
 			.child(cmdProperties, "properties", "prop")
 			.child(cmdPortal, "portal", "p")
 			.child(cmdDiffculty, "difficulty", "diff")
-			//.child(cmdGamemode, "gamemode", "gm")
 			.child(cmdSetSpawn, "setspawn", "spawn", "ss")
 			.child(cmdHardcore, "hardcore", "h")
-			//.child(cmdRespawn, "respawn", "rs")
 			.child(cmdKeepSpawnLoaded, "keepspawnloaded", "keep", "ksl")
-			//.child(cmdLockWeather, "lockweather", "weather",  "lw")
 			.child(cmdList, "list", "l")
 			.child(cmdTeleport, "teleport", "tp")
 			.child(cmdCopy, "copy", "cp")
 			.child(cmdRename, "rename", "rn")
 			.child(cmdUnload, "unload", "u")
 			.child(cmdLoad, "load", "ld")
-			//.child(cmdGamerule, "gamerule", "gr")
 			.child(cmdButton, "button", "b")
 			.child(cmdPlate, "plate", "pl")
 			.child(cmdHelp, "help", "hp")

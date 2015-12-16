@@ -66,10 +66,6 @@ public class PortalEventManager {
 			return;
 		}
 
-//		if(CMDShow.show.contains(player)){
-//			return;
-//		}
-
 		ConfigManager loader = new ConfigManager("portals.conf");
 
 		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
@@ -102,10 +98,6 @@ public class PortalEventManager {
 			PortalBuilder.getCreators().remove(player);
 			return;
 		}
-
-//		if(CMDShow.show.contains(player)){
-//			return;
-//		}
 
 		ConfigManager loader = new ConfigManager("portals.conf");
 
