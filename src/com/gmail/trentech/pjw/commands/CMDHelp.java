@@ -57,11 +57,6 @@ public class CMDHelp implements CommandExecutor {
 				example = " /world difficulty MyWorld HARD\n"
 						+ " /world difficulty @w PEACEFUL";
 				break;
-			case "gamemode":
-				description = " Set the default gamemode players will be set to apon entering world";
-				example = " /world gamemode MyWorld SURVIVAL\n"
-						+ " /world gamemode @w ADVENTURE";
-				break;
 			case "hardcore":
 				description = " Toggle on and off hardcore mode for world";
 				example = " /world hardcore MyWorld false\n"
@@ -80,16 +75,6 @@ public class CMDHelp implements CommandExecutor {
 				description = " Loads specified world if exists.";
 				example = " /world load NewWorld";
 				break;
-			case "locktime":
-				description = " Locks current time in specified world.";
-				example = " /world locktime MyWorld true\n"
-						+ " /world locktime @w false";
-				break;
-			case "lockweather":
-				description = " Locks current weather in specified world.";
-				example = " /world lockweather MyWorld true\n"
-						+ " /world lockweather @w false";
-				break;
 			case "plate":
 				description = " Use this command to create a pressire playe that will teleport you to other worlds";
 				example = " /world plate MyWorld";
@@ -99,6 +84,11 @@ public class CMDHelp implements CommandExecutor {
 				example = " /world portal MyWorld\n"
 						+ " /world portal MyWorld 10,60,45 15,50,45\n"
 						+ " /world portal MyWorld 150,66,30 15,75,65 ThisWorld";
+				break;
+			case "gamerule":
+				description = " Configure varies world properties";
+				example = " /gamerule MyWorld mobGriefing false\n"
+						+ " /gamerule @w pvp true";
 				break;
 			case "properties":
 				description = " View all properties associated with a world";
@@ -113,11 +103,6 @@ public class CMDHelp implements CommandExecutor {
 			case "rename":
 				description = " Allows for renaming worlds. World must be unloaded before you can rename world";
 				example = " /world rename MyWorld NewWorldName";
-				break;
-			case "respawn":
-				description = " Sets the world you respawn in if you die in specified world";
-				example = " /world respawn MyWorld SpawnWorld\n"
-						+ " /world respawn @w SpawnWorld";
 				break;
 			case "setspawn":
 				description = " Sets the spawn point of specified world. If no arguments present sets spawn of current world to player location.";

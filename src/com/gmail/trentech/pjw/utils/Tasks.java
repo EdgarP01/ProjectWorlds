@@ -26,12 +26,14 @@ public class Tasks {
 						world.getProperties().setWorldTime(time);
 					}
 					// TEMPORARY UNTIL WEATHER EVENT IMPLEMENTED
-					ConfigurationNode weatherNode = new ConfigManager("worlds.conf").getConfig().getNode("Worlds", world.getName(), "Weather");
-					if(weatherNode.getNode("Lock").getBoolean()){
-						String weather = weatherNode.getNode("Set").getString();
-						if(!world.getWeather().getName().equalsIgnoreCase(weather)){
-							world.forecast(Main.getGame().getRegistry().getType(Weather.class, weather).get());
-						}	
+
+					String grWeather = world.getProperties().getGameRule("defaultWeather").get();
+					
+					if(!grWeather.equalsIgnoreCase("normal")){
+						if(!world.getWeather().getName().equalsIgnoreCase(grWeather)){
+							Weather weather = Main.getGame().getRegistry().getType(Weather.class, grWeather).get();
+							world.forecast(weather);
+						}
 					}
 				}
             }

@@ -32,8 +32,6 @@ import com.gmail.trentech.pjw.events.TeleportEvent;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Resource;
 
-import ninja.leaping.configurate.ConfigurationNode;
-
 public class EventManager {
 
 	@Listener
@@ -86,20 +84,18 @@ public class EventManager {
 		World world = event.getTargetWorld();
 		
 		WorldProperties properties = world.getProperties();
-		
-		ConfigManager loader = new ConfigManager("worlds.conf");
-		ConfigurationNode config = loader.getConfig();
-		
-		if(config.getNode("Worlds", world.getName()).getString() == null){
-			config.getNode("Worlds", world.getName(), "PVP").setValue(true);
-			config.getNode("Worlds", world.getName(), "Respawn-World").setValue(Main.getGame().getServer().getDefaultWorld().get().getWorldName());
-			config.getNode("Worlds", world.getName(), "Gamemode").setValue(properties.getGameMode().getName().toUpperCase());
-			//config.getNode("Worlds", world.getName(), "Time", "Lock").setValue(false);
-			//config.getNode("Worlds", world.getName(), "Time", "Set").setValue(6000);
-			config.getNode("Worlds", world.getName(), "Weather", "Lock").setValue(false);
-			config.getNode("Worlds", world.getName(), "Weather", "Set").setValue("CLEAR");	
 
-			loader.save();
+		if(!properties.getGameRule("pvp").isPresent()){
+			properties.setGameRule("pvp", "true");
+		}
+		if(!properties.getGameRule("respawnWorld").isPresent()){
+			properties.setGameRule("respawnWorld", Main.getGame().getServer().getDefaultWorld().get().getWorldName());
+		}
+		if(!properties.getGameRule("gamemode").isPresent()){
+			properties.setGameRule("gamemode", GameModes.SURVIVAL.getName());
+		}
+		if(!properties.getGameRule("defaultWeather").isPresent()){
+			properties.setGameRule("defaultWeather", "normal");
 		}
 	}
 
@@ -113,10 +109,12 @@ public class EventManager {
 		World worldSrc = event.getFromTransform().getExtent();
 		World worldDest = event.getToTransform().getExtent();
 
+		WorldProperties properties = worldDest.getProperties();
+		
 		if(worldSrc != worldDest){
 			GameMode gamemode = GameModes.SURVIVAL;
-			if(Main.getGame().getRegistry().getType(GameMode.class, new ConfigManager("worlds.conf").getConfig().getNode("Worlds", worldDest.getName(), "Gamemode").getString()).isPresent()){
-				gamemode = Main.getGame().getRegistry().getType(GameMode.class, new ConfigManager("worlds.conf").getConfig().getNode("Worlds", worldDest.getName(), "Gamemode").getString()).get();
+			if(Main.getGame().getRegistry().getType(GameMode.class, properties.getGameRule("gamemode").get()).isPresent()){
+				gamemode = Main.getGame().getRegistry().getType(GameMode.class, properties.getGameRule("gamemode").get()).get();
 			}
 
 			player.offer(Keys.GAME_MODE, gamemode);
@@ -141,21 +139,23 @@ public class EventManager {
         }
 
         World world = victim.getWorld();
-        
-        if(!new ConfigManager("worlds.conf").getConfig().getNode("Worlds", world.getName(), "PVP").getBoolean()){
-        	event.setCancelled(true);
-        }
+		WorldProperties properties = world.getProperties();
+		
+		if(!Boolean.parseBoolean(properties.getGameRule("pvp").get())){
+			event.setCancelled(true);
+		}
     }
 	
 	// CURRENTLY NOT WORKING - TEMP SOLUTION IN TASKS CLASS
 	@Listener
 	public void onChangeWorldWeatherEvent(ChangeWorldWeatherEvent event) {
 		World world = event.getTargetWorld();
+		WorldProperties properties = world.getProperties();
 		
-		ConfigurationNode config = new ConfigManager("worlds.conf").getConfig();
+		String grWeather = properties.getGameRule("defaultWeather").get();
 		
-		if(config.getNode("Worlds", world.getName(), "Weather", "Lock").getBoolean()){
-			Weather weather = Main.getGame().getRegistry().getType(Weather.class, config.getNode("Worlds", world.getName(), "Weather", "Set").getString()).get();
+		if(!grWeather.equalsIgnoreCase("normal")){
+			Weather weather = Main.getGame().getRegistry().getType(Weather.class, grWeather).get();
 			world.forecast(weather);
 		}
 	}
@@ -166,21 +166,16 @@ public class EventManager {
 			return;
 		}
 		World world = event.getFromTransform().getExtent();
-
-		String respawnWorldName = new ConfigManager("worlds.conf").getConfig().getNode("Worlds", world.getName(), "Respawn-World").getString();
-
-		if(!respawnWorldName.equalsIgnoreCase("NONE")){			
-			if(Main.getGame().getServer().getWorld(respawnWorldName).isPresent()){
-				World respawnWorld = Main.getGame().getServer().getWorld(respawnWorldName).get();
-				
-				Transform<World> transform = event.getToTransform().setLocation(respawnWorld.getSpawnLocation());
-				event.setToTransform(transform);
-			}
-			return;
-		}
+		WorldProperties properties = world.getProperties();
 		
-		Transform<World> transform = event.getToTransform().setLocation(world.getSpawnLocation());
-		event.setToTransform(transform);
+		String respawnWorldName = properties.getGameRule("respawnWorld").get();
+		
+		if(Main.getGame().getServer().getWorld(respawnWorldName).isPresent()){
+			World respawnWorld = Main.getGame().getServer().getWorld(respawnWorldName).get();
+			
+			Transform<World> transform = event.getToTransform().setLocation(respawnWorld.getSpawnLocation());
+			event.setToTransform(transform);
+		}
 	}
 	
 

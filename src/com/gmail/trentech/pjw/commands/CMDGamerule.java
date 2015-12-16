@@ -85,6 +85,10 @@ public class CMDGamerule implements CommandExecutor {
 		}
 		String value = args.<String>getOne("value").get();
 		
+		if(!isValid(rule, value)){
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "value ", value, " for gamerule ", rule, " is not valid"));
+		}
+		
 		world.getProperties().setGameRule(rule, value);
 
 		src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set gamerule ", rule, " to ", value));
@@ -98,6 +102,71 @@ public class CMDGamerule implements CommandExecutor {
 		Text t3 = Texts.of(TextColors.GOLD, "<rule> ");
 		Text t4 = Texts.of(TextColors.GOLD, "[value]");
 		return Texts.of(t1,t2,t3,t4);
+	}
+	
+	private boolean isValid(String rule, String value){
+		switch(rule){
+		case "commandBlockOutput":
+			return validBool(value);
+		case "defaultWeather":
+			if(value.equalsIgnoreCase("CLEAR") || value.equalsIgnoreCase("RAIN") || value.equalsIgnoreCase("THUNDER_STORM") || value.equalsIgnoreCase("NORMAL")){
+				return true;
+			}
+			return false;
+		case "doDaylightCycle":
+			return validBool(value);
+		case "doFireTick":
+			return validBool(value);
+		case "doMobLoot":
+			return validBool(value);
+		case "doMobSpawning":
+			return validBool(value);
+		case "doTileDrops":
+			return validBool(value);
+		case "gamemode":
+			if(value.equalsIgnoreCase("SURVIVAL") || value.equalsIgnoreCase("CREATIVE") || value.equalsIgnoreCase("ADVENTURE") || value.equalsIgnoreCase("SPECTATOR")){
+				return true;
+			}
+			return false;
+		case "keepInventory":
+			return validBool(value);
+		case "logAdminCommands":
+			return validBool(value);
+		case "mobGriefing":
+			return validBool(value);
+		case "naturalRegeneration":
+			return validBool(value);
+		case "pvp":
+			return validBool(value);
+		case "randomTick":
+			try{
+				Long.parseLong(value);
+				return true;
+			}catch(Exception e){
+				return false;
+			}
+		case "reduceDebugInfo":
+			return validBool(value);
+		case "respawnWorld":
+			if(Main.getGame().getServer().getWorld(value).isPresent()){
+				return true;
+			}
+			return false;
+		case "sendCommandFeedback":
+			return validBool(value);
+		case "showDeathMessages":
+			return validBool(value);
+		default: return false;
+		}
+	}
+	
+	private boolean validBool(String value){
+		try{
+			Boolean.parseBoolean(value);
+			return true;
+		}catch(Exception e){
+			return false;
+		}
 	}
 
 }

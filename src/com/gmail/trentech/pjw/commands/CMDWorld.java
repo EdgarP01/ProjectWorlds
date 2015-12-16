@@ -51,13 +51,13 @@ public class CMDWorld implements CommandExecutor {
 			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help load")).append(Texts.of("/world load")).build());
 		}
+		if(src.hasPermission("pjw.cmd.gamerule")) {
+			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))
+					.onClick(TextActions.runCommand("/gamerule")).append(Texts.of("/gameule")).build());
+		}
 		if(src.hasPermission("pjw.cmd.world.difficulty")) {
 			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help difficulty")).append(Texts.of("/world difficulty")).build());
-		}
-		if(src.hasPermission("pjw.cmd.world.gamemode")) {
-			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))
-					.onClick(TextActions.runCommand("/world help gamemode")).append(Texts.of("/world gamemode")).build());
 		}
 		if(src.hasPermission("pjw.cmd.world.setspawn")) {
 			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))
@@ -67,10 +67,6 @@ public class CMDWorld implements CommandExecutor {
 			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help pvp")).append(Texts.of("/world pvp")).build());
 		}
-		if(src.hasPermission("pjw.cmd.world.respawn")) {
-			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))
-					.onClick(TextActions.runCommand("/world help respawn")).append(Texts.of("/world respawn")).build());
-		}
 		if(src.hasPermission("pjw.cmd.world.keepspawnloaded")) {
 			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help keepspawnloaded")).append(Texts.of("/world keepspawnloaded")).build());
@@ -78,14 +74,6 @@ public class CMDWorld implements CommandExecutor {
 		if(src.hasPermission("pjw.cmd.world.hardcore")) {
 			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help hardcore")).append(Texts.of("/world hardcore")).build());
-		}
-//		if(src.hasPermission("pjw.cmd.world.locktime")) {
-//			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))
-//					.onClick(TextActions.runCommand("/world help locktime")).append(Texts.of("/world locktime")).build());
-//		}
-		if(src.hasPermission("pjw.cmd.world.lockweather")) {
-			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))
-					.onClick(TextActions.runCommand("/world help lockweather")).append(Texts.of("/world lockweather")).build());
 		}
 		if(src.hasPermission("pjw.cmd.world.list")) {
 			list.add(Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Click command for more information ")))

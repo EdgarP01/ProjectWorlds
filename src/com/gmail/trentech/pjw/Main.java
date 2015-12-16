@@ -51,6 +51,7 @@ public class Main {
     	getGame().getEventManager().registerListeners(this, new PlateEventManager());
     	
     	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
+    	getGame().getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", "gr");
     	
     	Modifiers.put("SKY",  new SkylandsWorldGeneratorModifier());
     	Modifiers.put("VOID",  new VoidWorldGeneratorModifier());
