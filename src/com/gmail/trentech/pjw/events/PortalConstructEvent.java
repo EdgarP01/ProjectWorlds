@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Cancellable;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.impl.AbstractEvent;
 
 public class PortalConstructEvent extends AbstractEvent implements Cancellable {
@@ -25,6 +26,11 @@ public class PortalConstructEvent extends AbstractEvent implements Cancellable {
 	@Override
 	public void setCancelled(boolean cancel) {
 		this.cancelled = cancel;		
+	}
+	
+	@Override
+	public Cause getCause() {
+		return null;
 	}
 
 	public List<String> getLocations() {

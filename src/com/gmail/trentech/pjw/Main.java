@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -32,14 +33,14 @@ import com.gmail.trentech.pjw.utils.Tasks;
 public class Main {
 
 	private static Game game;
-	private static Logger log;
+	private static Logger log;	
 	private static PluginContainer plugin;
 
 	@Listener
     public void onPreInitialization(GamePreInitializationEvent event) {
-		game = event.getGame();
-		plugin = event.getGame().getPluginManager().getPlugin(Resource.ID).get();
-		log = event.getGame().getPluginManager().getLogger(plugin);
+		game = Sponge.getGame();
+		plugin = getGame().getPluginManager().getPlugin(Resource.ID).get();
+		log = getGame().getPluginManager().getLogger(plugin);
     }
 
     @Listener
