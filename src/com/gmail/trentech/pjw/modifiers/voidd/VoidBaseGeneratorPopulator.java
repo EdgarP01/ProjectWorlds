@@ -4,11 +4,11 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.ImmutableBiomeArea;
 import org.spongepowered.api.world.extent.MutableBlockVolume;
-import org.spongepowered.api.world.gen.GeneratorPopulator;
+import org.spongepowered.api.world.gen.GenerationPopulator;
 
 import com.flowpowered.math.vector.Vector3i;
 
-public class VoidBaseGeneratorPopulator implements GeneratorPopulator {
+public class VoidBaseGeneratorPopulator implements GenerationPopulator {
 
 	@Override
 	public void populate(World world, MutableBlockVolume buffer, ImmutableBiomeArea biomes) {

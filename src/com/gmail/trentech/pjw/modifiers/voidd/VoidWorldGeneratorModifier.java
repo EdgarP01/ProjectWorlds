@@ -9,10 +9,10 @@ public class VoidWorldGeneratorModifier implements WorldGeneratorModifier {
 	@Override
 	public void modifyWorldGenerator(WorldCreationSettings world, DataContainer settings, WorldGenerator worldGenerator) {
         
-        worldGenerator.getGeneratorPopulators().clear();
+        worldGenerator.getGenerationPopulators().clear();
 		worldGenerator.getPopulators().clear();
 		
-		worldGenerator.setBaseGeneratorPopulator(new VoidBaseGeneratorPopulator());
+		worldGenerator.setBaseGenerationPopulator(new VoidBaseGeneratorPopulator());
 	}
 
     @Override

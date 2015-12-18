@@ -8,7 +8,7 @@ public class TestWorldGeneratorModifier implements WorldGeneratorModifier {
 
 	@Override
 	public void modifyWorldGenerator(WorldCreationSettings world, DataContainer settings, WorldGenerator worldGenerator) {
-        worldGenerator.setBaseGeneratorPopulator(new TestGeneratorPopulator());
+        worldGenerator.setBaseGenerationPopulator(new TestGeneratorPopulator());
         worldGenerator.setBiomeGenerator(new TestBiomeGenerator());
 		worldGenerator.getPopulators().clear();
 	}

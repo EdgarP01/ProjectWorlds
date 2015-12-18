@@ -80,10 +80,11 @@ public class CMDHelp implements CommandExecutor {
 				example = " /world plate MyWorld";
 				break;
 			case "portal":
-				description = " Create portal to another dimension. No arguments allow for deleting portals";
+				description = " Create portal to another dimension. No arguments allow for deleting portals.";
 				example = " /world portal MyWorld\n"
 						+ " /world portal MyWorld 10,60,45 15,50,45\n"
-						+ " /world portal MyWorld 150,66,30 15,75,65 ThisWorld";
+						+ " /world portal MyWorld 150,66,30 15,75,65 ThisWorld\n"
+						+ " /world portal show";
 				break;
 			case "gamerule":
 				description = " Configure varies world properties";
