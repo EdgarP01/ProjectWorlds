@@ -13,7 +13,7 @@ import com.gmail.trentech.pjw.Main;
 public class Resource {
 
 	public final static String NAME = "Project Worlds";
-	public final static String VERSION = "0.5.19";
+	public final static String VERSION = "0.5.20";
 	public final static String ID = "Project Worlds";
 
 	public static void spawnParticles(Location<World> location, double range, boolean sub){

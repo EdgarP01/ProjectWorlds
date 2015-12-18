@@ -6,6 +6,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
@@ -25,10 +26,13 @@ public class PortalEventManager {
 
 	@Listener
 	public void onPortalConstructEvent(PortalConstructEvent event){
-		Player player = event.getPlayer();
+		if(!event.getCause().first(Player.class).isPresent()){
+			return;
+		}
+		Player player = event.getCause().first(Player.class).get();
 		
 		if(!player.hasPermission("pjw.portal.create." + player.getWorld().getName())){
-        	event.getPlayer().sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to create portals in this world"));
+			player.sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to create portals in this world"));
         	event.setCancelled(true);
         	return;
 		}
@@ -148,7 +152,7 @@ public class PortalEventManager {
 		}
 		World world = Main.getGame().getServer().getWorld(worldName).get();
 		
-		Main.getGame().getEventManager().post(new TeleportEvent(player, player.getLocation(), world.getSpawnLocation()));
+		Main.getGame().getEventManager().post(new TeleportEvent(player.getLocation(), world.getSpawnLocation(), Cause.of(player)));
 	}
 
 	@Listener
@@ -184,7 +188,7 @@ public class PortalEventManager {
 		}else{
 			Portal portal = new Portal(event.getTargetBlock().getState(), builder.getWorld(), builder.getLocation(), event.getTargetBlock().getLocation().get());
 
-			boolean portalConstructEvent = Main.getGame().getEventManager().post(new PortalConstructEvent(player, portal.getLocations()));
+			boolean portalConstructEvent = Main.getGame().getEventManager().post(new PortalConstructEvent(portal.getLocations(), Cause.of(player)));
 			if(!portalConstructEvent) {
 				portal.build();
 			}

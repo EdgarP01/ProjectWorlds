@@ -13,6 +13,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
@@ -105,7 +106,7 @@ public class SignEventManager {
 			return;
 		}
 		
-		Main.getGame().getEventManager().post(new TeleportEvent(player, player.getLocation(), world.getSpawnLocation()));
+		Main.getGame().getEventManager().post(new TeleportEvent(player.getLocation(), world.getSpawnLocation(), Cause.of(player)));
 	}
 	
 	@Listener

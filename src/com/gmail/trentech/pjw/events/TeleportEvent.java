@@ -1,6 +1,5 @@
 package com.gmail.trentech.pjw.events;
 
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.impl.AbstractEvent;
@@ -10,14 +9,14 @@ import org.spongepowered.api.world.World;
 public class TeleportEvent extends AbstractEvent implements Cancellable {
 	
 	private boolean cancelled = false;
-	private Player player;
+	private Cause cause;
 	private Location<World> src;
 	private Location<World> dest;
 	
-	public TeleportEvent(Player player, Location<World> src, Location<World> dest){
-		this.player = player;
+	public TeleportEvent(Location<World> src, Location<World> dest, Cause cause){
 		this.src = src;
 		this.setDest(dest);
+		this.cause = cause;
 	}
 	
 	@Override
@@ -32,11 +31,7 @@ public class TeleportEvent extends AbstractEvent implements Cancellable {
 	
 	@Override
 	public Cause getCause() {
-		return null;
-	}
-
-	public Player getPlayer() {
-		return player;
+		return cause;
 	}
 
 	public Location<World> getDest() {

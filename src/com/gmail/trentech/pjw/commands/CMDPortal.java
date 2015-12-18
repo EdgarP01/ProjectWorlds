@@ -9,6 +9,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
@@ -75,7 +76,7 @@ public class CMDPortal implements CommandExecutor {
 			
 			Portal portal = new Portal(block, worldPlace, worldName, Integer.parseInt(point1[0]), Integer.parseInt(point1[1]), Integer.parseInt(point1[2]), Integer.parseInt(point2[0]), Integer.parseInt(point2[1]), Integer.parseInt(point2[2]));
 			
-			boolean portalConstructEvent = Main.getGame().getEventManager().post(new PortalConstructEvent(player, portal.getLocations()));
+			boolean portalConstructEvent = Main.getGame().getEventManager().post(new PortalConstructEvent(portal.getLocations(), Cause.of(player)));
 			if(!portalConstructEvent) {
 				portal.build();
 			}

@@ -36,7 +36,11 @@ public class EventManager {
 
 	@Listener
 	public void onTeleportEvent(TeleportEvent event){
-		Player player = event.getPlayer();
+		if(!event.getCause().first(Player.class).isPresent()){
+			return;
+		}
+		Player player = event.getCause().first(Player.class).get();
+		
 		Location<World> src = event.getSrc();
 		Location<World> dest = event.getDest();
 

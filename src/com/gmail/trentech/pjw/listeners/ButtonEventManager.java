@@ -8,6 +8,7 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
@@ -68,7 +69,7 @@ public class ButtonEventManager {
 				return;
 			}
 
-			Main.getGame().getEventManager().post(new TeleportEvent(player, player.getLocation(), world.getSpawnLocation()));
+			Main.getGame().getEventManager().post(new TeleportEvent(player.getLocation(), world.getSpawnLocation(), Cause.of(player)));
 		}
 	}
 	@Listener

@@ -2,7 +2,6 @@ package com.gmail.trentech.pjw.events;
 
 import java.util.List;
 
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.impl.AbstractEvent;
@@ -10,11 +9,12 @@ import org.spongepowered.api.event.impl.AbstractEvent;
 public class PortalConstructEvent extends AbstractEvent implements Cancellable {
 
 	private boolean cancelled = false;
-	private Player player;
+	//private Player player;
+	private Cause cause;
 	private List<String> locations;
 	
-	public PortalConstructEvent(Player player, List<String> locations){
-		this.player = player;
+	public PortalConstructEvent(List<String> locations, Cause cause){
+		this.cause = cause;
 		this.locations = locations;
 	}
 	
@@ -30,14 +30,14 @@ public class PortalConstructEvent extends AbstractEvent implements Cancellable {
 	
 	@Override
 	public Cause getCause() {
-		return null;
+		return cause;
 	}
 
 	public List<String> getLocations() {
 		return locations;
 	}
 
-	public Player getPlayer() {
-		return player;
-	}
+//	public Player getPlayer() {
+//		return player;
+//	}
 }

@@ -8,6 +8,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
@@ -102,7 +103,7 @@ public class CMDTeleport implements CommandExecutor {
 			dest = world.getLocation(Integer.parseInt(location[0]), Integer.parseInt(location[1]), Integer.parseInt(location[2]));
 		}
 
-		boolean result = Main.getGame().getEventManager().post(new TeleportEvent(player, player.getLocation(), dest));
+		boolean result = Main.getGame().getEventManager().post(new TeleportEvent(player.getLocation(), dest, Cause.of(player)));
 		
 		if(!result){
 			if(((Player) src) != player){
