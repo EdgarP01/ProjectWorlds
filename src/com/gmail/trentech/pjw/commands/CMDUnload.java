@@ -46,7 +46,7 @@ public class CMDUnload implements CommandExecutor {
 				Player player = (Player) entity;
 				WorldProperties properties = Main.getGame().getServer().getDefaultWorld().get();
 				player.setLocationSafely(Main.getGame().getServer().getWorld(properties.getWorldName()).get().getSpawnLocation());
-				player.sendMessage(Texts.of(TextColors.GOLD, properties.getWorldName(), " has been unloaded"));
+				player.sendMessage(Texts.of(TextColors.GOLD, properties.getWorldName(), " is being unloaded"));
 			}
 		}
 		

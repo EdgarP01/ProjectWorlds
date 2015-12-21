@@ -25,15 +25,17 @@ import org.spongepowered.api.world.GeneratorType;
 import org.spongepowered.api.world.GeneratorTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
-import org.spongepowered.api.world.WorldBuilder;
+import org.spongepowered.api.world.WorldCreationSettings;
+import org.spongepowered.api.world.WorldCreationSettings.Builder;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
+import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.modifiers.Modifiers;
 
 public class CMDCreate implements CommandExecutor {
 
-	private WorldBuilder builder = Main.getGame().getRegistry().createBuilder(WorldBuilder.class);
+	private Builder builder = WorldCreationSettings.builder();
 	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -78,7 +80,18 @@ public class CMDCreate implements CommandExecutor {
 			}
 		}
 
-		Optional<World> load = builder.enabled(true).loadsOnStartup(true).build();
+		WorldCreationSettings settings = builder.enabled(true).loadsOnStartup(true).build();
+
+		final Optional<WorldProperties> optProperties = Main.getGame().getServer().createWorldProperties(settings);
+
+        if (!optProperties.isPresent()) {
+			src.sendMessage(Texts.of(TextColors.DARK_RED, "something went wrong"));
+			return CommandResult.empty();
+        }
+
+        src.sendMessage(Texts.of(TextColors.YELLOW, "Preparing spawn area. This may take a minute."));
+
+		Optional<World> load = Main.getGame().getServer().loadWorld(optProperties.get());
 
 		if(!load.isPresent()){
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "something went wrong"));
@@ -95,8 +108,8 @@ public class CMDCreate implements CommandExecutor {
 
 	private Text invalidArg(){
 		Text t1 = Texts.of(TextColors.GOLD, "/world create <world> ");
-		Text t2 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("OVERWORLD\nNETHER\nEND"))).append(Texts.of("[D:type] ")).build();
-		Text t3 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("DEFAULT\nOVERWORLD\nNETHER\nEND\nFLAT"))).append(Texts.of("[G:generator] ")).build();
+		Text t2 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("OVERWORLD\nNETHER\nTHE_END"))).append(Texts.of("[D:type] ")).build();
+		Text t3 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("DEFAULT\nOVERWORLD\nNETHER\nTHE_END\nFLAT\nAMPLIFIED\nLARGE_BIOMES"))).append(Texts.of("[G:generator] ")).build();
 		TextBuilder modifierShow = null;
 		for(Entry<String, WorldGeneratorModifier> modifiers :Modifiers.getAll().entrySet()){
 			if(modifierShow == null){
@@ -116,10 +129,10 @@ public class CMDCreate implements CommandExecutor {
 		switch(option[0]){
 			case "D":
 				if(Main.getGame().getRegistry().getType(DimensionType.class, option[1]).isPresent()){
-					builder.dimensionType(Main.getGame().getRegistry().getType(DimensionType.class, option[1]).get());
+					builder.dimension(Main.getGame().getRegistry().getType(DimensionType.class, option[1]).get());
 				}else{
 					Main.getLog().warn("Dimension type " + option[1] + "does not exist. defaulting to OVERWORLD");
-					builder.dimensionType(DimensionTypes.OVERWORLD);
+					builder.dimension(DimensionTypes.OVERWORLD);
 				}
 				return true;				
 			case "G":
