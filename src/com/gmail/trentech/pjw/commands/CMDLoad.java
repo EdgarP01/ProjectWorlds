@@ -54,7 +54,7 @@ public class CMDLoad implements CommandExecutor {
 		
 		try {
 			if(IOManager.dimensionIdExists(IOManager.getDimenionId(worldName))){
-				src.sendMessage(Texts.of(TextColors.DARK_RED, "[WARNING]", TextColors.GOLD, " World contains dimension id comflict. attempting to repair."));
+				src.sendMessage(Texts.of(TextColors.DARK_RED, "[WARNING]", TextColors.GOLD, " World contains dimension id conflict. attempting to repair."));
 				IOManager.init(worldName);
 			}
 		} catch (IOException e) {

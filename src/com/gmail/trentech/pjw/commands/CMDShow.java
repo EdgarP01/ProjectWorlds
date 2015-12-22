@@ -62,7 +62,7 @@ public class CMDShow implements CommandExecutor {
 		}
 		
 		for(Location<World> location : locations){
-			location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
+			location.getExtent().spawnParticles(ParticleEffect.builder()
 					.type(ParticleTypes.BARRIER).count(1).build(), location.getPosition().add(.5,.5,.5));
 		}
 

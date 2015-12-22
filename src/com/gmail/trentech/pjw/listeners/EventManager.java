@@ -12,6 +12,7 @@ import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.world.ChangeWorldWeatherEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
@@ -35,12 +36,7 @@ import com.gmail.trentech.pjw.utils.Resource;
 public class EventManager {
 
 	@Listener
-	public void onTeleportEvent(TeleportEvent event){
-		if(!event.getCause().first(Player.class).isPresent()){
-			return;
-		}
-		Player player = event.getCause().first(Player.class).get();
-		
+	public void onTeleportEvent(TeleportEvent event, @First Player player){
 		Location<World> src = event.getSrc();
 		Location<World> dest = event.getDest();
 
@@ -169,6 +165,7 @@ public class EventManager {
 		if(!(event.getTargetEntity() instanceof Player)){
 			return;
 		}
+		
 		World world = event.getFromTransform().getExtent();
 		WorldProperties properties = world.getProperties();
 		
@@ -181,6 +178,4 @@ public class EventManager {
 			event.setToTransform(transform);
 		}
 	}
-	
-
 }

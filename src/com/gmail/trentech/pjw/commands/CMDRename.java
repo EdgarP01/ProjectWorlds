@@ -15,9 +15,6 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
-
-import ninja.leaping.configurate.ConfigurationNode;
 
 public class CMDRename implements CommandExecutor {
 	
@@ -62,23 +59,6 @@ public class CMDRename implements CommandExecutor {
 					src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not rename ", oldWorldName));
 					return CommandResult.empty();
 				}
-
-				WorldProperties properties = Main.getGame().getServer().getWorldProperties(newWorldName).get();
-				
-				ConfigManager loader = new ConfigManager("worlds.conf");
-				ConfigurationNode config = loader.getConfig();
-
-				config.getNode("Worlds", newWorldName, "Gamemode").setValue(properties.getGameMode().getName().toUpperCase());
-				config.getNode("Worlds", newWorldName, "PVP").setValue(config.getNode("Worlds", oldWorldName, "PVP").getBoolean());
-				config.getNode("Worlds", newWorldName, "Respawn-World").setValue(config.getNode("Worlds", oldWorldName, "Respawn-World").getString());
-				//config.getNode("Worlds", newWorldName, "Time", "Lock").setValue(config.getNode("Worlds", oldWorldName, "Time", "Lock").getBoolean());
-				//config.getNode("Worlds", newWorldName, "Time", "Set").setValue(config.getNode("Worlds", oldWorldName, "Time", "Set").getString());
-				config.getNode("Worlds", newWorldName, "Weather", "Lock").setValue(config.getNode("Worlds", oldWorldName, "Weather", "Lock").getBoolean());
-				config.getNode("Worlds", newWorldName, "Weather", "Set").setValue(config.getNode("Worlds", oldWorldName, "Weather", "Set").getString());
-				
-				config.getNode("Worlds", oldWorldName).setValue(null);
-
-				loader.save();
 
 				src.sendMessage(Texts.of(TextColors.DARK_GREEN, newWorldName, " renamed successfully"));
 				

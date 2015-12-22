@@ -18,16 +18,11 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
-
-import ninja.leaping.configurate.ConfigurationNode;
 
 public class CMDProperties implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		ConfigurationNode config = new ConfigManager("worlds.conf").getConfig();
-		
 		String worldName;
 		if(args.hasAny("name")) {
 			worldName = args.<String>getOne("name").get();
@@ -42,16 +37,12 @@ public class CMDProperties implements CommandExecutor {
 			worldName = player.getWorld().getName();
 		}
 
-		if(config.getNode("Worlds", worldName) == null){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
-			return CommandResult.empty();
-		}
 		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
 			src.sendMessage(Texts.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
 			return CommandResult.empty();
 		}
 		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
-		
+
 		PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 		
 		pages.title(Texts.builder().color(TextColors.DARK_PURPLE).append(Texts.of(TextColors.GOLD, "SETTINGS")).build());
@@ -81,7 +72,7 @@ public class CMDProperties implements CommandExecutor {
 		list.add(Texts.of(TextColors.DARK_PURPLE, "Mob Griefing: ", TextColors.GOLD, properties.getGameRule("mobGriefing").get()));
 		list.add(Texts.of(TextColors.DARK_PURPLE, "Natural Regeneration: ", TextColors.GOLD, properties.getGameRule("naturalRegeneration").get()));
 		list.add(Texts.of(TextColors.DARK_PURPLE, "Tick Speed: ", TextColors.GOLD, properties.getGameRule("randomTickSpeed").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Reduce Debug Info: ", TextColors.GOLD, properties.getGameRule("reduceDebugInfo").get()));
+		list.add(Texts.of(TextColors.DARK_PURPLE, "Reduced Debug Info: ", TextColors.GOLD, properties.getGameRule("reducedDebugInfo").get()));
 		list.add(Texts.of(TextColors.DARK_PURPLE, "Send Command Feedback: ", TextColors.GOLD, properties.getGameRule("sendCommandFeedback").get()));
 		list.add(Texts.of(TextColors.DARK_PURPLE, "Show Death Messages: ", TextColors.GOLD, properties.getGameRule("showDeathMessages").get()));
 

@@ -8,6 +8,7 @@ import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
@@ -25,12 +26,7 @@ import ninja.leaping.configurate.ConfigurationNode;
 public class PortalEventManager {
 
 	@Listener
-	public void onPortalConstructEvent(PortalConstructEvent event){
-		if(!event.getCause().first(Player.class).isPresent()){
-			return;
-		}
-		Player player = event.getCause().first(Player.class).get();
-		
+	public void onPortalConstructEvent(PortalConstructEvent event, @First Player player){
 		if(!player.hasPermission("pjw.portal.create." + player.getWorld().getName())){
 			player.sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to create portals in this world"));
         	event.setCancelled(true);
@@ -59,12 +55,7 @@ public class PortalEventManager {
 	}
 	
 	@Listener
-	public void onChangeBlockEvent(ChangeBlockEvent.Place event) {
-		if (!event.getCause().first(Player.class).isPresent()) {
-			return;
-		}
-		Player player = event.getCause().first(Player.class).get();
-		
+	public void onChangeBlockEvent(ChangeBlockEvent.Place event, @First Player player) {
 		if(PortalBuilder.getCreators().contains(player)){
 			PortalBuilder.getCreators().remove(player);
 			return;
@@ -92,12 +83,7 @@ public class PortalEventManager {
 	}
 	
 	@Listener
-	public void onChangeBlockEvent(ChangeBlockEvent.Break event) {
-		if (!event.getCause().first(Player.class).isPresent()) {
-			return;
-		}
-		Player player = event.getCause().first(Player.class).get();
-
+	public void onChangeBlockEvent(ChangeBlockEvent.Break event, @First Player player) {
 		if(PortalBuilder.getCreators().contains(player)){
 			PortalBuilder.getCreators().remove(player);
 			return;
@@ -156,12 +142,7 @@ public class PortalEventManager {
 	}
 
 	@Listener
-	public void onInteractBlockEvent(InteractBlockEvent.Secondary event) {
-		if(!(event.getCause().first(Player.class).isPresent())){
-			return;
-		}
-		Player player = (Player) event.getCause().first(Player.class).get();
-
+	public void onInteractBlockEvent(InteractBlockEvent.Secondary event, @First Player player) {
 		if(PortalBuilder.getActiveBuilders().get(player) == null){
 			return;
 		}

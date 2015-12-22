@@ -14,6 +14,7 @@ import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
@@ -28,13 +29,7 @@ import com.gmail.trentech.pjw.utils.Resource;
 public class SignEventManager {
 	
 	@Listener
-	public void onSignCreateEvent(ChangeSignEvent event) {
-		Player player = null;
-		Optional<Player> playerOptional = event.getCause().first(Player.class);
-		if(playerOptional.isPresent()){
-			player = playerOptional.get();
-		}
-
+	public void onSignCreateEvent(ChangeSignEvent event, @First Player player) {
 		SignData signData = event.getText();
 
 		ListValue<Text> lines = signData.getValue(Keys.SIGN_LINES).get();
@@ -66,17 +61,10 @@ public class SignEventManager {
 	}
 
 	@Listener
-	public void onSignInteractEvent(InteractBlockEvent.Secondary event) {
+	public void onSignInteractEvent(InteractBlockEvent.Secondary event, @First Player player) {
 		if(!(event.getTargetBlock().getState().getType().equals(BlockTypes.WALL_SIGN) || event.getTargetBlock().getState().getType().equals(BlockTypes.STANDING_SIGN))){
 			return;
 		}
-
-		Optional<Player> playerOptional = event.getCause().first(Player.class);
-		if(!playerOptional.isPresent()){
-			return;
-			
-		}
-		Player player = playerOptional.get();
 
 		Location<World> block = event.getTargetBlock().getLocation().get();
 
@@ -110,15 +98,12 @@ public class SignEventManager {
 	}
 	
 	@Listener
-	public void onSignBreakEvent(ChangeBlockEvent.Break event) {
-		Optional<Player> playerOptional = event.getCause().first(Player.class);
-	    if (!playerOptional.isPresent()) {
-	    	return;
-	    }
-
+	public void onSignBreakEvent(ChangeBlockEvent.Break event, @First Player player) {
 	    SignData signData = null;
+	    
 	    for(Transaction<BlockSnapshot> blockTransaction : event.getTransactions()){
-	    	Optional<Location<World>> blockOptional = blockTransaction.getOriginal().getLocation();	    	
+	    	Optional<Location<World>> blockOptional = blockTransaction.getOriginal().getLocation();	
+	    	
 	    	if(!blockOptional.isPresent()){
 	    		continue;
 	    	}
@@ -146,7 +131,6 @@ public class SignEventManager {
         	return;
 		}
 
-		Player player = playerOptional.get();
 		if(!player.hasPermission("pjw.sign.break")) {
 			player.sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to break portal signs"));
 			event.setCancelled(true);

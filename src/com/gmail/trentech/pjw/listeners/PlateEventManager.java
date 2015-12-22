@@ -9,6 +9,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
@@ -26,12 +27,7 @@ public class PlateEventManager {
 	public static HashMap<Player, String> creators = new HashMap<>();
 
 	@Listener
-	public void onChangeBlockEvent(ChangeBlockEvent.Modify event) {
-		if (!event.getCause().first(Player.class).isPresent()) {
-			return;
-		}
-		Player player = event.getCause().first(Player.class).get();
-		
+	public void onChangeBlockEvent(ChangeBlockEvent.Modify event, @First Player player) {
 		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
 			BlockSnapshot block = transaction.getFinal();
 
@@ -74,12 +70,7 @@ public class PlateEventManager {
 	}
 	
 	@Listener
-	public void onChangeBlockEvent(ChangeBlockEvent.Break event) {
-		if (!event.getCause().first(Player.class).isPresent()) {
-			return;
-		}
-		Player player = event.getCause().first(Player.class).get();
-		
+	public void onChangeBlockEvent(ChangeBlockEvent.Break event, @First Player player) {
 		if(creators.containsKey(player)){
 			creators.remove(player);
 			return;
@@ -108,12 +99,7 @@ public class PlateEventManager {
 	}
 
 	@Listener
-	public void onChangeBlockEvent(ChangeBlockEvent.Place event) {
-		if (!event.getCause().first(Player.class).isPresent()) {
-			return;
-		}
-		Player player = event.getCause().first(Player.class).get();
-		
+	public void onChangeBlockEvent(ChangeBlockEvent.Place event, @First Player player) {
 		if(!creators.containsKey(player)){
 			return;
 		}

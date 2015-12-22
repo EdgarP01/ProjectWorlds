@@ -145,7 +145,7 @@ public class CMDGamerule implements CommandExecutor {
 			}catch(Exception e){
 				return false;
 			}
-		case "reduceDebugInfo":
+		case "reducedDebugInfo":
 			return validBool(value);
 		case "respawnWorld":
 			if(Main.getGame().getServer().getWorld(value).isPresent()){

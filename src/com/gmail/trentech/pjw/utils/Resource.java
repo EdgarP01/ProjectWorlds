@@ -13,7 +13,7 @@ import com.gmail.trentech.pjw.Main;
 public class Resource {
 
 	public final static String NAME = "Project Worlds";
-	public final static String VERSION = "0.5.21";
+	public final static String VERSION = "0.5.22";
 	public final static String ID = "Project Worlds";
 
 	public static void spawnParticles(Location<World> location, double range, boolean sub){
@@ -29,7 +29,6 @@ public class Resource {
 					.type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(3).build(), location.getPosition().add(v3,v1,v2));
 			location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
 					.type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(3).build(), location.getPosition().add(0,v1,0));
-
 			if(sub){
 				location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
 						.type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(3).build(), location.getPosition().sub(v1,v2,v3));

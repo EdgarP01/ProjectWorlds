@@ -12,9 +12,6 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
-
-import ninja.leaping.configurate.ConfigurationNode;
 
 public class CMDDelete implements CommandExecutor {
 
@@ -38,12 +35,6 @@ public class CMDDelete implements CommandExecutor {
 			
 			try {
 				if(Main.getGame().getServer().deleteWorld(worldInfo).get()){
-					ConfigManager loader = new ConfigManager("worlds.conf");
-					ConfigurationNode config = loader.getConfig();
-
-					config.getNode("Worlds", worldName).setValue(null);
-					loader.save();
-					
 					src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " deleted successfully"));
 					return CommandResult.success();
 				}
