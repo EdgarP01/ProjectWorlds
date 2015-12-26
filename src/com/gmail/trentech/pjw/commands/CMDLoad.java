@@ -75,8 +75,8 @@ public class CMDLoad implements CommandExecutor {
 	}
 	
 	private Text invalidArg(){
-		Text t1 = Texts.of(TextColors.GOLD, "/world load ");
-		Text t2 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("<world> ")).build();
+		Text t1 = Texts.of(TextColors.YELLOW, "/world load ");
+		Text t2 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("<world> ")).build();
 		return Texts.of(t1,t2);
 	}
 }

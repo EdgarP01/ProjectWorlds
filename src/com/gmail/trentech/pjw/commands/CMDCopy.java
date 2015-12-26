@@ -73,9 +73,9 @@ public class CMDCopy implements CommandExecutor {
 	}
 	
 	private Text invalidArg(){
-		Text t1 = Texts.of(TextColors.GOLD, "/world copy ");
-		Text t2 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Enter source world"))).append(Texts.of("<world> ")).build();
-		Text t3 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Enter new world name"))).append(Texts.of("<world>")).build();
+		Text t1 = Texts.of(TextColors.YELLOW, "/world copy ");
+		Text t2 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("Enter source world"))).append(Texts.of("<world> ")).build();
+		Text t3 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("Enter new world name"))).append(Texts.of("<world>")).build();
 		return Texts.of(t1,t2,t3);
 	}
 }

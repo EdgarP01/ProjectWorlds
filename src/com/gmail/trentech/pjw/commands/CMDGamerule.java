@@ -45,15 +45,15 @@ public class CMDGamerule implements CommandExecutor {
 		if(!args.hasAny("rule")) {
 			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 			
-			pages.title(Texts.builder().color(TextColors.DARK_PURPLE).append(Texts.of(TextColors.GOLD, world.getName().toUpperCase())).build());
+			pages.title(Texts.builder().color(TextColors.DARK_GREEN).append(Texts.of(TextColors.AQUA, world.getName().toUpperCase())).build());
 			
 			List<Text> list = new ArrayList<>();
 			
 			for(Entry<String, String> gamerule : world.getGameRules().entrySet()){
-				list.add(Texts.of(TextColors.DARK_PURPLE, gamerule.getKey(), ": ", TextColors.GOLD, gamerule.getValue()));
+				list.add(Texts.of(TextColors.AQUA, gamerule.getKey(), ": ", TextColors.GREEN, gamerule.getValue()));
 			}
 
-			list.add(Texts.of(TextColors.DARK_PURPLE, "Command: ", invalidArg()));
+			list.add(Texts.of(TextColors.AQUA, "Command: ", invalidArg()));
 			
 			pages.contents(list);
 			
@@ -71,11 +71,11 @@ public class CMDGamerule implements CommandExecutor {
 		if(!args.hasAny("value")) {
 			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 			
-			pages.title(Texts.builder().color(TextColors.DARK_PURPLE).append(Texts.of(TextColors.GOLD, world.getName().toUpperCase())).build());
+			pages.title(Texts.builder().color(TextColors.DARK_GREEN).append(Texts.of(TextColors.AQUA, world.getName())).build());
 			
 			List<Text> list = new ArrayList<>();
-			list.add(Texts.of(TextColors.DARK_PURPLE, rule, ": ", TextColors.GOLD, world.getGameRule(rule).get()));
-			list.add(Texts.of(TextColors.DARK_PURPLE, "Command: ", invalidArg()));
+			list.add(Texts.of(TextColors.AQUA, rule, ": ", TextColors.GREEN, world.getGameRule(rule).get()));
+			list.add(Texts.of(TextColors.AQUA, "Command: ", invalidArg()));
 			
 			pages.contents(list);
 			
@@ -97,10 +97,10 @@ public class CMDGamerule implements CommandExecutor {
 	}
 	
 	private Text invalidArg(){
-		Text t1 = Texts.of(TextColors.GOLD, "/world gamerule ");
-		Text t2 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("<world> ")).build();
-		Text t3 = Texts.of(TextColors.GOLD, "<rule> ");
-		Text t4 = Texts.of(TextColors.GOLD, "[value]");
+		Text t1 = Texts.of(TextColors.GREEN, "/world gamerule ");
+		Text t2 = Texts.builder().color(TextColors.GREEN).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("<world> ")).build();
+		Text t3 = Texts.of(TextColors.GREEN, "<rule> ");
+		Text t4 = Texts.of(TextColors.GREEN, "[value]");
 		return Texts.of(t1,t2,t3,t4);
 	}
 	

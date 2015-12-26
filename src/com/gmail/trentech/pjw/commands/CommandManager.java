@@ -23,24 +23,7 @@ public class CommandManager {
 		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
 		    .executor(new CMDDelete())
 		    .build();
-	
-	public CommandSpec cmdShow = CommandSpec.builder()
-		    .description(Texts.of("Fills all portal regions to make them temporarly visible"))
-		    .permission("pjw.cmd.world.portal.show")
-		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
-		    .executor(new CMDShow())
-		    .build();
-	
-	public CommandSpec cmdPortal = CommandSpec.builder()
-		    .description(Texts.of("create world portal"))
-		    .permission("pjw.cmd.world.portal")
-		    .child(cmdShow, "Show", "s")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.string(Texts.of("point1")))
-		    		,GenericArguments.optional(GenericArguments.string(Texts.of("point2"))), GenericArguments.optional(GenericArguments.string(Texts.of("block")))
-		    		,GenericArguments.optional(GenericArguments.string(Texts.of("world"))))
-		    .executor(new CMDPortal())
-		    .build();
-	
+
 	public CommandSpec cmdDiffculty = CommandSpec.builder()
 		    .description(Texts.of("set difficulty of world"))
 		    .permission("pjw.cmd.world.difficulty")
@@ -129,20 +112,6 @@ public class CommandManager {
 		    		,GenericArguments.optional(GenericArguments.string(Texts.of("value"))))
 		    .executor(new CMDGamerule())
 		    .build();
-	
-	public CommandSpec cmdButton = CommandSpec.builder()
-		    .description(Texts.of("place a teleport button"))
-		    .permission("pjw.cmd.world.button")
-		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
-		    .executor(new CMDButton())
-		    .build();
-	
-	public CommandSpec cmdPlate = CommandSpec.builder()
-		    .description(Texts.of("place a teleport pressure plate"))
-		    .permission("pjw.cmd.world.plate")
-		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Texts.of("name"))))
-		    .executor(new CMDPlate())
-		    .build();
 
 	public CommandSpec cmdHelp = CommandSpec.builder()
 		    .description(Texts.of("i need help"))
@@ -151,13 +120,19 @@ public class CommandManager {
 		    .executor(new CMDHelp())
 		    .build();
 	
+	public CommandSpec cmdGamemode = CommandSpec.builder()
+		    .description(Texts.of("set gamemode of world"))
+		    .permission("pjw.cmd.world.gamemode")
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.string(Texts.of("value"))))
+		    .executor(new CMDGamemode())
+		    .build();
+	
 	public CommandSpec cmdWorld = CommandSpec.builder()
 			.description(Texts.of("Base command"))
 			.permission("pjw.cmd.world")
 			.child(cmdCreate, "create", "cr")
 			.child(cmdDelete, "delete", "del")
 			.child(cmdProperties, "properties", "prop")
-			.child(cmdPortal, "portal", "p")
 			.child(cmdDiffculty, "difficulty", "diff")
 			.child(cmdSetSpawn, "setspawn", "spawn", "ss")
 			.child(cmdHardcore, "hardcore", "h")
@@ -168,9 +143,8 @@ public class CommandManager {
 			.child(cmdRename, "rename", "rn")
 			.child(cmdUnload, "unload", "u")
 			.child(cmdLoad, "load", "ld")
-			.child(cmdButton, "button", "b")
-			.child(cmdPlate, "plate", "pl")
 			.child(cmdHelp, "help", "hp")
+			//.child(cmdGamemode, "gamemode", "gm")
 			.executor(new CMDWorld())
 			.build();
 }

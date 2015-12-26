@@ -1,7 +1,11 @@
 package com.gmail.trentech.pjw.listeners;
 
+import java.util.Random;
+
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.entity.JoinData;
+import org.spongepowered.api.effect.particle.ParticleEffect;
+import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
@@ -27,11 +31,11 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 import org.spongepowered.api.world.weather.Weather;
 
+import com.flowpowered.math.vector.Vector3d;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.commands.CMDTeleport;
 import com.gmail.trentech.pjw.events.TeleportEvent;
 import com.gmail.trentech.pjw.utils.ConfigManager;
-import com.gmail.trentech.pjw.utils.Resource;
 
 public class EventManager {
 
@@ -50,14 +54,14 @@ public class EventManager {
 			return;
 		}
 		if(new ConfigManager().getConfig().getNode("Options", "Show-Particles").getBoolean()){
-			Resource.spawnParticles(src, 0.5, true);
-			Resource.spawnParticles(src.getRelative(Direction.UP), 0.5, true);
+			spawnParticles(src, 0.5, true);
+			spawnParticles(src.getRelative(Direction.UP), 0.5, true);
 			
-			Resource.spawnParticles(dest, 1.0, false);
-			Resource.spawnParticles(dest.getRelative(Direction.UP), 1.0, false);
+			spawnParticles(dest, 1.0, false);
+			spawnParticles(dest.getRelative(Direction.UP), 1.0, false);
 		}
 
-		player.sendTitle(Titles.of(Texts.of(TextColors.GOLD, dest.getExtent().getName()), Texts.of(TextColors.DARK_PURPLE, "x: ", dest.getExtent().getSpawnLocation().getBlockX(), ", y: ", dest.getExtent().getSpawnLocation().getBlockY(),", z: ", dest.getExtent().getSpawnLocation().getBlockZ())));
+		player.sendTitle(Titles.of(Texts.of(TextColors.DARK_GREEN, dest.getExtent().getName()), Texts.of(TextColors.AQUA, "x: ", dest.getExtent().getSpawnLocation().getBlockX(), ", y: ", dest.getExtent().getSpawnLocation().getBlockY(),", z: ", dest.getExtent().getSpawnLocation().getBlockZ())));
 	}
 	
 	@Listener
@@ -176,6 +180,33 @@ public class EventManager {
 			
 			Transform<World> transform = event.getToTransform().setLocation(respawnWorld.getSpawnLocation());
 			event.setToTransform(transform);
+		}
+	}
+	
+	private void spawnParticles(Location<World> location, double range, boolean sub){
+		
+		Random random = new Random();
+		
+		for(int i = 0; i < 5; i++){
+			double v1 = 0.0 + (range - 0.0) * random.nextDouble();
+			double v2 = 0.0 + (range - 0.0) * random.nextDouble();
+			double v3 = 0.0 + (range - 0.0) * random.nextDouble();
+
+			location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
+					.type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(3).build(), location.getPosition().add(v3,v1,v2));
+			location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
+					.type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(3).build(), location.getPosition().add(0,v1,0));
+			if(sub){
+				location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
+						.type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(3).build(), location.getPosition().sub(v1,v2,v3));
+				location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
+						.type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(3).build(), location.getPosition().sub(0,v2,0));
+			}else{
+				location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
+						.type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(3).build(), location.getPosition().add(v3,v1,v1));
+				location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
+						.type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(3).build(), location.getPosition().add(v2,v3,v2));
+			}
 		}
 	}
 }

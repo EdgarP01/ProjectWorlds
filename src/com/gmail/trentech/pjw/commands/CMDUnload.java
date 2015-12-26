@@ -43,7 +43,6 @@ public class CMDUnload implements CommandExecutor {
 		
 		for(Entity entity : world.getEntities()){
 			if(entity instanceof Player){
-				System.out.println("WTF");
 				Player player = (Player) entity;
 				WorldProperties properties = Main.getGame().getServer().getDefaultWorld().get();
 				player.setLocationSafely(Main.getGame().getServer().getWorld(properties.getWorldName()).get().getSpawnLocation());

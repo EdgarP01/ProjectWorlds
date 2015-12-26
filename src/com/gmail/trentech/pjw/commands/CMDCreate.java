@@ -107,9 +107,9 @@ public class CMDCreate implements CommandExecutor {
 	}
 
 	private Text invalidArg(){
-		Text t1 = Texts.of(TextColors.GOLD, "/world create <world> ");
-		Text t2 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("OVERWORLD\nNETHER\nTHE_END"))).append(Texts.of("[D:type] ")).build();
-		Text t3 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("DEFAULT\nOVERWORLD\nNETHER\nTHE_END\nFLAT\nAMPLIFIED\nLARGE_BIOMES"))).append(Texts.of("[G:generator] ")).build();
+		Text t1 = Texts.of(TextColors.YELLOW, "/world create <world> ");
+		Text t2 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("OVERWORLD\nNETHER\nTHE_END"))).append(Texts.of("[D:type] ")).build();
+		Text t3 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("DEFAULT\nOVERWORLD\nNETHER\nTHE_END\nFLAT\nAMPLIFIED\nLARGE_BIOMES"))).append(Texts.of("[G:generator] ")).build();
 		TextBuilder modifierShow = null;
 		for(Entry<String, WorldGeneratorModifier> modifiers :Modifiers.getAll().entrySet()){
 			if(modifierShow == null){
@@ -118,8 +118,8 @@ public class CMDCreate implements CommandExecutor {
 				modifierShow.append(Texts.of("\n", modifiers.getKey()));
 			}	
 		}
-		Text t4 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(modifierShow.build())).append(Texts.of("[M:modifier] ")).build();
-		Text t5 = Texts.of(TextColors.GOLD, "[S:seed]");
+		Text t4 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(modifierShow.build())).append(Texts.of("[M:modifier] ")).build();
+		Text t5 = Texts.of(TextColors.YELLOW, "[S:seed]");
 		return Texts.of(t1,t2,t3,t4,t5);
 	}
 	

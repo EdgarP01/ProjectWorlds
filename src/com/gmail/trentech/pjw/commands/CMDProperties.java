@@ -28,8 +28,8 @@ public class CMDProperties implements CommandExecutor {
 			worldName = args.<String>getOne("name").get();
 		}else{
 			if(!(src instanceof Player)){
-				Text t1 = Texts.of(TextColors.GOLD, "/world properties ");
-				Text t2 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("[world] ")).build();
+				Text t1 = Texts.of(TextColors.YELLOW, "/world properties ");
+				Text t2 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("[world] ")).build();
 				src.sendMessage(Texts.of(t1,t2));
 				return CommandResult.empty();
 			}
@@ -45,36 +45,36 @@ public class CMDProperties implements CommandExecutor {
 
 		PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 		
-		pages.title(Texts.builder().color(TextColors.DARK_PURPLE).append(Texts.of(TextColors.GOLD, "SETTINGS")).build());
+		pages.title(Texts.builder().color(TextColors.DARK_GREEN).append(Texts.of(TextColors.AQUA, "Settings")).build());
 		
 		List<Text> list = new ArrayList<>();
 		
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Name: ", TextColors.GOLD, worldName));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "UUID: ", TextColors.GOLD, properties.getUniqueId().toString()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Dimension Type: ", TextColors.GOLD, properties.getDimensionType().getName().toUpperCase()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Generator Type: ", TextColors.GOLD, properties.getGeneratorType().getName().toUpperCase()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Seed: ", TextColors.GOLD, properties.getSeed()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "GameMode: ", TextColors.GOLD, properties.getGameRule("gamemode").get()));		
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Difficulty: ", TextColors.GOLD, properties.getDifficulty().getName().toUpperCase()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "PVP: ", TextColors.GOLD, properties.getGameRule("pvp").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Keep Spawn Loaded: ", TextColors.GOLD, properties.doesKeepSpawnLoaded()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, properties.isHardcore()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Respawn World: ", TextColors.GOLD, properties.getGameRule("respawnWorld").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Default Weather: ", TextColors.GOLD, properties.getGameRule("defaultWeather").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Command Block Output: ", TextColors.GOLD, properties.getGameRule("commandBlockOutput").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Freeze Time: ", TextColors.GOLD, properties.getGameRule("doDaylightCycle").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Fire Spread: ", TextColors.GOLD, properties.getGameRule("doFireTick").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Mob Loot: ", TextColors.GOLD, properties.getGameRule("doMobLoot").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Mob Spawning: ", TextColors.GOLD, properties.getGameRule("doMobSpawning").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Tile Drops: ", TextColors.GOLD, properties.getGameRule("doTileDrops").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Keep Inventory: ", TextColors.GOLD, properties.getGameRule("keepInventory").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Log Admin Commands: ", TextColors.GOLD, properties.getGameRule("logAdminCommands").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Mob Griefing: ", TextColors.GOLD, properties.getGameRule("mobGriefing").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Natural Regeneration: ", TextColors.GOLD, properties.getGameRule("naturalRegeneration").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Tick Speed: ", TextColors.GOLD, properties.getGameRule("randomTickSpeed").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Reduced Debug Info: ", TextColors.GOLD, properties.getGameRule("reducedDebugInfo").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Send Command Feedback: ", TextColors.GOLD, properties.getGameRule("sendCommandFeedback").get()));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Show Death Messages: ", TextColors.GOLD, properties.getGameRule("showDeathMessages").get()));
+		list.add(Texts.of(TextColors.AQUA, "Name: ", TextColors.GREEN, worldName));
+		list.add(Texts.of(TextColors.AQUA, "UUID: ", TextColors.GREEN, properties.getUniqueId().toString()));
+		list.add(Texts.of(TextColors.AQUA, "Dimension Type: ", TextColors.GREEN, properties.getDimensionType().getName().toUpperCase()));
+		list.add(Texts.of(TextColors.AQUA, "Generator Type: ", TextColors.GREEN, properties.getGeneratorType().getName().toUpperCase()));
+		list.add(Texts.of(TextColors.AQUA, "Seed: ", TextColors.GREEN, properties.getSeed()));
+		list.add(Texts.of(TextColors.AQUA, "GameMode: ", TextColors.GREEN, properties.getGameRule("gamemode").get()));		
+		list.add(Texts.of(TextColors.AQUA, "Difficulty: ", TextColors.GREEN, properties.getDifficulty().getName().toUpperCase()));
+		list.add(Texts.of(TextColors.AQUA, "PVP: ", TextColors.GREEN, properties.getGameRule("pvp").get()));
+		list.add(Texts.of(TextColors.AQUA, "Keep Spawn Loaded: ", TextColors.GREEN, properties.doesKeepSpawnLoaded()));
+		list.add(Texts.of(TextColors.AQUA, "Hardcore: ", TextColors.GREEN, properties.isHardcore()));
+		list.add(Texts.of(TextColors.AQUA, "Respawn World: ", TextColors.GREEN, properties.getGameRule("respawnWorld").get()));
+		list.add(Texts.of(TextColors.AQUA, "Default Weather: ", TextColors.GREEN, properties.getGameRule("defaultWeather").get()));
+		list.add(Texts.of(TextColors.AQUA, "Command Block Output: ", TextColors.GREEN, properties.getGameRule("commandBlockOutput").get()));
+		list.add(Texts.of(TextColors.AQUA, "Freeze Time: ", TextColors.GREEN, properties.getGameRule("doDaylightCycle").get()));
+		list.add(Texts.of(TextColors.AQUA, "Fire Spread: ", TextColors.GREEN, properties.getGameRule("doFireTick").get()));
+		list.add(Texts.of(TextColors.AQUA, "Mob Loot: ", TextColors.GREEN, properties.getGameRule("doMobLoot").get()));
+		list.add(Texts.of(TextColors.AQUA, "Mob Spawning: ", TextColors.GREEN, properties.getGameRule("doMobSpawning").get()));
+		list.add(Texts.of(TextColors.AQUA, "Tile Drops: ", TextColors.GREEN, properties.getGameRule("doTileDrops").get()));
+		list.add(Texts.of(TextColors.AQUA, "Keep Inventory: ", TextColors.GREEN, properties.getGameRule("keepInventory").get()));
+		list.add(Texts.of(TextColors.AQUA, "Log Admin Commands: ", TextColors.GREEN, properties.getGameRule("logAdminCommands").get()));
+		list.add(Texts.of(TextColors.AQUA, "Mob Griefing: ", TextColors.GREEN, properties.getGameRule("mobGriefing").get()));
+		list.add(Texts.of(TextColors.AQUA, "Natural Regeneration: ", TextColors.GREEN, properties.getGameRule("naturalRegeneration").get()));
+		list.add(Texts.of(TextColors.AQUA, "Tick Speed: ", TextColors.GREEN, properties.getGameRule("randomTickSpeed").get()));
+		list.add(Texts.of(TextColors.AQUA, "Reduced Debug Info: ", TextColors.GREEN, properties.getGameRule("reducedDebugInfo").get()));
+		list.add(Texts.of(TextColors.AQUA, "Send Command Feedback: ", TextColors.GREEN, properties.getGameRule("sendCommandFeedback").get()));
+		list.add(Texts.of(TextColors.AQUA, "Show Death Messages: ", TextColors.GREEN, properties.getGameRule("showDeathMessages").get()));
 
 		pages.contents(list);
 		

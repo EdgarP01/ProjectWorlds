@@ -22,8 +22,8 @@ public class CMDHelp implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("command")) {
-			Text t1 = Texts.of(TextColors.GOLD, "/world help ");
-			Text t2 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Enter the command you need help with"))).append(Texts.of("<command> ")).build();
+			Text t1 = Texts.of(TextColors.YELLOW, "/world help ");
+			Text t2 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("Enter the command you need help with"))).append(Texts.of("<command> ")).build();
 			src.sendMessage(Texts.of(t1,t2));
 			return CommandResult.empty();
 		}
@@ -32,10 +32,6 @@ public class CMDHelp implements CommandExecutor {
 		String example = null;
 		
 		switch(command.toLowerCase()){
-			case "button":
-				description = " Use this command to create a button that will teleport you to other worlds";
-				example = " /world button MyWorld";
-				break;
 			case "copy":
 				description = " Allows you to make a new world from an existing world.";
 				example = " /world copy srcWorld newWorld\n"
@@ -74,17 +70,6 @@ public class CMDHelp implements CommandExecutor {
 			case "load":
 				description = " Loads specified world if exists.";
 				example = " /world load NewWorld";
-				break;
-			case "plate":
-				description = " Use this command to create a pressire playe that will teleport you to other worlds";
-				example = " /world plate MyWorld";
-				break;
-			case "portal":
-				description = " Create portal to another dimension. No arguments allow for deleting portals.";
-				example = " /world portal MyWorld\n"
-						+ " /world portal MyWorld 10,60,45 15,50,45\n"
-						+ " /world portal MyWorld 150,66,30 15,75,65 ThisWorld\n"
-						+ " /world portal show";
 				break;
 			case "gamerule":
 				description = " Configure varies world properties";
@@ -132,14 +117,14 @@ public class CMDHelp implements CommandExecutor {
 	
 	private PaginationBuilder help(String command, String description, String example){
 		PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
-		pages.title(Texts.builder().color(TextColors.DARK_PURPLE).append(Texts.of(TextColors.GOLD, command)).build());
+		pages.title(Texts.builder().color(TextColors.DARK_GREEN).append(Texts.of(TextColors.AQUA, command)).build());
 		
 		List<Text> list = new ArrayList<>();
 
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Description:"));
-		list.add(Texts.of(TextColors.GOLD, description));
-		list.add(Texts.of(TextColors.DARK_PURPLE, "Example:"));
-		list.add(Texts.of(TextColors.GOLD,  example, TextColors.DARK_PURPLE));
+		list.add(Texts.of(TextColors.AQUA, "Description:"));
+		list.add(Texts.of(TextColors.GREEN, description));
+		list.add(Texts.of(TextColors.AQUA, "Example:"));
+		list.add(Texts.of(TextColors.GREEN,  example, TextColors.DARK_GREEN));
 		
 		pages.contents(list);
 		

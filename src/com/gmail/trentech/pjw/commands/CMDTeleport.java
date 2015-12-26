@@ -13,7 +13,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.title.Titles;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -27,9 +26,9 @@ public class CMDTeleport implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("arg0")) {
-			Text t1 = Texts.of(TextColors.GOLD, "/world teleport ");
-			Text t2 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Enter the player you want to teleport"))).append(Texts.of("[player] ")).build();
-			Text t3 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Enter world or @w for current world, and optional coordinates"))).append(Texts.of("<world:[x,y,z]>")).build();
+			Text t1 = Texts.of(TextColors.YELLOW, "/world teleport ");
+			Text t2 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("Enter the player you want to teleport"))).append(Texts.of("[player] ")).build();
+			Text t3 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("Enter world or @w for current world, and optional coordinates"))).append(Texts.of("<world:[x,y,z]>")).build();
 			
 			src.sendMessage(Texts.of(t1,t2,t3));
 
@@ -49,8 +48,7 @@ public class CMDTeleport implements CommandExecutor {
 			Location<World> location = players.get(player);
 			
 			player.setLocation(location);
-			player.sendTitle(Titles.of(Texts.of(TextColors.GOLD, location.getExtent().getName()), Texts.of(TextColors.DARK_PURPLE, "x: ", location.getExtent().getSpawnLocation().getBlockX(), ", y: ", location.getExtent().getSpawnLocation().getBlockY(),", z: ", location.getExtent().getSpawnLocation().getBlockZ())));
-			
+
 			players.remove(player);
 			
 			return CommandResult.success();

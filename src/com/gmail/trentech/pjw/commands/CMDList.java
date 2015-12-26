@@ -26,18 +26,18 @@ public class CMDList implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 		
-		pages.title(Texts.builder().color(TextColors.DARK_PURPLE).append(Texts.of(TextColors.GOLD, "Worlds")).build());
+		pages.title(Texts.builder().color(TextColors.DARK_GREEN).append(Texts.of(TextColors.AQUA, "Worlds")).build());
 		
 		List<Text> list = new ArrayList<>();
 		
 		for(World world : Main.getGame().getServer().getWorlds()){
-			TextBuilder builder = Texts.builder().color(TextColors.DARK_PURPLE).onHover(TextActions.showText(Texts.of(TextColors.WHITE, "Click to view properies")));
-			builder.onClick(TextActions.runCommand("/world properties " + world.getName())).append(Texts.of(TextColors.DARK_PURPLE, world.getName(), ": ", TextColors.GOLD, world.getEntities().size(), " Entities"));
+			TextBuilder builder = Texts.builder().color(TextColors.AQUA).onHover(TextActions.showText(Texts.of(TextColors.WHITE, "Click to view properies")));
+			builder.onClick(TextActions.runCommand("/world properties " + world.getName())).append(Texts.of(TextColors.AQUA, world.getName(), ": ", TextColors.GREEN, world.getEntities().size(), " Entities"));
 			list.add(builder.build());
 		}
 		for(WorldProperties world : Main.getGame().getServer().getUnloadedWorlds()){
 			TextBuilder builder = Texts.builder().color(TextColors.DARK_GRAY).onHover(TextActions.showText(Texts.of(TextColors.WHITE, "Click to load world")));
-			builder.onClick(TextActions.runCommand("/world load " + world.getWorldName())).append(Texts.of(TextColors.DARK_PURPLE, world.getWorldName(), ": ", TextColors.GRAY, " Unloaded"));
+			builder.onClick(TextActions.runCommand("/world load " + world.getWorldName())).append(Texts.of(TextColors.AQUA, world.getWorldName(), ": ", TextColors.GRAY, " Unloaded"));
 			list.add(builder.build());
 		}
 

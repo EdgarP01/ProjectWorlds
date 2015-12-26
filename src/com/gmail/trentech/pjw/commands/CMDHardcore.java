@@ -44,17 +44,11 @@ public class CMDHardcore implements CommandExecutor {
 		if(!args.hasAny("value")) {
 			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 			
-			pages.title(Texts.builder().color(TextColors.DARK_PURPLE).append(Texts.of(TextColors.GOLD, world.getName().toUpperCase())).build());
+			pages.title(Texts.builder().color(TextColors.DARK_GREEN).append(Texts.of(TextColors.AQUA, world.getName().toUpperCase())).build());
 			
 			List<Text> list = new ArrayList<>();
-			
-			if(world.getProperties().isHardcore()){
-				list.add(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, "true"));
-			}else{
-				list.add(Texts.of(TextColors.DARK_PURPLE, "Hardcore: ", TextColors.GOLD, "false"));
-			}
-
-			list.add(Texts.of(TextColors.DARK_PURPLE, "Command: ",invalidArg()));
+			list.add(Texts.of(TextColors.AQUA, "Hardcore: ", TextColors.GREEN, world.getProperties().isHardcore()));
+			list.add(Texts.of(TextColors.AQUA, "Command: ",invalidArg()));
 			
 			pages.contents(list);
 			
@@ -80,9 +74,9 @@ public class CMDHardcore implements CommandExecutor {
 	}
 	
 	private Text invalidArg(){
-		Text t1 = Texts.of(TextColors.GOLD, "/world hardcore ");
-		Text t2 = Texts.builder().color(TextColors.GOLD).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("<world> ")).build();
-		Text t3 = Texts.of(TextColors.GOLD, "[true/false]");
+		Text t1 = Texts.of(TextColors.GREEN, "/world hardcore ");
+		Text t2 = Texts.builder().color(TextColors.GREEN).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("<world> ")).build();
+		Text t3 = Texts.of(TextColors.GREEN, "[true/false]");
 		return Texts.of(t1,t2,t3);
 	}
 

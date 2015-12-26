@@ -18,11 +18,7 @@ import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.commands.CommandManager;
-import com.gmail.trentech.pjw.listeners.ButtonEventManager;
 import com.gmail.trentech.pjw.listeners.EventManager;
-import com.gmail.trentech.pjw.listeners.PlateEventManager;
-import com.gmail.trentech.pjw.listeners.PortalEventManager;
-import com.gmail.trentech.pjw.listeners.SignEventManager;
 import com.gmail.trentech.pjw.modifiers.Modifiers;
 import com.gmail.trentech.pjw.modifiers.voidd.VoidWorldGeneratorModifier;
 import com.gmail.trentech.pjw.utils.ConfigManager;
@@ -46,10 +42,10 @@ public class Main {
     @Listener
     public void onInitialization(GameInitializationEvent event) {
     	getGame().getEventManager().registerListeners(this, new EventManager());
-    	getGame().getEventManager().registerListeners(this, new SignEventManager());
-    	getGame().getEventManager().registerListeners(this, new PortalEventManager());
-    	getGame().getEventManager().registerListeners(this, new ButtonEventManager());
-    	getGame().getEventManager().registerListeners(this, new PlateEventManager());
+    	//getGame().getEventManager().registerListeners(this, new SignEventManager());
+    	//getGame().getEventManager().registerListeners(this, new PortalEventManager());
+    	//getGame().getEventManager().registerListeners(this, new ButtonEventManager());
+    	//getGame().getEventManager().registerListeners(this, new PlateEventManager());
     	
     	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
     	getGame().getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", "gr");

@@ -9,6 +9,8 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.gamemode.GameMode;
+import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.service.pagination.PaginationBuilder;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
@@ -16,12 +18,10 @@ import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
-import org.spongepowered.api.world.difficulty.Difficulties;
-import org.spongepowered.api.world.difficulty.Difficulty;
 
 import com.gmail.trentech.pjw.Main;
 
-public class CMDDifficulty implements CommandExecutor {
+public class CMDGamemode implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -30,7 +30,7 @@ public class CMDDifficulty implements CommandExecutor {
 			return CommandResult.empty();
 		}
 		String worldName = args.<String>getOne("name").get();
-
+		
 		if(worldName.equalsIgnoreCase("@w")){
 			if(src instanceof Player){
 				worldName = ((Player) src).getWorld().getName();
@@ -49,33 +49,32 @@ public class CMDDifficulty implements CommandExecutor {
 			pages.title(Texts.builder().color(TextColors.DARK_GREEN).append(Texts.of(TextColors.AQUA, world.getName().toUpperCase())).build());
 			
 			List<Text> list = new ArrayList<>();
-			list.add(Texts.of(TextColors.AQUA, "Difficulty: ", TextColors.GREEN, world.getProperties().getDifficulty().getName().toUpperCase()));
+			list.add(Texts.of(TextColors.AQUA, "GameMode: ", TextColors.GREEN, world.getProperties().getGameMode().getName().toUpperCase()));
 			list.add(Texts.of(TextColors.AQUA, "Command: ", invalidArg()));
 			
 			pages.contents(list);
 			
 			pages.sendTo(src);
 			
-			return CommandResult.success();
+			return CommandResult.empty();
 		}
 
-		Difficulty difficulty = Difficulties.NORMAL;
-		if(Main.getGame().getRegistry().getType(Difficulty.class, args.<String>getOne("value").get()).isPresent()){
-			difficulty = Main.getGame().getRegistry().getType(Difficulty.class, args.<String>getOne("value").get()).get();
+		GameMode gamemode = GameModes.CREATIVE;
+		if(Main.getGame().getRegistry().getType(GameMode.class, args.<String>getOne("value").get().toUpperCase()).isPresent()){
+			gamemode = Main.getGame().getRegistry().getType(GameMode.class, args.<String>getOne("value").get().toUpperCase()).get();
 		}
 
-		world.getProperties().setDifficulty(difficulty);
-
-		src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set difficulty of world ", worldName, " to ", difficulty.getName().toUpperCase()));
+		world.getProperties().setGameMode(gamemode);
+		
+		src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set gamemode of world ", worldName, " to ", gamemode.getName().toUpperCase()));
 		
 		return CommandResult.success();
 	}
-	
+
 	private Text invalidArg(){
-		Text t1 = Texts.of(TextColors.GREEN, "/world difficulty ");
+		Text t1 = Texts.of(TextColors.GREEN, "/world gamemode ");
 		Text t2 = Texts.builder().color(TextColors.GREEN).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("<world> ")).build();
-		Text t3 = Texts.builder().color(TextColors.GREEN).onHover(TextActions.showText(Texts.of("PEACEFUL\nEASY\nNORMAL\nHARD"))).append(Texts.of("[value]")).build();
+		Text t3 = Texts.builder().color(TextColors.GREEN).onHover(TextActions.showText(Texts.of("SURVIVAL\nCREATIVE\nADVENTURE\nSPECTATOR"))).append(Texts.of("[value]")).build();
 		return Texts.of(t1,t2,t3);
 	}
-
 }
