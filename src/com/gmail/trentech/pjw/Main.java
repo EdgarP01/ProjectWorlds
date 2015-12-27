@@ -42,11 +42,7 @@ public class Main {
     @Listener
     public void onInitialization(GameInitializationEvent event) {
     	getGame().getEventManager().registerListeners(this, new EventManager());
-    	//getGame().getEventManager().registerListeners(this, new SignEventManager());
-    	//getGame().getEventManager().registerListeners(this, new PortalEventManager());
-    	//getGame().getEventManager().registerListeners(this, new ButtonEventManager());
-    	//getGame().getEventManager().registerListeners(this, new PlateEventManager());
-    	
+
     	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
     	getGame().getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", "gr");
     	
