@@ -107,8 +107,8 @@ public class CommandManager {
 		    //.child(cmdDiffculty, "difficulty")
 			//.child(cmdHardcore, "hardcore", "h")
 			//.child(cmdKeepSpawnLoaded, "keepspawnloaded")
-		    .arguments(GenericArguments.optional(GenericArguments.optional(GenericArguments.string(Texts.of("name")))
-		    		,GenericArguments.string(Texts.of("rule")))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name")))
+		    		,GenericArguments.optional(GenericArguments.string(Texts.of("rule")))
 		    		,GenericArguments.optional(GenericArguments.string(Texts.of("value"))))
 		    .executor(new CMDGamerule())
 		    .build();

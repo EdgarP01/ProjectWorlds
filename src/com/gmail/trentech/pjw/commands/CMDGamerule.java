@@ -86,10 +86,11 @@ public class CMDGamerule implements CommandExecutor {
 		String value = args.<String>getOne("value").get();
 		
 		if(!isValid(rule, value)){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "value ", value, " for gamerule ", rule, " is not valid"));
+			src.sendMessage(Texts.of(TextColors.DARK_RED, value, " is not a valid value for gamerule ", rule));
+			return CommandResult.empty();
 		}
 		
-		world.getProperties().setGameRule(rule, value);
+		world.getProperties().setGameRule(rule, value.toLowerCase());
 
 		src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Set gamerule ", rule, " to ", value));
 		
@@ -97,7 +98,7 @@ public class CMDGamerule implements CommandExecutor {
 	}
 	
 	private Text invalidArg(){
-		Text t1 = Texts.of(TextColors.GREEN, "/world gamerule ");
+		Text t1 = Texts.of(TextColors.GREEN, "/gamerule ");
 		Text t2 = Texts.builder().color(TextColors.GREEN).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("<world> ")).build();
 		Text t3 = Texts.of(TextColors.GREEN, "<rule> ");
 		Text t4 = Texts.of(TextColors.GREEN, "[value]");
@@ -161,12 +162,10 @@ public class CMDGamerule implements CommandExecutor {
 	}
 	
 	private boolean validBool(String value){
-		try{
-			Boolean.parseBoolean(value);
+		if(value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")){
 			return true;
-		}catch(Exception e){
-			return false;
 		}
+		return false;
 	}
 
 }
