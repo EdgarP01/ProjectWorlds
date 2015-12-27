@@ -29,16 +29,19 @@ public class CMDHelp implements CommandExecutor {
 		}
 		String command = args.<String>getOne("command").get().toUpperCase();
 		String description = null;
+		String syntax = null;
 		String example = null;
 		
 		switch(command.toLowerCase()){
 			case "copy":
 				description = " Allows you to make a new world from an existing world.";
+				syntax = " /world copy <world> <world>";
 				example = " /world copy srcWorld newWorld\n"
 						+ " /world copy @w newWorld";
 				break;
 			case "create":
 				description = " Allows you to create new worlds with any combination of optional arguments D: for dimension type, G: for generator type, S: for seed and M: for generator modifiers.";
+				syntax = " /world create <world> [D:type] [G:generator] [M:modifer]  [S:seed]";
 				example = " /world create NewWorld S:-12309830198412353456\n"
 						+ " /world create NewWorld D:OVERWORLD G:OVERWORLD\n"
 						+ " /world create NewWorld D:NETHER M:SKY\n"
@@ -46,20 +49,24 @@ public class CMDHelp implements CommandExecutor {
 				break;
 			case "delete":
 				description = " Delete worlds you no longer need. Worlds must be unloaded before you can delete them.";
+				syntax = " /world delete <world>";
 				example = " /world delete OldWorld";
 				break;
 			case "difficulty":
 				description = " Set the difficulty level for each world.";
+				syntax = " /world difficulty <world> [value]";
 				example = " /world difficulty MyWorld HARD\n"
 						+ " /world difficulty @w PEACEFUL";
 				break;
 			case "hardcore":
 				description = " Toggle on and off hardcore mode for world";
+				syntax = " /world hardcore <world> [value]";
 				example = " /world hardcore MyWorld false\n"
 						+ " /world hardcore @w true";
 				break;
 			case "keepspawnloaded":
 				description = " Keeps spawn point of world loaded in memory";
+				syntax = " /world keepspawnloaded <world> [value]";
 				example = " /world keepspawnloaded MyWorld true\n"
 						+ " /world keepspawnloaded @w false";
 				break;
@@ -69,34 +76,41 @@ public class CMDHelp implements CommandExecutor {
 				break;
 			case "load":
 				description = " Loads specified world if exists.";
+				syntax = " /world load <world>";
 				example = " /world load NewWorld";
 				break;
 			case "gamerule":
 				description = " Configure varies world properties";
+				syntax = " /gamerule <world> [rule] [value]";
 				example = " /gamerule MyWorld mobGriefing false\n"
 						+ " /gamerule @w pvp true";
 				break;
 			case "properties":
 				description = " View all properties associated with a world";
-				example = " /world portal\n"
-						+ " /world portal MyWorld";
+				syntax = " /world properties <world>";
+				example = " /world properties\n"
+						+ " /world properties MyWorld";
 				break;
 			case "pvp":
 				description = " Toggle on and off pvp for world";
+				syntax = " /world pvp <world> [value]";
 				example = " /world pvp MyWorld true\n"
 						+ " /world pvp @w false";
 				break;
 			case "rename":
 				description = " Allows for renaming worlds. World must be unloaded before you can rename world";
+				syntax = " /world rename <world> <world>";
 				example = " /world rename MyWorld NewWorldName";
 				break;
 			case "setspawn":
 				description = " Sets the spawn point of specified world. If no arguments present sets spawn of current world to player location.";
+				syntax = " /world setspawn <world> <x,y,z>";
 				example = " /world setspawn\n"
 						+ " /world setspawn MyWorld -153,75,300";
 				break;
 			case "teleport":
 				description = " Teleport self or others to specified world and location";
+				syntax = " /world teleport <world> <world:[x,y,z]>";
 				example = " /world teleport MyWorld\n"
 						+ " /world teleport MyWorld:-153,75,300\n"
 						+ " /world teleport SomePlayer MyWorld\n"
@@ -104,6 +118,7 @@ public class CMDHelp implements CommandExecutor {
 				break;
 			case "unload":
 				description = " unloads specified world. If players are in world, they will be teleported to default spawn.";
+				syntax = " /world unload <world>";
 				example = " /world unload MyWorld";
 				break;
 			default:
@@ -111,11 +126,11 @@ public class CMDHelp implements CommandExecutor {
 				return CommandResult.empty();
 		}
 		
-		help(command, description, example).sendTo(src);
+		help(command, description, syntax, example).sendTo(src);
 		return CommandResult.success();
 	}
 	
-	private PaginationBuilder help(String command, String description, String example){
+	private PaginationBuilder help(String command, String description, String syntax, String example){
 		PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 		pages.title(Texts.builder().color(TextColors.DARK_GREEN).append(Texts.of(TextColors.AQUA, command)).build());
 		
@@ -123,6 +138,8 @@ public class CMDHelp implements CommandExecutor {
 
 		list.add(Texts.of(TextColors.AQUA, "Description:"));
 		list.add(Texts.of(TextColors.GREEN, description));
+		list.add(Texts.of(TextColors.AQUA, "Syntax:"));
+		list.add(Texts.of(TextColors.GREEN, syntax));
 		list.add(Texts.of(TextColors.AQUA, "Example:"));
 		list.add(Texts.of(TextColors.GREEN,  example, TextColors.DARK_GREEN));
 		

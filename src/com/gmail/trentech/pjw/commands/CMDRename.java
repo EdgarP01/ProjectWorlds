@@ -72,7 +72,7 @@ public class CMDRename implements CommandExecutor {
 	}
 	
 	private Text invalidArg(){
-		Text t1 = Texts.of(TextColors.YELLOW, "/world pvp ");
+		Text t1 = Texts.of(TextColors.YELLOW, "/world rename ");
 		Text t2 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("<world> ")).build();
 		Text t3 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("Enter new world name"))).append(Texts.of("<world>")).build();
 		return Texts.of(t1,t2,t3);
