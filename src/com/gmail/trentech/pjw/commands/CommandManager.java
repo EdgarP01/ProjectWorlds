@@ -127,10 +127,18 @@ public class CommandManager {
 		    .executor(new CMDGamemode())
 		    .build();
 	
+	public CommandSpec cmdRegen = CommandSpec.builder()
+		    .description(Texts.of("regenerate a world"))
+		    .permission("pjw.cmd.world.regen")
+		    .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("name"))), GenericArguments.optional(GenericArguments.string(Texts.of("value"))))
+		    .executor(new CMDRegen())
+		    .build();
+	
 	public CommandSpec cmdWorld = CommandSpec.builder()
 			.description(Texts.of("Base command"))
 			.permission("pjw.cmd.world")
 			.child(cmdCreate, "create", "cr")
+			.child(cmdRegen, "regen", "r")
 			.child(cmdDelete, "delete", "dl")
 			.child(cmdProperties, "properties", "p")
 			.child(cmdDiffculty, "difficulty", "df")

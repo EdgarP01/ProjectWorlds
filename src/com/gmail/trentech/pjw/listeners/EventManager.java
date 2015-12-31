@@ -48,11 +48,13 @@ public class EventManager {
 			player.sendMessage(Texts.of(TextColors.DARK_RED, "You do not have permission to travel to ", dest.getExtent().getName()));
 			return;
 		}
+		
 		if(!player.setLocationSafely(dest)){
 			CMDTeleport.players.put(player, dest);
 			player.sendMessage(Texts.builder().color(TextColors.DARK_RED).append(Texts.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.runCommand("/world teleport confirm")).append(Texts.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
 			return;
 		}
+		
 		if(new ConfigManager().getConfig().getNode("Options", "Show-Particles").getBoolean()){
 			spawnParticles(src, 0.5, true);
 			spawnParticles(src.getRelative(Direction.UP), 0.5, true);
@@ -126,16 +128,11 @@ public class EventManager {
 	}
 	
     @Listener
-    public void onDamageEntityEvent(DamageEntityEvent event) {
+    public void onDamageEntityEvent(DamageEntityEvent event, @First EntityDamageSource damageSource) {
     	if(!(event.getTargetEntity() instanceof Player)) {
     		return;
     	}
     	Player victim = (Player) event.getTargetEntity();
-
-		if (!event.getCause().first(EntityDamageSource.class).isPresent()) {
-			return;
-		}		
-        EntityDamageSource damageSource = event.getCause().first(EntityDamageSource.class).get();
 
         Entity source = damageSource.getSource();
         if (!(source instanceof Player)) {

@@ -39,10 +39,6 @@ public class CMDWorld implements CommandExecutor {
 			list.add(Texts.builder().color(TextColors.GREEN).onHover(TextActions.showText(Texts.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help Rename")).append(Texts.of(" /world rename")).build());
 		}
-		if(src.hasPermission("pjw.cmd.world.unload")) {
-			list.add(Texts.builder().color(TextColors.GREEN).onHover(TextActions.showText(Texts.of("Click command for more information ")))
-					.onClick(TextActions.runCommand("/world help Unload")).append(Texts.of(" /world unload")).build());
-		}
 		if(src.hasPermission("pjw.cmd.world.copy")) {
 			list.add(Texts.builder().color(TextColors.GREEN).onHover(TextActions.showText(Texts.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help Copy")).append(Texts.of(" /world copy")).build());
@@ -51,9 +47,13 @@ public class CMDWorld implements CommandExecutor {
 			list.add(Texts.builder().color(TextColors.GREEN).onHover(TextActions.showText(Texts.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help Load")).append(Texts.of(" /world load")).build());
 		}
-		if(src.hasPermission("pjw.cmd.gamerule")) {
+		if(src.hasPermission("pjw.cmd.world.unload")) {
 			list.add(Texts.builder().color(TextColors.GREEN).onHover(TextActions.showText(Texts.of("Click command for more information ")))
-					.onClick(TextActions.runCommand(" /gamerule")).append(Texts.of(" /gamerule")).build());
+					.onClick(TextActions.runCommand("/world help Unload")).append(Texts.of(" /world unload")).build());
+		}
+		if(src.hasPermission("pjw.cmd.world.regen")) {
+			list.add(Texts.builder().color(TextColors.GREEN).onHover(TextActions.showText(Texts.of("Click command for more information ")))
+					.onClick(TextActions.runCommand("/world help Regen")).append(Texts.of(" /world regen")).build());
 		}
 //		if(src.hasPermission("pjw.cmd.world.gamemode")) {
 //			list.add(Texts.builder().color(TextColors.GREEN).onHover(TextActions.showText(Texts.of("Click command for more information ")))
@@ -86,6 +86,10 @@ public class CMDWorld implements CommandExecutor {
 		if(src.hasPermission("pjw.cmd.world.teleport")) {
 			list.add(Texts.builder().color(TextColors.GREEN).onHover(TextActions.showText(Texts.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help teleport")).append(Texts.of(" /world teleport")).build());
+		}
+		if(src.hasPermission("pjw.cmd.gamerule")) {
+			list.add(Texts.builder().color(TextColors.GREEN).onHover(TextActions.showText(Texts.of("Click command for more information ")))
+					.onClick(TextActions.runCommand(" /gamerule")).append(Texts.of(" /gamerule")).build());
 		}
 		pages.contents(list);
 		

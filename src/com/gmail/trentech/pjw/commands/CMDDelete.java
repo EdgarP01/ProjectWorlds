@@ -1,12 +1,6 @@
 package com.gmail.trentech.pjw.commands;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -40,33 +34,33 @@ public class CMDDelete implements CommandExecutor {
 			}
 
 			try {
-				File worldFile = new File(Main.getGame().getSavesDirectory() + "/" + Main.getGame().getServer().getDefaultWorld().get().getWorldName() + "/" + worldName);
-				
-				FileOutputStream fileOutputStream = new FileOutputStream(new File(Main.getGame().getSavesDirectory().toFile() + "/" + worldName + ".zip"));
-	    		ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
-	    		
-	    		ZipEntry worldEntry = new ZipEntry(worldFile.getName());
-	    		zipOutputStream.putNextEntry(worldEntry);
-	    		
-	    		FileInputStream fileInputStream = new FileInputStream(worldFile);
-	   	   
-	    		byte[] buffer = new byte[1024];
-
-	    		int bytesRead;
-	    		while ((bytesRead = fileInputStream.read(buffer)) > 0) {
-	    			zipOutputStream.write(buffer, 0, bytesRead);
-	    		}
-
-	    		zipOutputStream.closeEntry();
-	    		fileInputStream.close();
-	    		fileOutputStream.close();    		
-	    		zipOutputStream.close();
+//				File worldFile = new File(Main.getGame().getSavesDirectory() + "/" + Main.getGame().getServer().getDefaultWorld().get().getWorldName() + "/" + worldName);
+//				
+//				FileOutputStream fileOutputStream = new FileOutputStream(new File(Main.getGame().getSavesDirectory() + "/" + worldName + ".zip"));
+//	    		ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
+//	    		
+//	    		ZipEntry worldEntry = new ZipEntry(worldFile.getName());
+//	    		zipOutputStream.putNextEntry(worldEntry);
+//	    		
+//	    		FileInputStream fileInputStream = new FileInputStream(worldFile.getAbsoluteFile());
+//	   	   
+//	    		byte[] buffer = new byte[1024];
+//
+//	    		int bytesRead;
+//	    		while ((bytesRead = fileInputStream.read(buffer)) > 0) {
+//	    			zipOutputStream.write(buffer, 0, bytesRead);
+//	    		}
+//
+//	    		zipOutputStream.closeEntry();
+//	    		fileInputStream.close();
+//	    		fileOutputStream.close();    		
+//	    		zipOutputStream.close();
 
 				if(Main.getGame().getServer().deleteWorld(worldInfo).get()){
 					src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " deleted successfully"));
 					return CommandResult.success();
 				}
-			} catch (InterruptedException | ExecutionException | IOException e) {
+			} catch (InterruptedException | ExecutionException e) {
 				e.printStackTrace();
 			}
 		}

@@ -136,6 +136,13 @@ public class CMDHelp implements CommandExecutor {
 						+ " /w u <world>";
 				example = " /world unload MyWorld";
 				break;
+			case "regen":
+				description = " Regenerates a world. You can preserve the seed or generate new random.";
+				syntax = " /world regen <world> [true/false]\n"
+						+ " /w r <world>  [true/false]";
+				example = " /world regen MyWorld\n"
+						+ " /world regen MyWorld true";
+				break;
 			default:
 				src.sendMessage(Texts.of(TextColors.DARK_RED, "Not a valid command"));
 				return CommandResult.empty();
