@@ -9,8 +9,6 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.TextBuilder;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
@@ -41,7 +39,7 @@ public class CMDCreate implements CommandExecutor {
 		String worldName = args.<String>getOne("name").get();
 
 		if(Main.getGame().getServer().getWorld(worldName).isPresent()){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "World ", worldName, " already exists"));
+			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", worldName, " already exists"));
 			return CommandResult.empty();
 		}
 		
@@ -80,16 +78,16 @@ public class CMDCreate implements CommandExecutor {
 		final Optional<WorldProperties> optProperties = Main.getGame().getServer().createWorldProperties(settings);
 
         if (!optProperties.isPresent()) {
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "something went wrong"));
+			src.sendMessage(Text.of(TextColors.DARK_RED, "something went wrong"));
 			return CommandResult.empty();
         }
 
-        src.sendMessage(Texts.of(TextColors.YELLOW, "Preparing spawn area. This may take a minute."));
+        src.sendMessage(Text.of(TextColors.YELLOW, "Preparing spawn area. This may take a minute."));
 
 		Optional<World> load = Main.getGame().getServer().loadWorld(optProperties.get());
 
 		if(!load.isPresent()){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "something went wrong"));
+			src.sendMessage(Text.of(TextColors.DARK_RED, "something went wrong"));
 			return CommandResult.empty();
 		}
 
@@ -97,25 +95,25 @@ public class CMDCreate implements CommandExecutor {
 		
 		Utils.createPlatform(world.getSpawnLocation().getRelative(Direction.DOWN));
 		
-		src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " created successfully"));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " created successfully"));
 		return CommandResult.success();
 	}
 
 	private Text invalidArg(){
-		Text t1 = Texts.of(TextColors.YELLOW, "/world create <world> ");
-		Text t2 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("OVERWORLD\nNETHER\nTHE_END"))).append(Texts.of("[D:type] ")).build();
-		Text t3 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("DEFAULT\nOVERWORLD\nNETHER\nTHE_END\nFLAT\nAMPLIFIED\nLARGE_BIOMES"))).append(Texts.of("[G:generator] ")).build();
-		TextBuilder modifierShow = null;
+		Text t1 = Text.of(TextColors.YELLOW, "/world create <world> ");
+		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("OVERWORLD\nNETHER\nTHE_END"))).append(Text.of("[D:type] ")).build();
+		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("DEFAULT\nOVERWORLD\nNETHER\nTHE_END\nFLAT\nAMPLIFIED\nLARGE_BIOMES"))).append(Text.of("[G:generator] ")).build();
+		org.spongepowered.api.text.Text.Builder modifierShow = null;
 		for(Entry<String, WorldGeneratorModifier> modifiers :Modifiers.getAll().entrySet()){
 			if(modifierShow == null){
-				modifierShow = Texts.builder().append(Texts.of(modifiers.getKey()));
+				modifierShow = Text.builder().append(Text.of(modifiers.getKey()));
 			}else{
-				modifierShow.append(Texts.of("\n", modifiers.getKey()));
+				modifierShow.append(Text.of("\n", modifiers.getKey()));
 			}	
 		}
-		Text t4 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(modifierShow.build())).append(Texts.of("[M:modifier] ")).build();
-		Text t5 = Texts.of(TextColors.YELLOW, "[S:seed]");
-		return Texts.of(t1,t2,t3,t4,t5);
+		Text t4 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(modifierShow.build())).append(Text.of("[M:modifier] ")).build();
+		Text t5 = Text.of(TextColors.YELLOW, "[S:seed]");
+		return Text.of(t1,t2,t3,t4,t5);
 	}
 	
 	private boolean add(String arg) {

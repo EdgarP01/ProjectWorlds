@@ -9,7 +9,6 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
@@ -33,7 +32,7 @@ public class CMDRename implements CommandExecutor {
 		}
 		
 		if(Main.getGame().getServer().getWorld(oldWorldName).isPresent()){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, oldWorldName, " must be unloaded before you can rename"));
+			src.sendMessage(Text.of(TextColors.DARK_RED, oldWorldName, " must be unloaded before you can rename"));
 			return CommandResult.empty();
 		}
 		
@@ -46,7 +45,7 @@ public class CMDRename implements CommandExecutor {
 
 		for(WorldProperties world : Main.getGame().getServer().getAllWorldProperties()){
 			if(world.getWorldName().equalsIgnoreCase(newWorldName)){
-				src.sendMessage(Texts.of(TextColors.DARK_RED, newWorldName, " already exists"));
+				src.sendMessage(Text.of(TextColors.DARK_RED, newWorldName, " already exists"));
 				return CommandResult.empty();
 			}
 		}
@@ -56,25 +55,25 @@ public class CMDRename implements CommandExecutor {
 				Optional<WorldProperties> rename = Main.getGame().getServer().renameWorld(worldInfo, newWorldName);
 
 				if(!rename.isPresent()){
-					src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not rename ", oldWorldName));
+					src.sendMessage(Text.of(TextColors.DARK_RED, "Could not rename ", oldWorldName));
 					return CommandResult.empty();
 				}
 
-				src.sendMessage(Texts.of(TextColors.DARK_GREEN, newWorldName, " renamed successfully"));
+				src.sendMessage(Text.of(TextColors.DARK_GREEN, newWorldName, " renamed successfully"));
 				
 				return CommandResult.success();
 			}
 		}
 
-		src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not locate ", oldWorldName));
+		src.sendMessage(Text.of(TextColors.DARK_RED, "Could not locate ", oldWorldName));
 		
 		return CommandResult.empty();
 	}
 	
 	private Text invalidArg(){
-		Text t1 = Texts.of(TextColors.YELLOW, "/world rename ");
-		Text t2 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("Enter world or @w for current world"))).append(Texts.of("<world> ")).build();
-		Text t3 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("Enter new world name"))).append(Texts.of("<world>")).build();
-		return Texts.of(t1,t2,t3);
+		Text t1 = Text.of(TextColors.YELLOW, "/world rename ");
+		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world or @w for current world"))).append(Text.of("<world> ")).build();
+		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter new world name"))).append(Text.of("<world>")).build();
+		return Text.of(t1,t2,t3);
 	}
 }

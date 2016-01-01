@@ -7,7 +7,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
@@ -18,13 +18,13 @@ public class CMDDelete implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {
-			src.sendMessage(Texts.of(TextColors.YELLOW, "/world delete <world>"));
+			src.sendMessage(Text.of(TextColors.YELLOW, "/world delete <world>"));
 			return CommandResult.empty();
 		}
 		String worldName = args.<String>getOne("name").get();
 
 		if(Main.getGame().getServer().getWorld(worldName).isPresent()){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, worldName, " must be unloaded before you can rename"));
+			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " must be unloaded before you can rename"));
 			return CommandResult.empty();
 		}
 
@@ -57,7 +57,7 @@ public class CMDDelete implements CommandExecutor {
 //	    		zipOutputStream.close();
 
 				if(Main.getGame().getServer().deleteWorld(worldInfo).get()){
-					src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " deleted successfully"));
+					src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " deleted successfully"));
 					return CommandResult.success();
 				}
 			} catch (InterruptedException | ExecutionException e) {
@@ -65,7 +65,7 @@ public class CMDDelete implements CommandExecutor {
 			}
 		}
 		
-		src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not locate ", worldName));
+		src.sendMessage(Text.of(TextColors.DARK_RED, "Could not locate ", worldName));
 		
 		return CommandResult.empty();
 	}

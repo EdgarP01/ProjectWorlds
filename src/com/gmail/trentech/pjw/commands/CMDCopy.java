@@ -10,7 +10,6 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
@@ -46,12 +45,12 @@ public class CMDCopy implements CommandExecutor {
 				continue;
 			}
 			
-			src.sendMessage(Texts.of(TextColors.DARK_RED, newWorldName, " already exists"));
+			src.sendMessage(Text.of(TextColors.DARK_RED, newWorldName, " already exists"));
 			return CommandResult.empty();
 		}
 		
 		if(!Main.getGame().getServer().getWorld(oldWorldName).isPresent()){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "World ", oldWorldName, " does not exists"));
+			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", oldWorldName, " does not exists"));
 			return CommandResult.empty();
 		}
 
@@ -63,19 +62,19 @@ public class CMDCopy implements CommandExecutor {
 		}
 		
 		if(!copy.isPresent()){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not copy ", oldWorldName));
+			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not copy ", oldWorldName));
 			return CommandResult.empty();
 		}
 
-		src.sendMessage(Texts.of(TextColors.DARK_GREEN, oldWorldName, " copied to ", newWorldName));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, oldWorldName, " copied to ", newWorldName));
 		
 		return CommandResult.success();
 	}
 	
 	private Text invalidArg(){
-		Text t1 = Texts.of(TextColors.YELLOW, "/world copy ");
-		Text t2 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("Enter source world"))).append(Texts.of("<world> ")).build();
-		Text t3 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("Enter new world name"))).append(Texts.of("<world>")).build();
-		return Texts.of(t1,t2,t3);
+		Text t1 = Text.of(TextColors.YELLOW, "/world copy ");
+		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter source world"))).append(Text.of("<world> ")).build();
+		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter new world name"))).append(Text.of("<world>")).build();
+		return Text.of(t1,t2,t3);
 	}
 }

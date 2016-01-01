@@ -11,7 +11,6 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
@@ -42,7 +41,7 @@ public class CMDRegen implements CommandExecutor {
 		}
 		
 		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
+			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
 			return CommandResult.empty();
 		}
 		World world = Main.getGame().getServer().getWorld(worldName).get();
@@ -59,19 +58,19 @@ public class CMDRegen implements CommandExecutor {
 			builder.seed(properties.getSeed());
 		}
 		
-		src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Kicking players from world.."));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Kicking players from world.."));
 		for(Entity entity : world.getEntities()){
 			if(entity instanceof Player){
 				Player player = (Player) entity;
 				WorldProperties defaultProperties = Main.getGame().getServer().getDefaultWorld().get();
 				player.setLocationSafely(Main.getGame().getServer().getWorld(defaultProperties.getWorldName()).get().getSpawnLocation());
-				player.sendMessage(Texts.of(TextColors.GOLD, world.getName(), " is being regenerated"));
+				player.sendMessage(Text.of(TextColors.GOLD, world.getName(), " is being regenerated"));
 			}
 		}
 
-		src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Unloading world.."));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Unloading world.."));
 		if(!Main.getGame().getServer().unloadWorld(world)){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not unload ", worldName));
+			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not unload ", worldName));
 			return CommandResult.empty();
 		}
 
@@ -79,41 +78,41 @@ public class CMDRegen implements CommandExecutor {
 			ListenableFuture<Boolean> delete = Main.getGame().getServer().deleteWorld(properties);
 			while(!delete.isDone()){}
 			if(!delete.get()){
-				src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not delete ", worldName));
+				src.sendMessage(Text.of(TextColors.DARK_RED, "Could not delete ", worldName));
 				return CommandResult.empty();
 			}
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
 
-		src.sendMessage(Texts.of(TextColors.DARK_GREEN, "Regenerating world.."));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Regenerating world.."));
 		WorldCreationSettings settings = builder.enabled(true).loadsOnStartup(true).build();
 
 		final Optional<WorldProperties> optProperties = Main.getGame().getServer().createWorldProperties(settings);
 
         if (!optProperties.isPresent()) {
-        	src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not regenerate ", worldName));
+        	src.sendMessage(Text.of(TextColors.DARK_RED, "Could not regenerate ", worldName));
         	return CommandResult.empty();
         }
 
 		Optional<World> load = Main.getGame().getServer().loadWorld(optProperties.get());
 
 		if(!load.isPresent()){
-			src.sendMessage(Texts.of(TextColors.DARK_RED, "Could not load ", worldName));
+			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not load ", worldName));
 			return CommandResult.empty();
 		}
 
 		Utils.createPlatform(load.get().getSpawnLocation().getRelative(Direction.DOWN));
 		
-		src.sendMessage(Texts.of(TextColors.DARK_GREEN, worldName, " regenerated successfully"));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " regenerated successfully"));
 		
 		return CommandResult.success();
 	}
 	
 	private Text invalidArg(){
-		Text t1 = Texts.of(TextColors.YELLOW, "/world regen ");
-		Text t2 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("Enter world name"))).append(Texts.of("<world> ")).build();
-		Text t3 = Texts.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Texts.of("Preserve seed? true/false"))).append(Texts.of("[value]")).build();
-		return Texts.of(t1,t2,t3);
+		Text t1 = Text.of(TextColors.YELLOW, "/world regen ");
+		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world name"))).append(Text.of("<world> ")).build();
+		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Preserve seed? true/false"))).append(Text.of("[value]")).build();
+		return Text.of(t1,t2,t3);
 	}
 }

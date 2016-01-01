@@ -50,7 +50,7 @@ public class Main {
     	Modifiers.put("VOID",  new VoidWorldGeneratorModifier());
     	
     	for(Entry<String, WorldGeneratorModifier> entry : Modifiers.getAll().entrySet()){
-    		getGame().getRegistry().registerWorldGeneratorModifier(entry.getValue());
+    		getGame().getRegistry().register(WorldGeneratorModifier.class, entry.getValue());
     	}
     }
 
