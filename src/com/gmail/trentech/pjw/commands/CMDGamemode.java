@@ -16,7 +16,7 @@ import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 
@@ -36,19 +36,19 @@ public class CMDGamemode implements CommandExecutor {
 			}
 		}
 		
-		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
+		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
 			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
 			return CommandResult.empty();
 		}
-		World world = Main.getGame().getServer().getWorld(worldName).get();
+		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
 
 		if(!args.hasAny("value")) {
 			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 			
-			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, world.getName().toUpperCase())).build());
+			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, properties.getWorldName().toUpperCase())).build());
 			
 			List<Text> list = new ArrayList<>();
-			list.add(Text.of(TextColors.AQUA, "GameMode: ", TextColors.GREEN, world.getProperties().getGameMode().getName().toUpperCase()));
+			list.add(Text.of(TextColors.AQUA, "GameMode: ", TextColors.GREEN, properties.getGameMode().getName().toUpperCase()));
 			list.add(Text.of(TextColors.AQUA, "Command: ", invalidArg()));
 			
 			pages.contents(list);
@@ -63,7 +63,7 @@ public class CMDGamemode implements CommandExecutor {
 			gamemode = Main.getGame().getRegistry().getType(GameMode.class, args.<String>getOne("value").get().toUpperCase()).get();
 		}
 
-		world.getProperties().setGameMode(gamemode);
+		properties.setGameMode(gamemode);
 		
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set gamemode of world ", worldName, " to ", gamemode.getName().toUpperCase()));
 		

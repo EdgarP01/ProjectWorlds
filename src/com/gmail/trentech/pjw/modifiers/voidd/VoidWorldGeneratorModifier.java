@@ -22,7 +22,7 @@ public class VoidWorldGeneratorModifier implements WorldGeneratorModifier {
 
     @Override
     public String getName() {
-        return "VOID";
+        return "Void";
     }
 
 }

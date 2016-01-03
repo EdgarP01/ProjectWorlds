@@ -9,7 +9,6 @@ import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
@@ -29,7 +28,6 @@ import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
-import org.spongepowered.api.world.weather.Weather;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.gmail.trentech.pjw.Main;
@@ -72,17 +70,18 @@ public class EventManager {
 	    
 	    // NOT IMPLEMENTED YET
 		if(player.get(JoinData.class).isPresent()){
+			System.out.println("JOIN DATA PRESENT");
 			return;
 		}
 		
-		String worldName = new ConfigManager().getConfig().getNode("Options", "Join-Spawn").getString();
-		
-		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
-			return;
-		}
-		World world = Main.getGame().getServer().getWorld(worldName).get();
-		
-		player.setLocationSafely(world.getSpawnLocation());
+//		String worldName = new ConfigManager().getConfig().getNode("Options", "Join-Spawn").getString();
+//		
+//		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
+//			return;
+//		}
+//		World world = Main.getGame().getServer().getWorld(worldName).get();
+//		
+//		player.setLocationSafely(world.getSpawnLocation());
 	}
 	
 	@Listener
@@ -100,8 +99,8 @@ public class EventManager {
 		if(!properties.getGameRule("gamemode").isPresent()){
 			properties.setGameRule("gamemode", GameModes.SURVIVAL.getName());
 		}
-		if(!properties.getGameRule("defaultWeather").isPresent()){
-			properties.setGameRule("defaultWeather", "normal");
+		if(!properties.getGameRule("doWeatherCycle").isPresent()){
+			properties.setGameRule("doWeatherCycle", "true");
 		}
 	}
 
@@ -118,12 +117,9 @@ public class EventManager {
 		WorldProperties properties = worldDest.getProperties();
 		
 		if(worldSrc != worldDest){
-			GameMode gamemode = GameModes.SURVIVAL;
-			if(Main.getGame().getRegistry().getType(GameMode.class, properties.getGameRule("gamemode").get()).isPresent()){
-				gamemode = Main.getGame().getRegistry().getType(GameMode.class, properties.getGameRule("gamemode").get()).get();
-			}
-
-			player.offer(Keys.GAME_MODE, gamemode);
+			if(!properties.getGameMode().equals(player.gameMode().get())){
+				player.offer(Keys.GAME_MODE, properties.getGameMode());
+			}			
 		}
 	}
 	
@@ -146,18 +142,14 @@ public class EventManager {
 			event.setCancelled(true);
 		}
     }
-	
-	// CURRENTLY NOT WORKING - TEMP SOLUTION IN TASKS CLASS
+
 	@Listener
 	public void onChangeWorldWeatherEvent(ChangeWorldWeatherEvent event) {
 		World world = event.getTargetWorld();
 		WorldProperties properties = world.getProperties();
-		
-		String grWeather = properties.getGameRule("defaultWeather").get();
-		
-		if(!grWeather.equalsIgnoreCase("normal")){
-			Weather weather = Main.getGame().getRegistry().getType(Weather.class, grWeather).get();
-			world.forecast(weather);
+
+		if(!Boolean.parseBoolean(properties.getGameRule("doWeatherCycle").get())){
+			event.setCancelled(true);
 		}
 	}
 	

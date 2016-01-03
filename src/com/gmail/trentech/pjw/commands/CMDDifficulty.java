@@ -14,9 +14,9 @@ import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.difficulty.Difficulties;
 import org.spongepowered.api.world.difficulty.Difficulty;
+import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 
@@ -36,19 +36,19 @@ public class CMDDifficulty implements CommandExecutor {
 			}
 		}
 		
-		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
+		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
 			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
 			return CommandResult.empty();
 		}
-		World world = Main.getGame().getServer().getWorld(worldName).get();
+		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
 
 		if(!args.hasAny("value")) {
 			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 			
-			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, world.getName().toUpperCase())).build());
+			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, properties.getWorldName().toUpperCase())).build());
 			
 			List<Text> list = new ArrayList<>();
-			list.add(Text.of(TextColors.AQUA, "Difficulty: ", TextColors.GREEN, world.getProperties().getDifficulty().getName().toUpperCase()));
+			list.add(Text.of(TextColors.AQUA, "Difficulty: ", TextColors.GREEN, properties.getDifficulty().getName().toUpperCase()));
 			list.add(Text.of(TextColors.AQUA, "Command: ", invalidArg()));
 			
 			pages.contents(list);
@@ -63,9 +63,9 @@ public class CMDDifficulty implements CommandExecutor {
 			difficulty = Main.getGame().getRegistry().getType(Difficulty.class, args.<String>getOne("value").get()).get();
 		}
 
-		world.getProperties().setDifficulty(difficulty);
+		properties.setDifficulty(difficulty);
 
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set difficulty of world ", worldName, " to ", difficulty.getName().toUpperCase()));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set difficulty of ", worldName, " to ", difficulty.getName().toUpperCase()));
 		
 		return CommandResult.success();
 	}

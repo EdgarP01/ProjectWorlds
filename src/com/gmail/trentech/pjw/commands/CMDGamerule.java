@@ -15,7 +15,7 @@ import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 
@@ -35,20 +35,20 @@ public class CMDGamerule implements CommandExecutor {
 			}
 		}
 		
-		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
+		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
 			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
 			return CommandResult.empty();
 		}
-		World world = Main.getGame().getServer().getWorld(worldName).get();
+		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
 		
 		if(!args.hasAny("rule")) {
 			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 			
-			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, world.getName().toUpperCase())).build());
+			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, properties.getWorldName().toUpperCase())).build());
 			
 			List<Text> list = new ArrayList<>();
 			
-			for(Entry<String, String> gamerule : world.getGameRules().entrySet()){
+			for(Entry<String, String> gamerule : properties.getGameRules().entrySet()){
 				list.add(Text.of(TextColors.AQUA, gamerule.getKey(), ": ", TextColors.GREEN, gamerule.getValue()));
 			}
 
@@ -62,7 +62,7 @@ public class CMDGamerule implements CommandExecutor {
 		}
 		String rule = args.<String>getOne("rule").get();
 
-		if(!world.getProperties().getGameRule(rule).isPresent()){
+		if(!properties.getGameRule(rule).isPresent()){
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Gamerule  ", rule, " does not exist"));
 			return CommandResult.empty();
 		}
@@ -70,10 +70,10 @@ public class CMDGamerule implements CommandExecutor {
 		if(!args.hasAny("value")) {
 			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 			
-			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, world.getName())).build());
+			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, properties.getWorldName())).build());
 			
 			List<Text> list = new ArrayList<>();
-			list.add(Text.of(TextColors.AQUA, rule, ": ", TextColors.GREEN, world.getGameRule(rule).get()));
+			list.add(Text.of(TextColors.AQUA, rule, ": ", TextColors.GREEN, properties.getGameRule(rule).get()));
 			list.add(Text.of(TextColors.AQUA, "Command: ", invalidArg()));
 			
 			pages.contents(list);
@@ -89,7 +89,7 @@ public class CMDGamerule implements CommandExecutor {
 			return CommandResult.empty();
 		}
 		
-		world.getProperties().setGameRule(rule, value.toLowerCase());
+		properties.setGameRule(rule, value.toLowerCase());
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set gamerule ", rule, " to ", value));
 		
@@ -108,11 +108,8 @@ public class CMDGamerule implements CommandExecutor {
 		switch(rule){
 		case "commandBlockOutput":
 			return validBool(value);
-		case "defaultWeather":
-			if(value.equalsIgnoreCase("CLEAR") || value.equalsIgnoreCase("RAIN") || value.equalsIgnoreCase("THUNDER_STORM") || value.equalsIgnoreCase("NORMAL")){
-				return true;
-			}
-			return false;
+		case "doWeatherCycle":
+			return validBool(value);
 		case "doDaylightCycle":
 			return validBool(value);
 		case "doFireTick":
@@ -123,11 +120,11 @@ public class CMDGamerule implements CommandExecutor {
 			return validBool(value);
 		case "doTileDrops":
 			return validBool(value);
-		case "gamemode":
-			if(value.equalsIgnoreCase("SURVIVAL") || value.equalsIgnoreCase("CREATIVE") || value.equalsIgnoreCase("ADVENTURE") || value.equalsIgnoreCase("SPECTATOR")){
-				return true;
-			}
-			return false;
+//		case "gamemode":
+//			if(value.equalsIgnoreCase("SURVIVAL") || value.equalsIgnoreCase("CREATIVE") || value.equalsIgnoreCase("ADVENTURE") || value.equalsIgnoreCase("SPECTATOR")){
+//				return true;
+//			}
+//			return false;
 		case "keepInventory":
 			return validBool(value);
 		case "logAdminCommands":

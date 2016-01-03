@@ -18,7 +18,7 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 
-public class CMDKeepSpawnLoaded implements CommandExecutor {
+public class CMDPvp implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -46,31 +46,31 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, properties.getWorldName().toUpperCase())).build());
 			
 			List<Text> list = new ArrayList<>();
-			list.add(Text.of(TextColors.AQUA, "Keep Spawn Loaded: ", TextColors.GREEN, properties.doesKeepSpawnLoaded()));
-			list.add(Text.of(TextColors.AQUA, "Command: ",invalidArg()));
+			list.add(Text.of(TextColors.AQUA, "PVP: ", TextColors.GREEN, properties.isPVPEnabled()));
+			list.add(Text.of(TextColors.AQUA, "Command: ", invalidArg()));
 			
 			pages.contents(list);
 			
 			pages.sendTo(src);
-
-			return CommandResult.success();
+			
+			return CommandResult.empty();
 		}
 		String value = args.<String>getOne("value").get();
-		
+
 		if((!value.equalsIgnoreCase("true")) && (!value.equalsIgnoreCase("false"))){
 			src.sendMessage(invalidArg());
 			return CommandResult.empty();	
 		}
 
-		properties.setKeepSpawnLoaded(Boolean.parseBoolean(value));
-
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set keep spawn loaded of world ", worldName, " to ", value));
-
+		properties.setPVPEnabled(Boolean.parseBoolean(value));
+		
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set pvp of world ", worldName, " to ", value));
+		
 		return CommandResult.success();
 	}
-	
+
 	private Text invalidArg(){
-		Text t1 = Text.of(TextColors.GREEN, "/world keepspawnloaded ");
+		Text t1 = Text.of(TextColors.GREEN, "/world pvp ");
 		Text t2 = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Enter world or @w for current world"))).append(Text.of("<world> ")).build();
 		Text t3 = Text.of(TextColors.GREEN, "[true/false]");
 		return Text.of(t1,t2,t3);

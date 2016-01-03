@@ -14,7 +14,7 @@ import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 
@@ -34,19 +34,19 @@ public class CMDHardcore implements CommandExecutor {
 			}
 		}
 		
-		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
+		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
 			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
 			return CommandResult.empty();
 		}
-		World world = Main.getGame().getServer().getWorld(worldName).get();
+		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
 
 		if(!args.hasAny("value")) {
 			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 			
-			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, world.getName().toUpperCase())).build());
+			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, properties.getWorldName().toUpperCase())).build());
 			
 			List<Text> list = new ArrayList<>();
-			list.add(Text.of(TextColors.AQUA, "Hardcore: ", TextColors.GREEN, world.getProperties().isHardcore()));
+			list.add(Text.of(TextColors.AQUA, "Hardcore: ", TextColors.GREEN, properties.isHardcore()));
 			list.add(Text.of(TextColors.AQUA, "Command: ",invalidArg()));
 			
 			pages.contents(list);
@@ -57,15 +57,12 @@ public class CMDHardcore implements CommandExecutor {
 		}
 		String value = args.<String>getOne("value").get();
 
-		Boolean bool;
-		try{
-			bool = Boolean.parseBoolean(value);
-		}catch(Exception e){
+		if((!value.equalsIgnoreCase("true")) && (!value.equalsIgnoreCase("false"))){
 			src.sendMessage(invalidArg());
 			return CommandResult.empty();	
 		}
 
-		world.getProperties().setHardcore(bool);
+		properties.setHardcore(Boolean.parseBoolean(value));
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set hardcore of world ", worldName, " to ", value));
 

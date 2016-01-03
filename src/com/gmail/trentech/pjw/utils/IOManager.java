@@ -13,7 +13,6 @@ import com.gmail.trentech.pjw.Main;
 
 import net.obnoxint.xnbt.NBTTag;
 import net.obnoxint.xnbt.XNBT;
-import net.obnoxint.xnbt.types.ByteTag;
 import net.obnoxint.xnbt.types.CompoundTag;
 import net.obnoxint.xnbt.types.IntegerTag;
 import net.obnoxint.xnbt.types.ListTag;
@@ -159,9 +158,9 @@ public class IOManager {
 
 		CompoundTag compoundSpongeData = new CompoundTag("SpongeData", null);
 
-		compoundSpongeData.put(new ByteTag("enabled", (byte) 1));
-		compoundSpongeData.put(new ByteTag("keepSpawnLocked", (byte) 1));
-		compoundSpongeData.put(new ByteTag("loadOnStartup", (byte) 1));
+		//compoundSpongeData.put(new ByteTag("enabled", (byte) 1));
+		//compoundSpongeData.put(new ByteTag("keepSpawnLocked", (byte) 1));
+		//compoundSpongeData.put(new ByteTag("loadOnStartup", (byte) 1));
 		compoundSpongeData.put(new IntegerTag("dimensionId", generateDimenionId()));
 		compoundSpongeData.put(new LongTag("uuid_least", -6732046318667659594L));
 		compoundSpongeData.put(new LongTag("uuid_most", 9143053678590905554L));

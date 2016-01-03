@@ -23,7 +23,6 @@ import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.modifiers.Modifiers;
 import com.gmail.trentech.pjw.utils.Utils;
 
 public class CMDCreate implements CommandExecutor {
@@ -104,7 +103,7 @@ public class CMDCreate implements CommandExecutor {
 		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("OVERWORLD\nNETHER\nTHE_END"))).append(Text.of("[D:type] ")).build();
 		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("DEFAULT\nOVERWORLD\nNETHER\nTHE_END\nFLAT\nAMPLIFIED\nLARGE_BIOMES"))).append(Text.of("[G:generator] ")).build();
 		org.spongepowered.api.text.Text.Builder modifierShow = null;
-		for(Entry<String, WorldGeneratorModifier> modifiers :Modifiers.getAll().entrySet()){
+		for(Entry<String, WorldGeneratorModifier> modifiers :Main.getModifiers().entrySet()){
 			if(modifierShow == null){
 				modifierShow = Text.builder().append(Text.of(modifiers.getKey()));
 			}else{
@@ -137,8 +136,8 @@ public class CMDCreate implements CommandExecutor {
 				}
 				return true;
 			case "M":
-				if(Modifiers.get(option[1]) != null){
-					builder.generatorModifiers(Modifiers.get(option[1]));
+				if(Main.getModifiers().get(option[1]) != null){
+					builder.generatorModifiers(Main.getModifiers().get(option[1]));
 				}else{
 					Main.getLog().warn("Modifier type " + option[1] + "does not exist.");
 				}

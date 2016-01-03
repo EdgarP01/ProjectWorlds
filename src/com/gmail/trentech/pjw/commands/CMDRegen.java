@@ -8,7 +8,6 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
@@ -40,38 +39,26 @@ public class CMDRegen implements CommandExecutor {
 			}
 		}
 		
-		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
-			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
-			return CommandResult.empty();
-		}
-		World world = Main.getGame().getServer().getWorld(worldName).get();
-		
 		boolean preserve = false;
 		if(args.hasAny("value")) {
 			preserve = Boolean.parseBoolean(args.<String>getOne("value").get());
 		}
+		
+		if(Main.getGame().getServer().getWorld(worldName).isPresent()){
+			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " must be unloaded before you can rename"));
+			return CommandResult.empty();
+		}
 
-		WorldProperties properties = world.getProperties();
-		Builder builder = WorldCreationSettings.builder().name(world.getName()).dimension(properties.getDimensionType()).generatorSettings(properties.getGeneratorSettings());
+		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
+			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
+			return CommandResult.empty();
+		}
+		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
+
+		Builder builder = WorldCreationSettings.builder().name(properties.getWorldName()).dimension(properties.getDimensionType()).generatorSettings(properties.getGeneratorSettings());
 		
 		if(preserve){
 			builder.seed(properties.getSeed());
-		}
-		
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Kicking players from world.."));
-		for(Entity entity : world.getEntities()){
-			if(entity instanceof Player){
-				Player player = (Player) entity;
-				WorldProperties defaultProperties = Main.getGame().getServer().getDefaultWorld().get();
-				player.setLocationSafely(Main.getGame().getServer().getWorld(defaultProperties.getWorldName()).get().getSpawnLocation());
-				player.sendMessage(Text.of(TextColors.GOLD, world.getName(), " is being regenerated"));
-			}
-		}
-
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Unloading world.."));
-		if(!Main.getGame().getServer().unloadWorld(world)){
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not unload ", worldName));
-			return CommandResult.empty();
 		}
 
 		try {

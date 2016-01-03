@@ -50,14 +50,18 @@ public class CMDWorld implements CommandExecutor {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help Unload")).append(Text.of(" /world unload")).build());
 		}
+		if(src.hasPermission("pjw.cmd.world.enable")) {
+			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
+					.onClick(TextActions.runCommand("/world help Enable")).append(Text.of(" /world enable")).build());
+		}
 		if(src.hasPermission("pjw.cmd.world.regen")) {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help Regen")).append(Text.of(" /world regen")).build());
 		}
-//		if(src.hasPermission("pjw.cmd.world.gamemode")) {
-//			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
-//					.onClick(TextActions.runCommand("/world help Gamemode")).append(Text.of(" /world gamemode")).build());
-//		}
+		if(src.hasPermission("pjw.cmd.world.gamemode")) {
+			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
+					.onClick(TextActions.runCommand("/world help Gamemode")).append(Text.of(" /world gamemode")).build());
+		}
 		if(src.hasPermission("pjw.cmd.world.difficulty")) {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help Difficulty")).append(Text.of(" /world difficulty")).build());
@@ -66,10 +70,10 @@ public class CMDWorld implements CommandExecutor {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help Setspawn")).append(Text.of(" /world setspawn")).build());
 		}
-		if(src.hasPermission("pjw.cmd.world.pvp")) {
-			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
-					.onClick(TextActions.runCommand("/world help Pvp")).append(Text.of(" /world pvp")).build());
-		}
+//		if(src.hasPermission("pjw.cmd.world.pvp")) {
+//			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
+//					.onClick(TextActions.runCommand("/world help Pvp")).append(Text.of(" /world pvp")).build());
+//		}
 		if(src.hasPermission("pjw.cmd.world.keepspawnloaded")) {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help Keepspawnloaded")).append(Text.of(" /world keepspawnloaded")).build());

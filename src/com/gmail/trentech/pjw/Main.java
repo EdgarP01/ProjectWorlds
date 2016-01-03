@@ -1,6 +1,6 @@
 package com.gmail.trentech.pjw;
 
-import java.util.Map.Entry;
+import java.util.HashMap;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -10,7 +10,6 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
-import org.spongepowered.api.extra.skylands.SkylandsWorldGeneratorModifier;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.World;
@@ -19,11 +18,9 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.commands.CommandManager;
 import com.gmail.trentech.pjw.listeners.EventManager;
-import com.gmail.trentech.pjw.modifiers.Modifiers;
 import com.gmail.trentech.pjw.modifiers.voidd.VoidWorldGeneratorModifier;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Resource;
-import com.gmail.trentech.pjw.utils.Tasks;
 
 @Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION)
 public class Main {
@@ -32,6 +29,8 @@ public class Main {
 	private static Logger log;	
 	private static PluginContainer plugin;
 
+	private static HashMap<String, WorldGeneratorModifier> modifiers = new HashMap<>();
+	
 	@Listener
     public void onPreInitialization(GamePreInitializationEvent event) {
 		game = Sponge.getGame();
@@ -45,12 +44,11 @@ public class Main {
 
     	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
     	getGame().getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", "gr");
+
+    	getGame().getRegistry().register(WorldGeneratorModifier.class, new VoidWorldGeneratorModifier());
     	
-    	Modifiers.put("SKY",  new SkylandsWorldGeneratorModifier());
-    	Modifiers.put("VOID",  new VoidWorldGeneratorModifier());
-    	
-    	for(Entry<String, WorldGeneratorModifier> entry : Modifiers.getAll().entrySet()){
-    		getGame().getRegistry().register(WorldGeneratorModifier.class, entry.getValue());
+    	for(WorldGeneratorModifier modifier : getGame().getRegistry().getAllOf(WorldGeneratorModifier.class)){
+    		getModifiers().put(modifier.getName(), modifier);
     	}
     }
 
@@ -61,8 +59,6 @@ public class Main {
     	new ConfigManager();
 
     	loadWorlds();
-    	
-    	new Tasks().start();
     }
 
     public static Logger getLog() {
@@ -75,6 +71,10 @@ public class Main {
 
 	public static PluginContainer getPlugin() {
 		return plugin;
+	}
+
+	public static HashMap<String, WorldGeneratorModifier> getModifiers() {
+		return modifiers;
 	}
 
 	private void loadWorlds(){

@@ -18,7 +18,7 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 
-public class CMDKeepSpawnLoaded implements CommandExecutor {
+public class CMDEnable implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -34,6 +34,11 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 			}
 		}
 		
+		if(Main.getGame().getServer().getDefaultWorld().get().getWorldName().equalsIgnoreCase(worldName)){
+			src.sendMessage(Text.of(TextColors.DARK_RED, "Default world cannot be unloaded"));
+			return CommandResult.empty();
+		}
+		
 		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
 			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
 			return CommandResult.empty();
@@ -46,7 +51,7 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, properties.getWorldName().toUpperCase())).build());
 			
 			List<Text> list = new ArrayList<>();
-			list.add(Text.of(TextColors.AQUA, "Keep Spawn Loaded: ", TextColors.GREEN, properties.doesKeepSpawnLoaded()));
+			list.add(Text.of(TextColors.AQUA, "Enabled: ", TextColors.GREEN, properties.isEnabled()));
 			list.add(Text.of(TextColors.AQUA, "Command: ",invalidArg()));
 			
 			pages.contents(list);
@@ -62,15 +67,15 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 			return CommandResult.empty();	
 		}
 
-		properties.setKeepSpawnLoaded(Boolean.parseBoolean(value));
+		properties.setEnabled(Boolean.parseBoolean(value));
 
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set keep spawn loaded of world ", worldName, " to ", value));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set enabled of ", worldName, " to ", value));
 
 		return CommandResult.success();
 	}
 	
 	private Text invalidArg(){
-		Text t1 = Text.of(TextColors.GREEN, "/world keepspawnloaded ");
+		Text t1 = Text.of(TextColors.GREEN, "/world enable ");
 		Text t2 = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Enter world or @w for current world"))).append(Text.of("<world> ")).build();
 		Text t3 = Text.of(TextColors.GREEN, "[true/false]");
 		return Text.of(t1,t2,t3);

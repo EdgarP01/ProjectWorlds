@@ -101,12 +101,19 @@ public class CMDHelp implements CommandExecutor {
 				example = " /world properties\n"
 						+ " /world properties MyWorld";
 				break;
-			case "pvp":
-				description = " Toggle on and off pvp for world";
-				syntax = " /world pvp <world> [value]";
-				example = " /world pvp MyWorld true\n"
-						+ " /world pvp @w false";
+			case "gamemode":
+				description = " Change gamemode of the specified world";
+				syntax = " /world gamemode <world> <gamemode>\n"
+						+ " /w g <world> <gamemode>";
+				example = " /world gamemode\n"
+						+ " /world gamemode MyWorld SURVIVAL";
 				break;
+//			case "pvp":
+//				description = " Toggle on and off pvp for world";
+//				syntax = " /world pvp <world> [value]";
+//				example = " /world pvp MyWorld true\n"
+//						+ " /world pvp @w false";
+//				break;
 			case "rename":
 				description = " Allows for renaming worlds. World must be unloaded before you can rename world";
 				syntax = " /world rename <world> <world>\n"
@@ -141,6 +148,13 @@ public class CMDHelp implements CommandExecutor {
 						+ " /w r <world>  [true/false]";
 				example = " /world regen MyWorld\n"
 						+ " /world regen MyWorld true";
+				break;
+			case "enable":
+				description = " Enable and disable worlds from loading.";
+				syntax = " /world enable <world> <value>\n"
+						+ " /w e <world> <value>";
+				example = " /world enable MyWorld true\n"
+						+ " /world enable MyWorld false";
 				break;
 			default:
 				src.sendMessage(Text.of(TextColors.DARK_RED, "Not a valid command"));

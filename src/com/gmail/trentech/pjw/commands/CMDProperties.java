@@ -50,16 +50,17 @@ public class CMDProperties implements CommandExecutor {
 		
 		list.add(Text.of(TextColors.AQUA, "Name: ", TextColors.GREEN, worldName));
 		list.add(Text.of(TextColors.AQUA, "UUID: ", TextColors.GREEN, properties.getUniqueId().toString()));
+		list.add(Text.of(TextColors.AQUA, "Enabled: ", TextColors.GREEN, properties.isEnabled()));
 		list.add(Text.of(TextColors.AQUA, "Dimension Type: ", TextColors.GREEN, properties.getDimensionType().getName().toUpperCase()));
 		list.add(Text.of(TextColors.AQUA, "Generator Type: ", TextColors.GREEN, properties.getGeneratorType().getName().toUpperCase()));
 		list.add(Text.of(TextColors.AQUA, "Seed: ", TextColors.GREEN, properties.getSeed()));
 		list.add(Text.of(TextColors.AQUA, "GameMode: ", TextColors.GREEN, properties.getGameRule("gamemode").get()));		
 		list.add(Text.of(TextColors.AQUA, "Difficulty: ", TextColors.GREEN, properties.getDifficulty().getName().toUpperCase()));
-		list.add(Text.of(TextColors.AQUA, "PVP: ", TextColors.GREEN, properties.getGameRule("pvp").get()));
+		list.add(Text.of(TextColors.AQUA, "PVP: ", TextColors.GREEN, properties.isPVPEnabled()));
 		list.add(Text.of(TextColors.AQUA, "Keep Spawn Loaded: ", TextColors.GREEN, properties.doesKeepSpawnLoaded()));
 		list.add(Text.of(TextColors.AQUA, "Hardcore: ", TextColors.GREEN, properties.isHardcore()));
 		list.add(Text.of(TextColors.AQUA, "Respawn World: ", TextColors.GREEN, properties.getGameRule("respawnWorld").get()));
-		list.add(Text.of(TextColors.AQUA, "Default Weather: ", TextColors.GREEN, properties.getGameRule("defaultWeather").get()));
+		list.add(Text.of(TextColors.AQUA, "Freeze Weather: ", TextColors.GREEN, properties.getGameRule("doWeatherCycle").get()));
 		list.add(Text.of(TextColors.AQUA, "Command Block Output: ", TextColors.GREEN, properties.getGameRule("commandBlockOutput").get()));
 		list.add(Text.of(TextColors.AQUA, "Freeze Time: ", TextColors.GREEN, properties.getGameRule("doDaylightCycle").get()));
 		list.add(Text.of(TextColors.AQUA, "Fire Spread: ", TextColors.GREEN, properties.getGameRule("doFireTick").get()));

@@ -44,6 +44,8 @@ public class CMDLoad implements CommandExecutor {
 			try {
 				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.GOLD, " Converting world to Sponge. This could break something"));
 				IOManager.init(worldName);
+				src.sendMessage(Text.of(TextColors.DARK_GREEN, "World will not load until next restart"));
+				return CommandResult.success();
 			} catch (IOException e) {
 				src.sendMessage(Text.of(TextColors.DARK_RED, "Failed to convert world"));
 				e.printStackTrace();

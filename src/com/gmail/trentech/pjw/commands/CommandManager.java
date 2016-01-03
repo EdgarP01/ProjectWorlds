@@ -45,6 +45,13 @@ public class CommandManager {
 		    .executor(new CMDHardcore())
 		    .build();
 
+	public CommandSpec cmdPvp = CommandSpec.builder()
+		    .description(Text.of("toggle hardcore of world"))
+		    .permission("pjw.cmd.world.pvp")
+		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name"))), GenericArguments.optional(GenericArguments.remainingJoinedStrings(Text.of("value"))))
+		    .executor(new CMDPvp())
+		    .build();
+	
 	public CommandSpec cmdKeepSpawnLoaded = CommandSpec.builder()
 		    .description(Text.of("toggle keep world spawn loaded"))
 		    .permission("pjw.cmd.world.keeploaded")
@@ -104,9 +111,6 @@ public class CommandManager {
 	public CommandSpec cmdGamerule = CommandSpec.builder()
 		    .description(Text.of("edit gamerules of world"))
 		    .permission("pjw.cmd.world.gamerule")
-		    //.child(cmdDiffculty, "difficulty")
-			//.child(cmdHardcore, "hardcore", "h")
-			//.child(cmdKeepSpawnLoaded, "keepspawnloaded")
 		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name")))
 		    		,GenericArguments.optional(GenericArguments.string(Text.of("rule")))
 		    		,GenericArguments.optional(GenericArguments.string(Text.of("value"))))
@@ -134,6 +138,13 @@ public class CommandManager {
 		    .executor(new CMDRegen())
 		    .build();
 	
+	public CommandSpec cmdEnable = CommandSpec.builder()
+		    .description(Text.of("regenerate a world"))
+		    .permission("pjw.cmd.world.enable")
+		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name"))), GenericArguments.optional(GenericArguments.string(Text.of("value"))))
+		    .executor(new CMDEnable())
+		    .build();
+	
 	public CommandSpec cmdWorld = CommandSpec.builder()
 			.description(Text.of("Base command"))
 			.permission("pjw.cmd.world")
@@ -144,6 +155,7 @@ public class CommandManager {
 			.child(cmdDiffculty, "difficulty", "df")
 			.child(cmdSetSpawn, "setspawn", "s")
 			.child(cmdHardcore, "hardcore", "h")
+			//.child(cmdPvp, "pvp")
 			.child(cmdKeepSpawnLoaded, "keepspawnloaded", "k")
 			.child(cmdList, "list", "ls")
 			.child(cmdTeleport, "teleport", "tp")
@@ -151,8 +163,9 @@ public class CommandManager {
 			.child(cmdRename, "rename", "rn")
 			.child(cmdUnload, "unload", "u")
 			.child(cmdLoad, "load", "l")
+			.child(cmdEnable, "enable", "e")
 			.child(cmdHelp, "help")
-			//.child(cmdGamemode, "gamemode", "gm")
+			.child(cmdGamemode, "gamemode", "gm")
 			.executor(new CMDWorld())
 			.build();
 }
