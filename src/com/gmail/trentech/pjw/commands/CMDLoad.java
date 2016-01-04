@@ -1,7 +1,5 @@
 package com.gmail.trentech.pjw.commands;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 
 import org.spongepowered.api.command.CommandException;
@@ -15,7 +13,6 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.IOManager;
 
 public class CMDLoad implements CommandExecutor {
 
@@ -33,36 +30,36 @@ public class CMDLoad implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
-		File worldDirectory = new File(Main.getGame().getSavesDirectory() + "/" + Main.getGame().getServer().getDefaultWorld().get().getWorldName() + "/" + worldName);
-		if(!worldDirectory.exists()){
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not locate ", worldName));
-			return CommandResult.empty();
-		}
-
-		File dataFile = new File(worldDirectory.getAbsolutePath(), "level_sponge.dat");
-		if(!dataFile.exists()){
-			try {
-				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.GOLD, " Converting world to Sponge. This could break something"));
-				IOManager.init(worldName);
-				src.sendMessage(Text.of(TextColors.DARK_GREEN, "World will not load until next restart"));
-				return CommandResult.success();
-			} catch (IOException e) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, "Failed to convert world"));
-				e.printStackTrace();
-				return CommandResult.empty();
-			}
-		}
+//		File worldDirectory = new File(Main.getGame().getSavesDirectory() + "/" + Main.getGame().getServer().getDefaultWorld().get().getWorldName() + "/" + worldName);
+//		if(!worldDirectory.exists()){
+//			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not locate ", worldName));
+//			return CommandResult.empty();
+//		}
+//
+//		File dataFile = new File(worldDirectory.getAbsolutePath(), "level_sponge.dat");
+//		if(!dataFile.exists()){
+//			try {
+//				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.GOLD, " Converting world to Sponge. This could break something"));
+//				IOManager.init(worldName);
+//				src.sendMessage(Text.of(TextColors.DARK_GREEN, "World will not load until next restart"));
+//				return CommandResult.success();
+//			} catch (IOException e) {
+//				src.sendMessage(Text.of(TextColors.DARK_RED, "Failed to convert world"));
+//				e.printStackTrace();
+//				return CommandResult.empty();
+//			}
+//		}
 		
-		try {
-			if(IOManager.dimensionIdExists(IOManager.getDimenionId(worldName))){
-				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.GOLD, " World contains dimension id conflict. attempting to repair."));
-				IOManager.init(worldName);
-			}
-		} catch (IOException e) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Failed to repair world"));
-			e.printStackTrace();
-			return CommandResult.empty();
-		}
+//		try {
+//			if(IOManager.dimensionIdExists(IOManager.getDimenionId(worldName))){
+//				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.GOLD, " World contains dimension id conflict. attempting to repair."));
+//				IOManager.init(worldName);
+//			}
+//		} catch (IOException e) {
+//			src.sendMessage(Text.of(TextColors.DARK_RED, "Failed to repair world"));
+//			e.printStackTrace();
+//			return CommandResult.empty();
+//		}
 
 		Optional<World> load = Main.getGame().getServer().loadWorld(worldName);
 		

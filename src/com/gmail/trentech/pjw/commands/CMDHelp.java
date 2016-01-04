@@ -58,21 +58,24 @@ public class CMDHelp implements CommandExecutor {
 				description = " Set the difficulty level for each world.";
 				syntax = " /world difficulty <world> [value]\n"
 						+ " /w df <world> [value]";
-				example = " /world difficulty MyWorld HARD\n"
+				example = " /world difficulty MyWorld\n"
+						+ " /world difficulty MyWorld HARD\n"
 						+ " /world difficulty @w PEACEFUL";
 				break;
 			case "hardcore":
 				description = " Toggle on and off hardcore mode for world";
 				syntax = " /world hardcore <world> [value]\n"
 						+ " /w h <world> [value]";
-				example = " /world hardcore MyWorld false\n"
+				example = " /world hardcore MyWorld\n"
+						+ " /world hardcore MyWorld false\n"
 						+ " /world hardcore @w true";
 				break;
 			case "keepspawnloaded":
 				description = " Keeps spawn point of world loaded in memory";
 				syntax = " /world keepspawnloaded <world> [value]\n"
 						+ " /w k <world> [value]";
-				example = " /world keepspawnloaded MyWorld true\n"
+				example = " /world keepspawnloaded MyWorld\n"
+						+ " /world keepspawnloaded MyWorld true\n"
 						+ " /world keepspawnloaded @w false";
 				break;
 			case "list":
@@ -91,8 +94,9 @@ public class CMDHelp implements CommandExecutor {
 				description = " Configure varies world properties";
 				syntax = " /gamerule <world> [rule] [value]\n"
 						+ " /gr <world> [rule] [value]";
-				example = " /gamerule MyWorld mobGriefing false\n"
-						+ " /gamerule @w pvp true";
+				example = " /gamerule MyWorld\n"
+						+ " /gamerule MyWorld mobGriefing false\n"
+						+ " /gamerule @w doDaylightCycle true";
 				break;
 			case "properties":
 				description = " View all properties associated with a world";
@@ -106,7 +110,8 @@ public class CMDHelp implements CommandExecutor {
 				syntax = " /world gamemode <world> <gamemode>\n"
 						+ " /w g <world> <gamemode>";
 				example = " /world gamemode\n"
-						+ " /world gamemode MyWorld SURVIVAL";
+						+ " /world gamemode MyWorld SURVIVAL\n"
+						+ " /world gamemode @w CREATIVE";
 				break;
 //			case "pvp":
 //				description = " Toggle on and off pvp for world";
