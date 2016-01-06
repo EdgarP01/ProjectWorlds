@@ -61,7 +61,7 @@ public class CMDLoad implements CommandExecutor {
 			}
 		}else{
 			if(!spongeData.isFreeDimId()){
-				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " World contains dimension id conflict. attempting to repair."));
+				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " World contains dimension id conflict. Attempting to repair."));
 				try {
 					spongeData.setDimId();
 				} catch (IOException e) {
@@ -70,7 +70,7 @@ public class CMDLoad implements CommandExecutor {
 				}
 			}
 			if(!spongeData.isCorrectLevelName()){
-				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Repairing level name."));
+				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Level name mismatch. Attempting to repair."));
 				try {
 					spongeData.setLevelName();
 				} catch (IOException e) {
@@ -88,7 +88,7 @@ public class CMDLoad implements CommandExecutor {
 		}
 		
 		if(!worldData.isCorrectLevelName()){
-			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Repairing level name."));
+			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Level name mismatch. Attempting to repair."));
 			try {
 				worldData.setLevelName();
 			} catch (IOException e) {

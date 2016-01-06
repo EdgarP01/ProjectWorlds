@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Optional;
 
 import org.spongepowered.api.world.World;
 import org.spongepowered.common.world.DimensionManager;
@@ -23,42 +22,39 @@ import net.obnoxint.xnbt.types.StringTag;
 
 public class SpongeData {
 
-	protected String worldName;
-	protected String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
-	protected Optional<CompoundTag> compoundTag = Optional.empty();
-
+	private String worldName;
+	private File dataFile;
+	private CompoundTag compoundTag;
+	private boolean exists = false;
+	
 	public SpongeData(String worldName){
 		this.worldName = worldName;
 
-		File dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld + "/" + worldName, "level_sponge.dat");
-		if(defaultWorld.equalsIgnoreCase(worldName)){
-			dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld, "level_sponge.dat");
-		}
+		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
 		
+		dataFile = new File(defaultWorld + File.separator + worldName, "level_sponge.dat");
+		if(defaultWorld.equalsIgnoreCase(worldName)){
+			dataFile = new File(defaultWorld, "level_sponge.dat");
+		}
+
 		if(dataFile.exists()){
+			exists = true;
 			init();
 		}
 	}
 	
 	public boolean exists(){
-		if(compoundTag.isPresent()){
-			return true;
-		}
-		return false;
+		return exists;
 	}
 	
 	private void init() {
-		File dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld + "/" + worldName, "level_sponge.dat");
-		if(defaultWorld.equalsIgnoreCase(worldName)){
-			dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld, "level_sponge.dat");
-		}
 		try {
 			for (NBTTag root : XNBT.readFromFile(dataFile)) {
 				CompoundTag compoundRoot = (CompoundTag) root;
 				
 				for(Entry<String, NBTTag> rootItem :compoundRoot.entrySet()){
-					if(rootItem.getKey().equalsIgnoreCase("Data")){
-						compoundTag = Optional.of((CompoundTag) rootItem.getValue());
+					if(rootItem.getKey().equalsIgnoreCase("SpongeData")){
+						compoundTag = (CompoundTag) rootItem.getValue();
 					}
 				}
 			}
@@ -70,11 +66,6 @@ public class SpongeData {
 	public void createNewConfig(String dimType) throws IOException{
 		int dimId = DimensionManager.getNextFreeDimId();
 		DimensionManager.registerDimension(dimId, 0);
-
-		File dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld + "/" + worldName, "level_sponge.dat");
-		if(defaultWorld.equalsIgnoreCase(worldName)){
-			dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld, "level_sponge.dat");
-		}
 
 		CompoundTag compoundTag = new CompoundTag("SpongeData", null);	
 		
@@ -104,7 +95,7 @@ public class SpongeData {
 
 		XNBT.writeToFile(list, dataFile);
 		
-		this.compoundTag = Optional.of(compoundTag);
+		this.compoundTag = compoundTag;
 		
 		WorldData worldData = new WorldData(worldName);
 		
@@ -118,7 +109,7 @@ public class SpongeData {
 	}
 	
 	public boolean isCorrectLevelName(){
-		for(Entry<String, NBTTag> entry : compoundTag.get().entrySet()){
+		for(Entry<String, NBTTag> entry : compoundTag.entrySet()){
 			if(!entry.getKey().equalsIgnoreCase("LevelName")){
 				continue;
 			}
@@ -134,11 +125,6 @@ public class SpongeData {
 	}
 	
 	public void setLevelName() throws IOException{
-		File dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld + "/" + worldName, "level_sponge.dat");
-		if(defaultWorld.equalsIgnoreCase(worldName)){
-			dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld, "level_sponge.dat");
-		}
-		
 		WorldData worldData = new WorldData(worldName);
 		
 		if(!worldData.exists()){
@@ -149,11 +135,11 @@ public class SpongeData {
 			worldData.setLevelName();
 		}
 		
-		compoundTag.get().put(new StringTag("LevelName", worldName));
+		compoundTag.put(new StringTag("LevelName", worldName));
 
 		CompoundTag compoundRoot = new CompoundTag("", null);
 		
-		compoundRoot.put(compoundTag.get());
+		compoundRoot.put(compoundTag);
 
 		List<NBTTag> list = new ArrayList<>();
 		
@@ -164,7 +150,7 @@ public class SpongeData {
 
 	public boolean isFreeDimId(){
 		int dimId = 0;
-		for(Entry<String, NBTTag> entry : compoundTag.get().entrySet()){
+		for(Entry<String, NBTTag> entry : compoundTag.entrySet()){
 			if(!entry.getKey().equalsIgnoreCase("dimensionId")){
 				continue;
 			}
@@ -176,27 +162,20 @@ public class SpongeData {
 			if(world.getName().equalsIgnoreCase(worldName)){
 				continue;
 			}
-			
-			String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
-			
-			File dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld + "/" + world.getName(), "level_sponge.dat");
-			if(!world.getName().equalsIgnoreCase(defaultWorld)){
-				dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld, "level_sponge.dat");
-			}
-			
+
 			try {
 				for (NBTTag root : XNBT.readFromFile(dataFile)) {
 					CompoundTag compoundRoot = (CompoundTag) root;
 					
-					for(Entry<String, NBTTag> rootItem :compoundRoot.entrySet()){
+					for(Entry<String, NBTTag> rootItem : compoundRoot.entrySet()){
 						if(rootItem.getKey().equalsIgnoreCase("SpongeData")){
 							CompoundTag compoundSpongeData = (CompoundTag) rootItem.getValue();
 							
 							for(Entry<String, NBTTag> tag :compoundSpongeData.entrySet()){
 								if(tag.getKey().equalsIgnoreCase("dimensionId")){
-									int id = (Integer)tag.getValue().getPayload();
+									int id = (Integer) tag.getValue().getPayload();
 									if(id == dimId){
-										return true;
+										return false;
 									}
 								}
 							}
@@ -207,23 +186,18 @@ public class SpongeData {
 				e.printStackTrace();
 			}
 		}
-		return false;
+		return true;
 	}
 	
 	public void setDimId() throws IOException{
-		File dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld + "/" + worldName, "level_sponge.dat");
-		if(defaultWorld.equalsIgnoreCase(worldName)){
-			dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld, "level_sponge.dat");
-		}
-		
 		int dimId = DimensionManager.getNextFreeDimId();
 		DimensionManager.registerDimension(dimId, 0);
 		
-		compoundTag.get().put(new IntegerTag("dimensionId", dimId));
+		compoundTag.put(new IntegerTag("dimensionId", dimId));
 
 		CompoundTag compoundRoot = new CompoundTag("", null);
 		
-		compoundRoot.put(compoundTag.get());
+		compoundRoot.put(compoundTag);
 
 		List<NBTTag> list = new ArrayList<>();
 		

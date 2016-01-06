@@ -9,8 +9,6 @@ import java.util.Map.Entry;
 
 import com.gmail.trentech.pjw.Main;
 
-import java.util.Optional;
-
 import net.obnoxint.xnbt.NBTTag;
 import net.obnoxint.xnbt.XNBT;
 import net.obnoxint.xnbt.types.CompoundTag;
@@ -18,42 +16,39 @@ import net.obnoxint.xnbt.types.StringTag;
 
 public class WorldData {
 
-	protected String worldName;
-	protected String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
-	protected Optional<CompoundTag> compoundTag = Optional.empty();
-
+	private String worldName;
+	private File dataFile;
+	private CompoundTag compoundTag;
+	private boolean exists = false;
+	
 	public WorldData(String worldName){
 		this.worldName = worldName;
 
-		File dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld + "/" + worldName, "level.dat");
+		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
+		
+		dataFile = new File(defaultWorld + File.separator + worldName, "level.dat");
 		if(defaultWorld.equalsIgnoreCase(worldName)){
-			dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld, "level.dat");
+			dataFile = new File(defaultWorld, "level.dat");
 		}
 		
 		if(dataFile.exists()){
+			exists = true;
 			init();
 		}
 	}
 	
 	public boolean exists(){
-		if(compoundTag.isPresent()){
-			return true;
-		}
-		return false;
+		return exists;
 	}
 	
 	private void init() {
-		File dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld + "/" + worldName, "level.dat");
-		if(defaultWorld.equalsIgnoreCase(worldName)){
-			dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld, "level.dat");
-		}
 		try {
 			for (NBTTag root : XNBT.readFromFile(dataFile)) {
 				CompoundTag compoundRoot = (CompoundTag) root;
 				
 				for(Entry<String, NBTTag> rootItem :compoundRoot.entrySet()){
 					if(rootItem.getKey().equalsIgnoreCase("Data")){
-						compoundTag = Optional.of((CompoundTag) rootItem.getValue());
+						compoundTag = (CompoundTag) rootItem.getValue();
 					}
 				}
 			}
@@ -63,7 +58,7 @@ public class WorldData {
 	}
 
 	public boolean isCorrectLevelName(){
-		for(Entry<String, NBTTag> entry : compoundTag.get().entrySet()){
+		for(Entry<String, NBTTag> entry : compoundTag.entrySet()){
 			if(!entry.getKey().equalsIgnoreCase("LevelName")){
 				continue;
 			}
@@ -79,16 +74,11 @@ public class WorldData {
 	}
 	
 	public void setLevelName() throws IOException{
-		File dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld + "/" + worldName, "level.dat");
-		if(defaultWorld.equalsIgnoreCase(worldName)){
-			dataFile = new File(Main.getGame().getSavesDirectory() + "/" + defaultWorld, "level.dat");
-		}
-		
-		compoundTag.get().put(new StringTag("LevelName", worldName));
+		compoundTag.put(new StringTag("LevelName", worldName));
 
 		CompoundTag compoundRoot = new CompoundTag("", null);
 		
-		compoundRoot.put(compoundTag.get());
+		compoundRoot.put(compoundTag);
 
 		List<NBTTag> list = new ArrayList<>();
 		
