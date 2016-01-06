@@ -37,7 +37,7 @@ public class CMDDifficulty implements CommandExecutor {
 		}
 		
 		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
-			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
+			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
 		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();

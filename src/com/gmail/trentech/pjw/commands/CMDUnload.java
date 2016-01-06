@@ -36,7 +36,7 @@ public class CMDUnload implements CommandExecutor {
 		}
 		
 		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
-			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", worldName, " does not exist"));
+			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
 		World world = Main.getGame().getServer().getWorld(worldName).get();

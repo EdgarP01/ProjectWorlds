@@ -38,7 +38,7 @@ public class CMDCreate implements CommandExecutor {
 		String worldName = args.<String>getOne("name").get();
 
 		if(Main.getGame().getServer().getWorld(worldName).isPresent()){
-			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", worldName, " already exists"));
+			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " already exists"));
 			return CommandResult.empty();
 		}
 		
