@@ -16,7 +16,7 @@ public class CommandManager {
 		    		,GenericArguments.optional(GenericArguments.string(Text.of("arg3"))))
 		    .executor(new CMDCreate())
 		    .build();
-	
+
 	public CommandSpec cmdDelete = CommandSpec.builder()
 		    .description(Text.of("delete world"))
 		    .permission("pjw.cmd.world.delete")
@@ -104,7 +104,7 @@ public class CommandManager {
 	public CommandSpec cmdLoad = CommandSpec.builder()
 		    .description(Text.of("load a world"))
 		    .permission("pjw.cmd.world.load")
-		    .arguments(GenericArguments.optional(GenericArguments.remainingJoinedStrings(Text.of("name"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name"))), GenericArguments.optional(GenericArguments.string(Text.of("type"))))
 		    .executor(new CMDLoad())
 		    .build();
 	
@@ -155,7 +155,7 @@ public class CommandManager {
 			.child(cmdDiffculty, "difficulty", "df")
 			.child(cmdSetSpawn, "setspawn", "s")
 			.child(cmdHardcore, "hardcore", "h")
-			//.child(cmdPvp, "pvp")
+			.child(cmdPvp, "pvp")
 			.child(cmdKeepSpawnLoaded, "keepspawnloaded", "k")
 			.child(cmdList, "list", "ls")
 			.child(cmdTeleport, "teleport", "tp")

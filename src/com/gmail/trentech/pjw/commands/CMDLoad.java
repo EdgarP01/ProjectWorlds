@@ -1,5 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 import org.spongepowered.api.command.CommandException;
@@ -10,11 +12,13 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.DimensionType;
 import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.IOManager;
 
-public class CMDLoad implements CommandExecutor {
+public class CMDLoad extends IOManager implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -30,36 +34,49 @@ public class CMDLoad implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
-//		File worldDirectory = new File(Main.getGame().getSavesDirectory() + "/" + Main.getGame().getServer().getDefaultWorld().get().getWorldName() + "/" + worldName);
-//		if(!worldDirectory.exists()){
-//			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not locate ", worldName));
-//			return CommandResult.empty();
-//		}
-//
-//		File dataFile = new File(worldDirectory.getAbsolutePath(), "level_sponge.dat");
-//		if(!dataFile.exists()){
-//			try {
-//				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.GOLD, " Converting world to Sponge. This could break something"));
-//				IOManager.init(worldName);
-//				src.sendMessage(Text.of(TextColors.DARK_GREEN, "World will not load until next restart"));
-//				return CommandResult.success();
-//			} catch (IOException e) {
-//				src.sendMessage(Text.of(TextColors.DARK_RED, "Failed to convert world"));
-//				e.printStackTrace();
-//				return CommandResult.empty();
-//			}
-//		}
+		File worldDirectory = new File(Main.getGame().getSavesDirectory() + "/" + Main.getGame().getServer().getDefaultWorld().get().getWorldName() + "/" + worldName);
+		if(!worldDirectory.exists()){
+			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not locate ", worldName));
+			return CommandResult.empty();
+		}
+
+		File dataFile = new File(worldDirectory.getAbsolutePath(), "level_sponge.dat");
 		
-//		try {
-//			if(IOManager.dimensionIdExists(IOManager.getDimenionId(worldName))){
-//				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.GOLD, " World contains dimension id conflict. attempting to repair."));
-//				IOManager.init(worldName);
-//			}
-//		} catch (IOException e) {
-//			src.sendMessage(Text.of(TextColors.DARK_RED, "Failed to repair world"));
-//			e.printStackTrace();
-//			return CommandResult.empty();
-//		}
+		if(!dataFile.exists()){
+			src.sendMessage(Text.of(TextColors.YELLOW, "Foreign world detected"));
+			if(!args.hasAny("type")){
+				src.sendMessage(Text.of(TextColors.DARK_RED, "Must specify dimension type when importing worlds"));
+				return CommandResult.empty();
+			}
+			String type = args.<String>getOne("type").get();
+			
+			if(!Main.getGame().getRegistry().getType(DimensionType.class, type).isPresent()){
+				src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid dimension type"));
+				return CommandResult.empty();
+			}
+			
+			try {
+				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Converting world to Sponge. This could break something"));
+				init(worldName, type);
+				src.sendMessage(Text.of(TextColors.DARK_GREEN, "World will not load until next restart"));
+				return CommandResult.success();
+			} catch (IOException e) {
+				src.sendMessage(Text.of(TextColors.DARK_RED, "Failed to convert world"));
+				e.printStackTrace();
+				return CommandResult.empty();
+			}
+		}else{
+			try {
+				if(dimensionIdExists(worldName)){
+					src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " World contains dimension id conflict. attempting to repair."));
+					repairDim(worldName);
+				}
+			} catch (IOException e) {
+				src.sendMessage(Text.of(TextColors.DARK_RED, "Failed to repair world"));
+				e.printStackTrace();
+				return CommandResult.empty();
+			}
+		}
 
 		Optional<World> load = Main.getGame().getServer().loadWorld(worldName);
 		
@@ -75,6 +92,7 @@ public class CMDLoad implements CommandExecutor {
 	private Text invalidArg(){
 		Text t1 = Text.of(TextColors.YELLOW, "/world load ");
 		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world or @w for current world"))).append(Text.of("<world> ")).build();
-		return Text.of(t1,t2);
+		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Required for importing worlds"))).append(Text.of("[type]")).build();
+		return Text.of(t1,t2,t3);
 	}
 }
