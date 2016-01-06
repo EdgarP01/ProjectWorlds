@@ -70,10 +70,10 @@ public class CMDWorld implements CommandExecutor {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help Setspawn")).append(Text.of(" /world setspawn")).build());
 		}
-//		if(src.hasPermission("pjw.cmd.world.pvp")) {
-//			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
-//					.onClick(TextActions.runCommand("/world help Pvp")).append(Text.of(" /world pvp")).build());
-//		}
+		if(src.hasPermission("pjw.cmd.world.pvp")) {
+			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
+					.onClick(TextActions.runCommand("/world help Pvp")).append(Text.of(" /world pvp")).build());
+		}
 		if(src.hasPermission("pjw.cmd.world.keepspawnloaded")) {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/world help Keepspawnloaded")).append(Text.of(" /world keepspawnloaded")).build());

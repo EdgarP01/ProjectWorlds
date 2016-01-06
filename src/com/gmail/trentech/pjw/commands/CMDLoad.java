@@ -1,6 +1,5 @@
 package com.gmail.trentech.pjw.commands;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -16,9 +15,10 @@ import org.spongepowered.api.world.DimensionType;
 import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.IOManager;
+import com.gmail.trentech.pjw.io.SpongeData;
+import com.gmail.trentech.pjw.io.WorldData;
 
-public class CMDLoad extends IOManager implements CommandExecutor {
+public class CMDLoad implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -34,15 +34,9 @@ public class CMDLoad extends IOManager implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
-		File worldDirectory = new File(Main.getGame().getSavesDirectory() + "/" + Main.getGame().getServer().getDefaultWorld().get().getWorldName() + "/" + worldName);
-		if(!worldDirectory.exists()){
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not locate ", worldName));
-			return CommandResult.empty();
-		}
-
-		File dataFile = new File(worldDirectory.getAbsolutePath(), "level_sponge.dat");
+		SpongeData spongeData = new SpongeData(worldName);
 		
-		if(!dataFile.exists()){
+		if(!spongeData.exists()){
 			src.sendMessage(Text.of(TextColors.YELLOW, "Foreign world detected"));
 			if(!args.hasAny("type")){
 				src.sendMessage(Text.of(TextColors.DARK_RED, "Must specify dimension type when importing worlds"));
@@ -57,7 +51,7 @@ public class CMDLoad extends IOManager implements CommandExecutor {
 			
 			try {
 				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Converting world to Sponge. This could break something"));
-				init(worldName, type);
+				spongeData.createNewConfig(type.toLowerCase());
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, "World will not load until next restart"));
 				return CommandResult.success();
 			} catch (IOException e) {
@@ -66,18 +60,43 @@ public class CMDLoad extends IOManager implements CommandExecutor {
 				return CommandResult.empty();
 			}
 		}else{
-			try {
-				if(dimensionIdExists(worldName)){
-					src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " World contains dimension id conflict. attempting to repair."));
-					repairDim(worldName);
+			if(!spongeData.isFreeDimId()){
+				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " World contains dimension id conflict. attempting to repair."));
+				try {
+					spongeData.setDimId();
+				} catch (IOException e) {
+					src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong"));
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, "Failed to repair world"));
-				e.printStackTrace();
-				return CommandResult.empty();
+			}
+			if(!spongeData.isCorrectLevelName()){
+				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Repairing level name."));
+				try {
+					spongeData.setLevelName();
+				} catch (IOException e) {
+					src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong"));
+					e.printStackTrace();
+				}
 			}
 		}
 
+		WorldData worldData = new WorldData(worldName);
+		
+		if(!worldData.exists()){
+			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " is not a valid world"));
+			return CommandResult.empty();
+		}
+		
+		if(!worldData.isCorrectLevelName()){
+			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Repairing level name."));
+			try {
+				worldData.setLevelName();
+			} catch (IOException e) {
+				src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong"));
+				e.printStackTrace();
+			}
+		}
+		
 		Optional<World> load = Main.getGame().getServer().loadWorld(worldName);
 		
 		if(!load.isPresent()){

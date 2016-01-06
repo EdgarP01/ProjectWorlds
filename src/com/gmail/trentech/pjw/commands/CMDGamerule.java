@@ -133,8 +133,8 @@ public class CMDGamerule implements CommandExecutor {
 			return validBool(value);
 		case "naturalRegeneration":
 			return validBool(value);
-		case "pvp":
-			return validBool(value);
+//		case "pvp":
+//			return validBool(value);
 		case "randomTick":
 			try{
 				Long.parseLong(value);

@@ -113,12 +113,12 @@ public class CMDHelp implements CommandExecutor {
 						+ " /world gamemode MyWorld SURVIVAL\n"
 						+ " /world gamemode @w CREATIVE";
 				break;
-//			case "pvp":
-//				description = " Toggle on and off pvp for world";
-//				syntax = " /world pvp <world> [value]";
-//				example = " /world pvp MyWorld true\n"
-//						+ " /world pvp @w false";
-//				break;
+			case "pvp":
+				description = " Toggle on and off pvp for world";
+				syntax = " /world pvp <world> [value]";
+				example = " /world pvp MyWorld true\n"
+						+ " /world pvp @w false";
+				break;
 			case "rename":
 				description = " Allows for renaming worlds. World must be unloaded before you can rename world";
 				syntax = " /world rename <world> <world>\n"
