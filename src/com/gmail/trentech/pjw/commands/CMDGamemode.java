@@ -73,7 +73,15 @@ public class CMDGamemode implements CommandExecutor {
 	private Text invalidArg(){
 		Text t1 = Text.of(TextColors.GREEN, "/world gamemode ");
 		Text t2 = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Enter world or @w for current world"))).append(Text.of("<world> ")).build();
-		Text t3 = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("SURVIVAL\nCREATIVE\nADVENTURE\nSPECTATOR"))).append(Text.of("[value]")).build();
+		org.spongepowered.api.text.Text.Builder gamemodes = null;
+		for(GameMode gamemode : Main.getGame().getRegistry().getAllOf(GameMode.class)){
+			if(gamemodes == null){
+				gamemodes = Text.builder().append(Text.of(gamemode.getName()));
+			}else{
+				gamemodes.append(Text.of("\n", gamemode.getName()));
+			}
+		}
+		Text t3 = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(gamemodes.build())).append(Text.of("[value]")).build();
 		return Text.of(t1,t2,t3);
 	}
 }

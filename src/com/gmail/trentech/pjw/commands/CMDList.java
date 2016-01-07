@@ -31,12 +31,12 @@ public class CMDList implements CommandExecutor {
 		
 		for(World world : Main.getGame().getServer().getWorlds()){
 			Builder builder = Text.builder().color(TextColors.AQUA).onHover(TextActions.showText(Text.of(TextColors.WHITE, "Click to view properies")));
-			builder.onClick(TextActions.runCommand("/world properties " + world.getName())).append(Text.of(TextColors.AQUA, world.getName(), ": ", TextColors.GREEN, world.getEntities().size(), " Entities"));
+			builder.onClick(TextActions.runCommand("/pjw:world properties " + world.getName())).append(Text.of(TextColors.AQUA, world.getName(), ": ", TextColors.GREEN, world.getEntities().size(), " Entities"));
 			list.add(builder.build());
 		}
 		for(WorldProperties world : Main.getGame().getServer().getUnloadedWorlds()){
 			Builder builder = Text.builder().color(TextColors.DARK_GRAY).onHover(TextActions.showText(Text.of(TextColors.WHITE, "Click to load world")));
-			builder.onClick(TextActions.runCommand("/world load " + world.getWorldName())).append(Text.of(TextColors.AQUA, world.getWorldName(), ": ", TextColors.GRAY, " Unloaded"));
+			builder.onClick(TextActions.runCommand("/pjw:world load " + world.getWorldName())).append(Text.of(TextColors.AQUA, world.getWorldName(), ": ", TextColors.GRAY, " Unloaded"));
 			list.add(builder.build());
 		}
 

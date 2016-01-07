@@ -48,7 +48,7 @@ public class EventManager {
 		
 		if(!player.setLocationSafely(dest)){
 			CMDTeleport.players.put(player, dest);
-			player.sendMessage(Text.builder().color(TextColors.DARK_RED).append(Text.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.runCommand("/world teleport confirm")).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
+			player.sendMessage(Text.builder().color(TextColors.DARK_RED).append(Text.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.runCommand("/pjw:world teleport confirm")).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
 			return;
 		}
 		
@@ -89,15 +89,10 @@ public class EventManager {
 		
 		WorldProperties properties = world.getProperties();
 
-//		if(!properties.getGameRule("pvp").isPresent()){
-//			properties.setGameRule("pvp", "true");
-//		}
 		if(!properties.getGameRule("respawnWorld").isPresent()){
 			properties.setGameRule("respawnWorld", Main.getGame().getServer().getDefaultWorld().get().getWorldName());
 		}
-//		if(!properties.getGameRule("gamemode").isPresent()){
-//			properties.setGameRule("gamemode", GameModes.SURVIVAL.getName());
-//		}
+
 		if(!properties.getGameRule("doWeatherCycle").isPresent()){
 			properties.setGameRule("doWeatherCycle", "true");
 		}
@@ -136,8 +131,8 @@ public class EventManager {
 
         World world = victim.getWorld();
 		WorldProperties properties = world.getProperties();
-		
-		if(!Boolean.parseBoolean(properties.getGameRule("pvp").get())){
+
+		if(!properties.isPVPEnabled()){
 			event.setCancelled(true);
 		}
     }
@@ -147,7 +142,7 @@ public class EventManager {
 		World world = event.getTargetWorld();
 		WorldProperties properties = world.getProperties();
 
-		if(!Boolean.parseBoolean(properties.getGameRule("doWeatherCycle").get())){
+		if(properties.getGameRule("doWeatherCycle").get().equalsIgnoreCase("false")){
 			event.setCancelled(true);
 		}
 	}

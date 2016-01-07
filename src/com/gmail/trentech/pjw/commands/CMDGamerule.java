@@ -120,11 +120,6 @@ public class CMDGamerule implements CommandExecutor {
 			return validBool(value);
 		case "doTileDrops":
 			return validBool(value);
-//		case "gamemode":
-//			if(value.equalsIgnoreCase("SURVIVAL") || value.equalsIgnoreCase("CREATIVE") || value.equalsIgnoreCase("ADVENTURE") || value.equalsIgnoreCase("SPECTATOR")){
-//				return true;
-//			}
-//			return false;
 		case "keepInventory":
 			return validBool(value);
 		case "logAdminCommands":
@@ -133,8 +128,6 @@ public class CMDGamerule implements CommandExecutor {
 			return validBool(value);
 		case "naturalRegeneration":
 			return validBool(value);
-//		case "pvp":
-//			return validBool(value);
 		case "randomTick":
 			try{
 				Long.parseLong(value);

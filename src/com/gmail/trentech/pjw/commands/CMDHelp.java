@@ -33,14 +33,14 @@ public class CMDHelp implements CommandExecutor {
 		
 		switch(command.toLowerCase()){
 			case "copy":
-				description = " Allows you to make a new world from an existing world.";
+				description = " Allows you to make a new world from an existing world";
 				syntax = " /world copy <world> <world>\n"
 						+ " /w cp <world> <world>";
 				example = " /world copy srcWorld newWorld\n"
 						+ " /world copy @w newWorld";
 				break;
 			case "create":
-				description = " Allows you to create new worlds with any combination of optional arguments D: for dimension type, G: for generator type, S: for seed and M: for generator modifiers.";
+				description = " Allows you to create new worlds with any combination of optional arguments D: for dimension type, G: for generator type, S: for seed and M: for generator modifiers";
 				syntax = " /world create <world> [D:type] [G:generator] [M:modifer]  [S:seed]\n"
 						+ " /w cr <world> [D:type] [G:generator] [M:modifer]  [S:seed]";
 				example = " /world create NewWorld S:-12309830198412353456\n"
@@ -49,13 +49,13 @@ public class CMDHelp implements CommandExecutor {
 						+ " /world create M:VOID";
 				break;
 			case "delete":
-				description = " Delete worlds you no longer need. Worlds must be unloaded before you can delete them.";
+				description = " Delete worlds you no longer need. Worlds must be unloaded before you can delete them";
 				syntax = " /world delete <world>\n"
 						+ " /w dl <world>";
 				example = " /world delete OldWorld";
 				break;
 			case "difficulty":
-				description = " Set the difficulty level for each world.";
+				description = " Set the difficulty level for each world";
 				syntax = " /world difficulty <world> [value]\n"
 						+ " /w df <world> [value]";
 				example = " /world difficulty MyWorld\n"
@@ -85,7 +85,7 @@ public class CMDHelp implements CommandExecutor {
 				example = " /world list";
 				break;
 			case "load":
-				description = " Loads specified world if exists.";
+				description = " Loads specified world if exists";
 				syntax = " /world load <world>\n"
 						+ " /w l <world>";
 				example = " /world load NewWorld";
@@ -126,7 +126,7 @@ public class CMDHelp implements CommandExecutor {
 				example = " /world rename MyWorld NewWorldName";
 				break;
 			case "setspawn":
-				description = " Sets the spawn point of specified world. If no arguments present sets spawn of current world to player location.";
+				description = " Sets the spawn point of specified world. If no arguments present sets spawn of current world to player location";
 				syntax = " /world setspawn <world> <x,y,z>\n"
 						+ " /w s <world> <x,y,z>";
 				example = " /world setspawn\n"
@@ -142,20 +142,20 @@ public class CMDHelp implements CommandExecutor {
 						+ " /world teleport SomePlayer MyWorld:-153,75,300";
 				break;
 			case "unload":
-				description = " unloads specified world. If players are in world, they will be teleported to default spawn.";
+				description = " Unloads specified world. If players are in world, they will be teleported to default spawn";
 				syntax = " /world unload <world>\n"
 						+ " /w u <world>";
 				example = " /world unload MyWorld";
 				break;
 			case "regen":
-				description = " Regenerates a world. You can preserve the seed or generate new random.";
+				description = " Regenerates a world. You can preserve the seed or generate new random";
 				syntax = " /world regen <world> [true/false]\n"
 						+ " /w r <world>  [true/false]";
 				example = " /world regen MyWorld\n"
 						+ " /world regen MyWorld true";
 				break;
 			case "enable":
-				description = " Enable and disable worlds from loading.";
+				description = " Enable and disable worlds from loading";
 				syntax = " /world enable <world> <value>\n"
 						+ " /w e <world> <value>";
 				example = " /world enable MyWorld true\n"
