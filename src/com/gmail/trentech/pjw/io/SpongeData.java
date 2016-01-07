@@ -12,12 +12,12 @@ import org.spongepowered.common.world.DimensionManager;
 
 import com.gmail.trentech.pjw.Main;
 
-import net.obnoxint.xnbt.NBTTag;
 import net.obnoxint.xnbt.XNBT;
 import net.obnoxint.xnbt.types.CompoundTag;
 import net.obnoxint.xnbt.types.IntegerTag;
 import net.obnoxint.xnbt.types.ListTag;
 import net.obnoxint.xnbt.types.LongTag;
+import net.obnoxint.xnbt.types.NBTTag;
 import net.obnoxint.xnbt.types.StringTag;
 
 public class SpongeData {
@@ -49,7 +49,7 @@ public class SpongeData {
 	
 	private void init() {
 		try {
-			for (NBTTag root : XNBT.readFromFile(dataFile)) {
+			for (NBTTag root : XNBT.loadTags(dataFile)) {
 				CompoundTag compoundRoot = (CompoundTag) root;
 				
 				for(Entry<String, NBTTag> rootItem :compoundRoot.entrySet()){
@@ -93,7 +93,7 @@ public class SpongeData {
 		
 		list.add(compoundRoot);
 
-		XNBT.writeToFile(list, dataFile);
+		XNBT.saveTags(list, dataFile);
 		
 		this.compoundTag = compoundTag;
 		
@@ -145,7 +145,7 @@ public class SpongeData {
 		
 		list.add(compoundRoot);
 
-		XNBT.writeToFile(list, dataFile);
+		XNBT.saveTags(list, dataFile);
 	}
 
 	public boolean isFreeDimId(){
@@ -164,7 +164,7 @@ public class SpongeData {
 			}
 
 			try {
-				for (NBTTag root : XNBT.readFromFile(dataFile)) {
+				for (NBTTag root : XNBT.loadTags(dataFile)) {
 					CompoundTag compoundRoot = (CompoundTag) root;
 					
 					for(Entry<String, NBTTag> rootItem : compoundRoot.entrySet()){
@@ -203,6 +203,6 @@ public class SpongeData {
 		
 		list.add(compoundRoot);
 
-		XNBT.writeToFile(list, dataFile);
+		XNBT.saveTags(list, dataFile);
 	}
 }

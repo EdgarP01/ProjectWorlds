@@ -99,18 +99,37 @@ public class CMDCreate implements CommandExecutor {
 	}
 
 	private Text invalidArg(){
+		Main.getGame().getRegistry().getAllOf(DimensionType.class);
 		Text t1 = Text.of(TextColors.YELLOW, "/world create <world> ");
-		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("OVERWORLD\nNETHER\nTHE_END"))).append(Text.of("[D:type] ")).build();
-		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("DEFAULT\nOVERWORLD\nNETHER\nTHE_END\nFLAT\nAMPLIFIED\nLARGE_BIOMES"))).append(Text.of("[G:generator] ")).build();
-		org.spongepowered.api.text.Text.Builder modifierShow = null;
-		for(Entry<String, WorldGeneratorModifier> modifiers :Main.getModifiers().entrySet()){
-			if(modifierShow == null){
-				modifierShow = Text.builder().append(Text.of(modifiers.getKey()));
+		org.spongepowered.api.text.Text.Builder dimTypes = null;
+		for(DimensionType dimType : Main.getGame().getRegistry().getAllOf(DimensionType.class)){
+			if(dimTypes == null){
+				dimTypes = Text.builder().append(Text.of(dimType.getName()));
 			}else{
-				modifierShow.append(Text.of("\n", modifiers.getKey()));
+				dimTypes.append(Text.of("\n", dimType.getName()));
+			}
+		}
+		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(dimTypes.build())).append(Text.of("[D:type] ")).build();
+		org.spongepowered.api.text.Text.Builder genTypes = Text.builder();
+		for(GeneratorType genType : Main.getGame().getRegistry().getAllOf(GeneratorType.class)){
+			if(!genType.getName().equalsIgnoreCase("debug_all_block_states") && !genType.getName().equalsIgnoreCase("default_1_1")){
+				if(genTypes == null){
+					genTypes = Text.builder().append(Text.of(genType.getName()));
+				}else{
+					genTypes.append(Text.of(genType.getName(), "\n"));
+				}
+			}
+		}
+		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(genTypes.build())).append(Text.of("[G:generator] ")).build();
+		org.spongepowered.api.text.Text.Builder modifiers = null;
+		for(Entry<String, WorldGeneratorModifier> modifier :Main.getModifiers().entrySet()){
+			if(modifiers == null){
+				modifiers = Text.builder().append(Text.of(modifier.getKey()));
+			}else{
+				modifiers.append(Text.of("\n", modifier.getKey()));
 			}	
 		}
-		Text t4 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(modifierShow.build())).append(Text.of("[M:modifier] ")).build();
+		Text t4 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(modifiers.build())).append(Text.of("[M:modifier] ")).build();
 		Text t5 = Text.of(TextColors.YELLOW, "[S:seed]");
 		return Text.of(t1,t2,t3,t4,t5);
 	}

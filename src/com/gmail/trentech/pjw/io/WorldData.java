@@ -9,9 +9,9 @@ import java.util.Map.Entry;
 
 import com.gmail.trentech.pjw.Main;
 
-import net.obnoxint.xnbt.NBTTag;
 import net.obnoxint.xnbt.XNBT;
 import net.obnoxint.xnbt.types.CompoundTag;
+import net.obnoxint.xnbt.types.NBTTag;
 import net.obnoxint.xnbt.types.StringTag;
 
 public class WorldData {
@@ -43,7 +43,7 @@ public class WorldData {
 	
 	private void init() {
 		try {
-			for (NBTTag root : XNBT.readFromFile(dataFile)) {
+			for (NBTTag root : XNBT.loadTags(dataFile)) {
 				CompoundTag compoundRoot = (CompoundTag) root;
 				
 				for(Entry<String, NBTTag> rootItem :compoundRoot.entrySet()){
@@ -84,6 +84,6 @@ public class WorldData {
 		
 		list.add(compoundRoot);
 
-		XNBT.writeToFile(list, dataFile);
+		XNBT.saveTags(list, dataFile);
 	}
 }
