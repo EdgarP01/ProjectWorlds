@@ -16,7 +16,7 @@ public class ConfigManager {
 	private ConfigurationLoader<CommentedConfigurationNode> loader;
 	
 	public ConfigManager(String configName) {
-		String folder = "config/" + Resource.NAME + "/";
+		String folder = "config/projectworlds/";
         if (!new File(folder).isDirectory()) {
         	new File(folder).mkdirs();
         }
@@ -28,7 +28,7 @@ public class ConfigManager {
 	}
 	
 	public ConfigManager() {
-		String folder = "config/" + Resource.NAME + "/";
+		String folder = "config/projectworlds/";
         if (!new File(folder).isDirectory()) {
         	new File(folder).mkdirs();
         }
@@ -63,6 +63,12 @@ public class ConfigManager {
 			}
 			if(config.getNode("Options", "Show-Particles").getString() == null) {
 				config.getNode("Options", "Show-Particles").setValue(true).setComment("Display particle effects when teleporting");
+			}
+			if(config.getNode("Options", "Command-Alias","world").getString() == null) {
+				config.getNode("Options", "Command-Alias","world").setValue("pjw");
+			}
+			if(config.getNode("Options", "Command-Alias","gamerule").getString() == null) {
+				config.getNode("Options", "Command-Alias","gamerule").setValue("gr");
 			}
 		}
 		save();

@@ -9,7 +9,6 @@ import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
@@ -63,11 +62,11 @@ public class EventManager {
 
 		player.sendTitle(Title.of(Text.of(TextColors.DARK_GREEN, dest.getExtent().getName()), Text.of(TextColors.AQUA, "x: ", dest.getExtent().getSpawnLocation().getBlockX(), ", y: ", dest.getExtent().getSpawnLocation().getBlockY(),", z: ", dest.getExtent().getSpawnLocation().getBlockZ())));
 	}
-	
+
 	@Listener
 	public void onPlayerJoin(ClientConnectionEvent.Join event) {
 	    Player player = event.getTargetEntity();
-	    
+
 	    // NOT IMPLEMENTED YET
 		if(player.get(JoinData.class).isPresent()){
 			System.out.println("JOIN DATA PRESENT");
@@ -90,15 +89,15 @@ public class EventManager {
 		
 		WorldProperties properties = world.getProperties();
 
-		if(!properties.getGameRule("pvp").isPresent()){
-			properties.setGameRule("pvp", "true");
-		}
+//		if(!properties.getGameRule("pvp").isPresent()){
+//			properties.setGameRule("pvp", "true");
+//		}
 		if(!properties.getGameRule("respawnWorld").isPresent()){
 			properties.setGameRule("respawnWorld", Main.getGame().getServer().getDefaultWorld().get().getWorldName());
 		}
-		if(!properties.getGameRule("gamemode").isPresent()){
-			properties.setGameRule("gamemode", GameModes.SURVIVAL.getName());
-		}
+//		if(!properties.getGameRule("gamemode").isPresent()){
+//			properties.setGameRule("gamemode", GameModes.SURVIVAL.getName());
+//		}
 		if(!properties.getGameRule("doWeatherCycle").isPresent()){
 			properties.setGameRule("doWeatherCycle", "true");
 		}

@@ -1,5 +1,6 @@
 package com.gmail.trentech.pjw;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -40,10 +41,11 @@ public class Main {
 
     @Listener
     public void onInitialization(GameInitializationEvent event) {
+    	fixPath();
     	getGame().getEventManager().registerListeners(this, new EventManager());
 
-    	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
-    	getGame().getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", "gr");
+    	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", new ConfigManager().getConfig().getNode("Options", "Command-Alias","world").getString());
+    	getGame().getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", new ConfigManager().getConfig().getNode("Options", "Command-Alias","gamerule").getString());
 
     	getGame().getRegistry().register(WorldGeneratorModifier.class, new VoidWorldGeneratorModifier());
     	
@@ -86,6 +88,14 @@ public class Main {
 			}else{
 				getLog().warn("Failed to load " + world.getWorldName());
 			}
+		}
+	}
+	
+	private void fixPath(){
+		File directory = new File("config", "Project Worlds");
+		if(directory.exists()){
+			File newDirectory = new File("config", "projectworlds");
+			directory.renameTo(newDirectory);
 		}
 	}
 }

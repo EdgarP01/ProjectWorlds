@@ -151,33 +151,44 @@ public class SpongeData {
 	public boolean isFreeDimId(){
 		int dimId = 0;
 		for(Entry<String, NBTTag> entry : compoundTag.entrySet()){
-			if(!entry.getKey().equalsIgnoreCase("dimensionId")){
-				continue;
+			if(entry.getKey().equalsIgnoreCase("dimensionId")){
+				dimId = (Integer) entry.getValue().getPayload();
+				break;
 			}
-			
-			dimId = (Integer) entry.getValue().getPayload();
 		}
 
-		for(World world : Main.getGame().getServer().getWorlds()){		
+		for(World world : Main.getGame().getServer().getWorlds()){
 			if(world.getName().equalsIgnoreCase(worldName)){
 				continue;
 			}
 
+			String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
+			
+			File dataFile = new File(defaultWorld + File.separator + world.getName(), "level_sponge.dat");
+			if(defaultWorld.equalsIgnoreCase(world.getName())){
+				dataFile = new File(defaultWorld, "level_sponge.dat");
+			}
+			
 			try {
 				for (NBTTag root : XNBT.loadTags(dataFile)) {
 					CompoundTag compoundRoot = (CompoundTag) root;
 					
 					for(Entry<String, NBTTag> rootItem : compoundRoot.entrySet()){
-						if(rootItem.getKey().equalsIgnoreCase("SpongeData")){
-							CompoundTag compoundSpongeData = (CompoundTag) rootItem.getValue();
+						if(!rootItem.getKey().equalsIgnoreCase("SpongeData")){
+							continue;
+						}
+						
+						CompoundTag compoundSpongeData = (CompoundTag) rootItem.getValue();
+						
+						for(Entry<String, NBTTag> tag :compoundSpongeData.entrySet()){
+							if(!tag.getKey().equalsIgnoreCase("dimensionId")){
+								continue;
+							}
 							
-							for(Entry<String, NBTTag> tag :compoundSpongeData.entrySet()){
-								if(tag.getKey().equalsIgnoreCase("dimensionId")){
-									int id = (Integer) tag.getValue().getPayload();
-									if(id == dimId){
-										return false;
-									}
-								}
+							int id = (Integer) tag.getValue().getPayload();
+							
+							if(id == dimId){
+								return false;
 							}
 						}
 					}
