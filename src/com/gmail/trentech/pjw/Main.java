@@ -23,6 +23,8 @@ import com.gmail.trentech.pjw.modifiers.voidd.VoidWorldGeneratorModifier;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Resource;
 
+import ninja.leaping.configurate.ConfigurationNode;
+
 @Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION)
 public class Main {
 
@@ -42,10 +44,8 @@ public class Main {
     @Listener
     public void onInitialization(GameInitializationEvent event) {
     	fixPath();
+    	
     	getGame().getEventManager().registerListeners(this, new EventManager());
-
-    	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", new ConfigManager().getConfig().getNode("Options", "Command-Alias","world").getString());
-    	getGame().getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", new ConfigManager().getConfig().getNode("Options", "Command-Alias","gamerule").getString());
 
     	getGame().getRegistry().register(WorldGeneratorModifier.class, new VoidWorldGeneratorModifier());
     	
@@ -58,7 +58,10 @@ public class Main {
     public void onStartedServer(GameStartedServerEvent event) {
     	getLog().info("Initializing...");
 
-    	new ConfigManager();
+    	ConfigurationNode config = new ConfigManager().getConfig();
+    	
+    	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", config.getNode("Options", "Command-Alias", "world").getString());
+    	getGame().getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", config.getNode("Options", "Command-Alias", "gamerule").getString());
 
     	loadWorlds();
     }
