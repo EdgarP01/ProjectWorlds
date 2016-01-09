@@ -1,5 +1,6 @@
 package com.gmail.trentech.pjw.listeners;
 
+import java.util.Optional;
 import java.util.Random;
 
 import org.spongepowered.api.data.key.Keys;
@@ -18,6 +19,7 @@ import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.world.ChangeWorldWeatherEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
+import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
@@ -29,6 +31,7 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.flowpowered.math.vector.Vector3d;
+import com.gmail.trentech.pjp.commands.CMDBack;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.commands.CMDTeleport;
 import com.gmail.trentech.pjw.events.TeleportEvent;
@@ -61,6 +64,11 @@ public class EventManager {
 		}
 
 		player.sendTitle(Title.of(Text.of(TextColors.DARK_GREEN, dest.getExtent().getName()), Text.of(TextColors.AQUA, "x: ", dest.getBlockX(), ", y: ", dest.getBlockY(),", z: ", dest.getBlockZ())));
+		
+		Optional<PluginContainer> plugin = Main.getGame().getPluginManager().getPlugin("PJP");
+		if(plugin.isPresent()){
+			CMDBack.players.put(player, src);
+		}
 	}
 
 	@Listener
