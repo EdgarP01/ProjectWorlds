@@ -41,12 +41,12 @@ public class CMDHelp implements CommandExecutor {
 				break;
 			case "create":
 				description = " Allows you to create new worlds with any combination of optional arguments D: for dimension type, G: for generator type, S: for seed and M: for generator modifiers";
-				syntax = " /world create <world> [D:type] [G:generator] [M:modifer]  [S:seed]\n"
-						+ " /w cr <world> [D:type] [G:generator] [M:modifer]  [S:seed]";
-				example = " /world create NewWorld S:-12309830198412353456\n"
-						+ " /world create NewWorld D:OVERWORLD G:OVERWORLD\n"
-						+ " /world create NewWorld D:NETHER M:SKY\n"
-						+ " /world create M:VOID";
+				syntax = " /world create <world> [d:type] [g:generator] [m:modifer]  [s:seed]\n"
+						+ " /w cr <world> [d:type] [g:generator] [m:modifer]  [s:seed]";
+				example = " /world create NewWorld d:-12309830198412353456\n"
+						+ " /world create NewWorld d:OVERWORLD g:OVERWORLD\n"
+						+ " /world create NewWorld d:NETHER m:SKY\n"
+						+ " /world create m:VOID";
 				break;
 			case "delete":
 				description = " Delete worlds you no longer need. Worlds must be unloaded before you can delete them";

@@ -102,8 +102,10 @@ public class CMDLoad implements CommandExecutor {
 		if(!load.isPresent()){
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not load ", worldName));
 			return CommandResult.empty();
-		}	
-
+		}
+		
+		load.get().setKeepSpawnLoaded(true);
+		
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " loaded successfully"));
 		return CommandResult.success();
 	}

@@ -37,6 +37,11 @@ public class CMDCreate implements CommandExecutor {
 		}
 		String worldName = args.<String>getOne("name").get();
 
+		if(worldName.contains(":")){
+			src.sendMessage(invalidArg());
+			return CommandResult.empty();
+		}
+		
 		if(Main.getGame().getServer().getWorld(worldName).isPresent()){
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " already exists"));
 			return CommandResult.empty();
@@ -45,34 +50,34 @@ public class CMDCreate implements CommandExecutor {
 		builder.name(worldName);
 
 		if(args.hasAny("arg0")) {
-			if(!add(args.<String>getOne("arg0").get().toUpperCase())){
+			if(!add(args.<String>getOne("arg0").get())){
 				src.sendMessage(invalidArg());
 				return CommandResult.empty();
 			}
 		}
 
 		if(args.hasAny("arg1")) {
-			if(!add(args.<String>getOne("arg1").get().toUpperCase())){
+			if(!add(args.<String>getOne("arg1").get())){
 				src.sendMessage(invalidArg());
 				return CommandResult.empty();
 			}
 		}
 
 		if(args.hasAny("arg2")) {
-			if(!add(args.<String>getOne("arg2").get().toUpperCase())){
+			if(!add(args.<String>getOne("arg2").get())){
 				src.sendMessage(invalidArg());
 				return CommandResult.empty();
 			}
 		}
 
 		if(args.hasAny("arg3")) {
-			if(!add(args.<String>getOne("arg3").get().toUpperCase())){
+			if(!add(args.<String>getOne("arg3").get())){
 				src.sendMessage(invalidArg());
 				return CommandResult.empty();
 			}
 		}
 
-		WorldCreationSettings settings = builder.enabled(true).loadsOnStartup(true).build();
+		WorldCreationSettings settings = builder.enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true).build();
 
 		final Optional<WorldProperties> optProperties = Main.getGame().getServer().createWorldProperties(settings);
 
@@ -109,7 +114,7 @@ public class CMDCreate implements CommandExecutor {
 				dimTypes.append(Text.of("\n", dimType.getName()));
 			}
 		}
-		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(dimTypes.build())).append(Text.of("[D:type] ")).build();
+		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(dimTypes.build())).append(Text.of("[d:type] ")).build();
 		org.spongepowered.api.text.Text.Builder genTypes = Text.builder();
 		for(GeneratorType genType : Main.getGame().getRegistry().getAllOf(GeneratorType.class)){
 			if(!genType.getName().equalsIgnoreCase("debug_all_block_states") && !genType.getName().equalsIgnoreCase("default_1_1")){
@@ -120,7 +125,7 @@ public class CMDCreate implements CommandExecutor {
 				}
 			}
 		}
-		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(genTypes.build())).append(Text.of("[G:generator] ")).build();
+		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(genTypes.build())).append(Text.of("[g:generator] ")).build();
 		org.spongepowered.api.text.Text.Builder modifiers = null;
 		for(Entry<String, WorldGeneratorModifier> modifier :Main.getModifiers().entrySet()){
 			if(modifiers == null){
@@ -129,20 +134,20 @@ public class CMDCreate implements CommandExecutor {
 				modifiers.append(Text.of("\n", modifier.getKey()));
 			}	
 		}
-		Text t4 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(modifiers.build())).append(Text.of("[M:modifier] ")).build();
-		Text t5 = Text.of(TextColors.YELLOW, "[S:seed]");
+		Text t4 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(modifiers.build())).append(Text.of("[m:modifier] ")).build();
+		Text t5 = Text.of(TextColors.YELLOW, "[s:seed]");
 		return Text.of(t1,t2,t3,t4,t5);
 	}
 	
 	private boolean add(String arg) {
 		String[] option = arg.split(":");
 		
-		switch(option[0]){
+		switch(option[0].toUpperCase()){
 			case "D":
 				if(Main.getGame().getRegistry().getType(DimensionType.class, option[1]).isPresent()){
 					builder.dimension(Main.getGame().getRegistry().getType(DimensionType.class, option[1]).get());
 				}else{
-					Main.getLog().warn("Dimension type " + option[1] + "does not exist. defaulting to OVERWORLD");
+					Main.getLog().warn("Dimension type " + option[1] + " does not exist. defaulting to OVERWORLD");
 					builder.dimension(DimensionTypes.OVERWORLD);
 				}
 				return true;				
@@ -150,19 +155,29 @@ public class CMDCreate implements CommandExecutor {
 				if(Main.getGame().getRegistry().getType(GeneratorType.class, option[1]).isPresent()){
 					builder.generator(Main.getGame().getRegistry().getType(GeneratorType.class, option[1]).get());
 				}else{
-					Main.getLog().warn("Generator type " + option[1] + "does not exist. defaulting to DEFAULT");
+					Main.getLog().warn("Generator type " + option[1] + " does not exist. defaulting to DEFAULT");
 					builder.generator(GeneratorTypes.DEFAULT);
 				}
 				return true;
 			case "M":
-				if(Main.getModifiers().get(option[1]) != null){
-					builder.generatorModifiers(Main.getModifiers().get(option[1]));
+				String modifier = option[1];
+				if(option.length > 2){
+					modifier = option[1] + ":" + option[2];
+				}
+				if(Main.getModifiers().get(modifier) != null){
+					builder.generatorModifiers(Main.getModifiers().get(modifier));
 				}else{
-					Main.getLog().warn("Modifier type " + option[1] + "does not exist.");
+					Main.getLog().warn("Modifier type " + option[1] + " does not exist.");
 				}
 				return true;
 			case "S":
-				builder.seed(option[1].hashCode());
+				try{
+					Long seed = Long.parseLong(option[1]);
+					builder.seed(seed);
+				}catch(Exception e){
+					builder.seed(option[1].hashCode());
+				}
+				
 				return true;
 			default: return false;
 		}
