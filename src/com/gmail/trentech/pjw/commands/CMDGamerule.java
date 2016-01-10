@@ -18,9 +18,20 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDGamerule implements CommandExecutor {
 
+	public CMDGamerule(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "gamerule").getString();
+		
+		Help help = new Help("gamerule", " Configure varies world properties");
+		help.setSyntax(" /gamerule <world> [rule] [value]\n /" + alias + " <world> [rule] [value]");
+		help.setExample(" /gamerule MyWorld\n /gamerule MyWorld mobGriefing false\n /gamerule @w doDaylightCycle true");
+		CMDHelp.getList().add(help);
+	}
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {

@@ -18,9 +18,19 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDList implements CommandExecutor {
 
+	public CMDList(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		
+		Help help = new Help("list", " Lists all known worlds, loaded or unloaded");
+		help.setSyntax(" /world list\n /" + alias + " ls");
+		CMDHelp.getList().add(help);
+	}
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
@@ -34,6 +44,7 @@ public class CMDList implements CommandExecutor {
 			builder.onClick(TextActions.runCommand("/pjw:world properties " + world.getName())).append(Text.of(TextColors.AQUA, world.getName(), ": ", TextColors.GREEN, world.getEntities().size(), " Entities"));
 			list.add(builder.build());
 		}
+		
 		for(WorldProperties world : Main.getGame().getServer().getUnloadedWorlds()){
 			Builder builder = Text.builder().color(TextColors.DARK_GRAY).onHover(TextActions.showText(Text.of(TextColors.WHITE, "Click to load world")));
 			builder.onClick(TextActions.runCommand("/pjw:world load " + world.getWorldName())).append(Text.of(TextColors.AQUA, world.getWorldName(), ": ", TextColors.GRAY, " Unloaded"));

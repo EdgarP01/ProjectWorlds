@@ -23,11 +23,24 @@ import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Utils;
 
 public class CMDCreate implements CommandExecutor {
 
 	private Builder builder = WorldCreationSettings.builder();
+	
+	public CMDCreate(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		
+		Help help = new Help("create", " Allows you to create new worlds with any combination of optional arguments D: "
+				+ "for dimension type, G: for generator type, S: for seed and M: for generator modifiers");
+		help.setSyntax(" /world create <world> [d:type] [g:generator] [m:modifer]  [s:seed]\n /" + alias + " cr <world> [d:type] [g:generator] [m:modifer]  [s:seed]");
+		help.setExample(" /world create NewWorld d:-12309830198412353456\n /world create NewWorld d:OVERWORLD g:OVERWORLD\n"
+						+ " /world create NewWorld d:NETHER m:SKY\n /world create m:VOID");
+		CMDHelp.getList().add(help);
+	}
 	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

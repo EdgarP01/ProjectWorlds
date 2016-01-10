@@ -17,9 +17,20 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDPvp implements CommandExecutor {
 
+	public CMDPvp(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		
+		Help help = new Help("pvp", " Toggle on and off pvp for world");
+		help.setSyntax(" /world pvp <world> [value]\n /" + alias + " p <world> [value]");
+		help.setExample(" /world pvp MyWorld true\n /world pvp @w false");
+		CMDHelp.getList().add(help);
+	}
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {

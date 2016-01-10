@@ -12,9 +12,20 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.flowpowered.math.vector.Vector3i;
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDSetSpawn implements CommandExecutor {
 
+	public CMDSetSpawn(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		
+		Help help = new Help("rename", " Sets the spawn point of specified world. If no arguments present sets spawn of current world to player location");
+		help.setSyntax(" /world setspawn <world> <x,y,z>\n /" + alias + " s <world> <x,y,z>");
+		help.setExample(" /world setspawn\n /world setspawn MyWorld -153,75,300");
+		CMDHelp.getList().add(help);
+	}
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!(src instanceof Player)){

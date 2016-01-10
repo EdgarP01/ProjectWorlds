@@ -17,9 +17,20 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDEnable implements CommandExecutor {
 
+	public CMDEnable(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		
+		Help help = new Help("enable", " Enable and disable worlds from loading");
+		help.setSyntax(" /world enable <world> <value>\n /" + alias + " e <world> <value>");
+		help.setExample(" /world enable MyWorld true\n /world enable MyWorld false");
+		CMDHelp.getList().add(help);
+	}
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {

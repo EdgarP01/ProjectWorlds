@@ -1,26 +1,28 @@
-package com.gmail.trentech.pjw.modifiers.test;
+package com.gmail.trentech.pjw.extra;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.world.WorldCreationSettings;
 import org.spongepowered.api.world.gen.WorldGenerator;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 
-public class TestWorldGeneratorModifier implements WorldGeneratorModifier {
+public class VoidWorldGeneratorModifier implements WorldGeneratorModifier {
 
 	@Override
 	public void modifyWorldGenerator(WorldCreationSettings world, DataContainer settings, WorldGenerator worldGenerator) {
-        worldGenerator.setBaseGenerationPopulator(new TestGeneratorPopulator());
-        worldGenerator.setBiomeGenerator(new TestBiomeGenerator());
+        
+        worldGenerator.getGenerationPopulators().clear();
 		worldGenerator.getPopulators().clear();
+		
+		worldGenerator.setBaseGenerationPopulator(new VoidBaseGeneratorPopulator());
 	}
 
     @Override
     public String getId() {
-        return "pjw:test";
+        return "pjw:void";
     }
 
     @Override
     public String getName() {
-        return "TEST";
+        return "Void";
     }
 
 }

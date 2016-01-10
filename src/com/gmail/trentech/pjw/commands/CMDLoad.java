@@ -17,9 +17,20 @@ import org.spongepowered.api.world.World;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.io.WorldData;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDLoad implements CommandExecutor {
 
+	public CMDLoad(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		
+		Help help = new Help("load", " Loads sepcified world. If world is a non Sponge created world you will need to specify a dimension type to import");
+		help.setSyntax(" /world load <world> [type]\n /" + alias + " l <world> [type]");
+		help.setExample(" /world load NewWorld\n /world load BukkitWorld overworld");
+		CMDHelp.getList().add(help);
+	}
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {

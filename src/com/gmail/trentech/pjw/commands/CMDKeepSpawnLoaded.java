@@ -17,9 +17,20 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDKeepSpawnLoaded implements CommandExecutor {
 
+	public CMDKeepSpawnLoaded(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		
+		Help help = new Help("keepspawnloaded", " Keeps spawn point of world loaded in memory");
+		help.setSyntax(" /world keepspawnloaded <world> [value]\n /" + alias + " k <world> [value]");
+		help.setExample(" /world keepspawnloaded MyWorld\n /world keepspawnloaded MyWorld true\n /world keepspawnloaded @w false");
+		CMDHelp.getList().add(help);
+	}
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {
@@ -65,7 +76,8 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 		properties.setKeepSpawnLoaded(Boolean.parseBoolean(value));
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set keep spawn loaded of world ", worldName, " to ", value));
-
+		src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " This is currently not recommended as it can cause worlds to randomly unload when no players are occupying them"));
+		
 		return CommandResult.success();
 	}
 	

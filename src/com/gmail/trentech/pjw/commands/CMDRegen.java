@@ -19,10 +19,21 @@ import org.spongepowered.api.world.WorldCreationSettings.Builder;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Utils;
 import com.google.common.util.concurrent.ListenableFuture;
 
 public class CMDRegen implements CommandExecutor {
+	
+	public CMDRegen(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		
+		Help help = new Help("regen", " Regenerates a world. You can preserve the seed or generate new random");
+		help.setSyntax(" /world regen <world> [true/false]\n /" + alias + " r <world>  [true/false]");
+		help.setExample(" /world regen MyWorld\n /world regen MyWorld true");
+		CMDHelp.getList().add(help);
+	}
 	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

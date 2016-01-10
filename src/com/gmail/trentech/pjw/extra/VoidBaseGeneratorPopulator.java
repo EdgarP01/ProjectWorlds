@@ -1,4 +1,4 @@
-package com.gmail.trentech.pjw.modifiers.voidd;
+package com.gmail.trentech.pjw.extra;
 
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.world.World;

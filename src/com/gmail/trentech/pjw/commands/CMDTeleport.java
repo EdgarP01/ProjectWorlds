@@ -17,10 +17,21 @@ import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.events.TeleportEvent;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDTeleport implements CommandExecutor {
 
 	public static HashMap<Player, Location<World>> players = new HashMap<>();
+
+	public CMDTeleport(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		
+		Help help = new Help("teleport", " Teleport self or others to specified world and location");
+		help.setSyntax(" /world teleport <world> <world:[x,y,z]>\n /" + alias + " tp <world> <world:[x,y,z]>");
+		help.setExample(" /world teleport MyWorld\n /world teleport MyWorld:-153,75,300\n /world teleport SomePlayer MyWorld\n /world teleport SomePlayer MyWorld:-153,75,300");
+		CMDHelp.getList().add(help);
+	}
 	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -99,21 +110,19 @@ public class CMDTeleport implements CommandExecutor {
 			String[] location = coords.split(",");
 			dest = world.getLocation(Integer.parseInt(location[0]), Integer.parseInt(location[1]), Integer.parseInt(location[2]));
 		}
+		
+		TeleportEvent teleportEvent = new TeleportEvent(player, player.getLocation(), dest, Cause.of(src));
 
-		boolean result = Main.getGame().getEventManager().post(new TeleportEvent(player.getLocation(), dest, Cause.of(player)));
-		
-		if(!result){
-			if(((Player) src) != player){
-				src.sendMessage(Text.of(TextColors.DARK_GREEN, "Teleported ", player.getName(), " to ", world.getName()));
+		if(!Main.getGame().getEventManager().post(teleportEvent)){
+			dest = teleportEvent.getDestination();
+			player.setLocation(dest);
+			
+			if(src instanceof Player && ((Player) src) != player){
+				src.sendMessage(Text.of(TextColors.DARK_GREEN, "Teleported ", player.getName(), " to ", dest.getExtent(), ", x: ", dest.getBlockX(), ", y: ", dest.getBlockY(), ", z: ", dest.getBlockZ()));
 			}
-			return CommandResult.success();
 		}
-		
-		if(((Player) src) != player){
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Failed to teleport ", player.getName()));
-		}
-		
-		return CommandResult.empty();
+
+		return CommandResult.success();
 	}
 	
 	private boolean isValidLocation(String coords){

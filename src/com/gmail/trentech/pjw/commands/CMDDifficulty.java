@@ -19,9 +19,20 @@ import org.spongepowered.api.world.difficulty.Difficulty;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDDifficulty implements CommandExecutor {
 
+	public CMDDifficulty(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		
+		Help help = new Help("difficulty", " Set the difficulty level for each world");
+		help.setSyntax(" /world difficulty <world> [value]\n /" + alias + " df <world> [value]");
+		help.setExample(" /world difficulty MyWorld\n /world difficulty MyWorld HARD\n /world difficulty @w PEACEFUL");
+		CMDHelp.getList().add(help);
+	}
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {

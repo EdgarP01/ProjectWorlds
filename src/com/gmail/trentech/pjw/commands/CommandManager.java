@@ -155,7 +155,7 @@ public class CommandManager {
 			.child(cmdDiffculty, "difficulty", "df")
 			.child(cmdSetSpawn, "setspawn", "s")
 			.child(cmdHardcore, "hardcore", "h")
-			.child(cmdPvp, "pvp")
+			.child(cmdPvp, "pvp", "p")
 			.child(cmdKeepSpawnLoaded, "keepspawnloaded", "k")
 			.child(cmdList, "list", "ls")
 			.child(cmdTeleport, "teleport", "tp")

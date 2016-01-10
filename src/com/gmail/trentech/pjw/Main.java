@@ -18,8 +18,8 @@ import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.commands.CommandManager;
+import com.gmail.trentech.pjw.extra.VoidWorldGeneratorModifier;
 import com.gmail.trentech.pjw.listeners.EventManager;
-import com.gmail.trentech.pjw.modifiers.voidd.VoidWorldGeneratorModifier;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Resource;
 

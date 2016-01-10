@@ -19,9 +19,20 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDGamemode implements CommandExecutor {
 
+	public CMDGamemode(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		
+		Help help = new Help("gamemode", " Change gamemode of the specified world");
+		help.setSyntax(" /world gamemode <world> <gamemode>\n /" + alias + " g <world> <gamemode>");
+		help.setExample(" /world gamemode\n /world gamemode MyWorld SURVIVAL\n /world gamemode @w CREATIVE");
+		CMDHelp.getList().add(help);
+	}
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {

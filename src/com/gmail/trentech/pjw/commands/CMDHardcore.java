@@ -17,9 +17,20 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDHardcore implements CommandExecutor {
 
+	public CMDHardcore(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		
+		Help help = new Help("hardcore", " Toggle on and off hardcore mode for world");
+		help.setSyntax(" /world hardcore <world> [value]\n /" + alias + " h <world> [value]");
+		help.setExample(" /world hardcore MyWorld\n /world hardcore MyWorld false\n /world hardcore @w true");
+		CMDHelp.getList().add(help);
+	}
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {

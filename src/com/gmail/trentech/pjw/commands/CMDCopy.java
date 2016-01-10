@@ -15,8 +15,19 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDCopy implements CommandExecutor {
+	
+	public CMDCopy(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		
+		Help help = new Help("copy", " Allows you to make a new world from an existing world");
+		help.setSyntax(" /world copy <world> <world>\n /" + alias + " cp <world> <world>");
+		help.setExample(" /world copy srcWorld newWorld\n /world copy @w newWorld");
+		CMDHelp.getList().add(help);
+	}
 	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

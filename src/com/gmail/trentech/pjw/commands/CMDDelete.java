@@ -13,10 +13,21 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Zip;
 
 public class CMDDelete implements CommandExecutor {
 
+	public CMDDelete(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		
+		Help help = new Help("delete", " Delete worlds you no longer need. Worlds must be unloaded before you can delete them");
+		help.setSyntax(" /world delete <world>\n /" + alias + " dl <world>");
+		help.setExample(" /world delete OldWorld");
+		CMDHelp.getList().add(help);
+	}
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {

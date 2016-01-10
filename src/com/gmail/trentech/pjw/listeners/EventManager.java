@@ -19,7 +19,6 @@ import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.world.ChangeWorldWeatherEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
-import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
@@ -27,11 +26,11 @@ import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.text.title.Title;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.gmail.trentech.pjp.commands.CMDBack;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.commands.CMDTeleport;
 import com.gmail.trentech.pjw.events.TeleportEvent;
@@ -41,17 +40,24 @@ public class EventManager {
 
 	@Listener
 	public void onTeleportEvent(TeleportEvent event, @First Player player){
-		Location<World> src = event.getSrc();
-		Location<World> dest = event.getDest();
+		Location<World> src = event.getSource();
+		Location<World> dest = event.getDestination();
 
 		if(!player.hasPermission("pjw.worlds." + dest.getExtent().getName())){
 			player.sendMessage(Text.of(TextColors.DARK_RED, "You do not have permission to travel to ", dest.getExtent().getName()));
+			event.setCancelled(true);
 			return;
 		}
 		
-		if(!player.setLocationSafely(dest)){
+		TeleportHelper teleportHelper = Main.getGame().getTeleportHelper();
+		
+		Optional<Location<World>> optionalLocation = teleportHelper.getSafeLocation(dest);
+
+		if(!optionalLocation.isPresent()){
 			CMDTeleport.players.put(player, dest);
-			player.sendMessage(Text.builder().color(TextColors.DARK_RED).append(Text.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.runCommand("/pjw:world teleport confirm")).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
+			player.sendMessage(Text.builder().color(TextColors.DARK_RED).append(Text.of("Unsafe spawn point detected. Teleport anyway? "))
+					.onClick(TextActions.runCommand("/pjw:world teleport confirm")).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
+			event.setCancelled(true);
 			return;
 		}
 		
@@ -64,11 +70,6 @@ public class EventManager {
 		}
 
 		player.sendTitle(Title.of(Text.of(TextColors.DARK_GREEN, dest.getExtent().getName()), Text.of(TextColors.AQUA, "x: ", dest.getBlockX(), ", y: ", dest.getBlockY(),", z: ", dest.getBlockZ())));
-		
-		Optional<PluginContainer> plugin = Main.getGame().getPluginManager().getPlugin("PJP");
-		if(plugin.isPresent()){
-			CMDBack.players.put(player, src);
-		}
 	}
 
 	@Listener
@@ -108,9 +109,6 @@ public class EventManager {
 
 	@Listener
 	public void onDisplaceEntityEvent(DisplaceEntityEvent.TargetPlayer event) {
-		if(!(event.getTargetEntity() instanceof Player)){
-			return;
-		}
 		Player player = (Player) event.getTargetEntity();
 
 		World worldSrc = event.getFromTransform().getExtent();
@@ -124,7 +122,7 @@ public class EventManager {
 			}			
 		}
 	}
-	
+
     @Listener
     public void onDamageEntityEvent(DamageEntityEvent event, @First EntityDamageSource damageSource) {
     	if(!(event.getTargetEntity() instanceof Player)) {
@@ -174,8 +172,7 @@ public class EventManager {
 		}
 	}
 	
-	private void spawnParticles(Location<World> location, double range, boolean sub){
-		
+	private void spawnParticles(Location<World> location, double range, boolean sub){		
 		Random random = new Random();
 		
 		for(int i = 0; i < 5; i++){

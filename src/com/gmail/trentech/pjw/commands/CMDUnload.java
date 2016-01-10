@@ -13,9 +13,20 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDUnload implements CommandExecutor {
 
+	public CMDUnload(){
+		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		
+		Help help = new Help("unload", " Unloads specified world. If players are in world, they will be teleported to default spawn");
+		help.setSyntax(" /world unload <world>\n /" + alias + " u <world>");
+		help.setExample(" /world unload MyWorld");
+		CMDHelp.getList().add(help);
+	}
+	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("name")) {
