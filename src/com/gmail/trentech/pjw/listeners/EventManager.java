@@ -39,7 +39,9 @@ import com.gmail.trentech.pjw.utils.ConfigManager;
 public class EventManager {
 
 	@Listener
-	public void onTeleportEvent(TeleportEvent event, @First Player player){
+	public void onTeleportEvent(TeleportEvent event){
+		Player player = event.getTarget();
+		
 		Location<World> src = event.getSource();
 		Location<World> dest = event.getDestination();
 

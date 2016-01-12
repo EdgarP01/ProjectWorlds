@@ -13,9 +13,7 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.DimensionType;
-import org.spongepowered.api.world.DimensionTypes;
 import org.spongepowered.api.world.GeneratorType;
-import org.spongepowered.api.world.GeneratorTypes;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.WorldCreationSettings;
 import org.spongepowered.api.world.WorldCreationSettings.Builder;
@@ -159,19 +157,15 @@ public class CMDCreate implements CommandExecutor {
 			case "D":
 				if(Main.getGame().getRegistry().getType(DimensionType.class, option[1]).isPresent()){
 					builder.dimension(Main.getGame().getRegistry().getType(DimensionType.class, option[1]).get());
-				}else{
-					Main.getLog().warn("Dimension type " + option[1] + " does not exist. defaulting to OVERWORLD");
-					builder.dimension(DimensionTypes.OVERWORLD);
+					return true;
 				}
-				return true;				
+				return false;
 			case "G":
 				if(Main.getGame().getRegistry().getType(GeneratorType.class, option[1]).isPresent()){
 					builder.generator(Main.getGame().getRegistry().getType(GeneratorType.class, option[1]).get());
-				}else{
-					Main.getLog().warn("Generator type " + option[1] + " does not exist. defaulting to DEFAULT");
-					builder.generator(GeneratorTypes.DEFAULT);
+					return true;
 				}
-				return true;
+				return false;
 			case "M":
 				String modifier = option[1];
 				if(option.length > 2){
@@ -179,18 +173,16 @@ public class CMDCreate implements CommandExecutor {
 				}
 				if(Main.getModifiers().get(modifier) != null){
 					builder.generatorModifiers(Main.getModifiers().get(modifier));
-				}else{
-					Main.getLog().warn("Modifier type " + option[1] + " does not exist.");
+					return true;
 				}
-				return true;
+				return false;
 			case "S":
 				try{
 					Long seed = Long.parseLong(option[1]);
 					builder.seed(seed);
 				}catch(Exception e){
 					builder.seed(option[1].hashCode());
-				}
-				
+				}		
 				return true;
 			default: return false;
 		}
