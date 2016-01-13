@@ -59,7 +59,7 @@ public class ConfigManager {
 	private void init() {
 		if(file.getName().equalsIgnoreCase("config.conf")){
 			if(config.getNode("Options", "Join-Spawn").getString() == null) {
-				config.getNode("Options", "Join-Spawn").setValue(Main.getGame().getServer().getDefaultWorld().get().getWorldName()).setComment("World player spawns to when joining for the first time");
+				config.getNode("Options", "Join-Spawn").setValue("world").setComment("World player spawns to when joining for the first time");
 			}
 			if(config.getNode("Options", "Show-Particles").getString() == null) {
 				config.getNode("Options", "Show-Particles").setValue(true).setComment("Display particle effects when teleporting");
