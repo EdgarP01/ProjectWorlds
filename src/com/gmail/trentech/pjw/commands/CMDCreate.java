@@ -98,19 +98,26 @@ public class CMDCreate implements CommandExecutor {
         }
 
         src.sendMessage(Text.of(TextColors.YELLOW, "Preparing spawn area. This may take a minute."));
+		Main.getGame().getScheduler().createTaskBuilder().name("PJW" + settings.getWorldName()).delayTicks(20).execute(new Runnable(){
 
-		Optional<World> load = Main.getGame().getServer().loadWorld(optProperties.get());
+			@Override
+			public void run() {
+				Optional<World> load = Main.getGame().getServer().loadWorld(optProperties.get());
 
-		if(!load.isPresent()){
-			src.sendMessage(Text.of(TextColors.DARK_RED, "something went wrong"));
-			return CommandResult.empty();
-		}
+				if(!load.isPresent()){	
+					src.sendMessage(Text.of(TextColors.DARK_RED, "something went wrong"));
+					return;
+				}
 
-		World world = load.get();
-		
-		Utils.createPlatform(world.getSpawnLocation().getRelative(Direction.DOWN));
-		
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " created successfully"));
+				World world = load.get();
+				
+				Utils.createPlatform(world.getSpawnLocation().getRelative(Direction.DOWN));
+				
+				src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " created successfully"));
+			}
+			
+		}).submit(Main.getPlugin());
+
 		return CommandResult.success();
 	}
 

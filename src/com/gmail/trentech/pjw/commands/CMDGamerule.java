@@ -55,7 +55,7 @@ public class CMDGamerule implements CommandExecutor {
 		if(!args.hasAny("rule")) {
 			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 			
-			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, properties.getWorldName().toUpperCase())).build());
+			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, properties.getWorldName())).build());
 			
 			List<Text> list = new ArrayList<>();
 			
