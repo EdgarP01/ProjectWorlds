@@ -14,11 +14,11 @@ public class Zip {
 	public static void save(String zipFileName, File directory){
 		Main.getLog().info("Creating world backup..");
 		File backupDir = new File("backup");
-        if (!backupDir.isDirectory()) {
-        	backupDir.mkdirs();
-        }
-		
-		String zipFile = backupDir.getAbsolutePath() + "\\" + zipFileName + ".zip";
+        	if (!backupDir.isDirectory()) {
+        		backupDir.mkdirs();
+        	}
+
+		String zipFile = backupDir.getAbsolutePath() + File.separator + zipFileName + ".zip";
 
 		try {
 			FileOutputStream fileOutputStream = new FileOutputStream(zipFile);
