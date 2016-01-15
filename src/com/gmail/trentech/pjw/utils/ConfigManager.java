@@ -20,7 +20,7 @@ public class ConfigManager {
         if (!new File(folder).isDirectory()) {
         	new File(folder).mkdirs();
         }
-		file = new File(folder + configName);
+		file = new File(folder, configName);
 		
 		create();
 		load();
