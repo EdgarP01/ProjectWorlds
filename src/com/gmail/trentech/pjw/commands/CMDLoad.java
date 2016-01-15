@@ -13,6 +13,7 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.DimensionType;
 import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
@@ -46,7 +47,7 @@ public class CMDLoad implements CommandExecutor {
 		}
 
 		SpongeData spongeData = new SpongeData(worldName);
-		
+		WorldProperties properties;
 		if(!spongeData.exists()){
 			src.sendMessage(Text.of(TextColors.YELLOW, "Foreign world detected"));
 			if(!args.hasAny("type")){
@@ -59,6 +60,17 @@ public class CMDLoad implements CommandExecutor {
 				src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid dimension type"));
 				return CommandResult.empty();
 			}
+//			DimensionType dimensionType = Main.getGame().getRegistry().getType(DimensionType.class, type).get();
+//
+//			WorldCreationSettings settings = WorldCreationSettings.builder().name(worldName).dimension(dimensionType).enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true).build();
+//
+//			Optional<WorldProperties> optProperties = Main.getGame().getServer().createWorldProperties(settings);
+//
+//	        if (!optProperties.isPresent()) {
+//				src.sendMessage(Text.of(TextColors.DARK_RED, "something went wrong"));
+//				return CommandResult.empty();
+//	        }
+//	        properties = optProperties.get();
 			
 			try {
 				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Converting world to Sponge. This could break something"));
@@ -89,6 +101,7 @@ public class CMDLoad implements CommandExecutor {
 					e.printStackTrace();
 				}
 			}
+			properties = Main.getGame().getServer().getWorldProperties(worldName).get();
 		}
 
 		WorldData worldData = new WorldData(worldName);
@@ -108,7 +121,7 @@ public class CMDLoad implements CommandExecutor {
 			}
 		}
 		
-		Optional<World> load = Main.getGame().getServer().loadWorld(worldName);
+		Optional<World> load = Main.getGame().getServer().loadWorld(properties);
 		
 		if(!load.isPresent()){
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not load ", worldName));
