@@ -54,11 +54,11 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 		if(!args.hasAny("value")) {
 			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 			
-			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, properties.getWorldName())).build());
+			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, properties.getWorldName())).build());
 			
 			List<Text> list = new ArrayList<>();
-			list.add(Text.of(TextColors.AQUA, "Keep Spawn Loaded: ", TextColors.GREEN, properties.doesKeepSpawnLoaded()));
-			list.add(Text.of(TextColors.AQUA, "Command: ",invalidArg()));
+			list.add(Text.of(TextColors.GREEN, "Keep Spawn Loaded: ", TextColors.WHITE, properties.doesKeepSpawnLoaded()));
+			list.add(Text.of(TextColors.GREEN, "Command: ",invalidArg()));
 			
 			pages.contents(list);
 			

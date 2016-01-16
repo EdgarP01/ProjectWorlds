@@ -54,11 +54,11 @@ public class CMDHardcore implements CommandExecutor {
 		if(!args.hasAny("value")) {
 			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 			
-			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, properties.getWorldName())).build());
+			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, properties.getWorldName())).build());
 			
 			List<Text> list = new ArrayList<>();
-			list.add(Text.of(TextColors.AQUA, "Hardcore: ", TextColors.GREEN, properties.isHardcore()));
-			list.add(Text.of(TextColors.AQUA, "Command: ",invalidArg()));
+			list.add(Text.of(TextColors.GREEN, "Hardcore: ", TextColors.WHITE, properties.isHardcore()));
+			list.add(Text.of(TextColors.GREEN, "Command: ",invalidArg()));
 			
 			pages.contents(list);
 			
@@ -81,9 +81,9 @@ public class CMDHardcore implements CommandExecutor {
 	}
 	
 	private Text invalidArg(){
-		Text t1 = Text.of(TextColors.GREEN, "/world hardcore ");
-		Text t2 = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Enter world or @w for current world"))).append(Text.of("<world> ")).build();
-		Text t3 = Text.of(TextColors.GREEN, "[true/false]");
+		Text t1 = Text.of(TextColors.YELLOW, "/world hardcore ");
+		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world or @w for current world"))).append(Text.of("<world> ")).build();
+		Text t3 = Text.of(TextColors.YELLOW, "[true/false]");
 		return Text.of(t1,t2,t3);
 	}
 

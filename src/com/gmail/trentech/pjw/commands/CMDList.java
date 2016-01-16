@@ -35,19 +35,19 @@ public class CMDList implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 		
-		pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, "Worlds")).build());
+		pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Worlds")).build());
 		
 		List<Text> list = new ArrayList<>();
 		
 		for(World world : Main.getGame().getServer().getWorlds()){
-			Builder builder = Text.builder().color(TextColors.AQUA).onHover(TextActions.showText(Text.of(TextColors.WHITE, "Click to view properies")));
-			builder.onClick(TextActions.runCommand("/pjw:world properties " + world.getName())).append(Text.of(TextColors.AQUA, world.getName(), ": ", TextColors.GREEN, world.getEntities().size(), " Entities"));
+			Builder builder = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of(TextColors.WHITE, "Click to view properies")));
+			builder.onClick(TextActions.runCommand("/pjw:world properties " + world.getName())).append(Text.of(TextColors.GREEN, world.getName(), ": ", TextColors.GREEN, world.getEntities().size(), " Entities"));
 			list.add(builder.build());
 		}
 		
 		for(WorldProperties world : Main.getGame().getServer().getUnloadedWorlds()){
-			Builder builder = Text.builder().color(TextColors.DARK_GRAY).onHover(TextActions.showText(Text.of(TextColors.WHITE, "Click to load world")));
-			builder.onClick(TextActions.runCommand("/pjw:world load " + world.getWorldName())).append(Text.of(TextColors.AQUA, world.getWorldName(), ": ", TextColors.GRAY, " Unloaded"));
+			Builder builder = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of(TextColors.WHITE, "Click to load world")));
+			builder.onClick(TextActions.runCommand("/pjw:world load " + world.getWorldName())).append(Text.of(TextColors.GREEN, world.getWorldName(), ": ", TextColors.GRAY, " Unloaded"));
 			list.add(builder.build());
 		}
 

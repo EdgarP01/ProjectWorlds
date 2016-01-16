@@ -56,11 +56,11 @@ public class CMDDifficulty implements CommandExecutor {
 		if(!args.hasAny("value")) {
 			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 			
-			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, properties.getWorldName())).build());
+			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, properties.getWorldName())).build());
 			
 			List<Text> list = new ArrayList<>();
-			list.add(Text.of(TextColors.AQUA, "Difficulty: ", TextColors.GREEN, properties.getDifficulty().getName().toUpperCase()));
-			list.add(Text.of(TextColors.AQUA, "Command: ", invalidArg()));
+			list.add(Text.of(TextColors.GREEN, "Difficulty: ", TextColors.WHITE, properties.getDifficulty().getName().toUpperCase()));
+			list.add(Text.of(TextColors.GREEN, "Command: ", invalidArg()));
 			
 			pages.contents(list);
 			
@@ -82,9 +82,9 @@ public class CMDDifficulty implements CommandExecutor {
 	}
 	
 	private Text invalidArg(){
-		Text t1 = Text.of(TextColors.GREEN, "/world difficulty ");
-		Text t2 = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Enter world or @w for current world"))).append(Text.of("<world> ")).build();
-		Text t3 = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("PEACEFUL\nEASY\nNORMAL\nHARD"))).append(Text.of("[value]")).build();
+		Text t1 = Text.of(TextColors.YELLOW, "/world difficulty ");
+		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world or @w for current world"))).append(Text.of("<world> ")).build();
+		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("PEACEFUL\nEASY\nNORMAL\nHARD"))).append(Text.of("[value]")).build();
 		return Text.of(t1,t2,t3);
 	}
 

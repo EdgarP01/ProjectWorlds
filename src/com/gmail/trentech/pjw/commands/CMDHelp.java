@@ -34,20 +34,20 @@ public class CMDHelp implements CommandExecutor {
 		for(Help help : list){
 			if(help.getCommand().equalsIgnoreCase(command)){
 				PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
-				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, command.toLowerCase())).build());
+				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, command.toLowerCase())).build());
 				
 				List<Text> list = new ArrayList<>();
 
-				list.add(Text.of(TextColors.AQUA, "Description:"));
-				list.add(Text.of(TextColors.GREEN, help.getDescription()));
+				list.add(Text.of(TextColors.GREEN, "Description:"));
+				list.add(Text.of(TextColors.WHITE, help.getDescription()));
 				
 				if(help.getSyntax().isPresent()){
-					list.add(Text.of(TextColors.AQUA, "Syntax:"));
-					list.add(Text.of(TextColors.GREEN, help.getSyntax().get()));
+					list.add(Text.of(TextColors.GREEN, "Syntax:"));
+					list.add(Text.of(TextColors.WHITE, help.getSyntax().get()));
 				}
 				if(help.getExample().isPresent()){
-					list.add(Text.of(TextColors.AQUA, "Example:"));
-					list.add(Text.of(TextColors.GREEN,  help.getExample().get(), TextColors.DARK_GREEN));
+					list.add(Text.of(TextColors.GREEN, "Example:"));
+					list.add(Text.of(TextColors.WHITE,  help.getExample().get(), TextColors.DARK_GREEN));
 				}
 				
 				pages.contents(list);
