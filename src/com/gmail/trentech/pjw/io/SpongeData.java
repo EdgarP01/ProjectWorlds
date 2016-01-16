@@ -73,7 +73,6 @@ public class SpongeData {
 		compoundTag.put(new LongTag("uuid_least", -6732046318667659594L));
 		compoundTag.put(new LongTag("uuid_most", 9143053678590905554L));
 		compoundTag.put(new StringTag("dimensionType", dimType));
-		compoundTag.put(new StringTag("LevelName", worldName));
 
 		CompoundTag compoundPlayerId = new CompoundTag("", null);
 		
@@ -106,46 +105,6 @@ public class SpongeData {
 		if(!worldData.isCorrectLevelName()){
 			worldData.setLevelName();
 		}
-	}
-	
-	public boolean isCorrectLevelName(){
-		for(Entry<String, NBTTag> entry : compoundTag.entrySet()){
-			if(!entry.getKey().equalsIgnoreCase("LevelName")){
-				continue;
-			}
-			
-			String levelName = (String) entry.getValue().getPayload();
-			
-			if(levelName.equalsIgnoreCase(worldName)){
-				return true;
-			}
-			return false;
-		}
-		return false;
-	}
-	
-	public void setLevelName() throws IOException{
-		WorldData worldData = new WorldData(worldName);
-		
-		if(!worldData.exists()){
-			return;
-		}
-		
-		if(!worldData.isCorrectLevelName()){
-			worldData.setLevelName();
-		}
-		
-		compoundTag.put(new StringTag("LevelName", worldName));
-
-		CompoundTag compoundRoot = new CompoundTag("", null);
-		
-		compoundRoot.put(compoundTag);
-
-		List<NBTTag> list = new ArrayList<>();
-		
-		list.add(compoundRoot);
-
-		XNBT.saveTags(list, dataFile);
 	}
 
 	public boolean isFreeDimId(){

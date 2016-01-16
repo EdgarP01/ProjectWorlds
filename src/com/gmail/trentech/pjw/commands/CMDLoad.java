@@ -92,15 +92,7 @@ public class CMDLoad implements CommandExecutor {
 					e.printStackTrace();
 				}
 			}
-			if(!spongeData.isCorrectLevelName()){
-				src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Level name mismatch. Attempting to repair."));
-				try {
-					spongeData.setLevelName();
-				} catch (IOException e) {
-					src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong"));
-					e.printStackTrace();
-				}
-			}
+
 			properties = Main.getGame().getServer().getWorldProperties(worldName).get();
 		}
 
