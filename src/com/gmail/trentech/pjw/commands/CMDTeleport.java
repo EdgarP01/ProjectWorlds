@@ -107,7 +107,7 @@ public class CMDTeleport implements CommandExecutor {
 		Location<World> dest = world.getSpawnLocation();
 
 		if(isValidLocation(coords)){
-			String[] location = coords.split(" ");
+			String[] location = coords.split(",");
 			dest = world.getLocation(Integer.parseInt(location[0]), Integer.parseInt(location[1]), Integer.parseInt(location[2]));
 		}
 		
@@ -130,7 +130,7 @@ public class CMDTeleport implements CommandExecutor {
 			return false;
 		}
 		
-		for(String coord : coords.split(" ")){
+		for(String coord : coords.split(",")){
 			try{
 				Integer.parseInt(coord);
 			}catch(Exception e){

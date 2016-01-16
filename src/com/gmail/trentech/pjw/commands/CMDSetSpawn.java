@@ -51,13 +51,33 @@ public class CMDSetSpawn implements CommandExecutor {
 			return CommandResult.success();
 		}
 		
-		String[] values = args.<String>getOne("value").get().split(",");
+		String[] coords = args.<String>getOne("value").get().split(",");
 
-		properties.setSpawnPosition(new Vector3i().add(Integer.parseInt(values[0]), Integer.parseInt(values[1]), Integer.parseInt(values[2])));
+		if(!isValidLocation(coords)){
+			src.sendMessage(Text.of(TextColors.DARK_RED, coords, " is not valid"));
+			return CommandResult.empty();
+		}
+		
+		properties.setSpawnPosition(new Vector3i().add(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));
 		
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set spawn of world ", worldName, " to x: ", properties.getSpawnPosition().getX(), ", y: ", properties.getSpawnPosition().getY(), ", z: ", properties.getSpawnPosition().getZ()));
 		
 		return CommandResult.success();
+	}
+	
+	private boolean isValidLocation(String[] coords){
+		if(coords == null){
+			return false;
+		}
+		
+		for(String coord : coords){
+			try{
+				Integer.parseInt(coord);
+			}catch(Exception e){
+				return false;
+			}
+		}
+		return true;
 	}
 
 }
