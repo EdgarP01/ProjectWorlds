@@ -15,10 +15,7 @@ import com.gmail.trentech.pjw.Main;
 import net.obnoxint.xnbt.XNBT;
 import net.obnoxint.xnbt.types.CompoundTag;
 import net.obnoxint.xnbt.types.IntegerTag;
-import net.obnoxint.xnbt.types.ListTag;
-import net.obnoxint.xnbt.types.LongTag;
 import net.obnoxint.xnbt.types.NBTTag;
-import net.obnoxint.xnbt.types.StringTag;
 
 public class SpongeData {
 
@@ -60,50 +57,6 @@ public class SpongeData {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-	}
-
-	public void createNewConfig(String dimType) throws IOException{
-		int dimId = DimensionManager.getNextFreeDimId();
-		DimensionManager.registerDimension(dimId, 0);
-
-		CompoundTag compoundTag = new CompoundTag("SpongeData", null);	
-		
-		compoundTag.put(new IntegerTag("dimensionId", dimId));
-		compoundTag.put(new LongTag("uuid_least", -6732046318667659594L));
-		compoundTag.put(new LongTag("uuid_most", 9143053678590905554L));
-		compoundTag.put(new StringTag("dimensionType", dimType));
-
-		CompoundTag compoundPlayerId = new CompoundTag("", null);
-		
-		compoundPlayerId.put(new LongTag("uuid_least", -7628444587550319768L));
-		compoundPlayerId.put(new LongTag("uuid_most", 4244735002832685980L));
-
-		List<NBTTag> listPlayerId = new ArrayList<>();
-		listPlayerId.add(compoundPlayerId);
-		
-		compoundTag.put(new ListTag("PlayerIdTable", listPlayerId));
-
-		CompoundTag compoundRoot = new CompoundTag("", null);
-
-		compoundRoot.put(compoundTag);
-
-		List<NBTTag> list = new ArrayList<>();
-		
-		list.add(compoundRoot);
-
-		XNBT.saveTags(list, dataFile);
-		
-		this.compoundTag = compoundTag;
-		
-		WorldData worldData = new WorldData(worldName);
-		
-		if(!worldData.exists()){
-			return;
-		}
-		
-		if(!worldData.isCorrectLevelName()){
-			worldData.setLevelName();
 		}
 	}
 
