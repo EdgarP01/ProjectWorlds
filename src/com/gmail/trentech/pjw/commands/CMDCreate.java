@@ -11,10 +11,8 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.DimensionType;
 import org.spongepowered.api.world.GeneratorType;
-import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.WorldCreationSettings;
 import org.spongepowered.api.world.WorldCreationSettings.Builder;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
@@ -23,14 +21,13 @@ import org.spongepowered.api.world.storage.WorldProperties;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
-import com.gmail.trentech.pjw.utils.Utils;
 
 public class CMDCreate implements CommandExecutor {
 
 	private Builder builder = WorldCreationSettings.builder();
 	
 	public CMDCreate(){
-		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
 		
 		Help help = new Help("create", " Allows you to create new worlds with any combination of optional arguments D: "
 				+ "for dimension type, G: for generator type, S: for seed and M: for generator modifiers");
@@ -97,26 +94,30 @@ public class CMDCreate implements CommandExecutor {
 			return CommandResult.empty();
         }
 
-        src.sendMessage(Text.of(TextColors.YELLOW, "Preparing spawn area. This may take a minute."));
-		Main.getGame().getScheduler().createTaskBuilder().name("PJW" + settings.getWorldName()).delayTicks(20).execute(new Runnable(){
-
-			@Override
-			public void run() {
-				Optional<World> load = Main.getGame().getServer().loadWorld(optProperties.get());
-
-				if(!load.isPresent()){	
-					src.sendMessage(Text.of(TextColors.DARK_RED, "something went wrong"));
-					return;
-				}
-
-				World world = load.get();
-				
-				Utils.createPlatform(world.getSpawnLocation().getRelative(Direction.DOWN));
-				
-				src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " created successfully"));
-			}
-			
-		}).submit(Main.getPlugin());
+        optProperties.get();
+        
+        src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " created successfully"));
+        
+//        src.sendMessage(Text.of(TextColors.YELLOW, "Preparing spawn area. This may take a minute."));
+//		Main.getGame().getScheduler().createTaskBuilder().name("PJW" + settings.getWorldName()).delayTicks(20).execute(new Runnable(){
+//
+//			@Override
+//			public void run() {
+//				Optional<World> load = Main.getGame().getServer().loadWorld(optProperties.get());
+//
+//				if(!load.isPresent()){	
+//					src.sendMessage(Text.of(TextColors.DARK_RED, "something went wrong"));
+//					return;
+//				}
+//
+//				World world = load.get();
+//				
+//				Utils.createPlatform(world.getSpawnLocation().getRelative(Direction.DOWN));
+//				
+//				src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " created successfully"));
+//			}
+//			
+//		}).submit(Main.getPlugin());
 
 		return CommandResult.success();
 	}

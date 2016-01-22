@@ -21,7 +21,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDCopy implements CommandExecutor {
 	
 	public CMDCopy(){
-		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
 		
 		Help help = new Help("copy", " Allows you to make a new world from an existing world");
 		help.setSyntax(" /world copy <world> <world>\n /" + alias + " cp <world> <world>");

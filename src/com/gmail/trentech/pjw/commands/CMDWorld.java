@@ -42,6 +42,10 @@ public class CMDWorld implements CommandExecutor {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/pjw:world help copy")).append(Text.of(" /world copy")).build());
 		}
+		if(src.hasPermission("pjw.cmd.world.import")) {
+			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
+					.onClick(TextActions.runCommand("/pjw:world help import")).append(Text.of(" /world import")).build());
+		}
 		if(src.hasPermission("pjw.cmd.world.load")) {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/pjw:world help load")).append(Text.of(" /world load")).build());

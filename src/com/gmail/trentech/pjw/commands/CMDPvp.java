@@ -23,7 +23,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDPvp implements CommandExecutor {
 
 	public CMDPvp(){
-		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
 		
 		Help help = new Help("pvp", " Toggle on and off pvp for world");
 		help.setSyntax(" /world pvp <world> [value]\n /" + alias + " p <world> [value]");

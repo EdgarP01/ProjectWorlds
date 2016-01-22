@@ -24,7 +24,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDList implements CommandExecutor {
 
 	public CMDList(){
-		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
 		
 		Help help = new Help("list", " Lists all known worlds, loaded or unloaded");
 		help.setSyntax(" /world list\n /" + alias + " ls");

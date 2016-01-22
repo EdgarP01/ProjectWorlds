@@ -58,17 +58,23 @@ public class ConfigManager {
 	
 	private void init() {
 		if(file.getName().equalsIgnoreCase("config.conf")){
-			if(config.getNode("Options", "Join-Spawn").getString() == null) {
-				config.getNode("Options", "Join-Spawn").setValue("world").setComment("World player spawns to when joining for the first time");
+			if(config.getNode("options", "first_join", "world").getString() == null) {
+				config.getNode("options", "first_join", "world").setValue("world").setComment("World player spawns to when joining for the first time");
 			}
-			if(config.getNode("Options", "Show-Particles").getString() == null) {
-				config.getNode("Options", "Show-Particles").setValue(true).setComment("Display particle effects when teleporting");
+			if(config.getNode("options", "first_join", "title").getString() == null) {
+				config.getNode("options", "first_join", "title").setValue("&2Welcome to the server").setComment("First join title");
 			}
-			if(config.getNode("Options", "Command-Alias","world").getString() == null) {
-				config.getNode("Options", "Command-Alias","world").setValue("pjw");
+			if(config.getNode("options", "first_join", "sub_title").getString() == null) {
+				config.getNode("options", "first_join", "sub_title").setValue("&eThe best minecraft server ever").setComment("First join subtitle");
 			}
-			if(config.getNode("Options", "Command-Alias","gamerule").getString() == null) {
-				config.getNode("Options", "Command-Alias","gamerule").setValue("gr");
+			if(config.getNode("options", "join", "motd").getString() == null) {
+				config.getNode("options", "join", "motd").setValue(true).setComment("Show motd on join");
+			}
+			if(config.getNode("settings", "commands", "world").getString() == null) {
+				config.getNode("settings", "commands", "world").setValue("pjw");
+			}
+			if(config.getNode("settings", "commands", "gamerule").getString() == null) {
+				config.getNode("settings", "commands", "gamerule").setValue("gr");
 			}
 		}
 		save();

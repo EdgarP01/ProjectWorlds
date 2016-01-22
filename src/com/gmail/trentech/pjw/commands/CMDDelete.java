@@ -20,7 +20,7 @@ import com.gmail.trentech.pjw.utils.Zip;
 public class CMDDelete implements CommandExecutor {
 
 	public CMDDelete(){
-		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
 		
 		Help help = new Help("delete", " Delete worlds you no longer need. Worlds must be unloaded before you can delete them");
 		help.setSyntax(" /world delete <world>\n /" + alias + " dl <world>");

@@ -23,7 +23,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDKeepSpawnLoaded implements CommandExecutor {
 
 	public CMDKeepSpawnLoaded(){
-		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
 		
 		Help help = new Help("keepspawnloaded", " Keeps spawn point of world loaded in memory");
 		help.setSyntax(" /world keepspawnloaded <world> [value]\n /" + alias + " k <world> [value]");

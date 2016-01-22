@@ -1,12 +1,9 @@
 package com.gmail.trentech.pjw.listeners;
 
+import java.io.File;
 import java.util.Optional;
-import java.util.Random;
 
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.entity.JoinData;
-import org.spongepowered.api.effect.particle.ParticleEffect;
-import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
@@ -23,26 +20,26 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.text.title.Title;
-import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.flowpowered.math.vector.Vector3d;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.commands.CMDTeleport;
 import com.gmail.trentech.pjw.events.TeleportEvent;
 import com.gmail.trentech.pjw.utils.ConfigManager;
+
+import ninja.leaping.configurate.ConfigurationNode;
 
 public class EventManager {
 
 	@Listener
 	public void onTeleportEvent(TeleportEvent event){
 		Player player = event.getTarget();
-		
-		Location<World> src = event.getSource();
+
 		Location<World> dest = event.getDestination();
 
 		if(!player.hasPermission("pjw.worlds." + dest.getExtent().getName())){
@@ -62,14 +59,6 @@ public class EventManager {
 			event.setCancelled(true);
 			return;
 		}
-		
-		if(new ConfigManager().getConfig().getNode("Options", "Show-Particles").getBoolean()){
-			spawnParticles(src, 0.5, true);
-			spawnParticles(src.getRelative(Direction.UP), 0.5, true);
-			
-			spawnParticles(dest, 1.0, false);
-			spawnParticles(dest.getRelative(Direction.UP), 1.0, false);
-		}
 
 		player.sendTitle(Title.of(Text.of(TextColors.DARK_GREEN, dest.getExtent().getName()), Text.of(TextColors.AQUA, "x: ", dest.getBlockX(), ", y: ", dest.getBlockY(),", z: ", dest.getBlockZ())));
 	}
@@ -78,20 +67,33 @@ public class EventManager {
 	public void onPlayerJoin(ClientConnectionEvent.Join event) {
 	    Player player = event.getTargetEntity();
 
-	    // NOT IMPLEMENTED YET
-		if(player.get(JoinData.class).isPresent()){
-			System.out.println("JOIN DATA PRESENT");
-			return;
+		ConfigurationNode config = new ConfigManager().getConfig();
+		
+		if(config.getNode("options", "join", "motd").getBoolean()){
+			player.sendMessage(Main.getGame().getServer().getMotd());
 		}
 		
-//		String worldName = new ConfigManager().getConfig().getNode("Options", "Join-Spawn").getString();
-//		
-//		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
-//			return;
-//		}
-//		World world = Main.getGame().getServer().getWorld(worldName).get();
-//		
-//		player.setLocationSafely(world.getSpawnLocation());
+		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
+		
+		if(new File(defaultWorld + File.separator + "playerdata", player.getUniqueId().toString() + ".dat").exists()){
+			return;
+		}
+
+		ConfigurationNode node = new ConfigManager().getConfig().getNode("options", "first_join");
+		
+		String worldName = node.getNode("world").getString();
+		
+		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
+			return;
+		}
+		World world = Main.getGame().getServer().getWorld(worldName).get();
+		
+		player.setLocationSafely(world.getSpawnLocation());
+		
+		Text title = TextSerializers.FORMATTING_CODE.deserialize(node.getNode("title").getString());
+		Text subTitle = TextSerializers.FORMATTING_CODE.deserialize(node.getNode("sub_title").getString());
+
+		player.sendTitle(Title.of(title, subTitle));		
 	}
 	
 	@Listener
@@ -171,32 +173,6 @@ public class EventManager {
 			
 			Transform<World> transform = event.getToTransform().setLocation(respawnWorld.getSpawnLocation());
 			event.setToTransform(transform);
-		}
-	}
-	
-	private void spawnParticles(Location<World> location, double range, boolean sub){		
-		Random random = new Random();
-		
-		for(int i = 0; i < 5; i++){
-			double v1 = 0.0 + (range - 0.0) * random.nextDouble();
-			double v2 = 0.0 + (range - 0.0) * random.nextDouble();
-			double v3 = 0.0 + (range - 0.0) * random.nextDouble();
-
-			location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
-					.type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(3).build(), location.getPosition().add(v3,v1,v2));
-			location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
-					.type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(3).build(), location.getPosition().add(0,v1,0));
-			if(sub){
-				location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
-						.type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(3).build(), location.getPosition().sub(v1,v2,v3));
-				location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
-						.type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(3).build(), location.getPosition().sub(0,v2,0));
-			}else{
-				location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
-						.type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(3).build(), location.getPosition().add(v3,v1,v1));
-				location.getExtent().spawnParticles(Main.getGame().getRegistry().createBuilder(ParticleEffect.Builder.class)
-						.type(ParticleTypes.SPELL_WITCH).motion(Vector3d.UP).count(3).build(), location.getPosition().add(v2,v3,v2));
-			}
 		}
 	}
 }

@@ -23,7 +23,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDHardcore implements CommandExecutor {
 
 	public CMDHardcore(){
-		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
 		
 		Help help = new Help("hardcore", " Toggle on and off hardcore mode for world");
 		help.setSyntax(" /world hardcore <world> [value]\n /" + alias + " h <world> [value]");

@@ -25,7 +25,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDGamemode implements CommandExecutor {
 
 	public CMDGamemode(){
-		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
 		
 		Help help = new Help("gamemode", " Change gamemode of the specified world");
 		help.setSyntax(" /world gamemode <world> <gamemode>\n /" + alias + " g <world> <gamemode>");

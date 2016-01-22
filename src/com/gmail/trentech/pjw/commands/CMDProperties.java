@@ -23,7 +23,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDProperties implements CommandExecutor {
 
 	public CMDProperties(){
-		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
 		
 		Help help = new Help("properties", " View all properties associated with a world");
 		help.setSyntax(" /world properties <world>\n /" + alias + " p <world>");

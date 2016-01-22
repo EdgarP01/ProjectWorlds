@@ -25,7 +25,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDDifficulty implements CommandExecutor {
 
 	public CMDDifficulty(){
-		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
 		
 		Help help = new Help("difficulty", " Set the difficulty level for each world");
 		help.setSyntax(" /world difficulty <world> [value]\n /" + alias + " df <world> [value]");

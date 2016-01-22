@@ -27,7 +27,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 public class CMDRegen implements CommandExecutor {
 	
 	public CMDRegen(){
-		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
 		
 		Help help = new Help("regen", " Regenerates a world. You can preserve the seed or generate new random");
 		help.setSyntax(" /world regen <world> [true/false]\n /" + alias + " r <world>  [true/false]");

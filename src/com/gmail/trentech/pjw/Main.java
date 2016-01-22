@@ -55,8 +55,8 @@ public class Main {
     	
     	ConfigurationNode config = new ConfigManager().getConfig();
     	
-    	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", config.getNode("Options", "Command-Alias", "world").getString());
-    	getGame().getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", config.getNode("Options", "Command-Alias", "gamerule").getString());
+    	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", config.getNode("settings", "commands", "world").getString());
+    	getGame().getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", config.getNode("settings", "commands", "gamerule").getString());
     }
 
     @Listener

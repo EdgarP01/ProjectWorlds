@@ -23,7 +23,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDEnable implements CommandExecutor {
 
 	public CMDEnable(){
-		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
 		
 		Help help = new Help("enable", " Enable and disable worlds from loading");
 		help.setSyntax(" /world enable <world> <value>\n /" + alias + " e <world> <value>");

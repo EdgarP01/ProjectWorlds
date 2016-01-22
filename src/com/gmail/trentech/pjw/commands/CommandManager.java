@@ -104,8 +104,16 @@ public class CommandManager {
 	public CommandSpec cmdLoad = CommandSpec.builder()
 		    .description(Text.of(" Loads specified world if exists"))
 		    .permission("pjw.cmd.world.load")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name"))), GenericArguments.optional(GenericArguments.string(Text.of("type"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name"))))
 		    .executor(new CMDLoad())
+		    .build();
+	
+	public CommandSpec cmdImport = CommandSpec.builder()
+		    .description(Text.of(" Imports non sponge worlds, such as bukkit worlds"))
+		    .permission("pjw.cmd.world.import")
+		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name"))), GenericArguments.optional(GenericArguments.string(Text.of("type")))
+		    		,GenericArguments.optional(GenericArguments.string(Text.of("generator"))))
+		    .executor(new CMDImport())
 		    .build();
 	
 	public CommandSpec cmdGamerule = CommandSpec.builder()
@@ -163,6 +171,7 @@ public class CommandManager {
 			.child(cmdRename, "rename", "rn")
 			.child(cmdUnload, "unload", "u")
 			.child(cmdLoad, "load", "l")
+			.child(cmdImport, "import", "i")
 			.child(cmdEnable, "enable", "e")
 			.child(cmdHelp, "help")
 			.child(cmdGamemode, "gamemode", "gm")

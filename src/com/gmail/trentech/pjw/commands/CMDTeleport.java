@@ -25,7 +25,7 @@ public class CMDTeleport implements CommandExecutor {
 	public static HashMap<Player, Location<World>> players = new HashMap<>();
 
 	public CMDTeleport(){
-		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
 		
 		Help help = new Help("teleport", " Teleport self or others to specified world and location");
 		help.setSyntax(" /world teleport <world> <world:[x,y,z]>\n /" + alias + " tp <world> <world:[x,y,z]>");

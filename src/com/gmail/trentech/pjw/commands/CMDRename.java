@@ -20,7 +20,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDRename implements CommandExecutor {
 	
 	public CMDRename(){
-		String alias = new ConfigManager().getConfig().getNode("Options", "Command-Alias", "world").getString();
+		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
 		
 		Help help = new Help("rename", " Allows for renaming worlds. World must be unloaded before you can rename world");
 		help.setSyntax(" /world rename <world> <world>\n /" + alias + " rn <world> <world>");
