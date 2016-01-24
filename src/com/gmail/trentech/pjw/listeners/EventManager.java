@@ -115,6 +115,10 @@ public class EventManager {
 	public void onDisplaceEntityEvent(DisplaceEntityEvent.TargetPlayer event) {
 		Player player = (Player) event.getTargetEntity();
 
+		if(!new ConfigManager().getConfig().getNode("options", "world_gamemode").getBoolean()){
+			return;
+		}
+		
 		World worldSrc = event.getFromTransform().getExtent();
 		World worldDest = event.getToTransform().getExtent();
 

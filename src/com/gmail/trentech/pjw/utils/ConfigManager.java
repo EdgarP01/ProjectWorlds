@@ -70,6 +70,9 @@ public class ConfigManager {
 			if(config.getNode("options", "join", "motd").getString() == null) {
 				config.getNode("options", "join", "motd").setValue(true).setComment("Show motd on join");
 			}
+			if(config.getNode("options", "world_gamemode").getString() == null) {
+				config.getNode("options", "world_gamemode").setValue(true).setComment("Enable world specific gamemodes");
+			}
 			if(config.getNode("options", "commands").getString() == null) {
 				config.getNode("options", "commands").setComment("Allow to set custom command aliases");
 			}
