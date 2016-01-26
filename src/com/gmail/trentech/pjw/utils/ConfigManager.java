@@ -73,8 +73,8 @@ public class ConfigManager {
 			if(config.getNode("options", "world_gamemode").getString() == null) {
 				config.getNode("options", "world_gamemode").setValue(true).setComment("Enable world specific gamemodes");
 			}
-			if(config.getNode("options", "commands").getString() == null) {
-				config.getNode("options", "commands").setComment("Allow to set custom command aliases");
+			if(config.getNode("settings", "commands").getString() == null) {
+				config.getNode("settings", "commands").setComment("Allow to set custom command aliases");
 			}
 			if(config.getNode("settings", "commands", "world").getString() == null) {
 				config.getNode("settings", "commands", "world").setValue("pjw");
