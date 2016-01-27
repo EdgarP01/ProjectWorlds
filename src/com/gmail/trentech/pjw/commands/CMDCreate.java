@@ -87,37 +87,16 @@ public class CMDCreate implements CommandExecutor {
 
 		WorldCreationSettings settings = builder.enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true).build();
 
-		final Optional<WorldProperties> optProperties = Main.getGame().getServer().createWorldProperties(settings);
+		final Optional<WorldProperties> optionalProperties = Main.getGame().getServer().createWorldProperties(settings);
 
-        if (!optProperties.isPresent()) {
+        if (!optionalProperties.isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "something went wrong"));
 			return CommandResult.empty();
         }
 
-        optProperties.get();
+        optionalProperties.get();
         
         src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " created successfully"));
-        
-//        src.sendMessage(Text.of(TextColors.YELLOW, "Preparing spawn area. This may take a minute."));
-//		Main.getGame().getScheduler().createTaskBuilder().name("PJW" + settings.getWorldName()).delayTicks(20).execute(new Runnable(){
-//
-//			@Override
-//			public void run() {
-//				Optional<World> load = Main.getGame().getServer().loadWorld(optProperties.get());
-//
-//				if(!load.isPresent()){	
-//					src.sendMessage(Text.of(TextColors.DARK_RED, "something went wrong"));
-//					return;
-//				}
-//
-//				World world = load.get();
-//				
-//				Utils.createPlatform(world.getSpawnLocation().getRelative(Direction.DOWN));
-//				
-//				src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " created successfully"));
-//			}
-//			
-//		}).submit(Main.getPlugin());
 
 		return CommandResult.success();
 	}

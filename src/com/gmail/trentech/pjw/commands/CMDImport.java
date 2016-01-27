@@ -1,6 +1,5 @@
 package com.gmail.trentech.pjw.commands;
 
-import java.util.Map.Entry;
 import java.io.File;
 import java.util.Optional;
 
@@ -15,7 +14,6 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.DimensionType;
 import org.spongepowered.api.world.GeneratorType;
 import org.spongepowered.api.world.WorldCreationSettings;
-import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
@@ -119,14 +117,6 @@ public class CMDImport implements CommandExecutor {
 			}
 		}
 		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(genTypes.build())).append(Text.of("<generator>")).build();
-		org.spongepowered.api.text.Text.Builder modifiers = null;
-		for(Entry<String, WorldGeneratorModifier> modifier :Main.getModifiers().entrySet()){
-			if(modifiers == null){
-				modifiers = Text.builder().append(Text.of(modifier.getKey()));
-			}else{
-				modifiers.append(Text.of("\n", modifier.getKey()));
-			}	
-		}
 		return Text.of(t1,t2,t3);
 	}
 }
