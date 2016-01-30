@@ -58,28 +58,28 @@ public class ConfigManager {
 	
 	private void init() {
 		if(file.getName().equalsIgnoreCase("config.conf")){
-			if(config.getNode("options", "first_join", "world").getString() == null) {
+			if(config.getNode("options", "first_join", "world").isVirtual()) {
 				config.getNode("options", "first_join", "world").setValue("world").setComment("World player spawns to when joining for the first time");
 			}
-			if(config.getNode("options", "first_join", "title").getString() == null) {
+			if(config.getNode("options", "first_join", "title").isVirtual()) {
 				config.getNode("options", "first_join", "title").setValue("&2Welcome to the server").setComment("First join title");
 			}
-			if(config.getNode("options", "first_join", "sub_title").getString() == null) {
+			if(config.getNode("options", "first_join", "sub_title").isVirtual()) {
 				config.getNode("options", "first_join", "sub_title").setValue("&eThe best minecraft server ever").setComment("First join subtitle");
 			}
-			if(config.getNode("options", "join", "motd").getString() == null) {
+			if(config.getNode("options", "join", "motd").isVirtual()) {
 				config.getNode("options", "join", "motd").setValue(true).setComment("Show motd on join");
 			}
-			if(config.getNode("options", "world_gamemode").getString() == null) {
+			if(config.getNode("options", "world_gamemode").isVirtual()) {
 				config.getNode("options", "world_gamemode").setValue(true).setComment("Enable world specific gamemodes");
 			}
-			if(config.getNode("settings", "commands").getString() == null) {
+			if(config.getNode("settings", "commands").isVirtual()) {
 				config.getNode("settings", "commands").setComment("Allow to set custom command aliases");
 			}
-			if(config.getNode("settings", "commands", "world").getString() == null) {
+			if(config.getNode("settings", "commands", "world").isVirtual()) {
 				config.getNode("settings", "commands", "world").setValue("pjw");
 			}
-			if(config.getNode("settings", "commands", "gamerule").getString() == null) {
+			if(config.getNode("settings", "commands", "gamerule").isVirtual()) {
 				config.getNode("settings", "commands", "gamerule").setValue("gr");
 			}
 		}
