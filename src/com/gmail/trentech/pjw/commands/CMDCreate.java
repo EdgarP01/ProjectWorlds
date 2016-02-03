@@ -32,8 +32,8 @@ public class CMDCreate implements CommandExecutor {
 		Help help = new Help("create", " Allows you to create new worlds with any combination of optional arguments D: "
 				+ "for dimension type, G: for generator type, S: for seed and M: for generator modifiers");
 		help.setSyntax(" /world create <world> [d:type] [g:generator] [m:modifer]  [s:seed]\n /" + alias + " cr <world> [d:type] [g:generator] [m:modifer]  [s:seed]");
-		help.setExample(" /world create NewWorld d:-12309830198412353456\n /world create NewWorld d:OVERWORLD g:OVERWORLD\n"
-						+ " /world create NewWorld d:NETHER m:SKY\n /world create m:VOID");
+		help.setExample(" /world create NewWorld s:-12309830198412353456\n /world create NewWorld d:overworld g:overworld\n"
+						+ " /world create NewWorld d:nether m:sponge:skylands\n /world create m:pjw:void");
 		CMDHelp.getList().add(help);
 	}
 	
@@ -58,28 +58,28 @@ public class CMDCreate implements CommandExecutor {
 		builder.name(worldName);
 
 		if(args.hasAny("arg0")) {
-			if(!add(args.<String>getOne("arg0").get())){
+			if(!add(src, args.<String>getOne("arg0").get())){
 				src.sendMessage(invalidArg());
 				return CommandResult.empty();
 			}
 		}
 
 		if(args.hasAny("arg1")) {
-			if(!add(args.<String>getOne("arg1").get())){
+			if(!add(src, args.<String>getOne("arg1").get())){
 				src.sendMessage(invalidArg());
 				return CommandResult.empty();
 			}
 		}
 
 		if(args.hasAny("arg2")) {
-			if(!add(args.<String>getOne("arg2").get())){
+			if(!add(src, args.<String>getOne("arg2").get())){
 				src.sendMessage(invalidArg());
 				return CommandResult.empty();
 			}
 		}
 
 		if(args.hasAny("arg3")) {
-			if(!add(args.<String>getOne("arg3").get())){
+			if(!add(src, args.<String>getOne("arg3").get())){
 				src.sendMessage(invalidArg());
 				return CommandResult.empty();
 			}
@@ -137,7 +137,7 @@ public class CMDCreate implements CommandExecutor {
 		return Text.of(t1,t2,t3,t4,t5);
 	}
 	
-	private boolean add(String arg) {
+	private boolean add(CommandSource src, String arg) {
 		String[] option = arg.split(":");
 		
 		switch(option[0].toUpperCase()){
@@ -146,12 +146,14 @@ public class CMDCreate implements CommandExecutor {
 					builder.dimension(Main.getGame().getRegistry().getType(DimensionType.class, option[1]).get());
 					return true;
 				}
+				src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid Dimension Type"));
 				return false;
 			case "G":
 				if(Main.getGame().getRegistry().getType(GeneratorType.class, option[1]).isPresent()){
 					builder.generator(Main.getGame().getRegistry().getType(GeneratorType.class, option[1]).get());
 					return true;
 				}
+				src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid Generator Type"));
 				return false;
 			case "M":
 				String modifier = option[1];
@@ -162,6 +164,7 @@ public class CMDCreate implements CommandExecutor {
 					builder.generatorModifiers(Main.getModifiers().get(modifier));
 					return true;
 				}
+				src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid Modifier Type"));
 				return false;
 			case "S":
 				try{

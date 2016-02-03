@@ -86,7 +86,7 @@ public class CMDTeleport implements CommandExecutor {
 		}
 		Player player = Main.getGame().getServer().getPlayer(arg0).get();
 		
-		if((((Player) src) != player) && !src.hasPermission("pjw.cmd.world.teleport.others")){
+		if((src != player) && !src.hasPermission("pjw.cmd.world.teleport.others")){
 			src.sendMessage(Text.of(TextColors.DARK_RED, "You do not have permission to teleport others"));
 			return CommandResult.empty();
 		}
