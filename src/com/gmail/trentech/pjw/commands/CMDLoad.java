@@ -11,6 +11,7 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
@@ -19,6 +20,7 @@ import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.io.WorldData;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
+import com.gmail.trentech.pjw.utils.Utils;
 
 public class CMDLoad implements CommandExecutor {
 
@@ -97,6 +99,11 @@ public class CMDLoad implements CommandExecutor {
 				World world = load.get();
 				world.setKeepSpawnLoaded(true);
 				
+				if(CMDCreate.worlds.contains(worldName)){
+					Utils.createPlatform(load.get().getSpawnLocation().getRelative(Direction.DOWN));
+					CMDCreate.worlds.remove(worldName);
+				}
+
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " loaded successfully"));
 			}
 			

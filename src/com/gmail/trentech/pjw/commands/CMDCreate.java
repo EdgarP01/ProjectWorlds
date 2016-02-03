@@ -1,5 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
 
@@ -25,6 +27,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDCreate implements CommandExecutor {
 
 	private Builder builder = WorldCreationSettings.builder();
+	public static List<String> worlds = new ArrayList<>();
 	
 	public CMDCreate(){
 		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
@@ -95,6 +98,8 @@ public class CMDCreate implements CommandExecutor {
         }
 
         optionalProperties.get();
+        
+        worlds.add(worldName);
         
         src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " created successfully"));
 
