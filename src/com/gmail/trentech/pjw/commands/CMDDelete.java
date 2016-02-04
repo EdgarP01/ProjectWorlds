@@ -1,6 +1,5 @@
 package com.gmail.trentech.pjw.commands;
 
-import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 import org.spongepowered.api.command.CommandException;
@@ -46,9 +45,7 @@ public class CMDDelete implements CommandExecutor {
 			return CommandResult.empty();
 		}		
 
-		File worldFile = new File(Main.getGame().getServer().getDefaultWorld().get().getWorldName() + "/" + worldName);
-
-		Zip.save(worldName, worldFile);
+		new Zip(worldName).save();
 
 		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
 		
