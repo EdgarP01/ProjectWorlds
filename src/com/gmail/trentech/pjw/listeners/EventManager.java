@@ -8,9 +8,12 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.SpongeEventFactory;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
+import org.spongepowered.api.event.entity.DisplaceEntityEvent.TargetPlayer;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
@@ -40,6 +43,7 @@ public class EventManager {
 	public void onTeleportEvent(TeleportEvent event){
 		Player player = event.getTarget();
 
+		Location<World> src = event.getSource();
 		Location<World> dest = event.getDestination();
 
 		if(!player.hasPermission("pjw.worlds." + dest.getExtent().getName())){
@@ -61,6 +65,9 @@ public class EventManager {
 		}
 
 		player.sendTitle(Title.of(Text.of(TextColors.DARK_GREEN, dest.getExtent().getName()), Text.of(TextColors.AQUA, "x: ", dest.getBlockX(), ", y: ", dest.getBlockY(),", z: ", dest.getBlockZ())));
+		
+		TargetPlayer displaceEvent = SpongeEventFactory.createDisplaceEntityEventTargetPlayer(Cause.of(this), new Transform<World>(src), new Transform<World>(dest), player);
+		Main.getGame().getEventManager().post(displaceEvent);
 	}
 
 	@Listener
@@ -113,7 +120,7 @@ public class EventManager {
 
 	@Listener
 	public void onDisplaceEntityEvent(DisplaceEntityEvent.TargetPlayer event) {
-		Player player = (Player) event.getTargetEntity();
+		Player player = event.getTargetEntity();
 
 		if(!new ConfigManager().getConfig().getNode("options", "world_gamemode").getBoolean()){
 			return;

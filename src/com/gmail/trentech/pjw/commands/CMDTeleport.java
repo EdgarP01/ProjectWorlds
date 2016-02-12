@@ -7,8 +7,11 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.SpongeEventFactory;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.entity.DisplaceEntityEvent.TargetPlayer;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
@@ -56,9 +59,13 @@ public class CMDTeleport implements CommandExecutor {
 				return CommandResult.success();
 			}
 			Location<World> location = players.get(player);
+			Location<World> currentLocation = player.getLocation();
 			
 			player.setLocation(location);
 
+			TargetPlayer displaceEvent = SpongeEventFactory.createDisplaceEntityEventTargetPlayer(Cause.of(this), new Transform<World>(currentLocation), new Transform<World>(location), player);
+			Main.getGame().getEventManager().post(displaceEvent);
+			
 			players.remove(player);
 			
 			return CommandResult.success();
@@ -114,12 +121,17 @@ public class CMDTeleport implements CommandExecutor {
 		TeleportEvent teleportEvent = new TeleportEvent(player, player.getLocation(), dest, Cause.of(src));
 
 		if(!Main.getGame().getEventManager().post(teleportEvent)){
+			Location<World> currentLocation = player.getLocation();
 			dest = teleportEvent.getDestination();
+			
 			player.setLocation(dest);
 			
 			if(src instanceof Player && ((Player) src) != player){
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, "Teleported ", player.getName(), " to ", dest.getExtent(), ", x: ", dest.getBlockX(), ", y: ", dest.getBlockY(), ", z: ", dest.getBlockZ()));
 			}
+			
+			TargetPlayer displaceEvent = SpongeEventFactory.createDisplaceEntityEventTargetPlayer(Cause.of(this), new Transform<World>(currentLocation), new Transform<World>(dest), player);
+			Main.getGame().getEventManager().post(displaceEvent);
 		}
 
 		return CommandResult.success();
