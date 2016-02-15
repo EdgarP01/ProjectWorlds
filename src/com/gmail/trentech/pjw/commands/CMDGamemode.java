@@ -2,6 +2,7 @@ package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -10,7 +11,6 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
-import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.service.pagination.PaginationBuilder;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
@@ -68,15 +68,19 @@ public class CMDGamemode implements CommandExecutor {
 			
 			return CommandResult.empty();
 		}
+		String value = args.<String>getOne("value").get().toUpperCase();
 
-		GameMode gamemode = GameModes.CREATIVE;
-		if(Main.getGame().getRegistry().getType(GameMode.class, args.<String>getOne("value").get().toUpperCase()).isPresent()){
-			gamemode = Main.getGame().getRegistry().getType(GameMode.class, args.<String>getOne("value").get().toUpperCase()).get();
+		Optional<GameMode> optionalGamemode = Main.getGame().getRegistry().getType(GameMode.class, value);
+		
+		if(!optionalGamemode.isPresent()){
+			src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid GameMode Type"));
+			src.sendMessage(invalidArg());
 		}
-
+		GameMode gamemode = Main.getGame().getRegistry().getType(GameMode.class, value).get();
+		
 		properties.setGameMode(gamemode);
 		
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set gamemode of world ", worldName, " to ", gamemode.getName().toUpperCase()));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set gamemode of ", worldName, " to ", gamemode.getName().toUpperCase()));
 		
 		return CommandResult.success();
 	}
