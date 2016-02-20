@@ -74,12 +74,10 @@ public class EventManager {
 	public void onPlayerJoin(ClientConnectionEvent.Join event) {
 	    Player player = event.getTargetEntity();
 
-		ConfigurationNode config = new ConfigManager().getConfig();
-		
-		if(config.getNode("options", "join", "motd").getBoolean()){
+		if(player.hasPermission("pjw.options.motd")){
 			player.sendMessage(Main.getGame().getServer().getMotd());
 		}
-		
+
 		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
 		
 		if(new File(defaultWorld + File.separator + "playerdata", player.getUniqueId().toString() + ".dat").exists()){
@@ -119,10 +117,15 @@ public class EventManager {
 	}
 
 	@Listener
+	public void onDisplaceEntityEvent(DisplaceEntityEvent.Teleport.TargetPlayer event) {
+		System.out.println("DisplaceEntityEvent.Teleport.TargetPlayer");
+	}
+	
+	@Listener
 	public void onDisplaceEntityEvent(DisplaceEntityEvent.TargetPlayer event) {
 		Player player = event.getTargetEntity();
 
-		if(!new ConfigManager().getConfig().getNode("options", "world_gamemode").getBoolean()){
+		if(!player.hasPermission("pjw.options.gamemode")){
 			return;
 		}
 		
@@ -131,7 +134,7 @@ public class EventManager {
 
 		WorldProperties properties = worldDest.getProperties();
 		
-		if(worldSrc != worldDest){
+		if(!worldSrc.equals(worldDest)){
 			if(!properties.getGameMode().equals(player.gameMode().get())){
 				player.offer(Keys.GAME_MODE, properties.getGameMode());
 			}			
@@ -150,6 +153,10 @@ public class EventManager {
         	return;
         }
 
+        if(!victim.hasPermission("pjw.options.pvp")){
+        	return;
+        }
+        
         World world = victim.getWorld();
 		WorldProperties properties = world.getProperties();
 

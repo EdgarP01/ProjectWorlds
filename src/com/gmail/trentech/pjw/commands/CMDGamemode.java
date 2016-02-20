@@ -80,6 +80,8 @@ public class CMDGamemode implements CommandExecutor {
 		
 		properties.setGameMode(gamemode);
 		
+		Main.getGame().getServer().saveWorldProperties(properties);
+		
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set gamemode of ", worldName, " to ", gamemode.getName().toUpperCase()));
 		
 		return CommandResult.success();

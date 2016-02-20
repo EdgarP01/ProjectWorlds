@@ -67,17 +67,11 @@ public class ConfigManager {
 			if(config.getNode("options", "first_join", "sub_title").isVirtual()) {
 				config.getNode("options", "first_join", "sub_title").setValue("&eThe best minecraft server ever").setComment("First join subtitle");
 			}
-			if(config.getNode("options", "join", "motd").isVirtual()) {
-				config.getNode("options", "join", "motd").setValue(true).setComment("Show motd on join");
-			}
-			if(config.getNode("options", "world_gamemode").isVirtual()) {
-				config.getNode("options", "world_gamemode").setValue(true).setComment("Enable world specific gamemodes");
-			}
 			if(config.getNode("settings", "commands").isVirtual()) {
 				config.getNode("settings", "commands").setComment("Allow to set custom command aliases");
 			}
 			if(config.getNode("settings", "commands", "world").isVirtual()) {
-				config.getNode("settings", "commands", "world").setValue("pjw");
+				config.getNode("settings", "commands", "world").setValue("w");
 			}
 			if(config.getNode("settings", "commands", "gamerule").isVirtual()) {
 				config.getNode("settings", "commands", "gamerule").setValue("gr");
