@@ -20,6 +20,7 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Gamemode;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDGamemode implements CommandExecutor {
@@ -70,14 +71,21 @@ public class CMDGamemode implements CommandExecutor {
 		}
 		String value = args.<String>getOne("value").get().toUpperCase();
 
-		Optional<GameMode> optionalGamemode = Main.getGame().getRegistry().getType(GameMode.class, value);
-		
+		Optional<GameMode> optionalGamemode = Optional.empty();
+		try{
+			int index = Integer.parseInt(value);
+			optionalGamemode = Gamemode.get(index);
+		}catch(Exception e){
+			optionalGamemode = Gamemode.get(value);
+		}
+
 		if(!optionalGamemode.isPresent()){
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid GameMode Type"));
 			src.sendMessage(invalidArg());
+			return CommandResult.empty();
 		}
-		GameMode gamemode = Main.getGame().getRegistry().getType(GameMode.class, value).get();
-		
+		GameMode gamemode = optionalGamemode.get();
+
 		properties.setGameMode(gamemode);
 		
 		Main.getGame().getServer().saveWorldProperties(properties);
@@ -90,15 +98,21 @@ public class CMDGamemode implements CommandExecutor {
 	private Text invalidArg(){
 		Text t1 = Text.of(TextColors.YELLOW, "/world gamemode ");
 		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world or @w for current world"))).append(Text.of("<world> ")).build();
-		org.spongepowered.api.text.Text.Builder gamemodes = null;
-		for(GameMode gamemode : Main.getGame().getRegistry().getAllOf(GameMode.class)){
-			if(gamemodes == null){
-				gamemodes = Text.builder().append(Text.of(gamemode.getName()));
+		
+		Text.Builder builder = null;
+		
+    	Gamemode[] gamemodes = Gamemode.values();
+    	
+        for (Gamemode gamemode : gamemodes){
+			if(builder == null){
+				builder = Text.builder().append(Text.of(gamemode.getIndex(), ": ", gamemode.getGameMode().getName()));
 			}else{
-				gamemodes.append(Text.of("\n", gamemode.getName()));
+				builder.append(Text.of("\n", gamemode.getIndex(), ": ", gamemode.getGameMode().getName()));
 			}
-		}
-		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(gamemodes.build())).append(Text.of("[value]")).build();
+        }
+
+		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(builder.build())).append(Text.of("[value]")).build();
+		
 		return Text.of(t1,t2,t3);
 	}
 }

@@ -153,14 +153,10 @@ public class EventManager {
         	return;
         }
 
-        if(!victim.hasPermission("pjw.options.pvp")){
-        	return;
-        }
-        
         World world = victim.getWorld();
 		WorldProperties properties = world.getProperties();
 
-		if(!properties.isPVPEnabled()){
+		if(!properties.isPVPEnabled() && !victim.hasPermission("pjw.options.pvp")){
 			event.setCancelled(true);
 		}
     }
