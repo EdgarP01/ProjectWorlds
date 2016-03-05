@@ -1,6 +1,5 @@
 package com.gmail.trentech.pjw;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -45,8 +44,6 @@ public class Main {
 
     @Listener
     public void onInitialization(GameInitializationEvent event) {
-    	fixPath();
-    	
     	getGame().getEventManager().registerListeners(this, new EventManager());
 
     	getGame().getRegistry().register(WorldGeneratorModifier.class, new VoidWorldGeneratorModifier());
@@ -63,8 +60,6 @@ public class Main {
 
     @Listener
     public void onStartedServer(GameStartedServerEvent event) {
-    	getLog().info("Initializing...");
-
     	loadWorlds();
     }
 
@@ -85,22 +80,16 @@ public class Main {
 	}
 
 	private void loadWorlds(){
-		getLog().info("Loading worlds...");
 		for(WorldProperties world : getGame().getServer().getUnloadedWorlds()){
-			Optional<World> load = getGame().getServer().loadWorld(world);
-			if(load.isPresent()){
-				getLog().info("Loaded " + world.getWorldName());
-			}else{
-				getLog().warn("Failed to load " + world.getWorldName());
+			if(world.isEnabled()){
+				getLog().info("Loading " + world.getWorldName());
+				Optional<World> load = getGame().getServer().loadWorld(world);
+				if(load.isPresent()){
+					getLog().info("Loaded " + world.getWorldName());
+				}else{
+					getLog().warn("Failed to load " + world.getWorldName());
+				}
 			}
-		}
-	}
-	
-	private void fixPath(){
-		File directory = new File("config", "Project Worlds");
-		if(directory.exists()){
-			File newDirectory = new File("config", "projectworlds");
-			directory.renameTo(newDirectory);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public class CMDGamemode implements CommandExecutor {
 		
 		Help help = new Help("gamemode", " Change gamemode of the specified world");
 		help.setSyntax(" /world gamemode <world> <gamemode>\n /" + alias + " g <world> <gamemode>");
-		help.setExample(" /world gamemode\n /world gamemode MyWorld SURVIVAL\n /world gamemode @w CREATIVE");
+		help.setExample(" /world gamemode\n /world gamemode MyWorld SURVIVAL\n /world gamemode @w 1\n /world gamemode @a 2");
 		CMDHelp.getList().add(help);
 	}
 	
@@ -48,49 +49,53 @@ public class CMDGamemode implements CommandExecutor {
 			}
 		}
 		
-		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
-			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
-			return CommandResult.empty();
+		Collection<WorldProperties> worlds = new ArrayList<>();
+		
+		if(worldName.equalsIgnoreCase("@a")){
+			worlds = Main.getGame().getServer().getAllWorldProperties();
+		}else{
+			if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
+				src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
+				return CommandResult.empty();
+			}
+			worlds.add(Main.getGame().getServer().getWorldProperties(worldName).get());
 		}
-		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
 
-		if(!args.hasAny("value")) {
-			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
-			
-			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, properties.getWorldName())).build());
-			
-			List<Text> list = new ArrayList<>();
-			list.add(Text.of(TextColors.GREEN, "GameMode: ", TextColors.WHITE, properties.getGameMode().getName().toUpperCase()));
-			list.add(Text.of(TextColors.GREEN, "Command: ", invalidArg()));
-			
+		PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+		pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "GameMode")).build());
+
+		List<Text> list = new ArrayList<>();
+		
+		for(WorldProperties properties : worlds){
+			if(!args.hasAny("value")) {
+				list.add(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.WHITE, properties.getGameMode().getName().toUpperCase()));
+				continue;
+			}
+			String value = args.<String>getOne("value").get();
+
+			Optional<GameMode> optionalGamemode = Optional.empty();
+			try{
+				int index = Integer.parseInt(value);
+				optionalGamemode = Gamemode.get(index);
+			}catch(Exception e){
+				optionalGamemode = Gamemode.get(value);
+			}
+
+			if(!optionalGamemode.isPresent()){
+				src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid gamemode Type"));
+				return CommandResult.empty();
+			}
+			GameMode gamemode = optionalGamemode.get();
+
+			properties.setGameMode(gamemode);
+
+			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set gamemode of ", worldName, " to ", TextColors.YELLOW, gamemode.getName().toUpperCase()));
+		}
+		
+		if(!list.isEmpty()){
 			pages.contents(list);
-			
 			pages.sendTo(src);
-			
-			return CommandResult.empty();
 		}
-		String value = args.<String>getOne("value").get().toUpperCase();
-
-		Optional<GameMode> optionalGamemode = Optional.empty();
-		try{
-			int index = Integer.parseInt(value);
-			optionalGamemode = Gamemode.get(index);
-		}catch(Exception e){
-			optionalGamemode = Gamemode.get(value);
-		}
-
-		if(!optionalGamemode.isPresent()){
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid GameMode Type"));
-			src.sendMessage(invalidArg());
-			return CommandResult.empty();
-		}
-		GameMode gamemode = optionalGamemode.get();
-
-		properties.setGameMode(gamemode);
-		
-		Main.getGame().getServer().saveWorldProperties(properties);
-		
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set gamemode of ", worldName, " to ", gamemode.getName().toUpperCase()));
 		
 		return CommandResult.success();
 	}

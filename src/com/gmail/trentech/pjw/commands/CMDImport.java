@@ -1,6 +1,6 @@
 package com.gmail.trentech.pjw.commands;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 import org.spongepowered.api.command.CommandException;
@@ -18,6 +18,7 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
+import com.gmail.trentech.pjw.io.WorldData;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
@@ -46,11 +47,23 @@ public class CMDImport implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
-		if(!new File(Main.getGame().getServer().getDefaultWorld().get().getWorldName(), worldName).exists()){
-			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
+		WorldData worldData = new WorldData(worldName);
+		
+		if(!worldData.exists()){
+			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " is not a valid world"));
 			return CommandResult.empty();
 		}
 		
+		if(!worldData.isCorrectLevelName()){
+			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Level name mismatch. Attempting to repair."));
+			try {
+				worldData.setLevelName();
+			} catch (IOException e) {
+				src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong"));
+				e.printStackTrace();
+			}
+		}
+
 		SpongeData spongeData = new SpongeData(worldName);
 
 		if(spongeData.exists()){
@@ -88,9 +101,12 @@ public class CMDImport implements CommandExecutor {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "something went wrong"));
 			return CommandResult.empty();
         }
-        optProperties.get();
+        WorldProperties properties = optProperties.get();
 
-        src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " imported successfully"));
+		Main.getGame().getServer().saveWorldProperties(properties);
+		
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " imported successfully"));
+
         return CommandResult.success();
 	}
 
