@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import org.spongepowered.api.command.CommandException;
@@ -22,7 +23,6 @@ import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Utils;
-import com.google.common.util.concurrent.ListenableFuture;
 
 public class CMDRegen implements CommandExecutor {
 	
@@ -73,7 +73,7 @@ public class CMDRegen implements CommandExecutor {
 		}
 
 		try {
-			ListenableFuture<Boolean> delete = Main.getGame().getServer().deleteWorld(properties);
+			CompletableFuture<Boolean> delete = Main.getGame().getServer().deleteWorld(properties);
 			while(!delete.isDone()){}
 			if(!delete.get()){
 				src.sendMessage(Text.of(TextColors.DARK_RED, "Could not delete ", worldName));

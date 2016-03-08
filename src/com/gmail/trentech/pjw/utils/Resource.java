@@ -3,7 +3,7 @@ package com.gmail.trentech.pjw.utils;
 public class Resource {
 
 	public final static String NAME = "Project Worlds";
-	public final static String VERSION = "0.7.55";
-	public final static String ID = "PJW";
+	public final static String VERSION = "0.8.55";
+	public final static String ID = "pjw";
 
 }

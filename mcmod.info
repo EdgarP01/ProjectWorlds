@@ -1,0 +1,8 @@
+[
+    {
+        "modid": "projectworlds",
+        "name": "Project Worlds",
+        "description": "World management plugin for Sponge",
+        "version": "0.8.55",
+    }
+]

@@ -11,6 +11,7 @@ import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.SpongeEventFactory;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent.TargetPlayer;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
@@ -63,7 +64,7 @@ public class CMDTeleport implements CommandExecutor {
 			
 			player.setLocation(location);
 
-			TargetPlayer displaceEvent = SpongeEventFactory.createDisplaceEntityEventTargetPlayer(Cause.of(this), new Transform<World>(currentLocation), new Transform<World>(location), player);
+			TargetPlayer displaceEvent = SpongeEventFactory.createDisplaceEntityEventTargetPlayer(Cause.of(NamedCause.source(this)), new Transform<World>(currentLocation), new Transform<World>(location), player);
 			Main.getGame().getEventManager().post(displaceEvent);
 			
 			players.remove(player);
@@ -118,7 +119,7 @@ public class CMDTeleport implements CommandExecutor {
 			dest = world.getLocation(Integer.parseInt(location[0]), Integer.parseInt(location[1]), Integer.parseInt(location[2]));
 		}
 		
-		TeleportEvent teleportEvent = new TeleportEvent(player, player.getLocation(), dest, Cause.of(src));
+		TeleportEvent teleportEvent = new TeleportEvent(player, player.getLocation(), dest, Cause.of(NamedCause.source(src)));
 
 		if(!Main.getGame().getEventManager().post(teleportEvent)){
 			Location<World> currentLocation = player.getLocation();
@@ -130,7 +131,7 @@ public class CMDTeleport implements CommandExecutor {
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, "Teleported ", player.getName(), " to ", dest.getExtent(), ", x: ", dest.getBlockX(), ", y: ", dest.getBlockY(), ", z: ", dest.getBlockZ()));
 			}
 			
-			TargetPlayer displaceEvent = SpongeEventFactory.createDisplaceEntityEventTargetPlayer(Cause.of(this), new Transform<World>(currentLocation), new Transform<World>(dest), player);
+			TargetPlayer displaceEvent = SpongeEventFactory.createDisplaceEntityEventTargetPlayer(Cause.of(NamedCause.source(this)), new Transform<World>(currentLocation), new Transform<World>(dest), player);
 			Main.getGame().getEventManager().post(displaceEvent);
 		}
 
