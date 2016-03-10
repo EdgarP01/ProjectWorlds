@@ -55,15 +55,15 @@ public class CMDLoad implements CommandExecutor {
 			return CommandResult.empty();
 		}
 		
-		if(!spongeData.isFreeDimId()){
-			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " World contains dimension id conflict. Attempting to repair."));
-			try {
-				spongeData.setDimId();
-			} catch (IOException e) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong"));
-				e.printStackTrace();
-			}
-		}
+//		if(!spongeData.isFreeDimId()){
+//			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " World contains dimension id conflict. Attempting to repair."));
+//			try {
+//				spongeData.setDimId();
+//			} catch (IOException e) {
+//				src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong"));
+//				e.printStackTrace();
+//			}
+//		}
 
 		WorldData worldData = new WorldData(worldName);
 		

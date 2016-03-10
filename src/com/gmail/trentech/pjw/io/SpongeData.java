@@ -3,18 +3,14 @@ package com.gmail.trentech.pjw.io;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map.Entry;
 
 import org.spongepowered.api.world.World;
-import org.spongepowered.common.world.DimensionManager;
 
 import com.gmail.trentech.pjw.Main;
 
 import net.obnoxint.xnbt.XNBT;
 import net.obnoxint.xnbt.types.CompoundTag;
-import net.obnoxint.xnbt.types.IntegerTag;
 import net.obnoxint.xnbt.types.NBTTag;
 
 public class SpongeData {
@@ -112,20 +108,20 @@ public class SpongeData {
 		return true;
 	}
 	
-	public void setDimId() throws IOException{
-		int dimId = DimensionManager.getNextFreeDimId();
-		DimensionManager.registerDimension(dimId, 0);
-		
-		compoundTag.put(new IntegerTag("dimensionId", dimId));
-
-		CompoundTag compoundRoot = new CompoundTag("", null);
-		
-		compoundRoot.put(compoundTag);
-
-		List<NBTTag> list = new ArrayList<>();
-		
-		list.add(compoundRoot);
-
-		XNBT.saveTags(list, dataFile);
-	}
+//	public void setDimId() throws IOException{
+//		int dimId = DimensionManager.getNextFreeDimId();
+//		DimensionManager.registerDimension(dimId, 0);
+//		
+//		compoundTag.put(new IntegerTag("dimensionId", dimId));
+//
+//		CompoundTag compoundRoot = new CompoundTag("", null);
+//		
+//		compoundRoot.put(compoundTag);
+//
+//		List<NBTTag> list = new ArrayList<>();
+//		
+//		list.add(compoundRoot);
+//
+//		XNBT.saveTags(list, dataFile);
+//	}
 }
