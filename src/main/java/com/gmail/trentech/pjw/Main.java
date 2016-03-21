@@ -82,7 +82,8 @@ public class Main {
 
 	private void loadWorlds(){
 		for(WorldProperties world : getGame().getServer().getUnloadedWorlds()){
-			if(world.isEnabled()){
+			// Temporarily disable enable check until issue is resolved
+			//if(world.isEnabled()){
 				getLog().info("Loading " + world.getWorldName());
 				Optional<World> load = getGame().getServer().loadWorld(world);
 				if(load.isPresent()){
@@ -90,7 +91,7 @@ public class Main {
 				}else{
 					getLog().warn("Failed to load " + world.getWorldName());
 				}
-			}
+			//}
 		}
 	}
 }
