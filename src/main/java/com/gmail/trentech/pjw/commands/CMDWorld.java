@@ -62,6 +62,10 @@ public class CMDWorld implements CommandExecutor {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/pjw:world help regen")).append(Text.of(" /world regen")).build());
 		}
+		if(src.hasPermission("pjw.cmd.world.fill")) {
+			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
+					.onClick(TextActions.runCommand("/pjw:world help fill")).append(Text.of(" /world fill")).build());
+		}
 		if(src.hasPermission("pjw.cmd.world.gamemode")) {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
 					.onClick(TextActions.runCommand("/pjw:world help gamemode")).append(Text.of(" /world gamemode")).build());

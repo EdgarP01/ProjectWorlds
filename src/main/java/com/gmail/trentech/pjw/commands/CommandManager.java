@@ -153,6 +153,13 @@ public class CommandManager {
 		    .executor(new CMDEnable())
 		    .build();
 	
+	public CommandSpec cmdFill = CommandSpec.builder()
+		    .description(Text.of(" Pre generate chunks in a world"))
+		    .permission("pjw.cmd.world.fill")
+		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name"))), GenericArguments.optional(GenericArguments.string(Text.of("value"))))
+		    .executor(new CMDFill())
+		    .build();
+	
 	public CommandSpec cmdWorld = CommandSpec.builder()
 			.description(Text.of("Base command"))
 			.permission("pjw.cmd.world")
@@ -175,6 +182,7 @@ public class CommandManager {
 			.child(cmdEnable, "enable", "e")
 			.child(cmdHelp, "help")
 			.child(cmdGamemode, "gamemode", "gm")
+			.child(cmdFill, "fill", "f")
 			.executor(new CMDWorld())
 			.build();
 }
