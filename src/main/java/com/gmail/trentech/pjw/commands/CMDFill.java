@@ -94,11 +94,11 @@ public class CMDFill implements CommandExecutor {
 		World world = Main.getGame().getServer().getWorld(properties.getUniqueId()).get();
 		
 		WorldBorder border = world.getWorldBorder();
-		
+
 		border.setCenter(world.getSpawnLocation().getX(), world.getSpawnLocation().getZ());
 		border.setDiameter(diameter);
-
-		ChunkPreGenerate generator = world.getWorldBorder().newChunkPreGenerate(world).owner(Main.getPlugin());
+		
+		ChunkPreGenerate generator = border.newChunkPreGenerate(world).owner(Main.getPlugin());
 		generator.logger(Main.getLog());
 
 		Task task = generator.start();
@@ -108,6 +108,8 @@ public class CMDFill implements CommandExecutor {
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Pre-Generator starting for ", worldName));
 		src.sendMessage(Text.of(TextColors.GOLD, "This can cause significant lag while running"));
 		
+		border.setDiameter(60000000);
+
 		return CommandResult.success();
 	}
 	
