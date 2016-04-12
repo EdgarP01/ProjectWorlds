@@ -17,6 +17,7 @@ import org.spongepowered.api.world.WorldBorder;
 import org.spongepowered.api.world.WorldBorder.ChunkPreGenerate;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.flowpowered.math.vector.Vector3d;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
@@ -94,7 +95,10 @@ public class CMDFill implements CommandExecutor {
 		World world = Main.getGame().getServer().getWorld(properties.getUniqueId()).get();
 		
 		WorldBorder border = world.getWorldBorder();
-
+		
+		Vector3d center = border.getCenter();
+		double diam = border.getDiameter();
+		
 		border.setCenter(world.getSpawnLocation().getX(), world.getSpawnLocation().getZ());
 		border.setDiameter(diameter);
 		
@@ -108,8 +112,9 @@ public class CMDFill implements CommandExecutor {
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Pre-Generator starting for ", worldName));
 		src.sendMessage(Text.of(TextColors.GOLD, "This can cause significant lag while running"));
 		
-		border.setDiameter(60000000);
-
+		border.setDiameter(diam);
+		border.setCenter(center.getX(), center.getZ());
+		
 		return CommandResult.success();
 	}
 	
