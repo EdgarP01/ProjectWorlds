@@ -22,14 +22,19 @@ import com.gmail.trentech.pjw.extra.VoidWorldGeneratorModifier;
 import com.gmail.trentech.pjw.listeners.EventManager;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Resource;
+import com.google.inject.Inject;
 
 import me.flibio.updatifier.Updatifier;
+import net.minecrell.mcstats.SpongeStatsLite;
 import ninja.leaping.configurate.ConfigurationNode;
 
 @Updatifier(repoName = "ProjectWorlds", repoOwner = "TrenTech", version = Resource.VERSION)
 @Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION, authors = Resource.AUTHOR, url = Resource.URL, description = Resource.DESCRIPTION, dependencies = {@Dependency(id = "Updatifier", optional = true)})
 public class Main {
 
+    @Inject
+    private SpongeStatsLite stats;
+    
 	private static Game game;
 	private static Logger log;	
 	private static PluginContainer plugin;
@@ -38,13 +43,21 @@ public class Main {
 	
 	@Listener
     public void onPreInitialization(GamePreInitializationEvent event) {
+
+		
 		game = Sponge.getGame();
 		plugin = getGame().getPluginManager().getPlugin(Resource.ID).get();
 		log = getPlugin().getLogger();
+		
+		if(this.stats.start()){
+			getLog().info("MCStats started.");
+		}else{
+			getLog().warn("Could not start MCStats. This could be due to server opt-out, or error.");
+		}
     }
-
+	
     @Listener
-    public void onInitialization(GameInitializationEvent event) {
+    public void onInitialization(GameInitializationEvent event) {   	
     	getGame().getEventManager().registerListeners(this, new EventManager());
 
     	getGame().getRegistry().register(WorldGeneratorModifier.class, new VoidWorldGeneratorModifier());
