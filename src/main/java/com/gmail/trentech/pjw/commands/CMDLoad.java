@@ -82,9 +82,16 @@ public class CMDLoad implements CommandExecutor {
 			}
 		}
 		
-		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
+		Optional<WorldProperties> optionalProperties = Main.getGame().getServer().getWorldProperties(worldName);
+		
+		if(!optionalProperties.isPresent()){
+			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not find ", worldName));
+		}
+		
+		WorldProperties properties = optionalProperties.get();
 		
         src.sendMessage(Text.of(TextColors.YELLOW, "Preparing spawn area. This may take a minute."));
+
 		Main.getGame().getScheduler().createTaskBuilder().name("PJW" + worldName).delayTicks(20).execute(new Runnable(){
 
 			@Override
