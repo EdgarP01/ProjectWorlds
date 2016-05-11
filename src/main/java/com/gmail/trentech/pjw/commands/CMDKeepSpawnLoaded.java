@@ -59,13 +59,13 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 		}
 
 		Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
-		pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Hardcore")).build());
+		pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "KeepSpawnLoaded")).build());
 
 		List<Text> list = new ArrayList<>();
 		
 		for(WorldProperties properties : worlds){
 			if(!args.hasAny("value")) {
-				list.add(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.WHITE, Boolean.toString(properties.isHardcore()).toUpperCase()));
+				list.add(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.WHITE, Boolean.toString(properties.doesKeepSpawnLoaded()).toUpperCase()));
 				continue;
 			}
 			String value = args.<String>getOne("value").get();
