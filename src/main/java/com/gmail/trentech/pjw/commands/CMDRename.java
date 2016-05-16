@@ -14,18 +14,15 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDRename implements CommandExecutor {
 	
-	public CMDRename(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
-		
-		Help help = new Help("rename", " Allows for renaming worlds. World must be unloaded before you can rename world");
-		help.setSyntax(" /world rename <world> <world>\n /" + alias + " rn <world> <world>");
+	public CMDRename() {
+		Help help = new Help("rename", "rename", " Allows for renaming worlds. World must be unloaded before you can rename world");
+		help.setSyntax(" /world rename <world> <world>\n /w rn <world> <world>");
 		help.setExample(" /world rename MyWorld NewWorldName");
-		CMDHelp.getList().add(help);
+		help.save();
 	}
 	
 	@Override
@@ -36,13 +33,13 @@ public class CMDRename implements CommandExecutor {
 		}
 		String oldWorldName = args.<String>getOne("old").get();
 
-		if(oldWorldName.equalsIgnoreCase("@w")){
-			if(src instanceof Player){
+		if(oldWorldName.equalsIgnoreCase("@w")) {
+			if(src instanceof Player) {
 				oldWorldName = ((Player) src).getWorld().getName();
 			}
 		}
 		
-		if(Main.getGame().getServer().getWorld(oldWorldName).isPresent()){
+		if(Main.getGame().getServer().getWorld(oldWorldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, oldWorldName, " must be unloaded before you can rename"));
 			return CommandResult.empty();
 		}
@@ -54,18 +51,18 @@ public class CMDRename implements CommandExecutor {
 
 		String newWorldName = args.<String>getOne("new").get();
 
-		for(WorldProperties world : Main.getGame().getServer().getAllWorldProperties()){
-			if(world.getWorldName().equalsIgnoreCase(newWorldName)){
+		for(WorldProperties world : Main.getGame().getServer().getAllWorldProperties()) {
+			if(world.getWorldName().equalsIgnoreCase(newWorldName)) {
 				src.sendMessage(Text.of(TextColors.DARK_RED, newWorldName, " already exists"));
 				return CommandResult.empty();
 			}
 		}
 
-		for(WorldProperties worldInfo : Main.getGame().getServer().getUnloadedWorlds()){
-			if(worldInfo.getWorldName().equalsIgnoreCase(oldWorldName)){
+		for(WorldProperties worldInfo : Main.getGame().getServer().getUnloadedWorlds()) {
+			if(worldInfo.getWorldName().equalsIgnoreCase(oldWorldName)) {
 				Optional<WorldProperties> rename = Main.getGame().getServer().renameWorld(worldInfo, newWorldName);
 
-				if(!rename.isPresent()){
+				if(!rename.isPresent()) {
 					src.sendMessage(Text.of(TextColors.DARK_RED, "Could not rename ", oldWorldName));
 					return CommandResult.empty();
 				}
@@ -81,7 +78,7 @@ public class CMDRename implements CommandExecutor {
 		return CommandResult.empty();
 	}
 	
-	private Text invalidArg(){
+	private Text invalidArg() {
 		Text t1 = Text.of(TextColors.YELLOW, "/world rename ");
 		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world or @w for current world"))).append(Text.of("<world> ")).build();
 		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter new world name"))).append(Text.of("<world>")).build();

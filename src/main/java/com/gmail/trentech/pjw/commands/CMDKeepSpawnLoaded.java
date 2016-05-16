@@ -18,18 +18,15 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDKeepSpawnLoaded implements CommandExecutor {
 
-	public CMDKeepSpawnLoaded(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
-		
-		Help help = new Help("keepspawnloaded", " Keeps spawn point of world loaded in memory");
-		help.setSyntax(" /world keepspawnloaded <world> [value]\n /" + alias + " k <world> [value]");
+	public CMDKeepSpawnLoaded() {
+		Help help = new Help("keepspawnloaded", "keepspawnloaded", " Keeps spawn point of world loaded in memory");
+		help.setSyntax(" /world keepspawnloaded <world> [value]\n /w k <world> [value]");
 		help.setExample(" /world keepspawnloaded MyWorld\n /world keepspawnloaded MyWorld true\n /world keepspawnloaded @w false");
-		CMDHelp.getList().add(help);
+		help.save();
 	}
 	
 	@Override
@@ -40,18 +37,18 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 		}
 		String worldName = args.<String>getOne("name").get();
 		
-		if(worldName.equalsIgnoreCase("@w")){
-			if(src instanceof Player){
+		if(worldName.equalsIgnoreCase("@w")) {
+			if(src instanceof Player) {
 				worldName = ((Player) src).getWorld().getName();
 			}
 		}
 		
 		Collection<WorldProperties> worlds = new ArrayList<>();
 		
-		if(worldName.equalsIgnoreCase("@a")){
+		if(worldName.equalsIgnoreCase("@a")) {
 			worlds = Main.getGame().getServer().getAllWorldProperties();
 		}else{
-			if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
+			if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
 				src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 				return CommandResult.empty();
 			}
@@ -63,14 +60,14 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 
 		List<Text> list = new ArrayList<>();
 		
-		for(WorldProperties properties : worlds){
+		for(WorldProperties properties : worlds) {
 			if(!args.hasAny("value")) {
 				list.add(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.WHITE, Boolean.toString(properties.doesKeepSpawnLoaded()).toUpperCase()));
 				continue;
 			}
 			String value = args.<String>getOne("value").get();
 			
-			if((!value.equalsIgnoreCase("true")) && (!value.equalsIgnoreCase("false"))){
+			if((!value.equalsIgnoreCase("true")) && (!value.equalsIgnoreCase("false"))) {
 				src.sendMessage(invalidArg());
 				return CommandResult.empty();	
 			}
@@ -81,7 +78,7 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Setting this to false can cause worlds to randomly unload when no players are occupying them"));
 		}
 
-		if(!list.isEmpty()){
+		if(!list.isEmpty()) {
 			pages.contents(list);
 			pages.sendTo(src);
 		}
@@ -89,7 +86,7 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 		return CommandResult.success();
 	}
 	
-	private Text invalidArg(){
+	private Text invalidArg() {
 		Text t1 = Text.of(TextColors.GREEN, "/world keepspawnloaded ");
 		Text t2 = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Enter world or @w for current world or @a for all worlds"))).append(Text.of("<world> ")).build();
 		Text t3 = Text.of(TextColors.GREEN, "[true/false]");

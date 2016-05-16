@@ -17,17 +17,14 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDList implements CommandExecutor {
 
-	public CMDList(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
-		
-		Help help = new Help("list", " Lists all known worlds, loaded or unloaded");
-		help.setSyntax(" /world list\n /" + alias + " ls");
-		CMDHelp.getList().add(help);
+	public CMDList() {
+		Help help = new Help("list", "list", " Lists all known worlds, loaded or unloaded");
+		help.setSyntax(" /world list\n /w ls");
+		help.save();
 	}
 	
 	@Override
@@ -38,13 +35,13 @@ public class CMDList implements CommandExecutor {
 		
 		List<Text> list = new ArrayList<>();
 		
-		for(World world : Main.getGame().getServer().getWorlds()){
+		for(World world : Main.getGame().getServer().getWorlds()) {
 			Builder builder = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of(TextColors.WHITE, "Click to view properies")));
 			builder.onClick(TextActions.runCommand("/pjw:world properties " + world.getName())).append(Text.of(TextColors.GREEN, world.getName(), ": ", TextColors.GREEN, world.getEntities().size(), " Entities"));
 			list.add(builder.build());
 		}
 		
-		for(WorldProperties world : Main.getGame().getServer().getUnloadedWorlds()){
+		for(WorldProperties world : Main.getGame().getServer().getUnloadedWorlds()) {
 			Builder builder = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of(TextColors.WHITE, "Click to load world")));
 			builder.onClick(TextActions.runCommand("/pjw:world load " + world.getWorldName())).append(Text.of(TextColors.GREEN, world.getWorldName(), ": ", TextColors.GRAY, " Unloaded"));
 			list.add(builder.build());

@@ -19,18 +19,15 @@ import org.spongepowered.api.world.storage.WorldProperties;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.io.WorldData;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDImport implements CommandExecutor {
 
-	public CMDImport(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
-		
-		Help help = new Help("import", " Import worlds not native to Sponge");
-		help.setSyntax(" /world import <world> <type> <generator>\n /" + alias + " i <world> <type> <generator>");
+	public CMDImport() {
+		Help help = new Help("import", "import", " Import worlds not native to Sponge");
+		help.setSyntax(" /world import <world> <type> <generator>\n /w i <world> <type> <generator>");
 		help.setExample(" /world import NewWorld overworld overworld");
-		CMDHelp.getList().add(help);
+		help.save();
 	}
 	
 	@Override
@@ -42,19 +39,19 @@ public class CMDImport implements CommandExecutor {
 
 		String worldName = args.<String>getOne("name").get();
 		
-		if(Main.getGame().getServer().getWorld(worldName).isPresent()){
+		if(Main.getGame().getServer().getWorld(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " is already loaded"));
 			return CommandResult.empty();
 		}
 
 		WorldData worldData = new WorldData(worldName);
 		
-		if(!worldData.exists()){
+		if(!worldData.exists()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " is not a valid world"));
 			return CommandResult.empty();
 		}
 		
-		if(!worldData.isCorrectLevelName()){
+		if(!worldData.isCorrectLevelName()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Level name mismatch. Attempting to repair."));
 			try {
 				worldData.setLevelName();
@@ -66,27 +63,27 @@ public class CMDImport implements CommandExecutor {
 
 		SpongeData spongeData = new SpongeData(worldName);
 
-		if(spongeData.exists()){
+		if(spongeData.exists()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Sponge world detected"));
 			src.sendMessage(Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Click command for more information ")))
 						.onClick(TextActions.runCommand("/pjw:world load")).append(Text.of(" /world load")).build());
 			return CommandResult.empty();
 		}
 
-		if(!args.hasAny("type") || !args.hasAny("generator")){
+		if(!args.hasAny("type") || !args.hasAny("generator")) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Must specify dimension and generator type when importing worlds"));
 			return CommandResult.empty();
 		}
 		String type = args.<String>getOne("type").get();
 		String generator = args.<String>getOne("generator").get();
 			
-		if(!Main.getGame().getRegistry().getType(DimensionType.class, type).isPresent()){
+		if(!Main.getGame().getRegistry().getType(DimensionType.class, type).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid dimension type"));
 			return CommandResult.empty();
 		}
 		DimensionType dimensionType = Main.getGame().getRegistry().getType(DimensionType.class, type).get();
 
-		if(!Main.getGame().getRegistry().getType(GeneratorType.class, generator).isPresent()){
+		if(!Main.getGame().getRegistry().getType(GeneratorType.class, generator).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid generator type"));
 			return CommandResult.empty();
 		}
@@ -110,12 +107,12 @@ public class CMDImport implements CommandExecutor {
         return CommandResult.success();
 	}
 
-	private Text invalidArg(){
+	private Text invalidArg() {
 		Main.getGame().getRegistry().getAllOf(DimensionType.class);
 		Text t1 = Text.of(TextColors.YELLOW, "/world import <world> ");
 		org.spongepowered.api.text.Text.Builder dimTypes = null;
-		for(DimensionType dimType : Main.getGame().getRegistry().getAllOf(DimensionType.class)){
-			if(dimTypes == null){
+		for(DimensionType dimType : Main.getGame().getRegistry().getAllOf(DimensionType.class)) {
+			if(dimTypes == null) {
 				dimTypes = Text.builder().append(Text.of(dimType.getName()));
 			}else{
 				dimTypes.append(Text.of("\n", dimType.getName()));
@@ -123,9 +120,9 @@ public class CMDImport implements CommandExecutor {
 		}
 		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(dimTypes.build())).append(Text.of("<type> ")).build();
 		org.spongepowered.api.text.Text.Builder genTypes = Text.builder();
-		for(GeneratorType genType : Main.getGame().getRegistry().getAllOf(GeneratorType.class)){
-			if(!genType.getName().equalsIgnoreCase("debug_all_block_states") && !genType.getName().equalsIgnoreCase("default_1_1")){
-				if(genTypes == null){
+		for(GeneratorType genType : Main.getGame().getRegistry().getAllOf(GeneratorType.class)) {
+			if(!genType.getName().equalsIgnoreCase("debug_all_block_states") && !genType.getName().equalsIgnoreCase("default_1_1")) {
+				if(genTypes == null) {
 					genTypes = Text.builder().append(Text.of(genType.getName()));
 				}else{
 					genTypes.append(Text.of(genType.getName(), "\n"));

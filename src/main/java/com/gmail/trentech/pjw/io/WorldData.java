@@ -21,23 +21,23 @@ public class WorldData {
 	private CompoundTag compoundTag;
 	private boolean exists = false;
 	
-	public WorldData(String worldName){
+	public WorldData(String worldName) {
 		this.worldName = worldName;
 
 		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
 		
 		dataFile = new File(defaultWorld + File.separator + worldName, "level.dat");
-		if(defaultWorld.equalsIgnoreCase(worldName)){
+		if(defaultWorld.equalsIgnoreCase(worldName)) {
 			dataFile = new File(defaultWorld, "level.dat");
 		}
 		
-		if(dataFile.exists()){
+		if(dataFile.exists()) {
 			exists = true;
 			init();
 		}
 	}
 	
-	public boolean exists(){
+	public boolean exists() {
 		return exists;
 	}
 	
@@ -46,8 +46,8 @@ public class WorldData {
 			for (NBTTag root : XNBT.loadTags(dataFile)) {
 				CompoundTag compoundRoot = (CompoundTag) root;
 				
-				for(Entry<String, NBTTag> rootItem :compoundRoot.entrySet()){
-					if(rootItem.getKey().equalsIgnoreCase("Data")){
+				for(Entry<String, NBTTag> rootItem :compoundRoot.entrySet()) {
+					if(rootItem.getKey().equalsIgnoreCase("Data")) {
 						compoundTag = (CompoundTag) rootItem.getValue();
 					}
 				}
@@ -57,15 +57,15 @@ public class WorldData {
 		}
 	}
 
-	public boolean isCorrectLevelName(){
-		for(Entry<String, NBTTag> entry : compoundTag.entrySet()){
-			if(!entry.getKey().equalsIgnoreCase("LevelName")){
+	public boolean isCorrectLevelName() {
+		for(Entry<String, NBTTag> entry : compoundTag.entrySet()) {
+			if(!entry.getKey().equalsIgnoreCase("LevelName")) {
 				continue;
 			}
 			
 			String levelName = (String) entry.getValue().getPayload();
 			
-			if(levelName.equalsIgnoreCase(worldName)){
+			if(levelName.equalsIgnoreCase(worldName)) {
 				return true;
 			}
 			return false;

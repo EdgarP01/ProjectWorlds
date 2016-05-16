@@ -20,18 +20,15 @@ import org.spongepowered.api.world.difficulty.Difficulty;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDDifficulty implements CommandExecutor {
 
-	public CMDDifficulty(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
-		
-		Help help = new Help("difficulty", " Set the difficulty level for each world");
-		help.setSyntax(" /world difficulty <world> [value]\n /" + alias + " df <world> [value]");
+	public CMDDifficulty() {
+		Help help = new Help("difficulty", "difficulty", " Set the difficulty level for each world");
+		help.setSyntax(" /world difficulty <world> [value]\n /w df <world> [value]");
 		help.setExample(" /world difficulty MyWorld\n /world difficulty MyWorld HARD\n /world difficulty @w PEACEFUL\n /world difficulty @a SURVIVAL");
-		CMDHelp.getList().add(help);
+		help.save();
 	}
 	
 	@Override
@@ -42,18 +39,18 @@ public class CMDDifficulty implements CommandExecutor {
 		}
 		String worldName = args.<String>getOne("name").get();
 
-		if(worldName.equalsIgnoreCase("@w")){
-			if(src instanceof Player){
+		if(worldName.equalsIgnoreCase("@w")) {
+			if(src instanceof Player) {
 				worldName = ((Player) src).getWorld().getName();
 			}
 		}
 		
 		Collection<WorldProperties> worlds = new ArrayList<>();
 		
-		if(worldName.equalsIgnoreCase("@a")){
+		if(worldName.equalsIgnoreCase("@a")) {
 			worlds = Main.getGame().getServer().getAllWorldProperties();
 		}else{
-			if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
+			if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
 				src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 				return CommandResult.empty();
 			}
@@ -65,7 +62,7 @@ public class CMDDifficulty implements CommandExecutor {
 
 		List<Text> list = new ArrayList<>();
 		
-		for(WorldProperties properties : worlds){
+		for(WorldProperties properties : worlds) {
 			if(!args.hasAny("value")) {
 				list.add(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.WHITE, properties.getDifficulty().getName().toUpperCase()));
 				continue;
@@ -74,7 +71,7 @@ public class CMDDifficulty implements CommandExecutor {
 			
 			Optional<Difficulty> optionalDifficulty = Main.getGame().getRegistry().getType(Difficulty.class, value);
 			
-			if(!optionalDifficulty.isPresent()){
+			if(!optionalDifficulty.isPresent()) {
 				src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid difficulty type"));
 				return CommandResult.empty();
 			}
@@ -85,7 +82,7 @@ public class CMDDifficulty implements CommandExecutor {
 			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set difficulty of ", worldName, " to ", TextColors.YELLOW, difficulty.getName().toUpperCase()));
 		}
 
-		if(!list.isEmpty()){
+		if(!list.isEmpty()) {
 			pages.contents(list);
 			pages.sendTo(src);
 		}
@@ -93,7 +90,7 @@ public class CMDDifficulty implements CommandExecutor {
 		return CommandResult.success();
 	}
 	
-	private Text invalidArg(){
+	private Text invalidArg() {
 		Text t1 = Text.of(TextColors.YELLOW, "/world difficulty ");
 		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world or @w for current world or @a for all worlds"))).append(Text.of("<world> ")).build();
 		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("PEACEFUL\nEASY\nNORMAL\nHARD"))).append(Text.of("[value]")).build();

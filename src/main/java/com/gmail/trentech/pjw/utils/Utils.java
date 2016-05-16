@@ -14,7 +14,7 @@ import com.gmail.trentech.pjw.Main;
 
 public class Utils {
 
-	public static void createPlatform(Location<World> center){
+	public static void createPlatform(Location<World> center) {
 		platform(center, BlockTypes.STONE);
 		
 		platform(center.getRelative(Direction.UP), BlockTypes.AIR);
@@ -22,7 +22,7 @@ public class Utils {
 		platform(center.getRelative(Direction.UP).getRelative(Direction.UP).getRelative(Direction.UP), BlockTypes.AIR);
 	}
 	
-	private static void platform(Location<World> center, BlockType type){
+	private static void platform(Location<World> center, BlockType type) {
 		List<Location<World>> list = new ArrayList<>();
 
 		Location<World> south = center.getRelative(Direction.SOUTH);
@@ -67,7 +67,7 @@ public class Utils {
 		list.add(west2.getRelative(Direction.NORTH));
 		list.add(west2.getRelative(Direction.SOUTH));
 
-		for(Location<World> location : list){
+		for(Location<World> location : list) {
 			location.setBlock(Main.getGame().getRegistry().createBuilder(BlockState.Builder.class).blockType(type).build());
 		}
 	}

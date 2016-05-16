@@ -15,18 +15,15 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDCopy implements CommandExecutor {
 	
-	public CMDCopy(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
-		
-		Help help = new Help("copy", " Allows you to make a new world from an existing world");
-		help.setSyntax(" /world copy <world> <world>\n /" + alias + " cp <world> <world>");
+	public CMDCopy() {
+		Help help = new Help("copy", "copy", " Allows you to make a new world from an existing world");
+		help.setSyntax(" /world copy <world> <world>\n /w cp <world> <world>");
 		help.setExample(" /world copy srcWorld newWorld\n /world copy @w newWorld");
-		CMDHelp.getList().add(help);
+		help.save();
 	}
 	
 	@Override
@@ -38,8 +35,8 @@ public class CMDCopy implements CommandExecutor {
 
 		String oldWorldName = args.<String>getOne("old").get();
 		
-		if(oldWorldName.equalsIgnoreCase("@w")){
-			if(src instanceof Player){
+		if(oldWorldName.equalsIgnoreCase("@w")) {
+			if(src instanceof Player) {
 				oldWorldName = ((Player) src).getWorld().getName();
 			}
 		}
@@ -51,8 +48,8 @@ public class CMDCopy implements CommandExecutor {
 
 		String newWorldName = args.<String>getOne("new").get();
 		
-		for(WorldProperties world : Main.getGame().getServer().getAllWorldProperties()){
-			if(!world.getWorldName().equalsIgnoreCase(newWorldName)){
+		for(WorldProperties world : Main.getGame().getServer().getAllWorldProperties()) {
+			if(!world.getWorldName().equalsIgnoreCase(newWorldName)) {
 				continue;
 			}
 			
@@ -60,7 +57,7 @@ public class CMDCopy implements CommandExecutor {
 			return CommandResult.empty();
 		}
 		
-		if(!Main.getGame().getServer().getWorld(oldWorldName).isPresent()){
+		if(!Main.getGame().getServer().getWorld(oldWorldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", oldWorldName, " does not exists"));
 			return CommandResult.empty();
 		}
@@ -72,7 +69,7 @@ public class CMDCopy implements CommandExecutor {
 			e.printStackTrace();
 		}
 		
-		if(!copy.isPresent()){
+		if(!copy.isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not copy ", oldWorldName));
 			return CommandResult.empty();
 		}
@@ -82,7 +79,7 @@ public class CMDCopy implements CommandExecutor {
 		return CommandResult.success();
 	}
 	
-	private Text invalidArg(){
+	private Text invalidArg() {
 		Text t1 = Text.of(TextColors.YELLOW, "/world copy ");
 		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter source world"))).append(Text.of("<world> ")).build();
 		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter new world name"))).append(Text.of("<world>")).build();

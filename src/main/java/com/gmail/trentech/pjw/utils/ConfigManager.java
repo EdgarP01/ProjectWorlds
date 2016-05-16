@@ -47,7 +47,7 @@ public class ConfigManager {
 		return config;
 	}
 
-	public void save(){
+	public void save() {
 		try {
 			loader.save(config);
 		} catch (IOException e) {
@@ -57,7 +57,7 @@ public class ConfigManager {
 	}
 	
 	private void init() {
-		if(file.getName().equalsIgnoreCase("config.conf")){
+		if(file.getName().equalsIgnoreCase("config.conf")) {
 			if(config.getNode("options", "first_join", "world").isVirtual()) {
 				config.getNode("options", "first_join", "world").setValue("world").setComment("World player spawns to when joining for the first time");
 			}
@@ -67,20 +67,15 @@ public class ConfigManager {
 			if(config.getNode("options", "first_join", "sub_title").isVirtual()) {
 				config.getNode("options", "first_join", "sub_title").setValue("&eThe best minecraft server ever").setComment("First join subtitle");
 			}
-			if(config.getNode("settings", "commands").isVirtual()) {
-				config.getNode("settings", "commands").setComment("Allow to set custom command aliases");
-			}
-			if(config.getNode("settings", "commands", "world").isVirtual()) {
-				config.getNode("settings", "commands", "world").setValue("w");
-			}
-			if(config.getNode("settings", "commands", "gamerule").isVirtual()) {
-				config.getNode("settings", "commands", "gamerule").setValue("gr");
+			//UPDATE CONFIG
+			if(!config.getNode("settings", "commands").isVirtual()) {
+				config.getNode("settings").removeChild("commands");
 			}
 		}
 		save();
 	}
 
-	private void create(){
+	private void create() {
 		if(!file.exists()) {
 			try {
 				Main.getLog().info("Creating new " + file.getName() + " file...");
@@ -92,7 +87,7 @@ public class ConfigManager {
 		}
 	}
 	
-	private void load(){
+	private void load() {
 		loader = HoconConfigurationLoader.builder().setFile(file).build();
 		try {
 			config = loader.load();

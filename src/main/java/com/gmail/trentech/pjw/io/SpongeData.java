@@ -20,23 +20,23 @@ public class SpongeData {
 	private CompoundTag compoundTag;
 	private boolean exists = false;
 	
-	public SpongeData(String worldName){
+	public SpongeData(String worldName) {
 		this.worldName = worldName;
 
 		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
 		
 		dataFile = new File(defaultWorld + File.separator + worldName, "level_sponge.dat");
-		if(defaultWorld.equalsIgnoreCase(worldName)){
+		if(defaultWorld.equalsIgnoreCase(worldName)) {
 			dataFile = new File(defaultWorld, "level_sponge.dat");
 		}
 
-		if(dataFile.exists()){
+		if(dataFile.exists()) {
 			exists = true;
 			init();
 		}
 	}
 	
-	public boolean exists(){
+	public boolean exists() {
 		return exists;
 	}
 	
@@ -45,8 +45,8 @@ public class SpongeData {
 			for (NBTTag root : XNBT.loadTags(dataFile)) {
 				CompoundTag compoundRoot = (CompoundTag) root;
 				
-				for(Entry<String, NBTTag> rootItem :compoundRoot.entrySet()){
-					if(rootItem.getKey().equalsIgnoreCase("SpongeData")){
+				for(Entry<String, NBTTag> rootItem :compoundRoot.entrySet()) {
+					if(rootItem.getKey().equalsIgnoreCase("SpongeData")) {
 						compoundTag = (CompoundTag) rootItem.getValue();
 					}
 				}
@@ -56,24 +56,24 @@ public class SpongeData {
 		}
 	}
 
-	public boolean isFreeDimId(){
+	public boolean isFreeDimId() {
 		int dimId = 0;
-		for(Entry<String, NBTTag> entry : compoundTag.entrySet()){
-			if(entry.getKey().equalsIgnoreCase("dimensionId")){
+		for(Entry<String, NBTTag> entry : compoundTag.entrySet()) {
+			if(entry.getKey().equalsIgnoreCase("dimensionId")) {
 				dimId = (Integer) entry.getValue().getPayload();
 				break;
 			}
 		}
 
-		for(World world : Main.getGame().getServer().getWorlds()){
-			if(world.getName().equalsIgnoreCase(worldName)){
+		for(World world : Main.getGame().getServer().getWorlds()) {
+			if(world.getName().equalsIgnoreCase(worldName)) {
 				continue;
 			}
 
 			String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
 			
 			File dataFile = new File(defaultWorld + File.separator + world.getName(), "level_sponge.dat");
-			if(defaultWorld.equalsIgnoreCase(world.getName())){
+			if(defaultWorld.equalsIgnoreCase(world.getName())) {
 				dataFile = new File(defaultWorld, "level_sponge.dat");
 			}
 			
@@ -81,21 +81,21 @@ public class SpongeData {
 				for (NBTTag root : XNBT.loadTags(dataFile)) {
 					CompoundTag compoundRoot = (CompoundTag) root;
 					
-					for(Entry<String, NBTTag> rootItem : compoundRoot.entrySet()){
-						if(!rootItem.getKey().equalsIgnoreCase("SpongeData")){
+					for(Entry<String, NBTTag> rootItem : compoundRoot.entrySet()) {
+						if(!rootItem.getKey().equalsIgnoreCase("SpongeData")) {
 							continue;
 						}
 						
 						CompoundTag compoundSpongeData = (CompoundTag) rootItem.getValue();
 						
-						for(Entry<String, NBTTag> tag :compoundSpongeData.entrySet()){
-							if(!tag.getKey().equalsIgnoreCase("dimensionId")){
+						for(Entry<String, NBTTag> tag :compoundSpongeData.entrySet()) {
+							if(!tag.getKey().equalsIgnoreCase("dimensionId")) {
 								continue;
 							}
 							
 							int id = (Integer) tag.getValue().getPayload();
 							
-							if(id == dimId){
+							if(id == dimId) {
 								return false;
 							}
 						}

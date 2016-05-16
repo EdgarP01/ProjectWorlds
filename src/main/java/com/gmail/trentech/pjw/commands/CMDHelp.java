@@ -19,8 +19,6 @@ import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDHelp implements CommandExecutor {
 
-	private static List<Help> list = new ArrayList<>();
-	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("command")) {
@@ -31,8 +29,8 @@ public class CMDHelp implements CommandExecutor {
 		}
 		String command = args.<String>getOne("command").get();
 
-		for(Help help : list){
-			if(help.getCommand().equalsIgnoreCase(command)){
+		for(Help help : Help.getAll()) {
+			if(help.getCommand().equalsIgnoreCase(command)) {
 				Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, command.toLowerCase())).build());
 				
@@ -41,11 +39,11 @@ public class CMDHelp implements CommandExecutor {
 				list.add(Text.of(TextColors.GREEN, "Description:"));
 				list.add(Text.of(TextColors.WHITE, help.getDescription()));
 				
-				if(help.getSyntax().isPresent()){
+				if(help.getSyntax().isPresent()) {
 					list.add(Text.of(TextColors.GREEN, "Syntax:"));
 					list.add(Text.of(TextColors.WHITE, help.getSyntax().get()));
 				}
-				if(help.getExample().isPresent()){
+				if(help.getExample().isPresent()) {
 					list.add(Text.of(TextColors.GREEN, "Example:"));
 					list.add(Text.of(TextColors.WHITE,  help.getExample().get(), TextColors.DARK_GREEN));
 				}
@@ -60,9 +58,5 @@ public class CMDHelp implements CommandExecutor {
 		
 		src.sendMessage(Text.of(TextColors.DARK_RED, command, " is not a valid command"));
 		return CommandResult.empty();
-	}
-	
-	public static List<Help> getList() {
-		return list;
 	}
 }

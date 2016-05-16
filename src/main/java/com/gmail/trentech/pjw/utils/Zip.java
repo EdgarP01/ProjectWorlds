@@ -15,7 +15,7 @@ public class Zip {
 	File backupDir;
 	File worldDir;
 	
-	public Zip(String worldName){
+	public Zip(String worldName) {
 		this.worldName = worldName;
 		this.backupDir = new File("backups");
 		
@@ -27,14 +27,14 @@ public class Zip {
 
 		String defaultWorld = Main.getGame().getServer().getDefaultWorldName();
 		
-		if(worldName.equalsIgnoreCase(defaultWorld)){
+		if(worldName.equalsIgnoreCase(defaultWorld)) {
 			worldDir = new File(savesDir, worldName);
 		}else{
 			worldDir = new File(savesDir, defaultWorld + File.separator + worldName);
 		}
 	}
 	
-	public void save(){
+	public void save() {
 		Main.getLog().info("Backing up " + worldName);
 
 		String zipFile = this.backupDir.getAbsolutePath() + File.separator + this.worldName + ".zip";
@@ -56,7 +56,7 @@ public class Zip {
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isDirectory()) {
 				String name = files[i].getName();
-				if(!Main.getGame().getServer().getWorldProperties(name).isPresent()){
+				if(!Main.getGame().getServer().getWorldProperties(name).isPresent()) {
 					addDir(files[i], zipOutputStream);
 				}
 				continue;

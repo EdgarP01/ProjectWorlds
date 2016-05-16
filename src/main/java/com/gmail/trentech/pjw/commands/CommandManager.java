@@ -9,11 +9,11 @@ public class CommandManager {
 	public CommandSpec cmdCreate = CommandSpec.builder()
 		    .description(Text.of(" Allows you to create new worlds with any combination of optional arguments D: for dimension type, G: for generator type, S: for seed and M: for generator modifiers."))
 		    .permission("pjw.cmd.world.create")	    
-		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name")))
-		    		,GenericArguments.optional(GenericArguments.string(Text.of("arg0")))
-		    		,GenericArguments.optional(GenericArguments.string(Text.of("arg1")))
-		    		,GenericArguments.optional(GenericArguments.string(Text.of("arg2")))
-		    		,GenericArguments.optional(GenericArguments.string(Text.of("arg3"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name"))), GenericArguments.flags()
+    				.valueFlag(GenericArguments.string(Text.of("type")), "d")
+    				.valueFlag(GenericArguments.string(Text.of("generator")), "g")
+    				.valueFlag(GenericArguments.string(Text.of("modifer")), "m")
+    				.valueFlag(GenericArguments.string(Text.of("seed")), "s").buildWith(GenericArguments.none()))
 		    .executor(new CMDCreate())
 		    .build();
 

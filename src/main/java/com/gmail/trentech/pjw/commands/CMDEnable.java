@@ -17,18 +17,15 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDEnable implements CommandExecutor {
 
-	public CMDEnable(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
-		
-		Help help = new Help("enable", " Enable and disable worlds from loading");
-		help.setSyntax(" /world enable <world> <value>\n /" + alias + " e <world> <value>");
+	public CMDEnable() {
+		Help help = new Help("enable", "enable", " Enable and disable worlds from loading");
+		help.setSyntax(" /world enable <world> <value>\n /w e <world> <value>");
 		help.setExample(" /world enable MyWorld true\n /world enable MyWorld false");
-		CMDHelp.getList().add(help);
+		help.save();
 	}
 	
 	@Override
@@ -39,18 +36,18 @@ public class CMDEnable implements CommandExecutor {
 		}
 		String worldName = args.<String>getOne("name").get();
 		
-		if(worldName.equalsIgnoreCase("@w")){
-			if(src instanceof Player){
+		if(worldName.equalsIgnoreCase("@w")) {
+			if(src instanceof Player) {
 				worldName = ((Player) src).getWorld().getName();
 			}
 		}
 		
-		if(Main.getGame().getServer().getDefaultWorld().get().getWorldName().equalsIgnoreCase(worldName)){
+		if(Main.getGame().getServer().getDefaultWorld().get().getWorldName().equalsIgnoreCase(worldName)) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Default world cannot be unloaded"));
 			return CommandResult.empty();
 		}
 		
-		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
+		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
@@ -73,7 +70,7 @@ public class CMDEnable implements CommandExecutor {
 		}
 		String value = args.<String>getOne("value").get();
 		
-		if((!value.equalsIgnoreCase("true")) && (!value.equalsIgnoreCase("false"))){
+		if((!value.equalsIgnoreCase("true")) && (!value.equalsIgnoreCase("false"))) {
 			src.sendMessage(invalidArg());
 			return CommandResult.empty();	
 		}
@@ -85,7 +82,7 @@ public class CMDEnable implements CommandExecutor {
 		return CommandResult.success();
 	}
 	
-	private Text invalidArg(){
+	private Text invalidArg() {
 		Text t1 = Text.of(TextColors.YELLOW, "/world enable ");
 		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world or @w for current world"))).append(Text.of("<world> ")).build();
 		Text t3 = Text.of(TextColors.YELLOW, "[true/false]");

@@ -20,19 +20,16 @@ import org.spongepowered.api.world.WorldCreationSettings.Builder;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Utils;
 
 public class CMDRegen implements CommandExecutor {
 	
-	public CMDRegen(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
-		
-		Help help = new Help("regen", " Regenerates a world. You can preserve the seed or generate new random");
-		help.setSyntax(" /world regen <world> [true/false]\n /" + alias + " r <world>  [true/false]");
+	public CMDRegen() {
+		Help help = new Help("regen", "regen", " Regenerates a world. You can preserve the seed or generate new random");
+		help.setSyntax(" /world regen <world> [true/false]\n /w r <world>  [true/false]");
 		help.setExample(" /world regen MyWorld\n /world regen MyWorld true");
-		CMDHelp.getList().add(help);
+		help.save();
 	}
 	
 	@Override
@@ -44,8 +41,8 @@ public class CMDRegen implements CommandExecutor {
 
 		String worldName = args.<String>getOne("name").get();
 		
-		if(worldName.equalsIgnoreCase("@w")){
-			if(src instanceof Player){
+		if(worldName.equalsIgnoreCase("@w")) {
+			if(src instanceof Player) {
 				worldName = ((Player) src).getWorld().getName();
 			}
 		}
@@ -55,12 +52,12 @@ public class CMDRegen implements CommandExecutor {
 			preserve = Boolean.parseBoolean(args.<String>getOne("value").get());
 		}
 		
-		if(Main.getGame().getServer().getWorld(worldName).isPresent()){
+		if(Main.getGame().getServer().getWorld(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " must be unloaded before you can rename"));
 			return CommandResult.empty();
 		}
 
-		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
+		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
@@ -68,14 +65,14 @@ public class CMDRegen implements CommandExecutor {
 
 		Builder builder = WorldCreationSettings.builder().name(properties.getWorldName()).dimension(properties.getDimensionType()).generatorSettings(properties.getGeneratorSettings());
 		
-		if(preserve){
+		if(preserve) {
 			builder.seed(properties.getSeed());
 		}
 
 		try {
 			CompletableFuture<Boolean> delete = Main.getGame().getServer().deleteWorld(properties);
-			while(!delete.isDone()){}
-			if(!delete.get()){
+			while(!delete.isDone()) {}
+			if(!delete.get()) {
 				src.sendMessage(Text.of(TextColors.DARK_RED, "Could not delete ", worldName));
 				return CommandResult.empty();
 			}
@@ -95,7 +92,7 @@ public class CMDRegen implements CommandExecutor {
 
 		Optional<World> load = Main.getGame().getServer().loadWorld(optProperties.get());
 
-		if(!load.isPresent()){
+		if(!load.isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not load ", worldName));
 			return CommandResult.empty();
 		}
@@ -107,7 +104,7 @@ public class CMDRegen implements CommandExecutor {
 		return CommandResult.success();
 	}
 	
-	private Text invalidArg(){
+	private Text invalidArg() {
 		Text t1 = Text.of(TextColors.YELLOW, "/world regen ");
 		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world name"))).append(Text.of("<world> ")).build();
 		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Preserve seed? true/false"))).append(Text.of("[value]")).build();

@@ -20,19 +20,16 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Gamemode;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDGamemode implements CommandExecutor {
 
-	public CMDGamemode(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
-		
-		Help help = new Help("gamemode", " Change gamemode of the specified world");
-		help.setSyntax(" /world gamemode <world> <gamemode>\n /" + alias + " g <world> <gamemode>");
+	public CMDGamemode() {
+		Help help = new Help("gamemode", "gamemode", " Change gamemode of the specified world");
+		help.setSyntax(" /world gamemode <world> <gamemode>\n /w g <world> <gamemode>");
 		help.setExample(" /world gamemode\n /world gamemode MyWorld SURVIVAL\n /world gamemode @w 1\n /world gamemode @a 2");
-		CMDHelp.getList().add(help);
+		help.save();
 	}
 	
 	@Override
@@ -43,18 +40,18 @@ public class CMDGamemode implements CommandExecutor {
 		}
 		String worldName = args.<String>getOne("name").get();
 		
-		if(worldName.equalsIgnoreCase("@w")){
-			if(src instanceof Player){
+		if(worldName.equalsIgnoreCase("@w")) {
+			if(src instanceof Player) {
 				worldName = ((Player) src).getWorld().getName();
 			}
 		}
 		
 		Collection<WorldProperties> worlds = new ArrayList<>();
 		
-		if(worldName.equalsIgnoreCase("@a")){
+		if(worldName.equalsIgnoreCase("@a")) {
 			worlds = Main.getGame().getServer().getAllWorldProperties();
 		}else{
-			if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
+			if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
 				src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 				return CommandResult.empty();
 			}
@@ -66,7 +63,7 @@ public class CMDGamemode implements CommandExecutor {
 
 		List<Text> list = new ArrayList<>();
 		
-		for(WorldProperties properties : worlds){
+		for(WorldProperties properties : worlds) {
 			if(!args.hasAny("value")) {
 				list.add(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.WHITE, properties.getGameMode().getName().toUpperCase()));
 				continue;
@@ -77,11 +74,11 @@ public class CMDGamemode implements CommandExecutor {
 			try{
 				int index = Integer.parseInt(value);
 				optionalGamemode = Gamemode.get(index);
-			}catch(Exception e){
+			}catch(Exception e) {
 				optionalGamemode = Gamemode.get(value);
 			}
 
-			if(!optionalGamemode.isPresent()){
+			if(!optionalGamemode.isPresent()) {
 				src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid gamemode Type"));
 				return CommandResult.empty();
 			}
@@ -92,7 +89,7 @@ public class CMDGamemode implements CommandExecutor {
 			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set gamemode of ", worldName, " to ", TextColors.YELLOW, gamemode.getName().toUpperCase()));
 		}
 		
-		if(!list.isEmpty()){
+		if(!list.isEmpty()) {
 			pages.contents(list);
 			pages.sendTo(src);
 		}
@@ -100,7 +97,7 @@ public class CMDGamemode implements CommandExecutor {
 		return CommandResult.success();
 	}
 
-	private Text invalidArg(){
+	private Text invalidArg() {
 		Text t1 = Text.of(TextColors.YELLOW, "/world gamemode ");
 		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world or @w for current world"))).append(Text.of("<world> ")).build();
 		
@@ -108,8 +105,8 @@ public class CMDGamemode implements CommandExecutor {
 		
     	Gamemode[] gamemodes = Gamemode.values();
     	
-        for (Gamemode gamemode : gamemodes){
-			if(builder == null){
+        for (Gamemode gamemode : gamemodes) {
+			if(builder == null) {
 				builder = Text.builder().append(Text.of(gamemode.getIndex(), ": ", gamemode.getGameMode().getName()));
 			}else{
 				builder.append(Text.of("\n", gamemode.getIndex(), ": ", gamemode.getGameMode().getName()));

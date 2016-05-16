@@ -17,18 +17,15 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDProperties implements CommandExecutor {
 
-	public CMDProperties(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
-		
-		Help help = new Help("properties", " View all properties associated with a world");
-		help.setSyntax(" /world properties <world>\n /" + alias + " p <world>");
+	public CMDProperties() {
+		Help help = new Help("properties", "properties", " View all properties associated with a world");
+		help.setSyntax(" /world properties <world>\n /w p <world>");
 		help.setExample(" /world properties\n /world properties MyWorld");
-		CMDHelp.getList().add(help);
+		help.save();
 	}
 	
 	@Override
@@ -37,7 +34,7 @@ public class CMDProperties implements CommandExecutor {
 		if(args.hasAny("name")) {
 			worldName = args.<String>getOne("name").get();
 		}else{
-			if(!(src instanceof Player)){
+			if(!(src instanceof Player)) {
 				Text t1 = Text.of(TextColors.YELLOW, "/world properties ");
 				Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world or @w for current world"))).append(Text.of("[world] ")).build();
 				src.sendMessage(Text.of(t1,t2));
@@ -47,7 +44,7 @@ public class CMDProperties implements CommandExecutor {
 			worldName = player.getWorld().getName();
 		}
 
-		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
+		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}

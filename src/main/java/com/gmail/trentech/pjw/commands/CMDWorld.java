@@ -15,6 +15,7 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDWorld implements CommandExecutor {
 
@@ -28,7 +29,7 @@ public class CMDWorld implements CommandExecutor {
 		
 		if(src.hasPermission("pjw.cmd.world.create")) {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
-					.onClick(TextActions.runCommand("/pjw:world help create")).append(Text.of(" /world create")).build());
+					.onClick(TextActions.executeCallback(Help.getHelp("create"))).append(Text.of(" /world create")).build());
 		}
 		if(src.hasPermission("pjw.cmd.world.delete")) {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))

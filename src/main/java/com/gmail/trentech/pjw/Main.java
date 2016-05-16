@@ -20,13 +20,11 @@ import org.spongepowered.api.world.storage.WorldProperties;
 import com.gmail.trentech.pjw.commands.CommandManager;
 import com.gmail.trentech.pjw.extra.VoidWorldGeneratorModifier;
 import com.gmail.trentech.pjw.listeners.EventManager;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Resource;
 import com.google.inject.Inject;
 
 import me.flibio.updatifier.Updatifier;
 import net.minecrell.mcstats.SpongeStatsLite;
-import ninja.leaping.configurate.ConfigurationNode;
 
 @Updatifier(repoName = "ProjectWorlds", repoOwner = "TrenTech", version = Resource.VERSION)
 @Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION, authors = Resource.AUTHOR, url = Resource.URL, description = Resource.DESCRIPTION, dependencies = {@Dependency(id = "Updatifier", optional = true)})
@@ -49,7 +47,7 @@ public class Main {
 		plugin = getGame().getPluginManager().getPlugin(Resource.ID).get();
 		log = getPlugin().getLogger();
 		
-		if(this.stats.start()){
+		if(this.stats.start()) {
 			getLog().info("MCStats started.");
 		}else{
 			getLog().warn("Could not start MCStats. This could be due to server opt-out, or error.");
@@ -62,14 +60,12 @@ public class Main {
 
     	getGame().getRegistry().register(WorldGeneratorModifier.class, new VoidWorldGeneratorModifier());
     	
-    	for(WorldGeneratorModifier modifier : getGame().getRegistry().getAllOf(WorldGeneratorModifier.class)){
+    	for(WorldGeneratorModifier modifier : getGame().getRegistry().getAllOf(WorldGeneratorModifier.class)) {
     		getModifiers().put(modifier.getId(), modifier);
     	}
-    	
-    	ConfigurationNode config = new ConfigManager().getConfig();
-    	
-    	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", config.getNode("settings", "commands", "world").getString());
-    	getGame().getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", config.getNode("settings", "commands", "gamerule").getString());
+
+    	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
+    	getGame().getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", "gr");
     }
 
     @Listener
@@ -93,13 +89,13 @@ public class Main {
 		return modifiers;
 	}
 
-	private void loadWorlds(){
-		for(WorldProperties world : getGame().getServer().getUnloadedWorlds()){
+	private void loadWorlds() {
+		for(WorldProperties world : getGame().getServer().getUnloadedWorlds()) {
 			// Temporarily disable enable check until issue is resolved
-			//if(world.isEnabled()){
+			//if(world.isEnabled()) {
 				getLog().info("Loading " + world.getWorldName());
 				Optional<World> load = getGame().getServer().loadWorld(world);
-				if(load.isPresent()){
+				if(load.isPresent()) {
 					getLog().info("Loaded " + world.getWorldName());
 				}else{
 					getLog().warn("Failed to load " + world.getWorldName());

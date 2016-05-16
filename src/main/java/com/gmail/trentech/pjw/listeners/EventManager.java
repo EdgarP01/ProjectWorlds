@@ -41,13 +41,13 @@ import ninja.leaping.configurate.ConfigurationNode;
 public class EventManager {
 
 	@Listener
-	public void onTeleportEvent(TeleportEvent event){
+	public void onTeleportEvent(TeleportEvent event) {
 		Player player = event.getTarget();
 
 		Location<World> src = event.getSource();
 		Location<World> dest = event.getDestination();
 
-		if(!player.hasPermission("pjw.worlds." + dest.getExtent().getName())){
+		if(!player.hasPermission("pjw.worlds." + dest.getExtent().getName())) {
 			player.sendMessage(Text.of(TextColors.DARK_RED, "You do not have permission to travel to ", dest.getExtent().getName()));
 			event.setCancelled(true);
 			return;
@@ -57,7 +57,7 @@ public class EventManager {
 		
 		Optional<Location<World>> optionalLocation = teleportHelper.getSafeLocation(dest);
 
-		if(!optionalLocation.isPresent()){
+		if(!optionalLocation.isPresent()) {
 			CMDTeleport.players.put(player, dest);
 			player.sendMessage(Text.builder().color(TextColors.DARK_RED).append(Text.of("Unsafe spawn point detected. Teleport anyway? "))
 					.onClick(TextActions.runCommand("/pjw:world teleport confirm")).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
@@ -75,13 +75,13 @@ public class EventManager {
 	public void onPlayerJoin(ClientConnectionEvent.Join event) {
 	    Player player = event.getTargetEntity();
 
-		if(player.hasPermission("pjw.options.motd")){
+		if(player.hasPermission("pjw.options.motd")) {
 			player.sendMessage(Main.getGame().getServer().getMotd());
 		}
 
 		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
 		
-		if(new File(defaultWorld + File.separator + "playerdata", player.getUniqueId().toString() + ".dat").exists()){
+		if(new File(defaultWorld + File.separator + "playerdata", player.getUniqueId().toString() + ".dat").exists()) {
 			return;
 		}
 
@@ -89,7 +89,7 @@ public class EventManager {
 		
 		String worldName = node.getNode("world").getString();
 		
-		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
+		if(!Main.getGame().getServer().getWorld(worldName).isPresent()) {
 			return;
 		}
 		World world = Main.getGame().getServer().getWorld(worldName).get();
@@ -103,16 +103,16 @@ public class EventManager {
 	}
 	
 	@Listener
-	public void onLoadWorldEvent(LoadWorldEvent event){
+	public void onLoadWorldEvent(LoadWorldEvent event) {
 		World world = event.getTargetWorld();
 		
 		WorldProperties properties = world.getProperties();
 
-		if(!properties.getGameRule("respawnWorld").isPresent()){
+		if(!properties.getGameRule("respawnWorld").isPresent()) {
 			properties.setGameRule("respawnWorld", Main.getGame().getServer().getDefaultWorld().get().getWorldName());
 		}
 
-		if(!properties.getGameRule("doWeatherCycle").isPresent()){
+		if(!properties.getGameRule("doWeatherCycle").isPresent()) {
 			properties.setGameRule("doWeatherCycle", "true");
 		}
 	}
@@ -126,7 +126,7 @@ public class EventManager {
 	public void onDisplaceEntityEvent(DisplaceEntityEvent.TargetPlayer event) {
 		Player player = event.getTargetEntity();
 
-		if(!player.hasPermission("pjw.options.gamemode")){
+		if(!player.hasPermission("pjw.options.gamemode")) {
 			return;
 		}
 		
@@ -135,8 +135,8 @@ public class EventManager {
 
 		WorldProperties properties = worldDest.getProperties();
 		
-		if(!worldSrc.equals(worldDest)){
-			if(!properties.getGameMode().equals(player.gameMode().get())){
+		if(!worldSrc.equals(worldDest)) {
+			if(!properties.getGameMode().equals(player.gameMode().get())) {
 				player.offer(Keys.GAME_MODE, properties.getGameMode());
 			}			
 		}
@@ -157,7 +157,7 @@ public class EventManager {
         World world = victim.getWorld();
 		WorldProperties properties = world.getProperties();
 
-		if(!properties.isPVPEnabled() && !victim.hasPermission("pjw.options.pvp")){
+		if(!properties.isPVPEnabled() && !victim.hasPermission("pjw.options.pvp")) {
 			event.setCancelled(true);
 		}
     }
@@ -167,14 +167,14 @@ public class EventManager {
 		World world = event.getTargetWorld();
 		WorldProperties properties = world.getProperties();
 
-		if(properties.getGameRule("doWeatherCycle").get().equalsIgnoreCase("false")){
+		if(properties.getGameRule("doWeatherCycle").get().equalsIgnoreCase("false")) {
 			event.setCancelled(true);
 		}
 	}
 	
 	@Listener
 	public void onRespawnPlayerEvent(RespawnPlayerEvent event) {
-		if(!(event.getTargetEntity() instanceof Player)){
+		if(!(event.getTargetEntity() instanceof Player)) {
 			return;
 		}
 		
@@ -183,7 +183,7 @@ public class EventManager {
 		
 		String respawnWorldName = properties.getGameRule("respawnWorld").get();
 		
-		if(Main.getGame().getServer().getWorld(respawnWorldName).isPresent()){
+		if(Main.getGame().getServer().getWorld(respawnWorldName).isPresent()) {
 			World respawnWorld = Main.getGame().getServer().getWorld(respawnWorldName).get();
 			
 			Transform<World> transform = event.getToTransform().setLocation(respawnWorld.getSpawnLocation());

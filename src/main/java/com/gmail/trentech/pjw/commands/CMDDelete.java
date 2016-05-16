@@ -12,19 +12,16 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Zip;
 
 public class CMDDelete implements CommandExecutor {
 
-	public CMDDelete(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
-		
-		Help help = new Help("delete", " Delete worlds you no longer need. Worlds must be unloaded before you can delete them");
-		help.setSyntax(" /world delete <world>\n /" + alias + " dl <world>");
+	public CMDDelete() {
+		Help help = new Help("delete", "delete", " Delete worlds you no longer need. Worlds must be unloaded before you can delete them");
+		help.setSyntax(" /world delete <world>\n /w dl <world>");
 		help.setExample(" /world delete OldWorld");
-		CMDHelp.getList().add(help);
+		help.save();
 	}
 	
 	@Override
@@ -35,12 +32,12 @@ public class CMDDelete implements CommandExecutor {
 		}
 		String worldName = args.<String>getOne("name").get();
 
-		if(Main.getGame().getServer().getWorld(worldName).isPresent()){
+		if(Main.getGame().getServer().getWorld(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " must be unloaded before you can delete"));
 			return CommandResult.empty();
 		}
 		
-		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
+		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}		
@@ -50,7 +47,7 @@ public class CMDDelete implements CommandExecutor {
 		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
 		
 		try {
-			if(Main.getGame().getServer().deleteWorld(properties).get()){
+			if(Main.getGame().getServer().deleteWorld(properties).get()) {
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " deleted successfully"));
 				return CommandResult.success();
 			}

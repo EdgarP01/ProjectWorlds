@@ -13,18 +13,15 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDUnload implements CommandExecutor {
 
-	public CMDUnload(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
-		
-		Help help = new Help("unload", " Unloads specified world. If players are in world, they will be teleported to default spawn");
-		help.setSyntax(" /world unload <world>\n /" + alias + " u <world>");
+	public CMDUnload() {
+		Help help = new Help("unload", "unload", " Unloads specified world. If players are in world, they will be teleported to default spawn");
+		help.setSyntax(" /world unload <world>\n /w u <world>");
 		help.setExample(" /world unload MyWorld");
-		CMDHelp.getList().add(help);
+		help.save();
 	}
 	
 	@Override
@@ -35,25 +32,25 @@ public class CMDUnload implements CommandExecutor {
 		}
 		String worldName = args.<String>getOne("name").get();
 		
-		if(worldName.equalsIgnoreCase("@w")){
-			if(src instanceof Player){
+		if(worldName.equalsIgnoreCase("@w")) {
+			if(src instanceof Player) {
 				worldName = ((Player) src).getWorld().getName();
 			}
 		}
 		
-		if(Main.getGame().getServer().getDefaultWorld().get().getWorldName().equalsIgnoreCase(worldName)){
+		if(Main.getGame().getServer().getDefaultWorld().get().getWorldName().equalsIgnoreCase(worldName)) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Default world cannot be unloaded"));
 			return CommandResult.empty();
 		}
 		
-		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
+		if(!Main.getGame().getServer().getWorld(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
 		World world = Main.getGame().getServer().getWorld(worldName).get();
 		
-		for(Entity entity : world.getEntities()){
-			if(entity instanceof Player){
+		for(Entity entity : world.getEntities()) {
+			if(entity instanceof Player) {
 				Player player = (Player) entity;
 				WorldProperties properties = Main.getGame().getServer().getDefaultWorld().get();
 				player.setLocationSafely(Main.getGame().getServer().getWorld(properties.getWorldName()).get().getSpawnLocation());
@@ -61,7 +58,7 @@ public class CMDUnload implements CommandExecutor {
 			}
 		}
 		
-		if(!Main.getGame().getServer().unloadWorld(world)){
+		if(!Main.getGame().getServer().unloadWorld(world)) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not unload ", worldName));
 			return CommandResult.empty();
 		}

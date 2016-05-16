@@ -21,20 +21,17 @@ import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.events.TeleportEvent;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDTeleport implements CommandExecutor {
 
 	public static HashMap<Player, Location<World>> players = new HashMap<>();
 
-	public CMDTeleport(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
-		
-		Help help = new Help("teleport", " Teleport self or others to specified world and location");
-		help.setSyntax(" /world teleport <world> <world:[x,y,z]>\n /" + alias + " tp <world> <world:[x,y,z]>");
+	public CMDTeleport() {
+		Help help = new Help("teleport", "teleport", " Teleport self or others to specified world and location");
+		help.setSyntax(" /world teleport <world> <world:[x,y,z]>\n /w tp <world> <world:[x,y,z]>");
 		help.setExample(" /world teleport MyWorld\n /world teleport MyWorld:-153,75,300\n /world teleport SomePlayer MyWorld\n /world teleport SomePlayer MyWorld:-153,75,300");
-		CMDHelp.getList().add(help);
+		help.save();
 	}
 	
 	@Override
@@ -50,13 +47,13 @@ public class CMDTeleport implements CommandExecutor {
 		}
 		String arg0 = args.<String>getOne("arg0").get();
 		
-		if(arg0.equalsIgnoreCase("confirm")){
-			if(!(src instanceof Player)){
+		if(arg0.equalsIgnoreCase("confirm")) {
+			if(!(src instanceof Player)) {
 				return CommandResult.success();
 			}
 			Player player = (Player) src;
 			
-			if(!players.containsKey(player)){
+			if(!players.containsKey(player)) {
 				return CommandResult.success();
 			}
 			Location<World> location = players.get(player);
@@ -75,7 +72,7 @@ public class CMDTeleport implements CommandExecutor {
 		String worldName = args.<String>getOne("arg0").get();
 		
 		if(!args.hasAny("arg1")) {
-			if(!(src instanceof Player)){
+			if(!(src instanceof Player)) {
 				src.sendMessage(Text.of(TextColors.DARK_RED, "Must be a player"));
 				return CommandResult.empty();
 			}
@@ -84,29 +81,29 @@ public class CMDTeleport implements CommandExecutor {
 			worldName = args.<String>getOne("arg1").get();
 		}
 		
-		if(src instanceof Player){
+		if(src instanceof Player) {
 			worldName = worldName.replace("@w", ((Player) src).getWorld().getName());
 		}
 		
-		if(!Main.getGame().getServer().getPlayer(arg0).isPresent()){
+		if(!Main.getGame().getServer().getPlayer(arg0).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Player ", arg0, " does not exist"));
 			return CommandResult.empty();
 		}
 		Player player = Main.getGame().getServer().getPlayer(arg0).get();
 		
-		if((src != player) && !src.hasPermission("pjw.cmd.world.teleport.others")){
+		if((src != player) && !src.hasPermission("pjw.cmd.world.teleport.others")) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "You do not have permission to teleport others"));
 			return CommandResult.empty();
 		}
 		
 		String coords = null;
-		if(worldName.contains(":")){
+		if(worldName.contains(":")) {
 			String[] work = worldName.split(":");
 			worldName = work[0];
 			coords = work[1];
 		}
 		
-		if(!Main.getGame().getServer().getWorld(worldName).isPresent()){
+		if(!Main.getGame().getServer().getWorld(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
@@ -114,20 +111,20 @@ public class CMDTeleport implements CommandExecutor {
 
 		Location<World> dest = world.getSpawnLocation();
 
-		if(isValidLocation(coords)){
+		if(isValidLocation(coords)) {
 			String[] location = coords.split(",");
 			dest = world.getLocation(Integer.parseInt(location[0]), Integer.parseInt(location[1]), Integer.parseInt(location[2]));
 		}
 		
 		TeleportEvent teleportEvent = new TeleportEvent(player, player.getLocation(), dest, Cause.of(NamedCause.source(src)));
 
-		if(!Main.getGame().getEventManager().post(teleportEvent)){
+		if(!Main.getGame().getEventManager().post(teleportEvent)) {
 			Location<World> currentLocation = player.getLocation();
 			dest = teleportEvent.getDestination();
 			
 			player.setLocation(dest);
 			
-			if(src instanceof Player && ((Player) src) != player){
+			if(src instanceof Player && ((Player) src) != player) {
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, "Teleported ", player.getName(), " to ", dest.getExtent(), ", x: ", dest.getBlockX(), ", y: ", dest.getBlockY(), ", z: ", dest.getBlockZ()));
 			}
 			
@@ -138,15 +135,15 @@ public class CMDTeleport implements CommandExecutor {
 		return CommandResult.success();
 	}
 	
-	private boolean isValidLocation(String coords){
-		if(coords == null){
+	private boolean isValidLocation(String coords) {
+		if(coords == null) {
 			return false;
 		}
 		
-		for(String coord : coords.split(",")){
+		for(String coord : coords.split(",")) {
 			try{
 				Integer.parseInt(coord);
-			}catch(Exception e){
+			}catch(Exception e) {
 				return false;
 			}
 		}

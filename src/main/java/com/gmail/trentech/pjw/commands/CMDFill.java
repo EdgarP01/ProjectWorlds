@@ -19,20 +19,17 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDFill implements CommandExecutor {
 	
 	public static HashMap<String, Task> list = new HashMap<>();
 	
-	public CMDFill(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
-		
-		Help help = new Help("fill", " Pre generate chunks in a world outwards from center spawn");
-		help.setSyntax(" /world fill <world> <diameter>\n /" + alias + " f <world> <diameter>");
+	public CMDFill() {
+		Help help = new Help("fill", "fill", " Pre generate chunks in a world outwards from center spawn");
+		help.setSyntax(" /world fill <world> <diameter>\n /w f <world> <diameter>");
 		help.setExample(" /world fill MyWorld 1000\n /world fill MyWorld stop");
-		CMDHelp.getList().add(help);
+		help.save();
 	}
 	
 	@Override
@@ -43,8 +40,8 @@ public class CMDFill implements CommandExecutor {
 		}
 		String worldName = args.<String>getOne("name").get();
 		
-		if(worldName.equalsIgnoreCase("@w")){
-			if(src instanceof Player){
+		if(worldName.equalsIgnoreCase("@w")) {
+			if(src instanceof Player) {
 				worldName = ((Player) src).getWorld().getName();
 			}
 		}
@@ -55,8 +52,8 @@ public class CMDFill implements CommandExecutor {
 		}
 		String value = args.<String>getOne("value").get();
 		
-		if(value.equalsIgnoreCase("stop")){
-			if(!list.containsKey(worldName)){
+		if(value.equalsIgnoreCase("stop")) {
+			if(!list.containsKey(worldName)) {
 				src.sendMessage(Text.of(TextColors.YELLOW, "Pre-Generator not running for this world"));
 				return CommandResult.empty();
 			}
@@ -69,12 +66,12 @@ public class CMDFill implements CommandExecutor {
 		double diameter;
 		try{
 			diameter = Double.parseDouble(value);
-		}catch(Exception e){
+		}catch(Exception e) {
 			src.sendMessage(invalidArg());
 			return CommandResult.empty();
 		}
 
-		if(list.containsKey(worldName)){
+		if(list.containsKey(worldName)) {
 			if (Main.getGame().getScheduler().getScheduledTasks(Main.getPlugin()).contains(list.get(worldName))) {
 				src.sendMessage(Text.of(TextColors.YELLOW, "Pre-Generator already running for this world"));
 				return CommandResult.empty();
@@ -82,13 +79,13 @@ public class CMDFill implements CommandExecutor {
 			list.remove(worldName);		
 		}
 		
-		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
+		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
 		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
 		
-		if(!Main.getGame().getServer().getWorld(properties.getUniqueId()).isPresent()){
+		if(!Main.getGame().getServer().getWorld(properties.getUniqueId()).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " must be loaded"));
 			return CommandResult.empty();
 		}
@@ -118,7 +115,7 @@ public class CMDFill implements CommandExecutor {
 		return CommandResult.success();
 	}
 	
-	private Text invalidArg(){
+	private Text invalidArg() {
 		Text t1 = Text.of(TextColors.YELLOW, "/world fill ");
 		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world name"))).append(Text.of("<world> ")).build();
 		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("enter diameter or \"stop\""))).append(Text.of("<diameter>")).build();

@@ -12,23 +12,20 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.flowpowered.math.vector.Vector3i;
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDSetSpawn implements CommandExecutor {
 
-	public CMDSetSpawn(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "world").getString();
-		
-		Help help = new Help("rename", " Sets the spawn point of specified world. If no arguments present sets spawn of current world to player location");
-		help.setSyntax(" /world setspawn <world> <x,y,z>\n /" + alias + " s <world> <x,y,z>");
+	public CMDSetSpawn() {
+		Help help = new Help("rename", "rename", " Sets the spawn point of specified world. If no arguments present sets spawn of current world to player location");
+		help.setSyntax(" /world setspawn <world> <x,y,z>\n /w s <world> <x,y,z>");
 		help.setExample(" /world setspawn\n /world setspawn MyWorld -153,75,300");
-		CMDHelp.getList().add(help);
+		help.save();
 	}
 	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if(!(src instanceof Player)){
+		if(!(src instanceof Player)) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Must be a player"));
 			return CommandResult.empty();
 		}
@@ -39,7 +36,7 @@ public class CMDSetSpawn implements CommandExecutor {
 			worldName = args.<String>getOne("name").get();
 		}
 		
-		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
+		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
@@ -53,7 +50,7 @@ public class CMDSetSpawn implements CommandExecutor {
 		
 		String[] coords = args.<String>getOne("value").get().split(",");
 
-		if(!isValidLocation(coords)){
+		if(!isValidLocation(coords)) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, coords, " is not valid"));
 			return CommandResult.empty();
 		}
@@ -65,15 +62,15 @@ public class CMDSetSpawn implements CommandExecutor {
 		return CommandResult.success();
 	}
 	
-	private boolean isValidLocation(String[] coords){
-		if(coords == null){
+	private boolean isValidLocation(String[] coords) {
+		if(coords == null) {
 			return false;
 		}
 		
-		for(String coord : coords){
+		for(String coord : coords) {
 			try{
 				Integer.parseInt(coord);
-			}catch(Exception e){
+			}catch(Exception e) {
 				return false;
 			}
 		}

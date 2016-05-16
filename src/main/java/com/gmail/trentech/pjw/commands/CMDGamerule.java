@@ -18,18 +18,15 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDGamerule implements CommandExecutor {
 
-	public CMDGamerule(){
-		String alias = new ConfigManager().getConfig().getNode("settings", "commands", "gamerule").getString();
-		
-		Help help = new Help("gamerule", " Configure varies world properties");
-		help.setSyntax(" /gamerule <world> [rule] [value]\n /" + alias + " <world> [rule] [value]");
+	public CMDGamerule() {
+		Help help = new Help("gamerule", "gamerule", " Configure varies world properties");
+		help.setSyntax(" /gamerule <world> [rule] [value]\n /gr <world> [rule] [value]");
 		help.setExample(" /gamerule MyWorld\n /gamerule MyWorld mobGriefing false\n /gamerule @w doDaylightCycle true");
-		CMDHelp.getList().add(help);
+		help.save();
 	}
 	
 	@Override
@@ -40,13 +37,13 @@ public class CMDGamerule implements CommandExecutor {
 		}
 		String worldName = args.<String>getOne("name").get();
 		
-		if(worldName.equalsIgnoreCase("@w")){
-			if(src instanceof Player){
+		if(worldName.equalsIgnoreCase("@w")) {
+			if(src instanceof Player) {
 				worldName = ((Player) src).getWorld().getName();
 			}
 		}
 		
-		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()){
+		if(!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
@@ -59,7 +56,7 @@ public class CMDGamerule implements CommandExecutor {
 			
 			List<Text> list = new ArrayList<>();
 			
-			for(Entry<String, String> gamerule : properties.getGameRules().entrySet()){
+			for(Entry<String, String> gamerule : properties.getGameRules().entrySet()) {
 				list.add(Text.of(TextColors.AQUA, gamerule.getKey(), ": ", TextColors.GREEN, gamerule.getValue()));
 			}
 
@@ -73,7 +70,7 @@ public class CMDGamerule implements CommandExecutor {
 		}
 		String rule = args.<String>getOne("rule").get();
 
-		if(!properties.getGameRule(rule).isPresent()){
+		if(!properties.getGameRule(rule).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Gamerule  ", rule, " does not exist"));
 			return CommandResult.empty();
 		}
@@ -95,7 +92,7 @@ public class CMDGamerule implements CommandExecutor {
 		}
 		String value = args.<String>getOne("value").get();
 		
-		if(!isValid(rule, value)){
+		if(!isValid(rule, value)) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, value, " is not a valid value for gamerule ", rule));
 			return CommandResult.empty();
 		}
@@ -107,7 +104,7 @@ public class CMDGamerule implements CommandExecutor {
 		return CommandResult.success();
 	}
 	
-	private Text invalidArg(){
+	private Text invalidArg() {
 		Text t1 = Text.of(TextColors.YELLOW, "/gamerule ");
 		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world or @w for current world"))).append(Text.of("<world> ")).build();
 		Text t3 = Text.of(TextColors.YELLOW, "<rule> ");
@@ -115,8 +112,8 @@ public class CMDGamerule implements CommandExecutor {
 		return Text.of(t1,t2,t3,t4);
 	}
 	
-	private boolean isValid(String rule, String value){
-		switch(rule){
+	private boolean isValid(String rule, String value) {
+		switch(rule) {
 		case "commandBlockOutput":
 			return validBool(value);
 		case "doWeatherCycle":
@@ -143,13 +140,13 @@ public class CMDGamerule implements CommandExecutor {
 			try{
 				Long.parseLong(value);
 				return true;
-			}catch(Exception e){
+			}catch(Exception e) {
 				return false;
 			}
 		case "reducedDebugInfo":
 			return validBool(value);
 		case "respawnWorld":
-			if(Main.getGame().getServer().getWorld(value).isPresent()){
+			if(Main.getGame().getServer().getWorld(value).isPresent()) {
 				return true;
 			}
 			return false;
@@ -161,8 +158,8 @@ public class CMDGamerule implements CommandExecutor {
 		}
 	}
 	
-	private boolean validBool(String value){
-		if(value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")){
+	private boolean validBool(String value) {
+		if(value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
 			return true;
 		}
 		return false;
