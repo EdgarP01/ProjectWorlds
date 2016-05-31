@@ -52,15 +52,18 @@ public class CMDLoad implements CommandExecutor {
 			return CommandResult.empty();
 		}
 		
-//		if(!spongeData.isFreeDimId()) {
-//			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " World contains dimension id conflict. Attempting to repair."));
-//			try {
-//				spongeData.setDimId();
-//			} catch (IOException e) {
-//				src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong"));
-//				e.printStackTrace();
-//			}
-//		}
+		boolean restart = false;
+		
+		if(!spongeData.isFreeDimId()) {
+			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " World contains dimension id conflict. Attempting to repair."));
+			try {
+				spongeData.setDimId();
+				restart = true;
+			} catch (IOException e) {
+				src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong"));
+				e.printStackTrace();
+			}
+		}
 
 		WorldData worldData = new WorldData(worldName);
 		
@@ -73,16 +76,24 @@ public class CMDLoad implements CommandExecutor {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Level name mismatch. Attempting to repair."));
 			try {
 				worldData.setLevelName();
+				restart = true;
 			} catch (IOException e) {
 				src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong"));
 				e.printStackTrace();
+				return CommandResult.empty();
 			}
+		}
+		
+		if(restart) {
+			src.sendMessage(Text.of(TextColors.YELLOW, "Server restart required"));
+			return CommandResult.success();
 		}
 		
 		Optional<WorldProperties> optionalProperties = Main.getGame().getServer().getWorldProperties(worldName);
 		
 		if(!optionalProperties.isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not find ", worldName));
+			return CommandResult.empty();
 		}
 		
 		WorldProperties properties = optionalProperties.get();

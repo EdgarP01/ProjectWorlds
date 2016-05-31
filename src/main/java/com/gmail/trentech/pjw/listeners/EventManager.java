@@ -34,6 +34,7 @@ import org.spongepowered.api.world.storage.WorldProperties;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.commands.CMDTeleport;
 import com.gmail.trentech.pjw.events.TeleportEvent;
+import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 
 import ninja.leaping.configurate.ConfigurationNode;
@@ -105,6 +106,10 @@ public class EventManager {
 	@Listener
 	public void onLoadWorldEvent(LoadWorldEvent event) {
 		World world = event.getTargetWorld();
+
+		if(Main.getGame().getServer().getWorld(world.getName()).isPresent()) {
+			System.out.println("World name conflict: " + world.getName());
+		}
 		
 		WorldProperties properties = world.getProperties();
 
@@ -115,13 +120,12 @@ public class EventManager {
 		if(!properties.getGameRule("doWeatherCycle").isPresent()) {
 			properties.setGameRule("doWeatherCycle", "true");
 		}
+		String worldName = world.getName();
+		
+		SpongeData spongeData = new SpongeData(worldName);
+		SpongeData.getIds().add(spongeData.getDimId());
 	}
 
-	@Listener
-	public void onDisplaceEntityEvent(DisplaceEntityEvent.Teleport.TargetPlayer event) {
-		System.out.println("DisplaceEntityEvent.Teleport.TargetPlayer");
-	}
-	
 	@Listener
 	public void onDisplaceEntityEvent(DisplaceEntityEvent.TargetPlayer event) {
 		Player player = event.getTargetEntity();

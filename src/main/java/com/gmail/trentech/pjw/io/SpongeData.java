@@ -3,6 +3,8 @@ package com.gmail.trentech.pjw.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.spongepowered.api.world.World;
@@ -11,6 +13,7 @@ import com.gmail.trentech.pjw.Main;
 
 import net.obnoxint.xnbt.XNBT;
 import net.obnoxint.xnbt.types.CompoundTag;
+import net.obnoxint.xnbt.types.IntegerTag;
 import net.obnoxint.xnbt.types.NBTTag;
 
 public class SpongeData {
@@ -19,6 +22,7 @@ public class SpongeData {
 	private File dataFile;
 	private CompoundTag compoundTag;
 	private boolean exists = false;
+	private static List<Integer> ids = new ArrayList<>();
 	
 	public SpongeData(String worldName) {
 		this.worldName = worldName;
@@ -56,14 +60,18 @@ public class SpongeData {
 		}
 	}
 
-	public boolean isFreeDimId() {
-		int dimId = 0;
+	public int getDimId() {
 		for(Entry<String, NBTTag> entry : compoundTag.entrySet()) {
 			if(entry.getKey().equalsIgnoreCase("dimensionId")) {
-				dimId = (Integer) entry.getValue().getPayload();
-				break;
+				return (Integer) entry.getValue().getPayload();
 			}
 		}
+		
+		throw new NullPointerException();
+	}
+	
+	public boolean isFreeDimId() {
+		int dimId = getDimId();
 
 		for(World world : Main.getGame().getServer().getWorlds()) {
 			if(world.getName().equalsIgnoreCase(worldName)) {
@@ -107,21 +115,32 @@ public class SpongeData {
 		}
 		return true;
 	}
-	
-//	public void setDimId() throws IOException{
+
+	public static List<Integer> getIds() {
+		return ids;
+	}
+
+	public void setDimId() throws IOException {
 //		int dimId = DimensionManager.getNextFreeDimId();
 //		DimensionManager.registerDimension(dimId, 0);
-//		
-//		compoundTag.put(new IntegerTag("dimensionId", dimId));
-//
-//		CompoundTag compoundRoot = new CompoundTag("", null);
-//		
-//		compoundRoot.put(compoundTag);
-//
-//		List<NBTTag> list = new ArrayList<>();
-//		
-//		list.add(compoundRoot);
-//
-//		XNBT.saveTags(list, dataFile);
-//	}
+		for(int i = 1; i < Integer.MAX_VALUE; i++) {
+			if(ids.contains(i)) {
+				continue;
+			}
+			
+			compoundTag.put(new IntegerTag("dimensionId", i));
+			
+			CompoundTag compoundRoot = new CompoundTag("", null);
+					
+			compoundRoot.put(compoundTag);
+			
+			List<NBTTag> list = new ArrayList<>();
+					
+			list.add(compoundRoot);
+			
+			XNBT.saveTags(list, dataFile);
+			
+			break;
+		}
+	}
 }
