@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameAboutToStartServerEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
@@ -67,10 +68,14 @@ public class Main {
 
     @Listener
     public void onPostInitialization(GamePostInitializationEvent event) {
-    	SpongeData.init();	
-    	Migrator.init();
+    	SpongeData.init();  	
     }
 
+    @Listener
+    public void onAboutToStartServer(GameAboutToStartServerEvent event) {
+    	Migrator.init();
+    }
+    
     public static Logger getLog() {
         return log;
     }

@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
-import java.util.UUID;
 
 import com.gmail.trentech.pjw.Main;
 
@@ -36,7 +35,9 @@ public class Migrator {
 				continue;
 			}
 			
-			Main.getLog().info("Migrating world: " + world.getName());
+			String name = world.getName();
+			
+			Main.getLog().info("Migrating world: " + name);
 			
 			if(!worldData.isCorrectLevelName()) {
 				Main.getLog().warn("  * Repairing level name mismatch");
@@ -64,36 +65,24 @@ public class Migrator {
 				}
 			}
 
-			File dest = new File(new File(Main.getGame().getSavesDirectory().toFile(), Main.getGame().getServer().getDefaultWorldName()), world.getName());
-			
-			if(world.getName().equalsIgnoreCase(Main.getGame().getServer().getDefaultWorldName())) {
-				Main.getLog().error(" * A world with this name already exists");
-				String name =  world.getName() + "_" + UUID.randomUUID().toString();
-				
-				try {
-					worldData.setLevelName(name);
-					
-					dest = new File(new File(Main.getGame().getSavesDirectory().toFile(), Main.getGame().getServer().getDefaultWorldName()), name);
-				} catch (IOException e) {
-					e.printStackTrace();
-					continue;
-				}
-			}
-			
-			if(dest.exists()) {
-				Main.getLog().error(" * A world with this name already exists");
-				String name =  world.getName() + "_" + UUID.randomUUID().toString();
-				
-				try {
-					worldData.setLevelName(name);
-					
-					dest = new File(new File(Main.getGame().getSavesDirectory().toFile(), Main.getGame().getServer().getDefaultWorldName()), name);
-				} catch (IOException e) {
-					e.printStackTrace();
-					continue;
-				}
-			}
 
+			File dest = new File(new File(Main.getGame().getSavesDirectory().toFile(), Main.getGame().getServer().getDefaultWorldName()), name);
+			
+			int i = 1;
+			while(name.equalsIgnoreCase(Main.getGame().getServer().getDefaultWorldName()) || dest.exists()) {
+				Main.getLog().error(" * A world with this name already exists");
+				name =  world.getName() + "_" + i;
+				
+				try {
+					worldData.setLevelName(name);				
+					dest = new File(new File(Main.getGame().getSavesDirectory().toFile(), Main.getGame().getServer().getDefaultWorldName()), name);
+				} catch (IOException e) {
+					e.printStackTrace();
+					continue;
+				}
+				i++;
+			}
+			
 			try {
 				Main.getLog().info("  * Copying world to final resting place");
 				copyWorld(world, dest);

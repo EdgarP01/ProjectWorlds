@@ -118,11 +118,6 @@ public class EventManager {
 	}
 
 	@Listener
-	public void onDisplaceEntityEvent(DisplaceEntityEvent.Teleport.TargetPlayer event) {
-		System.out.println("DisplaceEntityEvent.Teleport.TargetPlayer");
-	}
-	
-	@Listener
 	public void onDisplaceEntityEvent(DisplaceEntityEvent.TargetPlayer event) {
 		Player player = event.getTargetEntity();
 
