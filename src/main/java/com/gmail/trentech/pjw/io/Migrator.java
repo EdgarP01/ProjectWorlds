@@ -17,7 +17,6 @@ public class Migrator {
 		
 		if(!directory.exists()) {
 			directory.mkdir();
-			return;
 		}
 
 		File[] files = directory.listFiles();
