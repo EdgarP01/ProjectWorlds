@@ -67,7 +67,7 @@ public class Migrator {
 			File dest = new File(new File(Main.getGame().getSavesDirectory().toFile(), Main.getGame().getServer().getDefaultWorldName()), world.getName());
 			
 			if(world.getName().equalsIgnoreCase(Main.getGame().getServer().getDefaultWorldName())) {
-				Main.getLog().error("  * A world with this name already exists");
+				Main.getLog().error(" * A world with this name already exists");
 				String name =  world.getName() + "_" + UUID.randomUUID().toString();
 				
 				try {
@@ -81,7 +81,7 @@ public class Migrator {
 			}
 			
 			if(dest.exists()) {
-				Main.getLog().error("  * A world with this name already exists");
+				Main.getLog().error(" * A world with this name already exists");
 				String name =  world.getName() + "_" + UUID.randomUUID().toString();
 				
 				try {
@@ -98,7 +98,7 @@ public class Migrator {
 				Main.getLog().info("  * Copying world to final resting place");
 				copyWorld(world, dest);
 			} catch (IOException e) {
-				Main.getLog().error("  * Could not copy world");
+				Main.getLog().error(" * Could not copy world");
 				e.printStackTrace();
 				continue;
 			}

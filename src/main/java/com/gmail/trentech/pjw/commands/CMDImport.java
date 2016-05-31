@@ -1,6 +1,5 @@
 package com.gmail.trentech.pjw.commands;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.spongepowered.api.command.CommandException;
@@ -18,6 +17,7 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
+import com.gmail.trentech.pjw.io.WorldData;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDImport implements CommandExecutor {
@@ -43,6 +43,13 @@ public class CMDImport implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
+		WorldData worldData = new WorldData(worldName);
+		
+		if(!worldData.exists()) {
+			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " is not a valid world"));
+			return CommandResult.empty();
+		}
+		
 		SpongeData spongeData = new SpongeData(worldName);
 
 		if(spongeData.exists()) {
