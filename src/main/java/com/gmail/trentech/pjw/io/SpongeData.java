@@ -65,8 +65,6 @@ public class SpongeData {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}else{
-			throw new NullPointerException();
 		}
 	}
 	
