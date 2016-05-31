@@ -1,6 +1,5 @@
 package com.gmail.trentech.pjw.commands;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.spongepowered.api.command.CommandException;
@@ -17,7 +16,6 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
-import com.gmail.trentech.pjw.io.WorldData;
 import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Utils;
 
@@ -51,38 +49,12 @@ public class CMDLoad implements CommandExecutor {
 						.onClick(TextActions.runCommand("/pjw:world import")).append(Text.of(" /world import")).build());
 			return CommandResult.empty();
 		}
-		
-//		if(!spongeData.isFreeDimId()) {
-//			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " World contains dimension id conflict. Attempting to repair."));
-//			try {
-//				spongeData.setDimId();
-//			} catch (IOException e) {
-//				src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong"));
-//				e.printStackTrace();
-//			}
-//		}
 
-		WorldData worldData = new WorldData(worldName);
-		
-		if(!worldData.exists()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " is not a valid world"));
-			return CommandResult.empty();
-		}
-		
-		if(!worldData.isCorrectLevelName()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Level name mismatch. Attempting to repair."));
-			try {
-				worldData.setLevelName();
-			} catch (IOException e) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong"));
-				e.printStackTrace();
-			}
-		}
-		
 		Optional<WorldProperties> optionalProperties = Main.getGame().getServer().getWorldProperties(worldName);
 		
 		if(!optionalProperties.isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not find ", worldName));
+			return CommandResult.empty();
 		}
 		
 		WorldProperties properties = optionalProperties.get();

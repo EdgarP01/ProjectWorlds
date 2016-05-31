@@ -18,7 +18,6 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
-import com.gmail.trentech.pjw.io.WorldData;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDImport implements CommandExecutor {
@@ -42,23 +41,6 @@ public class CMDImport implements CommandExecutor {
 		if(Main.getGame().getServer().getWorld(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " is already loaded"));
 			return CommandResult.empty();
-		}
-
-		WorldData worldData = new WorldData(worldName);
-		
-		if(!worldData.exists()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " is not a valid world"));
-			return CommandResult.empty();
-		}
-		
-		if(!worldData.isCorrectLevelName()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Level name mismatch. Attempting to repair."));
-			try {
-				worldData.setLevelName();
-			} catch (IOException e) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong"));
-				e.printStackTrace();
-			}
 		}
 
 		SpongeData spongeData = new SpongeData(worldName);

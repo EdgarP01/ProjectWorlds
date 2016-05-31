@@ -109,7 +109,7 @@ public class EventManager {
 		WorldProperties properties = world.getProperties();
 
 		if(!properties.getGameRule("respawnWorld").isPresent()) {
-			properties.setGameRule("respawnWorld", Main.getGame().getServer().getDefaultWorld().get().getWorldName());
+			properties.setGameRule("respawnWorld", world.getName());
 		}
 
 		if(!properties.getGameRule("doWeatherCycle").isPresent()) {

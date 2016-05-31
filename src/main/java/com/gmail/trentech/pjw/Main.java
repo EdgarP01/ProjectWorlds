@@ -1,24 +1,23 @@
 package com.gmail.trentech.pjw;
 
 import java.util.HashMap;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
+import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
-import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
-import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.commands.CommandManager;
 import com.gmail.trentech.pjw.extra.VoidWorldGeneratorModifier;
+import com.gmail.trentech.pjw.io.Migrator;
+import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.listeners.EventManager;
 import com.gmail.trentech.pjw.utils.Resource;
 import com.google.inject.Inject;
@@ -41,8 +40,6 @@ public class Main {
 	
 	@Listener
     public void onPreInitialization(GamePreInitializationEvent event) {
-
-		
 		game = Sponge.getGame();
 		plugin = getGame().getPluginManager().getPlugin(Resource.ID).get();
 		log = getPlugin().getLogger();
@@ -69,8 +66,9 @@ public class Main {
     }
 
     @Listener
-    public void onStartedServer(GameStartedServerEvent event) {
-    	loadWorlds();
+    public void onPostInitialization(GamePostInitializationEvent event) {
+    	SpongeData.init();	
+    	Migrator.init();
     }
 
     public static Logger getLog() {
@@ -87,20 +85,5 @@ public class Main {
 
 	public static HashMap<String, WorldGeneratorModifier> getModifiers() {
 		return modifiers;
-	}
-
-	private void loadWorlds() {
-		for(WorldProperties world : getGame().getServer().getUnloadedWorlds()) {
-			// Temporarily disable enable check until issue is resolved
-			//if(world.isEnabled()) {
-				getLog().info("Loading " + world.getWorldName());
-				Optional<World> load = getGame().getServer().loadWorld(world);
-				if(load.isPresent()) {
-					getLog().info("Loaded " + world.getWorldName());
-				}else{
-					getLog().warn("Failed to load " + world.getWorldName());
-				}
-			//}
-		}
 	}
 }
