@@ -119,7 +119,6 @@ public class CMDTeleport implements CommandExecutor {
 		TeleportEvent teleportEvent = new TeleportEvent(player, player.getLocation(), dest, Cause.of(NamedCause.source(src)));
 
 		if(!Main.getGame().getEventManager().post(teleportEvent)) {
-			Location<World> currentLocation = player.getLocation();
 			dest = teleportEvent.getDestination();
 			
 			player.setLocation(dest);
@@ -127,9 +126,6 @@ public class CMDTeleport implements CommandExecutor {
 			if(src instanceof Player && ((Player) src) != player) {
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, "Teleported ", player.getName(), " to ", dest.getExtent(), ", x: ", dest.getBlockX(), ", y: ", dest.getBlockY(), ", z: ", dest.getBlockZ()));
 			}
-			
-			TargetPlayer displaceEvent = SpongeEventFactory.createDisplaceEntityEventTargetPlayer(Cause.of(NamedCause.source(this)), new Transform<World>(currentLocation), new Transform<World>(dest), player);
-			Main.getGame().getEventManager().post(displaceEvent);
 		}
 
 		return CommandResult.success();
