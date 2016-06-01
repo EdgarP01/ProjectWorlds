@@ -145,7 +145,17 @@ public class CMDGamerule implements CommandExecutor {
 			}
 		case "reducedDebugInfo":
 			return validBool(value);
-		case "respawnWorld":
+		case "spawnOnDeath":
+			if(Main.getGame().getServer().getWorld(value).isPresent()) {
+				return true;
+			}
+			return false;
+		case "netherWorld":
+			if(Main.getGame().getServer().getWorld(value).isPresent()) {
+				return true;
+			}
+			return false;
+		case "endWorld":
 			if(Main.getGame().getServer().getWorld(value).isPresent()) {
 				return true;
 			}

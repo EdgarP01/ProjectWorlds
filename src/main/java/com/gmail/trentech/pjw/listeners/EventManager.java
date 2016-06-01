@@ -122,6 +122,12 @@ public class EventManager {
 		if(!properties.getGameRule("doWeatherCycle").isPresent()) {
 			properties.setGameRule("doWeatherCycle", "true");
 		}
+		if(!properties.getGameRule("netherWorld").isPresent()) {
+			properties.setGameRule("netherWorld", "DIM-1");
+		}
+		if(!properties.getGameRule("endWorld").isPresent()) {
+			properties.setGameRule("endWorld", "DIM1");
+		}
 	}
 
 	@Listener
