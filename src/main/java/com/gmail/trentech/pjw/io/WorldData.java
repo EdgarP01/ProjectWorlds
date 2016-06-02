@@ -1,6 +1,5 @@
 package com.gmail.trentech.pjw.io;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,10 +25,21 @@ public class WorldData {
 
 		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
 		
-		dataFile = new File(defaultWorld + File.separator + worldName, "level.dat");
 		if(defaultWorld.equalsIgnoreCase(worldName)) {
 			dataFile = new File(defaultWorld, "level.dat");
+		}else {
+			dataFile = new File(defaultWorld + File.separator + worldName, "level.dat");
 		}
+
+		if(dataFile.exists()) {
+			exists = true;
+			init();
+		}
+	}
+	
+	public WorldData(File directory) {
+		this.dataFile = new File(directory, "level.dat");
+		this.worldName = directory.getName();
 		
 		if(dataFile.exists()) {
 			exists = true;
@@ -73,8 +83,8 @@ public class WorldData {
 		return false;
 	}
 	
-	public void setLevelName() throws IOException{
-		compoundTag.put(new StringTag("LevelName", worldName));
+	public void setLevelName(String name) throws IOException{
+		compoundTag.put(new StringTag("LevelName", name));
 
 		CompoundTag compoundRoot = new CompoundTag("", null);
 		

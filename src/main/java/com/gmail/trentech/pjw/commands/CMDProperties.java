@@ -67,7 +67,9 @@ public class CMDProperties implements CommandExecutor {
 		list.add(Text.of(TextColors.GREEN, "PVP: ", TextColors.WHITE, properties.isPVPEnabled()));
 		list.add(Text.of(TextColors.GREEN, "Keep Spawn Loaded: ", TextColors.WHITE, properties.doesKeepSpawnLoaded()));
 		list.add(Text.of(TextColors.GREEN, "Hardcore: ", TextColors.WHITE, properties.isHardcore()));
-		list.add(Text.of(TextColors.GREEN, "Respawn World: ", TextColors.WHITE, properties.getGameRule("respawnWorld").get()));
+		list.add(Text.of(TextColors.GREEN, "Spawn On Death: ", TextColors.WHITE, properties.getGameRule("spawnOnDeath").get()));
+		list.add(Text.of(TextColors.GREEN, "Nether World: ", TextColors.WHITE, properties.getGameRule("netherWorld").get()));
+		list.add(Text.of(TextColors.GREEN, "End World: ", TextColors.WHITE, properties.getGameRule("endWorld").get()));
 		list.add(Text.of(TextColors.GREEN, "Freeze Weather: ", TextColors.WHITE, properties.getGameRule("doWeatherCycle").get()));
 		list.add(Text.of(TextColors.GREEN, "Command Block Output: ", TextColors.WHITE, properties.getGameRule("commandBlockOutput").get()));
 		list.add(Text.of(TextColors.GREEN, "Freeze Time: ", TextColors.WHITE, properties.getGameRule("doDaylightCycle").get()));

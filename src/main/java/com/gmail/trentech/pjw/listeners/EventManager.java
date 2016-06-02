@@ -8,13 +8,9 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.SpongeEventFactory;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DisplaceEntityEvent;
-import org.spongepowered.api.event.entity.DisplaceEntityEvent.TargetPlayer;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
@@ -34,7 +30,6 @@ import org.spongepowered.api.world.storage.WorldProperties;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.commands.CMDTeleport;
 import com.gmail.trentech.pjw.events.TeleportEvent;
-import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 
 import ninja.leaping.configurate.ConfigurationNode;
@@ -45,7 +40,6 @@ public class EventManager {
 	public void onTeleportEvent(TeleportEvent event) {
 		Player player = event.getTarget();
 
-		Location<World> src = event.getSource();
 		Location<World> dest = event.getDestination();
 
 		if(!player.hasPermission("pjw.worlds." + dest.getExtent().getName())) {
@@ -67,40 +61,48 @@ public class EventManager {
 		}
 
 		player.sendTitle(Title.of(Text.of(TextColors.DARK_GREEN, dest.getExtent().getName()), Text.of(TextColors.AQUA, "x: ", dest.getBlockX(), ", y: ", dest.getBlockY(),", z: ", dest.getBlockZ())));
-		
-		TargetPlayer displaceEvent = SpongeEventFactory.createDisplaceEntityEventTargetPlayer(Cause.of(NamedCause.source(this)), new Transform<World>(src), new Transform<World>(dest), player);
-		Main.getGame().getEventManager().post(displaceEvent);
 	}
 
 	@Listener
-	public void onPlayerJoin(ClientConnectionEvent.Join event) {
+	public void onClientConnectionEventJoin(ClientConnectionEvent.Join event) {
 	    Player player = event.getTargetEntity();
 
 		if(player.hasPermission("pjw.options.motd")) {
 			player.sendMessage(Main.getGame().getServer().getMotd());
 		}
 
+		ConfigurationNode node = new ConfigManager().getConfig().getNode("options");
+		
 		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
 		
-		if(new File(defaultWorld + File.separator + "playerdata", player.getUniqueId().toString() + ".dat").exists()) {
+		boolean lobbyMode = node.getNode("lobby_mode").getBoolean();
+		boolean firstJoin = new File(defaultWorld + File.separator + "playerdata", player.getUniqueId().toString() + ".dat").exists();
+		
+		if(firstJoin && !lobbyMode) {
 			return;
 		}
 
-		ConfigurationNode node = new ConfigManager().getConfig().getNode("options", "first_join");
+		String worldName = node.getNode("first_join", "world").getString();
 		
-		String worldName = node.getNode("world").getString();
+		Optional<World> optionalWorld = Main.getGame().getServer().getWorld(worldName);
 		
-		if(!Main.getGame().getServer().getWorld(worldName).isPresent()) {
+		if(!optionalWorld.isPresent()) {
 			return;
 		}
-		World world = Main.getGame().getServer().getWorld(worldName).get();
+		World world = optionalWorld.get();
 		
 		player.setLocationSafely(world.getSpawnLocation());
 		
-		Text title = TextSerializers.FORMATTING_CODE.deserialize(node.getNode("title").getString());
-		Text subTitle = TextSerializers.FORMATTING_CODE.deserialize(node.getNode("sub_title").getString());
+		if(player.hasPermission("pjw.options.gamemode")) {
+			player.offer(Keys.GAME_MODE, world.getProperties().getGameMode());
+		}		
+		
+		if(!firstJoin) {
+			Text title = TextSerializers.FORMATTING_CODE.deserialize(node.getNode("first_join", "title").getString());
+			Text subTitle = TextSerializers.FORMATTING_CODE.deserialize(node.getNode("first_join", "sub_title").getString());
 
-		player.sendTitle(Title.of(title, subTitle));		
+			player.sendTitle(Title.of(title, subTitle));
+		}		
 	}
 	
 	@Listener
@@ -113,33 +115,44 @@ public class EventManager {
 		
 		WorldProperties properties = world.getProperties();
 
-		if(!properties.getGameRule("respawnWorld").isPresent()) {
-			properties.setGameRule("respawnWorld", Main.getGame().getServer().getDefaultWorld().get().getWorldName());
+		if(!properties.getGameRule("spawnOnDeath").isPresent()) {
+			if(properties.getGameRule("respawnWorld").isPresent()) {
+				properties.setGameRule("spawnOnDeath", properties.getGameRule("respawnWorld").get());				
+			}else {
+				properties.setGameRule("spawnOnDeath", world.getName());
+			}
 		}
-
+		
 		if(!properties.getGameRule("doWeatherCycle").isPresent()) {
 			properties.setGameRule("doWeatherCycle", "true");
 		}
-		String worldName = world.getName();
-		
-		SpongeData spongeData = new SpongeData(worldName);
-		SpongeData.getIds().add(spongeData.getDimId());
+		if(!properties.getGameRule("netherWorld").isPresent()) {
+			properties.setGameRule("netherWorld", "DIM-1");
+		}
+		if(!properties.getGameRule("endWorld").isPresent()) {
+			properties.setGameRule("endWorld", "DIM1");
+		}
 	}
 
 	@Listener
-	public void onDisplaceEntityEvent(DisplaceEntityEvent.TargetPlayer event) {
-		Player player = event.getTargetEntity();
+	public void onDisplaceEntityEvent(DisplaceEntityEvent.Teleport event) {
+		Entity entity = event.getTargetEntity();
+		
+		if(!(entity instanceof Player)) {
+			return;
+		}
+		Player player = (Player) entity;
 
 		if(!player.hasPermission("pjw.options.gamemode")) {
 			return;
 		}
 		
-		World worldSrc = event.getFromTransform().getExtent();
-		World worldDest = event.getToTransform().getExtent();
-
-		WorldProperties properties = worldDest.getProperties();
+		World from = event.getFromTransform().getExtent();
+		World to = event.getToTransform().getExtent();
 		
-		if(!worldSrc.equals(worldDest)) {
+		WorldProperties properties = to.getProperties();
+		
+		if(!from.equals(to)) {
 			if(!properties.getGameMode().equals(player.gameMode().get())) {
 				player.offer(Keys.GAME_MODE, properties.getGameMode());
 			}			
@@ -185,13 +198,16 @@ public class EventManager {
 		World world = event.getFromTransform().getExtent();
 		WorldProperties properties = world.getProperties();
 		
-		String respawnWorldName = properties.getGameRule("respawnWorld").get();
+		String worldName = properties.getGameRule("spawnOnDeath").get();
 		
-		if(Main.getGame().getServer().getWorld(respawnWorldName).isPresent()) {
-			World respawnWorld = Main.getGame().getServer().getWorld(respawnWorldName).get();
-			
-			Transform<World> transform = event.getToTransform().setLocation(respawnWorld.getSpawnLocation());
-			event.setToTransform(transform);
+		Optional<World> optionalSpawnWorld = Main.getGame().getServer().getWorld(worldName);
+		
+		if(!optionalSpawnWorld.isPresent()) {
+			return;
 		}
+		World spawnWorld = optionalSpawnWorld.get();
+		
+		Transform<World> transform = event.getToTransform().setLocation(spawnWorld.getSpawnLocation());
+		event.setToTransform(transform);
 	}
 }

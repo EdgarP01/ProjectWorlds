@@ -1,6 +1,5 @@
 package com.gmail.trentech.pjw.commands;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.spongepowered.api.command.CommandException;
@@ -51,16 +50,6 @@ public class CMDImport implements CommandExecutor {
 			return CommandResult.empty();
 		}
 		
-		if(!worldData.isCorrectLevelName()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Level name mismatch. Attempting to repair."));
-			try {
-				worldData.setLevelName();
-			} catch (IOException e) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong"));
-				e.printStackTrace();
-			}
-		}
-
 		SpongeData spongeData = new SpongeData(worldName);
 
 		if(spongeData.exists()) {
