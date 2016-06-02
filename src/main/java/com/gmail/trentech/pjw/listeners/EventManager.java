@@ -109,10 +109,6 @@ public class EventManager {
 	public void onLoadWorldEvent(LoadWorldEvent event) {
 		World world = event.getTargetWorld();
 
-		if(Main.getGame().getServer().getWorld(world.getName()).isPresent()) {
-			System.out.println("World name conflict: " + world.getName());
-		}
-		
 		WorldProperties properties = world.getProperties();
 
 		if(!properties.getGameRule("spawnOnDeath").isPresent()) {
