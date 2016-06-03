@@ -19,6 +19,7 @@ import com.gmail.trentech.pjw.extra.VoidWorldGeneratorModifier;
 import com.gmail.trentech.pjw.io.Migrator;
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.listeners.EventManager;
+import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Resource;
 
 import me.flibio.updatifier.Updatifier;
@@ -52,6 +53,8 @@ public class Main {
 
     	getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
     	getGame().getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", "gr");
+    	
+    	new ConfigManager().init();
     }
 
     @Listener
