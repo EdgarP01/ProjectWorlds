@@ -7,12 +7,9 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.SpongeEventFactory;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
-import org.spongepowered.api.event.entity.DisplaceEntityEvent.TargetPlayer;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
@@ -57,13 +54,9 @@ public class CMDTeleport implements CommandExecutor {
 				return CommandResult.success();
 			}
 			Location<World> location = players.get(player);
-			Location<World> currentLocation = player.getLocation();
-			
+
 			player.setLocation(location);
 
-			TargetPlayer displaceEvent = SpongeEventFactory.createDisplaceEntityEventTargetPlayer(Cause.of(NamedCause.source(this)), new Transform<World>(currentLocation), new Transform<World>(location), player);
-			Main.getGame().getEventManager().post(displaceEvent);
-			
 			players.remove(player);
 			
 			return CommandResult.success();
