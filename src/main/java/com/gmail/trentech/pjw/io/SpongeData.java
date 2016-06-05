@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
@@ -68,16 +69,8 @@ public class SpongeData {
 	}
 	
 	public static void init() {
-		ids.add(-1);
-		ids.add(0);
-		ids.add(1);
-		
 		for(WorldProperties world : Main.getGame().getServer().getAllWorldProperties()) {
-			String worldName = world.getWorldName();
-
-			SpongeData spongeData = new SpongeData(worldName);
-			
-			ids.add(spongeData.getDimId());
+			ids.add((int) world.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get());
 		}
 	}
 	
@@ -111,6 +104,11 @@ public class SpongeData {
 	}
 	
 	public void setDimId(int id) throws IOException {
+//		DataView container = world.getAdditionalProperties().getView(DataQuery.of("SpongeData")).get();
+//		container.set(DataQuery.of("dimensionId"), id);
+//		world.setPropertySection(DataQuery.of("SpongeData"), container);
+//		Main.getGame().getServer().saveWorldProperties(world);		
+		
 		compoundTag.put(new IntegerTag("dimensionId", id));
 		
 		CompoundTag compoundRoot = new CompoundTag("", null);

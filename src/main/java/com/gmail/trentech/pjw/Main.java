@@ -4,12 +4,11 @@ import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.Platform;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GameAboutToStartServerEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -59,13 +58,11 @@ public class Main {
     }
 
     @Listener
-    public void onAboutToStartServer(GameAboutToStartServerEvent event) {
-    	if(getGame().getPlatform().getType().equals(Platform.Type.SERVER)) {
-        	SpongeData.init();
-        	Migrator.init();
-    	}
+    public void onStartingServer(GameStartingServerEvent event) {
+    	SpongeData.init();
+    	Migrator.init();
     }
-
+    
     public static Logger getLog() {
         return log;
     }

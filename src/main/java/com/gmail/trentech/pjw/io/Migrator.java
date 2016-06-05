@@ -64,7 +64,6 @@ public class Migrator {
 				}
 			}
 
-
 			File dest = new File(new File(Main.getGame().getSavesDirectory().toFile(), Main.getGame().getServer().getDefaultWorldName()), name);
 			
 			int i = 1;
