@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Platform;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameAboutToStartServerEvent;
@@ -59,10 +60,12 @@ public class Main {
 
     @Listener
     public void onAboutToStartServer(GameAboutToStartServerEvent event) {
-    	SpongeData.init();
-    	Migrator.init();
+    	if(getGame().getPlatform().getType().equals(Platform.Type.SERVER)) {
+        	SpongeData.init();
+        	Migrator.init();
+    	}
     }
-    
+
     public static Logger getLog() {
         return log;
     }

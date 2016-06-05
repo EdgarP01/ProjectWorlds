@@ -17,51 +17,17 @@ import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.world.ChangeWorldWeatherEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.action.TextActions;
-import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.text.title.Title;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.commands.CMDTeleport;
-import com.gmail.trentech.pjw.events.TeleportEvent;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
 public class EventManager {
-
-	@Listener
-	public void onTeleportEvent(TeleportEvent event) {
-		Player player = event.getTarget();
-
-		Location<World> dest = event.getDestination();
-
-		if(!player.hasPermission("pjw.worlds." + dest.getExtent().getName())) {
-			player.sendMessage(Text.of(TextColors.DARK_RED, "You do not have permission to travel to ", dest.getExtent().getName()));
-			event.setCancelled(true);
-			return;
-		}
-		
-		TeleportHelper teleportHelper = Main.getGame().getTeleportHelper();
-		
-		Optional<Location<World>> optionalLocation = teleportHelper.getSafeLocation(dest);
-
-		if(!optionalLocation.isPresent()) {
-			CMDTeleport.players.put(player, dest);
-			player.sendMessage(Text.builder().color(TextColors.DARK_RED).append(Text.of("Unsafe spawn point detected. Teleport anyway? "))
-					.onClick(TextActions.runCommand("/pjw:world teleport confirm")).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
-			event.setCancelled(true);
-			return;
-		}
-
-		player.sendTitle(Title.of(Text.of(TextColors.DARK_GREEN, dest.getExtent().getName()), Text.of(TextColors.AQUA, "x: ", dest.getBlockX(), ", y: ", dest.getBlockY(),", z: ", dest.getBlockZ())));
-	}
 
 	@Listener
 	public void onClientConnectionEventJoin(ClientConnectionEvent.Join event) {

@@ -73,13 +73,23 @@ public class CommandManager {
 		    .build();
 	
 	public CommandSpec cmdTeleport = CommandSpec.builder()
-		    .description(Text.of(" Teleport self or others to specified world and location"))
+		    .description(Text.of(" Teleport to specified world and location"))
 		    .permission("pjw.cmd.world.teleport")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("arg0"))), GenericArguments.optional(GenericArguments.string(Text.of("arg1")))
-		    		,GenericArguments.optional(GenericArguments.string(Text.of("arg1"))))
+		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("world"))), GenericArguments.flags()
+    				.valueFlag(GenericArguments.string(Text.of("x,y,z")), "c")
+    				.valueFlag(GenericArguments.string(Text.of("direction")), "d").buildWith(GenericArguments.none()))
 		    .executor(new CMDTeleport())
 		    .build();
 
+	public CommandSpec cmdTeleportP = CommandSpec.builder()
+		    .description(Text.of(" Teleport others to specified world and location"))
+		    .permission("pjw.cmd.world.teleport.others")
+		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("player"))), GenericArguments.optional(GenericArguments.string(Text.of("world"))), GenericArguments.flags()
+    				.valueFlag(GenericArguments.string(Text.of("x,y,z")), "c")
+    				.valueFlag(GenericArguments.string(Text.of("direction")), "d").buildWith(GenericArguments.none()))
+		    .executor(new CMDTeleportP())
+		    .build();
+	
 	public CommandSpec cmdCopy = CommandSpec.builder()
 		    .description(Text.of(" Allows you to make a new world from an existing world"))
 		    .permission("pjw.cmd.world.copy")
@@ -174,6 +184,7 @@ public class CommandManager {
 			.child(cmdKeepSpawnLoaded, "keepspawnloaded", "k")
 			.child(cmdList, "list", "ls")
 			.child(cmdTeleport, "teleport", "tp")
+			.child(cmdTeleportP, "teleportplayer", "tpp")
 			.child(cmdCopy, "copy", "cp")
 			.child(cmdRename, "rename", "rn")
 			.child(cmdUnload, "unload", "u")
