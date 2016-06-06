@@ -21,8 +21,12 @@ public class Migrator {
 
 		File[] files = directory.listFiles();
 		
-		Main.getLog().info("Found " + files.length + " possible worlds");
-		
+		if((files.length - 1) > 0) {
+			Main.getLog().info("Found " + (files.length - 1) + " possible worlds");
+		}else {
+			Main.getLog().info("No worlds to migrate");
+		}
+
 		for(File world : directory.listFiles()) {
 			if(!world.isDirectory()) {
 				continue;

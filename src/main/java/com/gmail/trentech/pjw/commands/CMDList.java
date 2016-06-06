@@ -18,6 +18,7 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.Help;
+import com.google.common.collect.Lists;
 
 public class CMDList implements CommandExecutor {
 
@@ -37,7 +38,7 @@ public class CMDList implements CommandExecutor {
 		
 		for(World world : Main.getGame().getServer().getWorlds()) {
 			Builder builder = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of(TextColors.WHITE, "Click to view properies")));
-			builder.onClick(TextActions.runCommand("/pjw:world properties " + world.getName())).append(Text.of(TextColors.GREEN, world.getName(), ": ", TextColors.GREEN, world.getEntities().size(), " Entities"));
+			builder.onClick(TextActions.runCommand("/pjw:world properties " + world.getName())).append(Text.of(TextColors.GREEN, world.getName(), ": ", Lists.newArrayList(world.getLoadedChunks()).size(), " Loaded chunks, ", world.getEntities().size(), " Entities"));
 			list.add(builder.build());
 		}
 		

@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.spongepowered.api.data.DataQuery;
-import org.spongepowered.api.world.storage.WorldProperties;
-
 import com.gmail.trentech.pjw.Main;
 
 import net.obnoxint.xnbt.XNBT;
@@ -25,7 +22,7 @@ public class SpongeData {
 	private static List<Integer> ids = new ArrayList<>();
 	
 	public SpongeData(String worldName) {
-		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
+		String defaultWorld = Main.getGame().getServer().getDefaultWorldName();
 		
 		if(defaultWorld.equalsIgnoreCase(worldName)) {
 			dataFile = new File(defaultWorld, "level_sponge.dat");
@@ -67,15 +64,13 @@ public class SpongeData {
 			}
 		}
 	}
-	
-	public static void init() {
-		for(WorldProperties world : Main.getGame().getServer().getAllWorldProperties()) {
-			ids.add((int) world.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get());
-		}
-	}
-	
+
 	public static List<Integer> getIds() {
 		return ids;
+	}
+	
+	public static void setIds(List<Integer> list) {
+		ids = list;
 	}
 	
 	public boolean exists() {

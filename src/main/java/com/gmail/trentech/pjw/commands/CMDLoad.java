@@ -16,6 +16,7 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
+import com.gmail.trentech.pjw.io.WorldData;
 import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Utils;
 
@@ -41,6 +42,13 @@ public class CMDLoad implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
+		WorldData worldData = new WorldData(worldName);
+
+		if(!worldData.exists()) {
+			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
+			return CommandResult.empty();
+		}
+		
 		SpongeData spongeData = new SpongeData(worldName);
 
 		if(!spongeData.exists()) {

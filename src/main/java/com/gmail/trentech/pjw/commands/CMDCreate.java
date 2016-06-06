@@ -10,6 +10,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
@@ -21,6 +22,8 @@ import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.io.SpongeData;
+import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDCreate implements CommandExecutor {
@@ -49,7 +52,7 @@ public class CMDCreate implements CommandExecutor {
 			return CommandResult.empty();
 		}
 		
-		if(Main.getGame().getServer().getWorld(worldName).isPresent()) {
+		if(Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " already exists"));
 			return CommandResult.empty();
 		}
@@ -112,8 +115,15 @@ public class CMDCreate implements CommandExecutor {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "something went wrong"));
 			return CommandResult.empty();
         }
-
-        optionalProperties.get();
+        WorldProperties properties = optionalProperties.get();
+        
+        Main.getGame().getServer().saveWorldProperties(properties);
+        
+        SpongeData.getIds().add((int) optionalProperties.get().getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get());
+        
+        ConfigManager configManager = new ConfigManager();
+        configManager.getConfig().getNode("dimension_ids").setValue(SpongeData.getIds());
+        configManager.save();
         
         worlds.add(worldName);
         

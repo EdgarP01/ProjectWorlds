@@ -23,7 +23,7 @@ public class WorldData {
 	public WorldData(String worldName) {
 		this.worldName = worldName;
 
-		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
+		String defaultWorld = Main.getGame().getServer().getDefaultWorldName();
 		
 		if(defaultWorld.equalsIgnoreCase(worldName)) {
 			dataFile = new File(defaultWorld, "level.dat");
