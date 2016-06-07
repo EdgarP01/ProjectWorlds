@@ -1,5 +1,6 @@
 package com.gmail.trentech.pjw.commands;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -15,8 +16,7 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.World;
-import org.spongepowered.api.world.WorldCreationSettings;
-import org.spongepowered.api.world.WorldCreationSettings.Builder;
+import org.spongepowered.api.world.WorldArchetype;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
@@ -63,7 +63,8 @@ public class CMDRegen implements CommandExecutor {
 		}
 		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
 
-		Builder builder = WorldCreationSettings.builder().name(properties.getWorldName()).dimension(properties.getDimensionType()).generatorSettings(properties.getGeneratorSettings());
+		WorldArchetype.Builder builder = WorldArchetype.builder().dimension(properties.getDimensionType()).generatorSettings(properties.getGeneratorSettings());
+		//Builder builder = WorldCreationSettings.builder().name(properties.getWorldName()).dimension(properties.getDimensionType()).generatorSettings(properties.getGeneratorSettings());
 		
 		if(preserve) {
 			builder.seed(properties.getSeed());
@@ -81,16 +82,19 @@ public class CMDRegen implements CommandExecutor {
 		}
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Regenerating world.."));
-		WorldCreationSettings settings = builder.enabled(true).loadsOnStartup(true).build();
+		
+		WorldArchetype settings = builder.enabled(true).loadsOnStartup(true).build(properties.getWorldName(), properties.getWorldName());
 
-		final Optional<WorldProperties> optProperties = Main.getGame().getServer().createWorldProperties(settings);
+		WorldProperties newProperties;
+		try {
+			newProperties = Main.getGame().getServer().createWorldProperties(worldName, settings);
+		} catch (IOException e) {
+			src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong. Check server log for details"));
+			e.printStackTrace();
+			return CommandResult.empty();
+		}
 
-        if (!optProperties.isPresent()) {
-        	src.sendMessage(Text.of(TextColors.DARK_RED, "Could not regenerate ", worldName));
-        	return CommandResult.empty();
-        }
-
-		Optional<World> load = Main.getGame().getServer().loadWorld(optProperties.get());
+		Optional<World> load = Main.getGame().getServer().loadWorld(newProperties);
 
 		if(!load.isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not load ", worldName));

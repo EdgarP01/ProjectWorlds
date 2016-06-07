@@ -1,6 +1,6 @@
 package com.gmail.trentech.pjw.commands;
 
-import java.util.Optional;
+import java.io.IOException;
 
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -12,7 +12,7 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.DimensionType;
 import org.spongepowered.api.world.GeneratorType;
-import org.spongepowered.api.world.WorldCreationSettings;
+import org.spongepowered.api.world.WorldArchetype;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.Main;
@@ -78,21 +78,22 @@ public class CMDImport implements CommandExecutor {
 		}
 		GeneratorType generatorType = Main.getGame().getRegistry().getType(GeneratorType.class, generator).get();
 
-		WorldCreationSettings settings = WorldCreationSettings.builder().name(worldName).dimension(dimensionType)
-				.generator(generatorType).enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true).build();
+		WorldArchetype settings = WorldArchetype.builder().dimension(dimensionType)
+				.generator(generatorType).enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true).build(worldName, worldName);
 
-		Optional<WorldProperties> optProperties = Main.getGame().getServer().createWorldProperties(settings);
-
-        if (!optProperties.isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "something went wrong"));
+		WorldProperties properties;
+		try {
+			properties = Main.getGame().getServer().createWorldProperties(worldName, settings);
+		} catch (IOException e) {
+			src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong. Check server log for details"));
+			e.printStackTrace();
 			return CommandResult.empty();
-        }
-        WorldProperties properties = optProperties.get();
+		}
 
 		Main.getGame().getServer().saveWorldProperties(properties);
 		
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " imported successfully"));
-
+		
         return CommandResult.success();
 	}
 

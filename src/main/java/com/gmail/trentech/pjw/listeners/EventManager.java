@@ -10,7 +10,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
-import org.spongepowered.api.event.entity.DisplaceEntityEvent;
+import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
@@ -97,7 +97,7 @@ public class EventManager {
 	}
 
 	@Listener
-	public void onDisplaceEntityEvent(DisplaceEntityEvent.Teleport event) {
+	public void onDisplaceEntityEvent(MoveEntityEvent.Teleport event) {
 		Entity entity = event.getTargetEntity();
 		
 		if(!(entity instanceof Player)) {

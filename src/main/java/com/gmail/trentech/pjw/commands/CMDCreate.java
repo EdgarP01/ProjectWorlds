@@ -1,5 +1,6 @@
 package com.gmail.trentech.pjw.commands;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -16,8 +17,7 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.DimensionType;
 import org.spongepowered.api.world.GeneratorType;
-import org.spongepowered.api.world.WorldCreationSettings;
-import org.spongepowered.api.world.WorldCreationSettings.Builder;
+import org.spongepowered.api.world.WorldArchetype;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
@@ -57,7 +57,7 @@ public class CMDCreate implements CommandExecutor {
 			return CommandResult.empty();
 		}
 		
-		Builder builder = WorldCreationSettings.builder().name(worldName);
+		WorldArchetype.Builder builder = WorldArchetype.builder();
 
 		if(args.hasAny("type")) {
 			String type = args.<String>getOne("type").get();
@@ -107,19 +107,20 @@ public class CMDCreate implements CommandExecutor {
 			}	
 		}
 
-		WorldCreationSettings settings = builder.enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true).build();
+		WorldArchetype settings = builder.enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true).build(worldName, worldName);
 
-		final Optional<WorldProperties> optionalProperties = Main.getGame().getServer().createWorldProperties(settings);
-
-        if (!optionalProperties.isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "something went wrong"));
+		WorldProperties properties;
+		try {
+			properties = Main.getGame().getServer().createWorldProperties(worldName, settings);
+		} catch (IOException e) {
+			src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong. Check server log for details"));
+			e.printStackTrace();
 			return CommandResult.empty();
-        }
-        WorldProperties properties = optionalProperties.get();
-        
+		}
+
         Main.getGame().getServer().saveWorldProperties(properties);
         
-        SpongeData.getIds().add((int) optionalProperties.get().getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get());
+        SpongeData.getIds().add((int) properties.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get());
         
         ConfigManager configManager = new ConfigManager();
         configManager.getConfig().getNode("dimension_ids").setValue(SpongeData.getIds());
@@ -128,7 +129,7 @@ public class CMDCreate implements CommandExecutor {
         worlds.add(worldName);
         
         src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " created successfully"));
-
+        
 		return CommandResult.success();
 	}
 
