@@ -153,10 +153,6 @@ public class EventManager {
 	
 	@Listener
 	public void onRespawnPlayerEvent(RespawnPlayerEvent event) {
-		if(!(event.getTargetEntity() instanceof Player)) {
-			return;
-		}
-		
 		World world = event.getFromTransform().getExtent();
 		WorldProperties properties = world.getProperties();
 		
