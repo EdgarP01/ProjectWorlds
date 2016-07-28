@@ -1,12 +1,15 @@
 package com.gmail.trentech.pjw.extra;
 
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.ImmutableBiomeArea;
 import org.spongepowered.api.world.extent.MutableBlockVolume;
 import org.spongepowered.api.world.gen.GenerationPopulator;
 
 import com.flowpowered.math.vector.Vector3i;
+import com.gmail.trentech.pjw.Main;
 
 public class VoidBaseGeneratorPopulator implements GenerationPopulator {
 
@@ -25,7 +28,7 @@ public class VoidBaseGeneratorPopulator implements GenerationPopulator {
 		for (int z = zMin; z <= zMax; z++) {
 			for (int y = yMin; y <= yMax; y++) {
 				for (int x = xMin; x <= xMax; x++) {
-					buffer.setBlockType(x, y, z, BlockTypes.AIR);
+					buffer.setBlockType(x, y, z, BlockTypes.AIR, Cause.of(NamedCause.source(Main.getPlugin())));
 				}
 			}
 		}

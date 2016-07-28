@@ -6,6 +6,8 @@ import java.util.List;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -68,7 +70,7 @@ public class Utils {
 		list.add(west2.getRelative(Direction.SOUTH));
 
 		for (Location<World> location : list) {
-			location.setBlock(Main.getGame().getRegistry().createBuilder(BlockState.Builder.class).blockType(type).build());
+			location.setBlock(Main.getGame().getRegistry().createBuilder(BlockState.Builder.class).blockType(type).build(), Cause.of(NamedCause.source(Main.getPlugin())));
 		}
 	}
 }
