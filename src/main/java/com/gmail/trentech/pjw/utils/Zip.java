@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.spongepowered.api.Sponge;
+
 import com.gmail.trentech.pjw.Main;
 
 public class Zip {
@@ -23,9 +25,9 @@ public class Zip {
 			backupDir.mkdirs();
 		}
 
-		File savesDir = Main.getGame().getSavesDirectory().toFile();
+		File savesDir = Sponge.getGame().getSavesDirectory().toFile();
 
-		String defaultWorld = Main.getGame().getServer().getDefaultWorldName();
+		String defaultWorld = Sponge.getServer().getDefaultWorldName();
 
 		if (worldName.equalsIgnoreCase(defaultWorld)) {
 			worldDir = new File(savesDir, worldName);
@@ -56,7 +58,7 @@ public class Zip {
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isDirectory()) {
 				String name = files[i].getName();
-				if (!Main.getGame().getServer().getWorldProperties(name).isPresent()) {
+				if (!Sponge.getServer().getWorldProperties(name).isPresent()) {
 					addDir(files[i], zipOutputStream);
 				}
 				continue;
@@ -64,7 +66,7 @@ public class Zip {
 
 			FileInputStream fileInputStream = new FileInputStream(files[i]);
 
-			String relativePath = files[i].getAbsolutePath().replace(Main.getGame().getSavesDirectory().toFile().getAbsolutePath(), "").replace(" ", "").replace(File.separator + Main.getGame().getServer().getDefaultWorldName() + File.separator, "").replace(this.worldName + File.separator, "");
+			String relativePath = files[i].getAbsolutePath().replace(Sponge.getGame().getSavesDirectory().toFile().getAbsolutePath(), "").replace(" ", "").replace(File.separator + Sponge.getServer().getDefaultWorldName() + File.separator, "").replace(this.worldName + File.separator, "");
 
 			zipOutputStream.putNextEntry(new ZipEntry(relativePath));
 

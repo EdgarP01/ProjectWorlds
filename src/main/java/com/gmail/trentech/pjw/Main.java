@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.event.Listener;
@@ -33,11 +32,10 @@ import com.gmail.trentech.pjw.utils.Resource;
 import me.flibio.updatifier.Updatifier;
 import ninja.leaping.configurate.ConfigurationNode;
 
-@Updatifier(repoName = "ProjectWorlds", repoOwner = "TrenTech", version = Resource.VERSION)
-@Plugin(id = Resource.ID, name = Resource.NAME, authors = Resource.AUTHOR, url = Resource.URL, dependencies = { @Dependency(id = "Updatifier", optional = true) })
+@Updatifier(repoName = Resource.NAME, repoOwner = Resource.AUTHOR, version = Resource.VERSION)
+@Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION, description = Resource.DESCRIPTION, authors = Resource.AUTHOR, url = Resource.URL, dependencies = { @Dependency(id = "Updatifier", optional = true) })
 public class Main {
 
-	private static Game game;
 	private static Logger log;
 	private static PluginContainer plugin;
 
@@ -45,24 +43,23 @@ public class Main {
 
 	@Listener
 	public void onPreInitialization(GamePreInitializationEvent event) {
-		game = Sponge.getGame();
-		plugin = getGame().getPluginManager().getPlugin(Resource.ID).get();
+		plugin = Sponge.getPluginManager().getPlugin(Resource.ID).get();
 		log = getPlugin().getLogger();
 	}
 
 	@Listener
 	public void onInitialization(GameInitializationEvent event) {
-		getGame().getEventManager().registerListeners(this, new EventManager());
+		Sponge.getEventManager().registerListeners(this, new EventManager());
 
-		getGame().getRegistry().register(WorldGeneratorModifier.class, new VoidWorldGeneratorModifier());
-		getGame().getRegistry().register(WorldGeneratorModifier.class, new OceanWorldGeneratorModifier());
+		Sponge.getRegistry().register(WorldGeneratorModifier.class, new VoidWorldGeneratorModifier());
+		Sponge.getRegistry().register(WorldGeneratorModifier.class, new OceanWorldGeneratorModifier());
 
-		for (WorldGeneratorModifier modifier : getGame().getRegistry().getAllOf(WorldGeneratorModifier.class)) {
+		for (WorldGeneratorModifier modifier : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
 			getModifiers().put(modifier.getId(), modifier);
 		}
 
-		getGame().getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
-		getGame().getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", "gr");
+		Sponge.getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
+		Sponge.getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", "gr");
 
 		new ConfigManager().init();
 	}
@@ -73,7 +70,7 @@ public class Main {
 
 		SpongeData.getIds().addAll(node.getChildrenList().stream().map(ConfigurationNode::getInt).collect(Collectors.toList()));
 
-		if (!node.isVirtual() && new File(Main.getGame().getServer().getDefaultWorldName()).exists()) {
+		if (!node.isVirtual() && new File(Sponge.getServer().getDefaultWorldName()).exists()) {
 			Migrator.init();
 		}
 	}
@@ -84,8 +81,8 @@ public class Main {
 
 		List<Integer> list = new ArrayList<>();
 
-		for (WorldProperties world : Main.getGame().getServer().getAllWorldProperties()) {
-			Main.getGame().getServer().saveWorldProperties(world);
+		for (WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+			Sponge.getServer().saveWorldProperties(world);
 			list.add((int) world.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get());
 		}
 
@@ -97,10 +94,6 @@ public class Main {
 
 	public static Logger getLog() {
 		return log;
-	}
-
-	public static Game getGame() {
-		return game;
 	}
 
 	public static PluginContainer getPlugin() {

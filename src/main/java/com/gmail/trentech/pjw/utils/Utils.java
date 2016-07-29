@@ -3,6 +3,7 @@ package com.gmail.trentech.pjw.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
@@ -70,7 +71,7 @@ public class Utils {
 		list.add(west2.getRelative(Direction.SOUTH));
 
 		for (Location<World> location : list) {
-			location.setBlock(Main.getGame().getRegistry().createBuilder(BlockState.Builder.class).blockType(type).build(), Cause.of(NamedCause.source(Main.getPlugin())));
+			location.setBlock(Sponge.getRegistry().createBuilder(BlockState.Builder.class).blockType(type).build(), Cause.of(NamedCause.source(Main.getPlugin())));
 		}
 	}
 }

@@ -3,6 +3,7 @@ package com.gmail.trentech.pjw.commands;
 import java.util.HashMap;
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -18,7 +19,6 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
 
-import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Rotation;
 
@@ -60,7 +60,7 @@ public class CMDTeleport implements CommandExecutor {
 			return CommandResult.success();
 		}
 
-		Optional<World> optionalWorld = Main.getGame().getServer().getWorld(worldName);
+		Optional<World> optionalWorld = Sponge.getServer().getWorld(worldName);
 
 		if (!optionalWorld.isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
@@ -107,7 +107,7 @@ public class CMDTeleport implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
-		TeleportHelper teleportHelper = Main.getGame().getTeleportHelper();
+		TeleportHelper teleportHelper = Sponge.getGame().getTeleportHelper();
 
 		Optional<Location<World>> optionalLocation = teleportHelper.getSafeLocation(location);
 

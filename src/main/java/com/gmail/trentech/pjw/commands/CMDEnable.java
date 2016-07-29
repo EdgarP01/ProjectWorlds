@@ -3,6 +3,7 @@ package com.gmail.trentech.pjw.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -16,7 +17,6 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDEnable implements CommandExecutor {
@@ -40,11 +40,11 @@ public class CMDEnable implements CommandExecutor {
 			worldName = ((Player) src).getWorld().getName();
 		}
 
-		if (!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
+		if (!Sponge.getServer().getWorldProperties(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
-		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
+		WorldProperties properties = Sponge.getServer().getWorldProperties(worldName).get();
 
 		if (!args.hasAny("value")) {
 			List<Text> list = new ArrayList<>();
@@ -53,7 +53,7 @@ public class CMDEnable implements CommandExecutor {
 			list.add(Text.of(TextColors.GREEN, "Command: ", invalidArg()));
 
 			if (src instanceof Player) {
-				PaginationList.Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+				PaginationList.Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
 
 				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, properties.getWorldName())).build());
 

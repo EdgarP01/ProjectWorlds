@@ -3,6 +3,7 @@ package com.gmail.trentech.pjw.commands;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -14,7 +15,6 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDCopy implements CommandExecutor {
@@ -46,7 +46,7 @@ public class CMDCopy implements CommandExecutor {
 
 		String newWorldName = args.<String> getOne("new").get();
 
-		for (WorldProperties world : Main.getGame().getServer().getAllWorldProperties()) {
+		for (WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
 			if (!world.getWorldName().equalsIgnoreCase(newWorldName)) {
 				continue;
 			}
@@ -55,14 +55,14 @@ public class CMDCopy implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
-		if (!Main.getGame().getServer().getWorld(oldWorldName).isPresent()) {
+		if (!Sponge.getServer().getWorld(oldWorldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", oldWorldName, " does not exists"));
 			return CommandResult.empty();
 		}
 
 		Optional<WorldProperties> copy = null;
 		try {
-			copy = Main.getGame().getServer().copyWorld(Main.getGame().getServer().getWorld(oldWorldName).get().getProperties(), newWorldName).get();
+			copy = Sponge.getServer().copyWorld(Sponge.getServer().getWorld(oldWorldName).get().getProperties(), newWorldName).get();
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}

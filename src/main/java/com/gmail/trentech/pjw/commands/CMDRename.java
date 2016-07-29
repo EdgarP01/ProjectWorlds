@@ -2,6 +2,7 @@ package com.gmail.trentech.pjw.commands;
 
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -13,7 +14,6 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDRename implements CommandExecutor {
@@ -37,7 +37,7 @@ public class CMDRename implements CommandExecutor {
 			oldWorldName = ((Player) src).getWorld().getName();
 		}
 
-		if (Main.getGame().getServer().getWorld(oldWorldName).isPresent()) {
+		if (Sponge.getServer().getWorld(oldWorldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, oldWorldName, " must be unloaded before you can rename"));
 			return CommandResult.empty();
 		}
@@ -49,16 +49,16 @@ public class CMDRename implements CommandExecutor {
 
 		String newWorldName = args.<String> getOne("new").get();
 
-		for (WorldProperties world : Main.getGame().getServer().getAllWorldProperties()) {
+		for (WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
 			if (world.getWorldName().equalsIgnoreCase(newWorldName)) {
 				src.sendMessage(Text.of(TextColors.DARK_RED, newWorldName, " already exists"));
 				return CommandResult.empty();
 			}
 		}
 
-		for (WorldProperties worldInfo : Main.getGame().getServer().getUnloadedWorlds()) {
+		for (WorldProperties worldInfo : Sponge.getServer().getUnloadedWorlds()) {
 			if (worldInfo.getWorldName().equalsIgnoreCase(oldWorldName)) {
-				Optional<WorldProperties> rename = Main.getGame().getServer().renameWorld(worldInfo, newWorldName);
+				Optional<WorldProperties> rename = Sponge.getServer().renameWorld(worldInfo, newWorldName);
 
 				if (!rename.isPresent()) {
 					src.sendMessage(Text.of(TextColors.DARK_RED, "Could not rename ", oldWorldName));

@@ -3,6 +3,7 @@ package com.gmail.trentech.pjw.listeners;
 import java.io.File;
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.Transform;
@@ -25,7 +26,6 @@ import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 
 import ninja.leaping.configurate.ConfigurationNode;
@@ -37,12 +37,12 @@ public class EventManager {
 		Player player = event.getTargetEntity();
 
 		if (player.hasPermission("pjw.options.motd")) {
-			player.sendMessage(Main.getGame().getServer().getMotd());
+			player.sendMessage(Sponge.getServer().getMotd());
 		}
 
 		ConfigurationNode node = new ConfigManager().getConfig().getNode("options");
 
-		String defaultWorld = Main.getGame().getServer().getDefaultWorld().get().getWorldName();
+		String defaultWorld = Sponge.getServer().getDefaultWorld().get().getWorldName();
 
 		boolean lobbyMode = node.getNode("lobby_mode").getBoolean();
 		boolean firstJoin = new File(defaultWorld + File.separator + "playerdata", player.getUniqueId().toString() + ".dat").exists();
@@ -53,7 +53,7 @@ public class EventManager {
 
 		String worldName = node.getNode("first_join", "world").getString();
 
-		Optional<World> optionalWorld = Main.getGame().getServer().getWorld(worldName);
+		Optional<World> optionalWorld = Sponge.getServer().getWorld(worldName);
 
 		if (!optionalWorld.isPresent()) {
 			return;
@@ -161,7 +161,7 @@ public class EventManager {
 
 		String worldName = properties.getGameRule("spawnOnDeath").get();
 
-		Optional<World> optionalSpawnWorld = Main.getGame().getServer().getWorld(worldName);
+		Optional<World> optionalSpawnWorld = Sponge.getServer().getWorld(worldName);
 
 		if (!optionalSpawnWorld.isPresent()) {
 			return;
@@ -186,7 +186,7 @@ public class EventManager {
 			return;
 		}
 
-		Optional<World> optionalWorld = Main.getGame().getServer().getWorld(toName);
+		Optional<World> optionalWorld = Sponge.getServer().getWorld(toName);
 
 		if (!optionalWorld.isPresent()) {
 			return;
@@ -197,7 +197,7 @@ public class EventManager {
 
 		location = new Location<World>(world, location.getBlockX(), location.getBlockY(), location.getBlockZ());
 
-		TeleportHelper teleportHelper = Main.getGame().getTeleportHelper();
+		TeleportHelper teleportHelper = Sponge.getGame().getTeleportHelper();
 
 		Optional<Location<World>> optionalLocation = teleportHelper.getSafeLocation(location);
 

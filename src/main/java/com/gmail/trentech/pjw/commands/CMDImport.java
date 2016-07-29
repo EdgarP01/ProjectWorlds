@@ -2,6 +2,7 @@ package com.gmail.trentech.pjw.commands;
 
 import java.io.IOException;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -15,7 +16,6 @@ import org.spongepowered.api.world.GeneratorType;
 import org.spongepowered.api.world.WorldArchetype;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.io.WorldData;
 import com.gmail.trentech.pjw.utils.Help;
@@ -38,7 +38,7 @@ public class CMDImport implements CommandExecutor {
 
 		String worldName = args.<String> getOne("name").get();
 
-		if (Main.getGame().getServer().getWorld(worldName).isPresent()) {
+		if (Sponge.getServer().getWorld(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " is already loaded"));
 			return CommandResult.empty();
 		}
@@ -65,31 +65,31 @@ public class CMDImport implements CommandExecutor {
 		String type = args.<String> getOne("type").get();
 		String generator = args.<String> getOne("generator").get();
 
-		if (!Main.getGame().getRegistry().getType(DimensionType.class, type).isPresent()) {
+		if (!Sponge.getRegistry().getType(DimensionType.class, type).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid dimension type"));
 			return CommandResult.empty();
 		}
-		DimensionType dimensionType = Main.getGame().getRegistry().getType(DimensionType.class, type).get();
+		DimensionType dimensionType = Sponge.getRegistry().getType(DimensionType.class, type).get();
 
-		if (!Main.getGame().getRegistry().getType(GeneratorType.class, generator).isPresent()) {
+		if (!Sponge.getRegistry().getType(GeneratorType.class, generator).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid generator type"));
 			return CommandResult.empty();
 		}
-		GeneratorType generatorType = Main.getGame().getRegistry().getType(GeneratorType.class, generator).get();
+		GeneratorType generatorType = Sponge.getRegistry().getType(GeneratorType.class, generator).get();
 
 		WorldArchetype settings = WorldArchetype.builder().dimension(dimensionType)
 				.generator(generatorType).enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true).build(worldName, worldName);
 
 		WorldProperties properties;
 		try {
-			properties = Main.getGame().getServer().createWorldProperties(worldName, settings);
+			properties = Sponge.getServer().createWorldProperties(worldName, settings);
 		} catch (IOException e) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong. Check server log for details"));
 			e.printStackTrace();
 			return CommandResult.empty();
 		}
 
-		Main.getGame().getServer().saveWorldProperties(properties);
+		Sponge.getServer().saveWorldProperties(properties);
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " imported successfully"));
 
@@ -97,10 +97,10 @@ public class CMDImport implements CommandExecutor {
 	}
 
 	private Text invalidArg() {
-		Main.getGame().getRegistry().getAllOf(DimensionType.class);
+		Sponge.getRegistry().getAllOf(DimensionType.class);
 		Text t1 = Text.of(TextColors.YELLOW, "/world import <world> ");
 		org.spongepowered.api.text.Text.Builder dimTypes = null;
-		for (DimensionType dimType : Main.getGame().getRegistry().getAllOf(DimensionType.class)) {
+		for (DimensionType dimType : Sponge.getRegistry().getAllOf(DimensionType.class)) {
 			if (dimTypes == null) {
 				dimTypes = Text.builder().append(Text.of(dimType.getName()));
 			} else {
@@ -109,7 +109,7 @@ public class CMDImport implements CommandExecutor {
 		}
 		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(dimTypes.build())).append(Text.of("<type> ")).build();
 		org.spongepowered.api.text.Text.Builder genTypes = Text.builder();
-		for (GeneratorType genType : Main.getGame().getRegistry().getAllOf(GeneratorType.class)) {
+		for (GeneratorType genType : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
 			if (!genType.getName().equalsIgnoreCase("debug_all_block_states") && !genType.getName().equalsIgnoreCase("default_1_1")) {
 				if (genTypes == null) {
 					genTypes = Text.builder().append(Text.of(genType.getName()));

@@ -1,5 +1,6 @@
 package com.gmail.trentech.pjw.commands;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -11,7 +12,6 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.flowpowered.math.vector.Vector3i;
-import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDSetSpawn implements CommandExecutor {
@@ -36,11 +36,11 @@ public class CMDSetSpawn implements CommandExecutor {
 			worldName = args.<String> getOne("name").get();
 		}
 
-		if (!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
+		if (!Sponge.getServer().getWorldProperties(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
-		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
+		WorldProperties properties = Sponge.getServer().getWorldProperties(worldName).get();
 
 		if (!args.hasAny("value")) {
 			properties.setSpawnPosition(player.getLocation().getBlockPosition());

@@ -2,6 +2,7 @@ package com.gmail.trentech.pjw.commands;
 
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -13,7 +14,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
 
-import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
@@ -40,24 +40,24 @@ public class CMDUnload implements CommandExecutor {
 			worldName = ((Player) src).getWorld().getName();
 		}
 
-		if (Main.getGame().getServer().getDefaultWorld().get().getWorldName().equalsIgnoreCase(worldName)) {
+		if (Sponge.getServer().getDefaultWorld().get().getWorldName().equalsIgnoreCase(worldName)) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Default world cannot be unloaded"));
 			return CommandResult.empty();
 		}
 
-		if (!Main.getGame().getServer().getWorld(worldName).isPresent()) {
+		if (!Sponge.getServer().getWorld(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
-		World world = Main.getGame().getServer().getWorld(worldName).get();
+		World world = Sponge.getServer().getWorld(worldName).get();
 
 		ConfigurationNode node = new ConfigManager().getConfig().getNode("options");
 
-		World defaultWorld = Main.getGame().getServer().getWorld(Main.getGame().getServer().getDefaultWorld().get().getWorldName()).get();
+		World defaultWorld = Sponge.getServer().getWorld(Sponge.getServer().getDefaultWorld().get().getWorldName()).get();
 
 		String joinWorldName = node.getNode("first_join", "world").getString();
 
-		Optional<World> optionalWorld = Main.getGame().getServer().getWorld(joinWorldName);
+		Optional<World> optionalWorld = Sponge.getServer().getWorld(joinWorldName);
 
 		if (optionalWorld.isPresent()) {
 			defaultWorld = optionalWorld.get();
@@ -72,7 +72,7 @@ public class CMDUnload implements CommandExecutor {
 			}
 		}
 
-		if (!Main.getGame().getServer().unloadWorld(world)) {
+		if (!Sponge.getServer().unloadWorld(world)) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not unload ", worldName));
 			return CommandResult.empty();
 		}

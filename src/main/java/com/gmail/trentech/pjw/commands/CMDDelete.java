@@ -3,6 +3,7 @@ package com.gmail.trentech.pjw.commands;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -13,7 +14,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
@@ -36,23 +36,23 @@ public class CMDDelete implements CommandExecutor {
 		}
 		String worldName = args.<String> getOne("name").get();
 
-		if (Main.getGame().getServer().getWorld(worldName).isPresent()) {
+		if (Sponge.getServer().getWorld(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " must be unloaded before you can delete"));
 			return CommandResult.empty();
 		}
 
-		if (!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
+		if (!Sponge.getServer().getWorldProperties(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
 
 		new Zip(worldName).save();
 
-		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
+		WorldProperties properties = Sponge.getServer().getWorldProperties(worldName).get();
 
 		int dimId = (int) properties.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get();
 		try {
-			if (Main.getGame().getServer().deleteWorld(properties).get()) {
+			if (Sponge.getServer().deleteWorld(properties).get()) {
 				List<Integer> ids = SpongeData.getIds();
 
 				for (int id = 0; id < ids.size(); id++) {

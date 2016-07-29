@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -50,7 +51,7 @@ public class CMDCreate implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
-		if (Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
+		if (Sponge.getServer().getWorldProperties(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " already exists"));
 			return CommandResult.empty();
 		}
@@ -60,7 +61,7 @@ public class CMDCreate implements CommandExecutor {
 		if (args.hasAny("type")) {
 			String type = args.<String> getOne("type").get();
 
-			Optional<DimensionType> optionalType = Main.getGame().getRegistry().getType(DimensionType.class, type);
+			Optional<DimensionType> optionalType = Sponge.getRegistry().getType(DimensionType.class, type);
 
 			if (!optionalType.isPresent()) {
 				src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid Dimension Type"));
@@ -73,7 +74,7 @@ public class CMDCreate implements CommandExecutor {
 		if (args.hasAny("generator")) {
 			String type = args.<String> getOne("generator").get();
 
-			Optional<GeneratorType> optionalType = Main.getGame().getRegistry().getType(GeneratorType.class, type);
+			Optional<GeneratorType> optionalType = Sponge.getRegistry().getType(GeneratorType.class, type);
 
 			if (!optionalType.isPresent()) {
 				src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid Generator Type"));
@@ -109,14 +110,14 @@ public class CMDCreate implements CommandExecutor {
 
 		WorldProperties properties;
 		try {
-			properties = Main.getGame().getServer().createWorldProperties(worldName, settings);
+			properties = Sponge.getServer().createWorldProperties(worldName, settings);
 		} catch (IOException e) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong. Check server log for details"));
 			e.printStackTrace();
 			return CommandResult.empty();
 		}
 
-		Main.getGame().getServer().saveWorldProperties(properties);
+		Sponge.getServer().saveWorldProperties(properties);
 
 		SpongeData.getIds().add((int) properties.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get());
 
@@ -132,10 +133,10 @@ public class CMDCreate implements CommandExecutor {
 	}
 
 	private Text invalidArg() {
-		Main.getGame().getRegistry().getAllOf(DimensionType.class);
+		Sponge.getRegistry().getAllOf(DimensionType.class);
 		Text t1 = Text.of(TextColors.YELLOW, "/world create <world> ");
 		org.spongepowered.api.text.Text.Builder dimTypes = null;
-		for (DimensionType dimType : Main.getGame().getRegistry().getAllOf(DimensionType.class)) {
+		for (DimensionType dimType : Sponge.getRegistry().getAllOf(DimensionType.class)) {
 			if (dimTypes == null) {
 				dimTypes = Text.builder().append(Text.of(dimType.getName()));
 			} else {
@@ -144,7 +145,7 @@ public class CMDCreate implements CommandExecutor {
 		}
 		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(dimTypes.build())).append(Text.of("[-d <type>] ")).build();
 		org.spongepowered.api.text.Text.Builder genTypes = Text.builder();
-		for (GeneratorType genType : Main.getGame().getRegistry().getAllOf(GeneratorType.class)) {
+		for (GeneratorType genType : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
 			if (!genType.getName().equalsIgnoreCase("debug_all_block_states") && !genType.getName().equalsIgnoreCase("default_1_1")) {
 				if (genTypes == null) {
 					genTypes = Text.builder().append(Text.of(genType.getName()));

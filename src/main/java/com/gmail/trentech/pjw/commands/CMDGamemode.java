@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -19,7 +20,6 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.Gamemode;
 import com.gmail.trentech.pjw.utils.Help;
 
@@ -47,13 +47,13 @@ public class CMDGamemode implements CommandExecutor {
 		Collection<WorldProperties> worlds = new ArrayList<>();
 
 		if (worldName.equalsIgnoreCase("@a")) {
-			worlds = Main.getGame().getServer().getAllWorldProperties();
+			worlds = Sponge.getServer().getAllWorldProperties();
 		} else {
-			if (!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
+			if (!Sponge.getServer().getWorldProperties(worldName).isPresent()) {
 				src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 				return CommandResult.empty();
 			}
-			worlds.add(Main.getGame().getServer().getWorldProperties(worldName).get());
+			worlds.add(Sponge.getServer().getWorldProperties(worldName).get());
 		}
 
 		GameMode gamemode = null;
@@ -91,7 +91,7 @@ public class CMDGamemode implements CommandExecutor {
 
 		if (!list.isEmpty()) {
 			if (src instanceof Player) {
-				PaginationList.Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+				PaginationList.Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
 
 				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "GameMode")).build());
 

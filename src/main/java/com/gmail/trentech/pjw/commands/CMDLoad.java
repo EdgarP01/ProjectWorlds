@@ -2,6 +2,7 @@ package com.gmail.trentech.pjw.commands;
 
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -37,7 +38,7 @@ public class CMDLoad implements CommandExecutor {
 		}
 		String worldName = args.<String> getOne("name").get();
 
-		if (Main.getGame().getServer().getWorld(worldName).isPresent()) {
+		if (Sponge.getServer().getWorld(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " is already loaded"));
 			return CommandResult.empty();
 		}
@@ -57,7 +58,7 @@ public class CMDLoad implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
-		Optional<WorldProperties> optionalProperties = Main.getGame().getServer().getWorldProperties(worldName);
+		Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(worldName);
 
 		if (!optionalProperties.isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not find ", worldName));
@@ -68,11 +69,11 @@ public class CMDLoad implements CommandExecutor {
 
 		src.sendMessage(Text.of(TextColors.YELLOW, "Preparing spawn area. This may take a minute."));
 
-		Main.getGame().getScheduler().createTaskBuilder().name("PJW" + worldName).delayTicks(20).execute(new Runnable() {
+		Sponge.getScheduler().createTaskBuilder().name("PJW" + worldName).delayTicks(20).execute(new Runnable() {
 
 			@Override
 			public void run() {
-				Optional<World> load = Main.getGame().getServer().loadWorld(properties);
+				Optional<World> load = Sponge.getServer().loadWorld(properties);
 
 				if (!load.isPresent()) {
 					src.sendMessage(Text.of(TextColors.DARK_RED, "Could not load ", worldName));

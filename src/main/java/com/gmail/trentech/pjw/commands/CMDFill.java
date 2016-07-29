@@ -2,6 +2,7 @@ package com.gmail.trentech.pjw.commands;
 
 import java.util.HashMap;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -70,24 +71,24 @@ public class CMDFill implements CommandExecutor {
 		}
 
 		if (list.containsKey(worldName)) {
-			if (Main.getGame().getScheduler().getScheduledTasks(Main.getPlugin()).contains(list.get(worldName))) {
+			if (Sponge.getScheduler().getScheduledTasks(Main.getPlugin()).contains(list.get(worldName))) {
 				src.sendMessage(Text.of(TextColors.YELLOW, "Pre-Generator already running for this world"));
 				return CommandResult.empty();
 			}
 			list.remove(worldName);
 		}
 
-		if (!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
+		if (!Sponge.getServer().getWorldProperties(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
-		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
+		WorldProperties properties = Sponge.getServer().getWorldProperties(worldName).get();
 
-		if (!Main.getGame().getServer().getWorld(properties.getUniqueId()).isPresent()) {
+		if (!Sponge.getServer().getWorld(properties.getUniqueId()).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " must be loaded"));
 			return CommandResult.empty();
 		}
-		World world = Main.getGame().getServer().getWorld(properties.getUniqueId()).get();
+		World world = Sponge.getServer().getWorld(properties.getUniqueId()).get();
 
 		WorldBorder border = world.getWorldBorder();
 
@@ -136,8 +137,8 @@ public class CMDFill implements CommandExecutor {
 	}
 
 	private void status(CommandSource src, Task task) {
-		Main.getGame().getScheduler().createTaskBuilder().delayTicks(100).execute(c -> {
-			if (!Main.getGame().getScheduler().getScheduledTasks(Main.getPlugin()).contains(task)) {
+		Sponge.getScheduler().createTaskBuilder().delayTicks(100).execute(c -> {
+			if (!Sponge.getScheduler().getScheduledTasks(Main.getPlugin()).contains(task)) {
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, "Pre-Generator finished"));
 			} else {
 				status(src, task);

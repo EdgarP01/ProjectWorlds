@@ -2,6 +2,7 @@ package com.gmail.trentech.pjw.commands;
 
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -16,7 +17,6 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
 
-import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Rotation;
 
@@ -37,7 +37,7 @@ public class CMDTeleportP implements CommandExecutor {
 		}
 		String playerName = args.<String> getOne("player").get();
 
-		Optional<Player> optionalPlayer = Main.getGame().getServer().getPlayer(playerName);
+		Optional<Player> optionalPlayer = Sponge.getServer().getPlayer(playerName);
 
 		if (!optionalPlayer.isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Player ", playerName, " does not exist"));
@@ -51,7 +51,7 @@ public class CMDTeleportP implements CommandExecutor {
 		}
 		String worldName = args.<String> getOne("world").get();
 
-		Optional<World> optionalWorld = Main.getGame().getServer().getWorld(worldName);
+		Optional<World> optionalWorld = Sponge.getServer().getWorld(worldName);
 
 		if (!optionalWorld.isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
@@ -98,7 +98,7 @@ public class CMDTeleportP implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
-		TeleportHelper teleportHelper = Main.getGame().getTeleportHelper();
+		TeleportHelper teleportHelper = Sponge.getGame().getTeleportHelper();
 
 		Optional<Location<World>> optionalLocation = teleportHelper.getSafeLocation(location);
 

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.gmail.trentech.pjw.Main;
+import org.spongepowered.api.Sponge;
 
 import net.obnoxint.xnbt.XNBT;
 import net.obnoxint.xnbt.types.CompoundTag;
@@ -23,7 +23,7 @@ public class WorldData {
 	public WorldData(String worldName) {
 		this.worldName = worldName;
 
-		String defaultWorld = Main.getGame().getServer().getDefaultWorldName();
+		String defaultWorld = Sponge.getServer().getDefaultWorldName();
 
 		if (defaultWorld.equalsIgnoreCase(worldName)) {
 			dataFile = new File(defaultWorld, "level.dat");

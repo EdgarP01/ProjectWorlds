@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -17,7 +18,6 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDGamerule implements CommandExecutor {
@@ -41,11 +41,11 @@ public class CMDGamerule implements CommandExecutor {
 			worldName = ((Player) src).getWorld().getName();
 		}
 
-		if (!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
+		if (!Sponge.getServer().getWorldProperties(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
-		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
+		WorldProperties properties = Sponge.getServer().getWorldProperties(worldName).get();
 
 		if (!args.hasAny("rule")) {
 			List<Text> list = new ArrayList<>();
@@ -57,7 +57,7 @@ public class CMDGamerule implements CommandExecutor {
 			list.add(Text.of(TextColors.AQUA, "Command: ", invalidArg()));
 
 			if (src instanceof Player) {
-				PaginationList.Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+				PaginationList.Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
 
 				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, properties.getWorldName())).build());
 
@@ -86,7 +86,7 @@ public class CMDGamerule implements CommandExecutor {
 			list.add(Text.of(TextColors.GREEN, "Command: ", invalidArg()));
 
 			if (src instanceof Player) {
-				PaginationList.Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+				PaginationList.Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
 
 				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, properties.getWorldName())).build());
 
@@ -157,17 +157,17 @@ public class CMDGamerule implements CommandExecutor {
 		case "reducedDebugInfo":
 			return validBool(value);
 		case "spawnOnDeath":
-			if (Main.getGame().getServer().getWorld(value).isPresent()) {
+			if (Sponge.getServer().getWorld(value).isPresent()) {
 				return true;
 			}
 			return false;
 		case "netherPortal":
-			if (Main.getGame().getServer().getWorld(value).isPresent()) {
+			if (Sponge.getServer().getWorld(value).isPresent()) {
 				return true;
 			}
 			return false;
 		case "endPortal":
-			if (Main.getGame().getServer().getWorld(value).isPresent()) {
+			if (Sponge.getServer().getWorld(value).isPresent()) {
 				return true;
 			}
 			return false;

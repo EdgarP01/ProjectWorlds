@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 
+import org.spongepowered.api.Sponge;
+
 import com.gmail.trentech.pjw.Main;
 
 public class Migrator {
@@ -13,7 +15,7 @@ public class Migrator {
 	public static void init() {
 		Main.getLog().info("Running World Migration tool..");
 
-		File directory = new File(Main.getGame().getSavesDirectory().toFile(), "imports");
+		File directory = new File(Sponge.getGame().getSavesDirectory().toFile(), "imports");
 
 		if (!directory.exists()) {
 			directory.mkdir();
@@ -68,16 +70,16 @@ public class Migrator {
 				}
 			}
 
-			File dest = new File(new File(Main.getGame().getSavesDirectory().toFile(), Main.getGame().getServer().getDefaultWorldName()), name);
+			File dest = new File(new File(Sponge.getGame().getSavesDirectory().toFile(), Sponge.getServer().getDefaultWorldName()), name);
 
 			int i = 1;
-			while (name.equalsIgnoreCase(Main.getGame().getServer().getDefaultWorldName()) || dest.exists()) {
+			while (name.equalsIgnoreCase(Sponge.getServer().getDefaultWorldName()) || dest.exists()) {
 				Main.getLog().error(" * A world with this name already exists");
 				name = world.getName() + "_" + i;
 
 				try {
 					worldData.setLevelName(name);
-					dest = new File(new File(Main.getGame().getSavesDirectory().toFile(), Main.getGame().getServer().getDefaultWorldName()), name);
+					dest = new File(new File(Sponge.getGame().getSavesDirectory().toFile(), Sponge.getServer().getDefaultWorldName()), name);
 				} catch (IOException e) {
 					e.printStackTrace();
 					continue;
@@ -100,7 +102,7 @@ public class Migrator {
 				Main.getLog().warn("  * Complete! Requires importing. /world import " + world.getName() + " <type> <generator>");
 			}
 
-			Main.getGame().getScheduler().createTaskBuilder().delayTicks(40).execute(e -> {
+			Sponge.getScheduler().createTaskBuilder().delayTicks(40).execute(e -> {
 				try {
 					deleteWorld(world);
 				} catch (Exception e1) {

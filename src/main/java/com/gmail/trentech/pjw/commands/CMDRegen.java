@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -19,7 +20,6 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.WorldArchetype;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Utils;
 
@@ -50,16 +50,16 @@ public class CMDRegen implements CommandExecutor {
 			preserve = Boolean.parseBoolean(args.<String> getOne("value").get());
 		}
 
-		if (Main.getGame().getServer().getWorld(worldName).isPresent()) {
+		if (Sponge.getServer().getWorld(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " must be unloaded before you can rename"));
 			return CommandResult.empty();
 		}
 
-		if (!Main.getGame().getServer().getWorldProperties(worldName).isPresent()) {
+		if (!Sponge.getServer().getWorldProperties(worldName).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}
-		WorldProperties properties = Main.getGame().getServer().getWorldProperties(worldName).get();
+		WorldProperties properties = Sponge.getServer().getWorldProperties(worldName).get();
 
 		WorldArchetype.Builder builder = WorldArchetype.builder().dimension(properties.getDimensionType()).generatorSettings(properties.getGeneratorSettings());
 
@@ -68,7 +68,7 @@ public class CMDRegen implements CommandExecutor {
 		}
 
 		try {
-			CompletableFuture<Boolean> delete = Main.getGame().getServer().deleteWorld(properties);
+			CompletableFuture<Boolean> delete = Sponge.getServer().deleteWorld(properties);
 			while (!delete.isDone()) {
 			}
 			if (!delete.get()) {
@@ -86,14 +86,14 @@ public class CMDRegen implements CommandExecutor {
 
 		WorldProperties newProperties;
 		try {
-			newProperties = Main.getGame().getServer().createWorldProperties(worldName, settings);
+			newProperties = Sponge.getServer().createWorldProperties(worldName, settings);
 		} catch (IOException e) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong. Check server log for details"));
 			e.printStackTrace();
 			return CommandResult.empty();
 		}
 
-		Optional<World> load = Main.getGame().getServer().loadWorld(newProperties);
+		Optional<World> load = Sponge.getServer().loadWorld(newProperties);
 
 		if (!load.isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not load ", worldName));
