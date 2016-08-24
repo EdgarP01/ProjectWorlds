@@ -80,9 +80,6 @@ public class CMDLoad implements CommandExecutor {
 					return;
 				}
 
-				World world = load.get();
-				world.setKeepSpawnLoaded(true);
-
 				if (CMDCreate.worlds.contains(worldName)) {
 					Utils.createPlatform(load.get().getSpawnLocation().getRelative(Direction.DOWN));
 					CMDCreate.worlds.remove(worldName);

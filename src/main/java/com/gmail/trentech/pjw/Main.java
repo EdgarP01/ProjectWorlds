@@ -21,7 +21,6 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.commands.CommandManager;
 import com.gmail.trentech.pjw.extra.OceanWorldGeneratorModifier;
-import com.gmail.trentech.pjw.extra.VoidWorldGeneratorModifier;
 import com.gmail.trentech.pjw.io.Migrator;
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.listeners.EventManager;
@@ -39,8 +38,6 @@ public class Main {
 	private static Logger log;
 	private static PluginContainer plugin;
 
-	//private static HashMap<String, WorldGeneratorModifier> modifiers = new HashMap<>();
-
 	@Listener
 	public void onPreInitialization(GamePreInitializationEvent event) {
 		plugin = Sponge.getPluginManager().getPlugin(Resource.ID).get();
@@ -51,8 +48,7 @@ public class Main {
 	public void onInitialization(GameInitializationEvent event) {
 		Sponge.getEventManager().registerListeners(this, new EventManager());
 		Sponge.getEventManager().registerListeners(this, new TabEventManager());
-		
-		Sponge.getRegistry().register(WorldGeneratorModifier.class, new VoidWorldGeneratorModifier());
+
 		Sponge.getRegistry().register(WorldGeneratorModifier.class, new OceanWorldGeneratorModifier());
 
 		Sponge.getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
