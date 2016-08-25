@@ -14,6 +14,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
@@ -63,7 +64,7 @@ public class CMDDelete implements CommandExecutor {
 					}
 				}
 
-				ConfigManager configManager = new ConfigManager();
+				ConfigManager configManager = Main.getConfigManager();
 				configManager.getConfig().getNode("dimension_ids").setValue(SpongeData.getIds());
 				configManager.save();
 

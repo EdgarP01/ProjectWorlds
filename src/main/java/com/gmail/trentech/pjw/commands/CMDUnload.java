@@ -14,7 +14,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
 
-import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.Help;
 
 import ninja.leaping.configurate.ConfigurationNode;
@@ -51,7 +51,7 @@ public class CMDUnload implements CommandExecutor {
 		}
 		World world = Sponge.getServer().getWorld(worldName).get();
 
-		ConfigurationNode node = new ConfigManager().getConfig().getNode("options");
+		ConfigurationNode node = Main.getConfigManager().getConfig().getNode("options");
 
 		World defaultWorld = Sponge.getServer().getWorld(Sponge.getServer().getDefaultWorld().get().getWorldName()).get();
 

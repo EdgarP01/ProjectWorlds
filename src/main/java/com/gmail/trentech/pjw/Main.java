@@ -38,6 +38,7 @@ public class Main {
 
 	private static Logger log;
 	private static PluginContainer plugin;
+	private static ConfigManager configManager;
 
 	@Listener
 	public void onPreInitialization(GamePreInitializationEvent event) {
@@ -56,12 +57,12 @@ public class Main {
 		Sponge.getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
 		Sponge.getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", "gr");
 
-		new ConfigManager().init();
+		configManager = new ConfigManager().init();
 	}
 
 	@Listener
 	public void onAboutToStartServer(GameAboutToStartServerEvent event) {
-		ConfigurationNode node = new ConfigManager().getConfig().getNode("dimension_ids");
+		ConfigurationNode node = getConfigManager().getConfig().getNode("dimension_ids");
 
 		SpongeData.getIds().addAll(node.getChildrenList().stream().map(ConfigurationNode::getInt).collect(Collectors.toList()));
 
@@ -72,8 +73,6 @@ public class Main {
 
 	@Listener
 	public void onStartedServer(GameStartedServerEvent event) {
-		ConfigManager configManager = new ConfigManager();
-
 		List<Integer> list = new ArrayList<>();
 
 		for (WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
@@ -83,8 +82,8 @@ public class Main {
 
 		SpongeData.setIds(list);
 
-		configManager.getConfig().getNode("dimension_ids").setValue(list).setComment("DO NOT EDIT");
-		configManager.save();
+		getConfigManager().getConfig().getNode("dimension_ids").setValue(list).setComment("DO NOT EDIT");
+		getConfigManager().save();
 	}
 
 	public static Logger getLog() {
@@ -93,5 +92,9 @@ public class Main {
 
 	public static PluginContainer getPlugin() {
 		return plugin;
+	}
+	
+	public static ConfigManager getConfigManager() {
+		return configManager;
 	}
 }

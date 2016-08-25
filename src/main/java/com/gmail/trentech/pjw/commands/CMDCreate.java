@@ -21,6 +21,7 @@ import org.spongepowered.api.world.WorldArchetype;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
@@ -121,7 +122,7 @@ public class CMDCreate implements CommandExecutor {
 
 		SpongeData.getIds().add((int) properties.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get());
 
-		ConfigManager configManager = new ConfigManager();
+		ConfigManager configManager = Main.getConfigManager();
 		configManager.getConfig().getNode("dimension_ids").setValue(SpongeData.getIds());
 		configManager.save();
 

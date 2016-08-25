@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.command.TabCompleteEvent;
@@ -22,7 +22,7 @@ import com.gmail.trentech.pjw.utils.Rotation;
 public class TabEventManager {
 
 	@Listener
-	public void onTabCompleteEvent(TabCompleteEvent event, @First Player player) {
+	public void onTabCompleteEvent(TabCompleteEvent event, @First CommandSource src) {
 		String rawMessage = event.getRawMessage();
 		
 		String[] args = rawMessage.split(" ");

@@ -20,7 +20,7 @@ public class ConfigManager {
 		if (!new File(folder).isDirectory()) {
 			new File(folder).mkdirs();
 		}
-		file = new File(folder, configName);
+		file = new File(folder, configName + ".conf");
 
 		create();
 		load();
@@ -54,7 +54,7 @@ public class ConfigManager {
 		}
 	}
 
-	public void init() {
+	public ConfigManager init() {
 		if (file.getName().equalsIgnoreCase("config.conf")) {
 			if (config.getNode("options", "first_join", "world").isVirtual()) {
 				config.getNode("options", "first_join", "world").setValue("world").setComment("World player spawns to when joining for the first time");
@@ -68,12 +68,10 @@ public class ConfigManager {
 			if (config.getNode("options", "lobby_mode").isVirtual()) {
 				config.getNode("options", "lobby_mode").setValue(false).setComment("If true, player will always spawn in first_join world on join");
 			}
-			// UPDATE CONFIG
-			if (!config.getNode("settings", "commands").isVirtual()) {
-				config.getNode("settings").removeChild("commands");
-			}
 		}
 		save();
+		
+		return this;
 	}
 
 	private void create() {

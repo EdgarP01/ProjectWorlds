@@ -123,30 +123,6 @@ public class CMDGamerule implements CommandExecutor {
 
 	private boolean isValid(String rule, String value) {
 		switch (rule) {
-		case "commandBlockOutput":
-			return validBool(value);
-		case "disableElytraMovementCheck":
-			return validBool(value);
-		case "doWeatherCycle":
-			return validBool(value);
-		case "doDaylightCycle":
-			return validBool(value);
-		case "doFireTick":
-			return validBool(value);
-		case "doMobLoot":
-			return validBool(value);
-		case "doMobSpawning":
-			return validBool(value);
-		case "doTileDrops":
-			return validBool(value);
-		case "keepInventory":
-			return validBool(value);
-		case "logAdminCommands":
-			return validBool(value);
-		case "mobGriefing":
-			return validBool(value);
-		case "naturalRegeneration":
-			return validBool(value);
 		case "randomTickSpeed":
 			try {
 				Long.parseLong(value);
@@ -161,8 +137,6 @@ public class CMDGamerule implements CommandExecutor {
 			} catch (Exception e) {
 				return false;
 			}
-		case "reducedDebugInfo":
-			return validBool(value);
 		case "spawnOnDeath":
 			if (Sponge.getServer().getWorld(value).isPresent()) {
 				return true;
@@ -178,14 +152,8 @@ public class CMDGamerule implements CommandExecutor {
 				return true;
 			}
 			return false;
-		case "sendCommandFeedback":
-			return validBool(value);
-		case "showDeathMessages":
-			return validBool(value);
-		case "spectatorsGeneratorChunks":
-			return validBool(value);
 		default:
-			return false;
+			return validBool(value);
 		}
 	}
 
