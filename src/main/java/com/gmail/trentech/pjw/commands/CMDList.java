@@ -2,6 +2,7 @@ package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
@@ -34,16 +35,19 @@ public class CMDList implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		List<Text> list = new ArrayList<>();
 
-		for (World world : Sponge.getServer().getWorlds()) {
-			Builder builder = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of(TextColors.WHITE, "Click to view properies")));
-			builder.onClick(TextActions.runCommand("/pjw:world properties " + world.getName())).append(Text.of(TextColors.GREEN, world.getName(), ": ", Lists.newArrayList(world.getLoadedChunks()).size(), " Loaded chunks, ", world.getEntities().size(), " Entities"));
-			list.add(builder.build());
-		}
-
-		for (WorldProperties world : Sponge.getServer().getUnloadedWorlds()) {
-			Builder builder = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of(TextColors.WHITE, "Click to load world")));
-			builder.onClick(TextActions.runCommand("/pjw:world load " + world.getWorldName())).append(Text.of(TextColors.GREEN, world.getWorldName(), ": ", TextColors.GRAY, " Unloaded"));
-			list.add(builder.build());
+		for (WorldProperties properties : Sponge.getServer().getAllWorldProperties()) {
+			Optional<World> optionalWorld = Sponge.getServer().getWorld(properties.getUniqueId());
+			
+			if(optionalWorld.isPresent()) {
+				World world = optionalWorld.get();
+				Builder builder = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of(TextColors.WHITE, "Click to view properies")));
+				builder.onClick(TextActions.runCommand("/pjw:world properties " + world.getName())).append(Text.of(TextColors.GREEN, world.getName(), ": ", Lists.newArrayList(world.getLoadedChunks()).size(), " Loaded chunks, ", world.getEntities().size(), " Entities"));
+				list.add(builder.build());
+			} else {
+				Builder builder = Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of(TextColors.WHITE, "Click to load world")));
+				builder.onClick(TextActions.runCommand("/pjw:world load " + properties.getWorldName())).append(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.GRAY, " Unloaded"));
+				list.add(builder.build());
+			}
 		}
 
 		if (src instanceof Player) {

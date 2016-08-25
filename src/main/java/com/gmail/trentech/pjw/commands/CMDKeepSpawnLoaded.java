@@ -75,7 +75,6 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 			properties.setKeepSpawnLoaded(Boolean.getBoolean(value));
 
 			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set keep spawn loaded of ", worldName, " to ", TextColors.YELLOW, value.toUpperCase()));
-			src.sendMessage(Text.of(TextColors.DARK_RED, "[WARNING]", TextColors.YELLOW, " Setting this to false can cause worlds to randomly unload when no players are occupying them"));
 		}
 
 		if (!list.isEmpty()) {

@@ -1,6 +1,8 @@
 package com.gmail.trentech.pjw.listeners;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
@@ -24,6 +26,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.PortalAgent;
 import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.utils.ConfigManager;
@@ -73,9 +76,27 @@ public class EventManager {
 	@Listener
 	public void onLoadWorldEvent(LoadWorldEvent event) {
 		World world = event.getTargetWorld();
-
 		WorldProperties properties = world.getProperties();
+		
+		List<WorldGeneratorModifier> modifiers = new ArrayList<>();
+		
+		boolean b = false;
+		
+		if(!properties.getGeneratorModifiers().isEmpty()) {
+			for(WorldGeneratorModifier modifier : properties.getGeneratorModifiers()) {
+				if(modifier.getId().equals("pjw:void")) {
+					modifiers.add(Sponge.getRegistry().getType(WorldGeneratorModifier.class, "sponge:void").get());
+					b = true;
+				} else {
+					modifiers.add(modifier);
+				}
+			}
+		}
 
+		if(b) {
+			properties.setGeneratorModifiers(modifiers);
+		}
+		
 		if (!properties.getGameRule("spawnOnDeath").isPresent()) {
 			if (properties.getGameRule("respawnWorld").isPresent()) {
 				properties.setGameRule("spawnOnDeath", properties.getGameRule("respawnWorld").get());

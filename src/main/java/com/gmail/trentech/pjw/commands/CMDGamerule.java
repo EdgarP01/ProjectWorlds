@@ -51,10 +51,8 @@ public class CMDGamerule implements CommandExecutor {
 			List<Text> list = new ArrayList<>();
 
 			for (Entry<String, String> gamerule : properties.getGameRules().entrySet()) {
-				list.add(Text.of(TextColors.AQUA, gamerule.getKey(), ": ", TextColors.GREEN, gamerule.getValue()));
+				list.add(Text.of(TextColors.GREEN, gamerule.getKey(), ": ", TextColors.WHITE, gamerule.getValue()));
 			}
-
-			list.add(Text.of(TextColors.AQUA, "Command: ", invalidArg()));
 
 			if (src instanceof Player) {
 				PaginationList.Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
