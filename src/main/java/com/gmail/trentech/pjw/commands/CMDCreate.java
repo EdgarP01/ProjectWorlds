@@ -3,7 +3,6 @@ package com.gmail.trentech.pjw.commands;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
@@ -13,7 +12,6 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.DimensionType;
 import org.spongepowered.api.world.GeneratorType;
@@ -21,7 +19,6 @@ import org.spongepowered.api.world.WorldArchetype;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
@@ -39,61 +36,25 @@ public class CMDCreate implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if (!args.hasAny("name")) {
-			src.sendMessage(invalidArg());
-			return CommandResult.empty();
-		}
 		String worldName = args.<String> getOne("name").get();
 
-		if (worldName.equalsIgnoreCase("-d") || worldName.equalsIgnoreCase("-g") || worldName.equalsIgnoreCase("-m") || worldName.equalsIgnoreCase("-s")) {
-			src.sendMessage(invalidArg());
-			return CommandResult.empty();
-		}
-
 		if (Sponge.getServer().getWorldProperties(worldName).isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " already exists"));
+			src.sendMessage(Text.of(TextColors.RED, worldName, " already exists"));
 			return CommandResult.empty();
 		}
 
 		WorldArchetype.Builder builder = WorldArchetype.builder();
 
-		if (args.hasAny("type")) {
-			String type = args.<String> getOne("type").get();
-
-			Optional<DimensionType> optionalType = Sponge.getRegistry().getType(DimensionType.class, type);
-
-			if (!optionalType.isPresent()) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid Dimension Type"));
-				src.sendMessage(invalidArg());
-				return CommandResult.empty();
-			}
-			builder.dimension(optionalType.get());
+		if (args.hasAny("dimensionType")) {
+			builder.dimension(args.<DimensionType> getOne("dimensionType").get());
 		}
 
-		if (args.hasAny("generator")) {
-			String type = args.<String> getOne("generator").get();
-
-			Optional<GeneratorType> optionalType = Sponge.getRegistry().getType(GeneratorType.class, type);
-
-			if (!optionalType.isPresent()) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid Generator Type"));
-				src.sendMessage(invalidArg());
-				return CommandResult.empty();
-			}
-			builder.generator(optionalType.get());
+		if (args.hasAny("generatorType")) {
+			builder.generator(args.<GeneratorType> getOne("generatorType").get());
 		}
 
 		if (args.hasAny("modifier")) {
-			String modifier = args.<String> getOne("modifier").get();
-
-			Optional<WorldGeneratorModifier> optionalType = Sponge.getRegistry().getType(WorldGeneratorModifier.class, modifier);
-			
-			if (!optionalType.isPresent()) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid Modifier Type"));
-				src.sendMessage(invalidArg());
-				return CommandResult.empty();
-			}
-			builder.generatorModifiers(optionalType.get());
+			builder.generatorModifiers(args.<WorldGeneratorModifier> getOne("modifier").get());
 		}
 
 		if (args.hasAny("seed")) {
@@ -122,7 +83,7 @@ public class CMDCreate implements CommandExecutor {
 
 		SpongeData.getIds().add((int) properties.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get());
 
-		ConfigManager configManager = Main.getConfigManager();
+		ConfigManager configManager = ConfigManager.get();
 		configManager.getConfig().getNode("dimension_ids").setValue(SpongeData.getIds());
 		configManager.save();
 
@@ -131,42 +92,5 @@ public class CMDCreate implements CommandExecutor {
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " created successfully"));
 
 		return CommandResult.success();
-	}
-
-	private Text invalidArg() {
-		Sponge.getRegistry().getAllOf(DimensionType.class);
-		Text t1 = Text.of(TextColors.YELLOW, "/world create <world> ");
-		org.spongepowered.api.text.Text.Builder dimTypes = null;
-		for (DimensionType dimType : Sponge.getRegistry().getAllOf(DimensionType.class)) {
-			if (dimTypes == null) {
-				dimTypes = Text.builder().append(Text.of(dimType.getId()));
-			} else {
-				dimTypes.append(Text.of("\n", dimType.getId()));
-			}
-		}
-		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(dimTypes.build())).append(Text.of("[-d <type>] ")).build();
-		org.spongepowered.api.text.Text.Builder genTypes = null;
-		for (GeneratorType genType : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
-			if (!genType.getName().equalsIgnoreCase("debug_all_block_states") && !genType.getName().equalsIgnoreCase("default_1_1")) {
-				if (genTypes == null) {
-					genTypes = Text.builder().append(Text.of(genType.getId()));
-				} else {
-					genTypes.append(Text.of(genType.getId(), "\n"));
-				}
-			}
-		}
-		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(genTypes.build())).append(Text.of("[-g <generator>] ")).build();
-		org.spongepowered.api.text.Text.Builder modifiers = null;
-		for (WorldGeneratorModifier modifier : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
-			if (modifiers == null) {
-				modifiers = Text.builder().append(Text.of(modifier.getId()));
-			} else {
-				modifiers.append(Text.of("\n", modifier.getId()));
-			}
-		}
-
-		Text t4 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(modifiers.build())).append(Text.of("[-m <modifier>] ")).build();
-		Text t5 = Text.of(TextColors.YELLOW, "[-s <seed>]");
-		return Text.of(t1, t2, t3, t4, t5);
 	}
 }

@@ -1,21 +1,11 @@
 package com.gmail.trentech.pjw.commands;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.service.pagination.PaginationList;
-import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.difficulty.Difficulty;
 import org.spongepowered.api.world.storage.WorldProperties;
@@ -33,79 +23,18 @@ public class CMDDifficulty implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if (!args.hasAny("name")) {
-			src.sendMessage(invalidArg());
+		WorldProperties properties = args.<WorldProperties> getOne("world").get();
+
+		if (!args.hasAny("difficulty")) {
+			src.sendMessage(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.WHITE, properties.getDifficulty().getName().toUpperCase()));	
 			return CommandResult.empty();
 		}
-		String worldName = args.<String> getOne("name").get();
+		Difficulty difficulty = args.<Difficulty> getOne("difficulty").get();
+		
+		properties.setDifficulty(difficulty);
 
-		if (worldName.equalsIgnoreCase("@w") && src instanceof Player) {
-			worldName = ((Player) src).getWorld().getName();
-		}
-
-		Collection<WorldProperties> worlds = new ArrayList<>();
-
-		if (worldName.equalsIgnoreCase("@a")) {
-			worlds = Sponge.getServer().getAllWorldProperties();
-		} else {
-			if (!Sponge.getServer().getWorldProperties(worldName).isPresent()) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
-				return CommandResult.empty();
-			}
-			worlds.add(Sponge.getServer().getWorldProperties(worldName).get());
-		}
-
-		Difficulty difficulty = null;
-
-		if (args.hasAny("value")) {
-			String value = args.<String> getOne("value").get();
-
-			Optional<Difficulty> optionalDifficulty = Sponge.getRegistry().getType(Difficulty.class, value);
-
-			if (!optionalDifficulty.isPresent()) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid difficulty type"));
-				return CommandResult.empty();
-			}
-			difficulty = optionalDifficulty.get();
-		}
-
-		List<Text> list = new ArrayList<>();
-
-		for (WorldProperties properties : worlds) {
-			if (difficulty == null) {
-				list.add(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.WHITE, properties.getDifficulty().getName().toUpperCase()));
-				continue;
-			}
-
-			properties.setDifficulty(difficulty);
-
-			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set difficulty of ", worldName, " to ", TextColors.YELLOW, difficulty.getName().toUpperCase()));
-		}
-
-		if (!list.isEmpty()) {
-			if (src instanceof Player) {
-				PaginationList.Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
-
-				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Difficulty")).build());
-
-				pages.contents(list);
-
-				pages.sendTo(src);
-			} else {
-				for (Text text : list) {
-					src.sendMessage(text);
-				}
-			}
-		}
-
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set difficulty of ", properties.getWorldName(), " to ", TextColors.YELLOW, difficulty.getName().toUpperCase()));
+		
 		return CommandResult.success();
 	}
-
-	private Text invalidArg() {
-		Text t1 = Text.of(TextColors.YELLOW, "/world difficulty ");
-		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world or @w for current world or @a for all worlds"))).append(Text.of("<world> ")).build();
-		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("PEACEFUL\nEASY\nNORMAL\nHARD"))).append(Text.of("[value]")).build();
-		return Text.of(t1, t2, t3);
-	}
-
 }

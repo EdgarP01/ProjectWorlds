@@ -37,7 +37,7 @@ public class Zip {
 	}
 
 	public void save() {
-		Main.getLog().info("Backing up " + worldName);
+		Main.instance().getLog().info("Backing up " + worldName);
 
 		String zipFile = this.backupDir.getAbsolutePath() + File.separator + this.worldName + ".zip";
 

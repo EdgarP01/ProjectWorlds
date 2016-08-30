@@ -14,7 +14,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
@@ -31,25 +30,14 @@ public class CMDDelete implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if (!args.hasAny("name")) {
-			src.sendMessage(Text.of(TextColors.YELLOW, "/world delete <world>"));
-			return CommandResult.empty();
-		}
-		String worldName = args.<String> getOne("name").get();
+		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
-		if (Sponge.getServer().getWorld(worldName).isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " must be unloaded before you can delete"));
+		if (Sponge.getServer().getWorld(properties.getWorldName()).isPresent()) {
+			src.sendMessage(Text.of(TextColors.RED, properties.getWorldName(), " must be unloaded before you can delete"));
 			return CommandResult.empty();
 		}
 
-		if (!Sponge.getServer().getWorldProperties(worldName).isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
-			return CommandResult.empty();
-		}
-
-		new Zip(worldName).save();
-
-		WorldProperties properties = Sponge.getServer().getWorldProperties(worldName).get();
+		new Zip(properties.getWorldName()).save();
 
 		int dimId = (int) properties.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get();
 		try {
@@ -64,11 +52,11 @@ public class CMDDelete implements CommandExecutor {
 					}
 				}
 
-				ConfigManager configManager = Main.getConfigManager();
+				ConfigManager configManager = ConfigManager.get();
 				configManager.getConfig().getNode("dimension_ids").setValue(SpongeData.getIds());
 				configManager.save();
 
-				src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " deleted successfully"));
+				src.sendMessage(Text.of(TextColors.DARK_GREEN, properties.getWorldName(), " deleted successfully"));
 
 				return CommandResult.success();
 			}
@@ -76,7 +64,7 @@ public class CMDDelete implements CommandExecutor {
 			e.printStackTrace();
 		}
 
-		src.sendMessage(Text.of(TextColors.DARK_RED, "Could not delete ", worldName));
+		src.sendMessage(Text.of(TextColors.DARK_RED, "Could not delete ", properties.getWorldName()));
 
 		return CommandResult.empty();
 	}

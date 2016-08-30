@@ -18,9 +18,11 @@ import org.spongepowered.api.text.title.Title;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Rotation;
+import com.gmail.trentech.pjw.utils.Utils;
 
 public class CMDTeleport implements CommandExecutor {
 
@@ -41,29 +43,12 @@ public class CMDTeleport implements CommandExecutor {
 		}
 		Player player = (Player) src;
 
-		if (!args.hasAny("world")) {
-			src.sendMessage(getUsage());
-			return CommandResult.empty();
-		}
-		String worldName = args.<String> getOne("world").get();
+		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
-		if (worldName.equalsIgnoreCase("confirm")) {
-			if (!players.containsKey(player)) {
-				return CommandResult.success();
-			}
-			Location<World> location = players.get(player);
-
-			player.setLocation(location);
-
-			players.remove(player);
-
-			return CommandResult.success();
-		}
-
-		Optional<World> optionalWorld = Sponge.getServer().getWorld(worldName);
+		Optional<World> optionalWorld = Sponge.getServer().getWorld(properties.getWorldName());
 
 		if (!optionalWorld.isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
+			src.sendMessage(Text.of(TextColors.DARK_RED, properties.getWorldName(), " does not exist"));
 			return CommandResult.empty();
 		}
 		World world = optionalWorld.get();
@@ -102,8 +87,8 @@ public class CMDTeleport implements CommandExecutor {
 			rotation = optionalRotation.get();
 		}
 
-		if (!src.hasPermission("pjw.worlds." + worldName)) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "You do not have permission to travel to ", worldName));
+		if (!src.hasPermission("pjw.worlds." + properties.getWorldName())) {
+			src.sendMessage(Text.of(TextColors.DARK_RED, "You do not have permission to travel to ", properties.getWorldName()));
 			return CommandResult.empty();
 		}
 
@@ -112,14 +97,13 @@ public class CMDTeleport implements CommandExecutor {
 		Optional<Location<World>> optionalLocation = teleportHelper.getSafeLocation(location);
 
 		if (!optionalLocation.isPresent()) {
-			players.put(player, location);
-			src.sendMessage(Text.builder().color(TextColors.DARK_RED).append(Text.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.runCommand("/pjw:world teleport confirm")).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
+			src.sendMessage(Text.builder().color(TextColors.DARK_RED).append(Text.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.executeCallback(Utils.unsafe(location))).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
 			return CommandResult.empty();
 		}
 
 		player.setLocationAndRotation(optionalLocation.get(), rotation.toVector3d());
 
-		player.sendTitle(Title.of(Text.of(TextColors.DARK_GREEN, worldName), Text.of(TextColors.AQUA, "x: ", location.getBlockX(), ", y: ", location.getBlockY(), ", z: ", location.getBlockZ())));
+		player.sendTitle(Title.of(Text.of(TextColors.DARK_GREEN, properties.getWorldName()), Text.of(TextColors.AQUA, "x: ", location.getBlockX(), ", y: ", location.getBlockY(), ", z: ", location.getBlockZ())));
 
 		return CommandResult.success();
 	}

@@ -13,7 +13,7 @@ import com.gmail.trentech.pjw.Main;
 public class Migrator {
 
 	public static void init() {
-		Main.getLog().info("Running World Migration tool..");
+		Main.instance().getLog().info("Running World Migration tool..");
 
 		File directory = new File(Sponge.getGame().getSavesDirectory().toFile(), "imports");
 
@@ -24,9 +24,9 @@ public class Migrator {
 		File[] files = directory.listFiles();
 
 		if ((files.length - 1) > 0) {
-			Main.getLog().info("Found " + (files.length - 1) + " possible worlds");
+			Main.instance().getLog().info("Found " + (files.length - 1) + " possible worlds");
 		} else {
-			Main.getLog().info("No worlds to migrate");
+			Main.instance().getLog().info("No worlds to migrate");
 		}
 
 		for (File world : directory.listFiles()) {
@@ -42,10 +42,10 @@ public class Migrator {
 
 			String name = world.getName();
 
-			Main.getLog().info("Migrating world: " + name);
+			Main.instance().getLog().info("Migrating world: " + name);
 
 			if (!worldData.isCorrectLevelName()) {
-				Main.getLog().warn("  * Repairing level name mismatch");
+				Main.instance().getLog().warn("  * Repairing level name mismatch");
 
 				try {
 					worldData.setLevelName(world.getName());
@@ -60,7 +60,7 @@ public class Migrator {
 			if (spongeData.exists()) {
 				if (!spongeData.isFreeDimId()) {
 
-					Main.getLog().warn("  * Repairing dimension id conflict");
+					Main.instance().getLog().warn("  * Repairing dimension id conflict");
 					try {
 						spongeData.setDimId(spongeData.getFreeDimId());
 					} catch (IOException e) {
@@ -74,7 +74,7 @@ public class Migrator {
 
 			int i = 1;
 			while (name.equalsIgnoreCase(Sponge.getServer().getDefaultWorldName()) || dest.exists()) {
-				Main.getLog().error(" * A world with this name already exists");
+				Main.instance().getLog().error(" * A world with this name already exists");
 				name = world.getName() + "_" + i;
 
 				try {
@@ -88,18 +88,18 @@ public class Migrator {
 			}
 
 			try {
-				Main.getLog().info("  * Copying world to final resting place");
+				Main.instance().getLog().info("  * Copying world to final resting place");
 				copyWorld(world, dest);
 			} catch (IOException e) {
-				Main.getLog().error(" * Could not copy world");
+				Main.instance().getLog().error(" * Could not copy world");
 				e.printStackTrace();
 				continue;
 			}
 
 			if (spongeData.exists()) {
-				Main.getLog().info("  * Complete!");
+				Main.instance().getLog().info("  * Complete!");
 			} else {
-				Main.getLog().warn("  * Complete! Requires importing. /world import " + world.getName() + " <type> <generator>");
+				Main.instance().getLog().warn("  * Complete! Requires importing. /world import " + world.getName() + " <type> <generator>");
 			}
 
 			Sponge.getScheduler().createTaskBuilder().delayTicks(40).execute(e -> {
@@ -108,7 +108,7 @@ public class Migrator {
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-			}).submit(Main.getPlugin());
+			}).submit(Main.instance().getPlugin());
 		}
 	}
 

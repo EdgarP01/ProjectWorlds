@@ -9,9 +9,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
@@ -28,59 +26,29 @@ public class CMDCopy implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if (!args.hasAny("old")) {
-			src.sendMessage(invalidArg());
-			return CommandResult.empty();
-		}
+		WorldProperties properties = args.<WorldProperties> getOne("oldWorld").get();
 
-		String oldWorldName = args.<String> getOne("old").get();
+		String newWorldName = args.<String> getOne("newWorld").get();
 
-		if (oldWorldName.equalsIgnoreCase("@w") && src instanceof Player) {
-			oldWorldName = ((Player) src).getWorld().getName();
-		}
-
-		if (!args.hasAny("new")) {
-			src.sendMessage(invalidArg());
-			return CommandResult.empty();
-		}
-
-		String newWorldName = args.<String> getOne("new").get();
-
-		for (WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
-			if (!world.getWorldName().equalsIgnoreCase(newWorldName)) {
-				continue;
-			}
-
-			src.sendMessage(Text.of(TextColors.DARK_RED, newWorldName, " already exists"));
-			return CommandResult.empty();
-		}
-
-		if (!Sponge.getServer().getWorld(oldWorldName).isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "World ", oldWorldName, " does not exists"));
+		if (Sponge.getServer().getWorldProperties(newWorldName).isPresent()) {
+			src.sendMessage(Text.of(TextColors.RED, newWorldName, " already exists"));
 			return CommandResult.empty();
 		}
 
 		Optional<WorldProperties> copy = null;
 		try {
-			copy = Sponge.getServer().copyWorld(Sponge.getServer().getWorld(oldWorldName).get().getProperties(), newWorldName).get();
+			copy = Sponge.getServer().copyWorld(properties, newWorldName).get();
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
 
 		if (!copy.isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not copy ", oldWorldName));
+			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not copy ", properties.getWorldName()));
 			return CommandResult.empty();
 		}
 
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, oldWorldName, " copied to ", newWorldName));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, properties.getWorldName(), " copied to ", newWorldName));
 
 		return CommandResult.success();
-	}
-
-	private Text invalidArg() {
-		Text t1 = Text.of(TextColors.YELLOW, "/world copy ");
-		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter source world"))).append(Text.of("<world> ")).build();
-		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter new world name"))).append(Text.of("<world>")).build();
-		return Text.of(t1, t2, t3);
 	}
 }

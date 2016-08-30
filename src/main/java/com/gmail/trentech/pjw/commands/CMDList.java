@@ -12,7 +12,6 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.pagination.PaginationList;
-import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Builder;
 import org.spongepowered.api.text.action.TextActions;
@@ -51,7 +50,7 @@ public class CMDList implements CommandExecutor {
 		}
 
 		if (src instanceof Player) {
-			PaginationList.Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
+			PaginationList.Builder pages = PaginationList.builder();
 
 			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Worlds")).build());
 

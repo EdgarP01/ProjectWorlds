@@ -1,6 +1,5 @@
 package com.gmail.trentech.pjw.commands;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -9,6 +8,8 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.flowpowered.math.vector.Vector3i;
@@ -25,28 +26,21 @@ public class CMDSetSpawn implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if (!(src instanceof Player)) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Must be a player"));
-			return CommandResult.empty();
+		if (!args.hasAny("world")) {
+			if(src instanceof Player) {
+				WorldProperties properties = ((Player) src).getWorld().getProperties();
+				Location<World> location = ((Player) src).getLocation();
+				
+				properties.setSpawnPosition(location.getBlockPosition());
+				
+				src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set spawn of world ", properties.getWorldName(), " to x: ", properties.getSpawnPosition().getX(), ", y: ", properties.getSpawnPosition().getY(), ", z: ", properties.getSpawnPosition().getZ()));
+				return CommandResult.success();
+			} else {
+				src.sendMessage(Text.of(TextColors.RED, "Must be a player"));
+				return CommandResult.empty();
+			}
 		}
-		Player player = (Player) src;
-
-		String worldName = player.getWorld().getName();
-		if (args.hasAny("name")) {
-			worldName = args.<String> getOne("name").get();
-		}
-
-		if (!Sponge.getServer().getWorldProperties(worldName).isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
-			return CommandResult.empty();
-		}
-		WorldProperties properties = Sponge.getServer().getWorldProperties(worldName).get();
-
-		if (!args.hasAny("value")) {
-			properties.setSpawnPosition(player.getLocation().getBlockPosition());
-			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set spawn of world ", worldName, " to x: ", properties.getSpawnPosition().getX(), ", y: ", properties.getSpawnPosition().getY(), ", z: ", properties.getSpawnPosition().getZ()));
-			return CommandResult.success();
-		}
+		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		String[] coords = args.<String> getOne("value").get().split(",");
 
@@ -57,7 +51,7 @@ public class CMDSetSpawn implements CommandExecutor {
 
 		properties.setSpawnPosition(new Vector3i().add(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));
 
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set spawn of world ", worldName, " to x: ", properties.getSpawnPosition().getX(), ", y: ", properties.getSpawnPosition().getY(), ", z: ", properties.getSpawnPosition().getZ()));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set spawn of world ", properties.getWorldName(), " to x: ", properties.getSpawnPosition().getX(), ", y: ", properties.getSpawnPosition().getY(), ", z: ", properties.getSpawnPosition().getZ()));
 
 		return CommandResult.success();
 	}

@@ -31,11 +31,6 @@ public class CMDImport implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if (!args.hasAny("name")) {
-			src.sendMessage(invalidArg());
-			return CommandResult.empty();
-		}
-
 		String worldName = args.<String> getOne("name").get();
 
 		if (Sponge.getServer().getWorld(worldName).isPresent()) {
@@ -58,24 +53,8 @@ public class CMDImport implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
-		if (!args.hasAny("type") || !args.hasAny("generator")) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Must specify dimension and generator type when importing worlds"));
-			return CommandResult.empty();
-		}
-		String type = args.<String> getOne("type").get();
-		String generator = args.<String> getOne("generator").get();
-
-		if (!Sponge.getRegistry().getType(DimensionType.class, type).isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid dimension type"));
-			return CommandResult.empty();
-		}
-		DimensionType dimensionType = Sponge.getRegistry().getType(DimensionType.class, type).get();
-
-		if (!Sponge.getRegistry().getType(GeneratorType.class, generator).isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Invalid generator type"));
-			return CommandResult.empty();
-		}
-		GeneratorType generatorType = Sponge.getRegistry().getType(GeneratorType.class, generator).get();
+		DimensionType dimensionType = args.<DimensionType> getOne("dimensionType").get();
+		GeneratorType generatorType = args.<GeneratorType> getOne("generatorType").get();
 
 		WorldArchetype settings = WorldArchetype.builder().dimension(dimensionType)
 				.generator(generatorType).enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true).build(worldName, worldName);
@@ -96,29 +75,4 @@ public class CMDImport implements CommandExecutor {
 		return CommandResult.success();
 	}
 
-	private Text invalidArg() {
-		Sponge.getRegistry().getAllOf(DimensionType.class);
-		Text t1 = Text.of(TextColors.YELLOW, "/world import <world> ");
-		org.spongepowered.api.text.Text.Builder dimTypes = null;
-		for (DimensionType dimType : Sponge.getRegistry().getAllOf(DimensionType.class)) {
-			if (dimTypes == null) {
-				dimTypes = Text.builder().append(Text.of(dimType.getName()));
-			} else {
-				dimTypes.append(Text.of("\n", dimType.getName()));
-			}
-		}
-		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(dimTypes.build())).append(Text.of("<type> ")).build();
-		org.spongepowered.api.text.Text.Builder genTypes = Text.builder();
-		for (GeneratorType genType : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
-			if (!genType.getName().equalsIgnoreCase("debug_all_block_states") && !genType.getName().equalsIgnoreCase("default_1_1")) {
-				if (genTypes == null) {
-					genTypes = Text.builder().append(Text.of(genType.getName()));
-				} else {
-					genTypes.append(Text.of(genType.getName(), "\n"));
-				}
-			}
-		}
-		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(genTypes.build())).append(Text.of("<generator>")).build();
-		return Text.of(t1, t2, t3);
-	}
 }

@@ -32,63 +32,50 @@ public class CMDLoad implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if (!args.hasAny("name")) {
-			src.sendMessage(Text.of(TextColors.YELLOW, "/world load <world>"));
-			return CommandResult.empty();
-		}
-		String worldName = args.<String> getOne("name").get();
+		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
-		if (Sponge.getServer().getWorld(worldName).isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " is already loaded"));
+		if (!Sponge.getServer().getWorld(properties.getUniqueId()).isPresent()) {
+			src.sendMessage(Text.of(TextColors.DARK_RED, properties.getWorldName(), " is already loaded"));
 			return CommandResult.empty();
 		}
 
-		WorldData worldData = new WorldData(worldName);
+		WorldData worldData = new WorldData(properties.getWorldName());
 
 		if (!worldData.exists()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
+			src.sendMessage(Text.of(TextColors.DARK_RED, properties.getWorldName(), " does not exist"));
 			return CommandResult.empty();
 		}
 
-		SpongeData spongeData = new SpongeData(worldName);
+		SpongeData spongeData = new SpongeData(properties.getWorldName());
 
 		if (!spongeData.exists()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Foriegn world detected"));
 			src.sendMessage(Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.runCommand("/pjw:world import")).append(Text.of(" /world import")).build());
 			return CommandResult.empty();
 		}
-
-		Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(worldName);
-
-		if (!optionalProperties.isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not find ", worldName));
-			return CommandResult.empty();
-		}
-
-		WorldProperties properties = optionalProperties.get();
-
+		
 		src.sendMessage(Text.of(TextColors.YELLOW, "Preparing spawn area. This may take a minute."));
 
-		Sponge.getScheduler().createTaskBuilder().name("PJW" + worldName).delayTicks(20).execute(new Runnable() {
+		Sponge.getScheduler().createTaskBuilder().name("PJW" + properties.getWorldName()).delayTicks(20).execute(new Runnable() {
 
 			@Override
 			public void run() {
 				Optional<World> load = Sponge.getServer().loadWorld(properties);
 
 				if (!load.isPresent()) {
-					src.sendMessage(Text.of(TextColors.DARK_RED, "Could not load ", worldName));
+					src.sendMessage(Text.of(TextColors.DARK_RED, "Could not load ", properties.getWorldName()));
 					return;
 				}
 
-				if (CMDCreate.worlds.contains(worldName)) {
+				if (CMDCreate.worlds.contains(properties.getWorldName())) {
 					Utils.createPlatform(load.get().getSpawnLocation().getRelative(Direction.DOWN));
-					CMDCreate.worlds.remove(worldName);
+					CMDCreate.worlds.remove(properties.getWorldName());
 				}
 
-				src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " loaded successfully"));
+				src.sendMessage(Text.of(TextColors.DARK_GREEN, properties.getWorldName(), " loaded successfully"));
 			}
 
-		}).submit(Main.getPlugin());
+		}).submit(Main.instance().getPlugin());
 
 		return CommandResult.success();
 	}

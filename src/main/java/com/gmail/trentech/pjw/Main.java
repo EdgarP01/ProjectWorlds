@@ -1,12 +1,16 @@
 package com.gmail.trentech.pjw;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameAboutToStartServerEvent;
@@ -28,6 +32,7 @@ import com.gmail.trentech.pjw.listeners.EventManager;
 import com.gmail.trentech.pjw.listeners.TabEventManager;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Resource;
+import com.google.inject.Inject;
 
 import me.flibio.updatifier.Updatifier;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -36,14 +41,26 @@ import ninja.leaping.configurate.ConfigurationNode;
 @Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION, description = Resource.DESCRIPTION, authors = Resource.AUTHOR, url = Resource.URL, dependencies = { @Dependency(id = "Updatifier", optional = true) })
 public class Main {
 
-	private static Logger log;
-	private static PluginContainer plugin;
-	private static ConfigManager configManager;
+	@Inject @ConfigDir(sharedRoot = false)
+    private Path path;
 
+	@Inject 
+	private PluginContainer plugin;
+	
+	@Inject
+	private Logger log;
+
+	private static Main instance;
+	
 	@Listener
-	public void onPreInitialization(GamePreInitializationEvent event) {
-		plugin = Sponge.getPluginManager().getPlugin(Resource.ID).get();
-		log = getPlugin().getLogger();
+	public void onPreInitializationEvent(GamePreInitializationEvent event) {
+		instance = this;
+		
+		try {			
+			Files.createDirectories(path);		
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Listener
@@ -57,12 +74,12 @@ public class Main {
 		Sponge.getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
 		Sponge.getCommandManager().register(this, new CommandManager().cmdGamerule, "gamerule", "gr");
 
-		configManager = new ConfigManager().init();
+		ConfigManager.init();
 	}
 
 	@Listener
 	public void onAboutToStartServer(GameAboutToStartServerEvent event) {
-		ConfigurationNode node = getConfigManager().getConfig().getNode("dimension_ids");
+		ConfigurationNode node = ConfigManager.get().getConfig().getNode("dimension_ids");
 
 		SpongeData.getIds().addAll(node.getChildrenList().stream().map(ConfigurationNode::getInt).collect(Collectors.toList()));
 
@@ -82,19 +99,25 @@ public class Main {
 
 		SpongeData.setIds(list);
 
-		getConfigManager().getConfig().getNode("dimension_ids").setValue(list).setComment("DO NOT EDIT");
-		getConfigManager().save();
+		ConfigManager configManager = ConfigManager.get();
+		
+		configManager.getConfig().getNode("dimension_ids").setValue(list).setComment("DO NOT EDIT");
+		configManager.save();
 	}
 
-	public static Logger getLog() {
+	public Logger getLog() {
 		return log;
 	}
 
-	public static PluginContainer getPlugin() {
+	public PluginContainer getPlugin() {
 		return plugin;
 	}
 	
-	public static ConfigManager getConfigManager() {
-		return configManager;
+	public Path getPath() {
+		return path;
+	}
+	
+	public static Main instance() {
+		return instance;
 	}
 }

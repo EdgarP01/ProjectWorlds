@@ -8,7 +8,6 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
@@ -35,33 +34,36 @@ public class CMDFill implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if (!args.hasAny("name")) {
-			src.sendMessage(invalidArg());
+		WorldProperties properties = args.<WorldProperties> getOne("world").get();
+
+		if (!Sponge.getServer().getWorld(properties.getUniqueId()).isPresent()) {
+			src.sendMessage(Text.of(TextColors.DARK_RED, properties.getWorldName(), " must be loaded"));
 			return CommandResult.empty();
 		}
-		String worldName = args.<String> getOne("name").get();
-
-		if (worldName.equalsIgnoreCase("@w") && src instanceof Player) {
-			worldName = ((Player) src).getWorld().getName();
-		}
-
-		if (!args.hasAny("value")) {
-			src.sendMessage(invalidArg());
-			return CommandResult.empty();
-		}
+		World world = Sponge.getServer().getWorld(properties.getUniqueId()).get();
+		
 		String value = args.<String> getOne("value").get();
 
 		if (value.equalsIgnoreCase("stop")) {
-			if (!list.containsKey(worldName)) {
+			if (!list.containsKey(properties.getWorldName())) {
 				src.sendMessage(Text.of(TextColors.YELLOW, "Pre-Generator not running for this world"));
 				return CommandResult.empty();
 			}
-			list.get(worldName).cancel();
-			list.remove(worldName);
+			list.get(properties.getWorldName()).cancel();
+			list.remove(properties.getWorldName());
 
-			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Pre-Generator cancelled for ", worldName));
+			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Pre-Generator cancelled for ", properties.getWorldName()));
 			return CommandResult.success();
 		}
+		
+		if (list.containsKey(properties.getWorldName())) {
+			if (Sponge.getScheduler().getScheduledTasks(Main.instance().getPlugin()).contains(list.get(properties.getWorldName()))) {
+				src.sendMessage(Text.of(TextColors.YELLOW, "Pre-Generator already running for this world"));
+				return CommandResult.empty();
+			}
+			list.remove(properties.getWorldName());
+		}
+		
 		double diameter;
 		try {
 			diameter = Double.parseDouble(value);
@@ -69,26 +71,6 @@ public class CMDFill implements CommandExecutor {
 			src.sendMessage(invalidArg());
 			return CommandResult.empty();
 		}
-
-		if (list.containsKey(worldName)) {
-			if (Sponge.getScheduler().getScheduledTasks(Main.getPlugin()).contains(list.get(worldName))) {
-				src.sendMessage(Text.of(TextColors.YELLOW, "Pre-Generator already running for this world"));
-				return CommandResult.empty();
-			}
-			list.remove(worldName);
-		}
-
-		if (!Sponge.getServer().getWorldProperties(worldName).isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " does not exist"));
-			return CommandResult.empty();
-		}
-		WorldProperties properties = Sponge.getServer().getWorldProperties(worldName).get();
-
-		if (!Sponge.getServer().getWorld(properties.getUniqueId()).isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " must be loaded"));
-			return CommandResult.empty();
-		}
-		World world = Sponge.getServer().getWorld(properties.getUniqueId()).get();
 
 		WorldBorder border = world.getWorldBorder();
 
@@ -98,26 +80,18 @@ public class CMDFill implements CommandExecutor {
 		border.setCenter(world.getSpawnLocation().getX(), world.getSpawnLocation().getZ());
 		border.setDiameter(diameter);
 
-		ChunkPreGenerate generator = border.newChunkPreGenerate(world).owner(Main.getPlugin());
-		generator.logger(Main.getLog());
+		ChunkPreGenerate generator = border.newChunkPreGenerate(world).owner(Main.instance().getPlugin());
+		generator.logger(Main.instance().getLog());
 		
 		if (args.hasAny("interval")) {
-			String interval = args.<String> getOne("interval").get();
-
-			try {
-				generator.tickInterval(Integer.parseInt(interval));
-			} catch(Exception e) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, interval, " is not a valid integer"));
-				src.sendMessage(invalidArg());
-				return CommandResult.empty();
-			}			
+			generator.tickInterval(args.<Integer> getOne("interval").get());		
 		}
 
 		Task task = generator.start();
 
-		list.put(worldName, task);
+		list.put(properties.getWorldName(), task);
 
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Pre-Generator starting for ", worldName));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Pre-Generator starting for ", properties.getWorldName()));
 		src.sendMessage(Text.of(TextColors.GOLD, "This can cause significant lag while running"));
 
 		status(src, task);
@@ -138,11 +112,11 @@ public class CMDFill implements CommandExecutor {
 
 	private void status(CommandSource src, Task task) {
 		Sponge.getScheduler().createTaskBuilder().delayTicks(100).execute(c -> {
-			if (!Sponge.getScheduler().getScheduledTasks(Main.getPlugin()).contains(task)) {
+			if (!Sponge.getScheduler().getScheduledTasks(Main.instance().getPlugin()).contains(task)) {
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, "Pre-Generator finished"));
 			} else {
 				status(src, task);
 			}
-		}).submit(Main.getPlugin());
+		}).submit(Main.instance().getPlugin());
 	}
 }
