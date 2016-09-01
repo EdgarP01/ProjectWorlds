@@ -67,6 +67,8 @@ public class ConfigManager {
 		
 		configManager.save();
 		
+		configManagers.put(configName, configManager);
+		
 		return configManager;
 	}
 	
