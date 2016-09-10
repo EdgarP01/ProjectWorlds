@@ -57,8 +57,7 @@ public class CMDGamerule implements CommandExecutor {
 		String rule = args.<String> getOne("rule").get();
 
 		if (!properties.getGameRule(rule).isPresent()) {
-			src.sendMessage(Text.of(TextColors.RED, "Gamerule  ", rule, " does not exist"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, "Gamerule  ", rule, " does not exist"));
 		}
 
 		if (!args.hasAny("value")) {
@@ -68,8 +67,7 @@ public class CMDGamerule implements CommandExecutor {
 		String value = args.<String> getOne("value").get();
 
 		if (!isValid(rule, value)) {
-			src.sendMessage(Text.of(TextColors.RED, value, " is not a valid value for gamerule ", rule));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, value, " is not a valid value for gamerule ", rule));
 		}
 
 		properties.setGameRule(rule, value.toLowerCase());

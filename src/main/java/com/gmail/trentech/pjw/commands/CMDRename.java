@@ -28,22 +28,19 @@ public class CMDRename implements CommandExecutor {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		if (Sponge.getServer().getWorld(properties.getWorldName()).isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, properties.getWorldName(), " must be unloaded before you can rename"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " must be unloaded before you can rename"));
 		}
 
 		String newWorldName = args.<String> getOne("new").get();
 
 		if (Sponge.getServer().getWorldProperties(newWorldName).isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, newWorldName, " already exists"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, newWorldName, " already exists"));
 		}
 
 		Optional<WorldProperties> rename = Sponge.getServer().renameWorld(properties, newWorldName);
 
 		if (!rename.isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not rename ", properties.getWorldName()));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, "Could not rename ", properties.getWorldName()));
 		}
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, properties.getWorldName(), " renamed to ", newWorldName, " successfully"));

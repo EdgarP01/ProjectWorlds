@@ -39,8 +39,7 @@ public class CMDCreate implements CommandExecutor {
 		String worldName = args.<String> getOne("name").get();
 
 		if (Sponge.getServer().getWorldProperties(worldName).isPresent()) {
-			src.sendMessage(Text.of(TextColors.RED, worldName, " already exists"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, worldName, " already exists"));
 		}
 
 		WorldArchetype.Builder builder = WorldArchetype.builder();
@@ -74,9 +73,8 @@ public class CMDCreate implements CommandExecutor {
 		try {
 			properties = Sponge.getServer().createWorldProperties(worldName, settings);
 		} catch (IOException e) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong. Check server log for details"));
 			e.printStackTrace();
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, "Something went wrong. Check server log for details"));
 		}
 
 		Sponge.getServer().saveWorldProperties(properties);

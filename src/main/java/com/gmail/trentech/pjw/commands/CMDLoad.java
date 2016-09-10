@@ -35,23 +35,21 @@ public class CMDLoad implements CommandExecutor {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		if (!Sponge.getServer().getWorld(properties.getUniqueId()).isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, properties.getWorldName(), " is already loaded"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " is already loaded"));
 		}
 
 		WorldData worldData = new WorldData(properties.getWorldName());
 
 		if (!worldData.exists()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, properties.getWorldName(), " does not exist"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " does not exist"));
 		}
 
 		SpongeData spongeData = new SpongeData(properties.getWorldName());
 
 		if (!spongeData.exists()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Foriegn world detected"));
+			src.sendMessage(Text.of(TextColors.RED, "Foriegn world detected"));
 			src.sendMessage(Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.runCommand("/pjw:world import")).append(Text.of(" /world import")).build());
-			return CommandResult.empty();
+			return CommandResult.success();
 		}
 		
 		src.sendMessage(Text.of(TextColors.YELLOW, "Preparing spawn area. This may take a minute."));
@@ -63,7 +61,7 @@ public class CMDLoad implements CommandExecutor {
 				Optional<World> load = Sponge.getServer().loadWorld(properties);
 
 				if (!load.isPresent()) {
-					src.sendMessage(Text.of(TextColors.DARK_RED, "Could not load ", properties.getWorldName()));
+					src.sendMessage(Text.of(TextColors.RED, "Could not load ", properties.getWorldName()));
 					return;
 				}
 

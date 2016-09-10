@@ -36,8 +36,7 @@ public class CMDSetSpawn implements CommandExecutor {
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set spawn of world ", properties.getWorldName(), " to x: ", properties.getSpawnPosition().getX(), ", y: ", properties.getSpawnPosition().getY(), ", z: ", properties.getSpawnPosition().getZ()));
 				return CommandResult.success();
 			} else {
-				src.sendMessage(Text.of(TextColors.RED, "Must be a player"));
-				return CommandResult.empty();
+				throw new CommandException(Text.of(TextColors.RED, "Must be a player"));
 			}
 		}
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
@@ -45,8 +44,7 @@ public class CMDSetSpawn implements CommandExecutor {
 		String[] coords = args.<String> getOne("value").get().split(",");
 
 		if (!isValidLocation(coords)) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, coords, " is not valid"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, coords, " is not valid"));
 		}
 
 		properties.setSpawnPosition(new Vector3i().add(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));
