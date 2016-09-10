@@ -55,14 +55,8 @@ public class CMDFill implements CommandExecutor {
 		}
 		
 		if (list.containsKey(properties.getWorldName())) {
-<<<<<<< HEAD
 			if (Sponge.getScheduler().getScheduledTasks(Main.getPlugin()).contains(list.get(properties.getWorldName()))) {
-				src.sendMessage(Text.of(TextColors.YELLOW, "Pre-Generator already running for this world"));
-				return CommandResult.empty();
-=======
-			if (Sponge.getScheduler().getScheduledTasks(Main.instance().getPlugin()).contains(list.get(properties.getWorldName()))) {
 				throw new CommandException(Text.of(TextColors.YELLOW, "Pre-Generator already running for this world"));
->>>>>>> branch '5.0.0' of https://github.com/TrenTech/ProjectWorlds
 			}
 			list.remove(properties.getWorldName());
 		}
