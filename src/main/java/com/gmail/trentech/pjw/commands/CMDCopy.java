@@ -19,8 +19,8 @@ public class CMDCopy implements CommandExecutor {
 
 	public CMDCopy() {
 		Help help = new Help("copy", "copy", " Allows you to make a new world from an existing world");
-		help.setSyntax(" /world copy <world> <world>\n /w cp <world> <world>");
-		help.setExample(" /world copy srcWorld newWorld\n /world copy @w newWorld");
+		help.setSyntax(" /world copy <oldWorld> <newWorld>\n /w cp <oldWorld> <newWorld>");
+		help.setExample(" /world copy srcWorld newWorld");
 		help.save();
 	}
 

@@ -75,7 +75,7 @@ public class CMDLoad implements CommandExecutor {
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, properties.getWorldName(), " loaded successfully"));
 			}
 
-		}).submit(Main.instance().getPlugin());
+		}).submit(Main.getPlugin());
 
 		return CommandResult.success();
 	}

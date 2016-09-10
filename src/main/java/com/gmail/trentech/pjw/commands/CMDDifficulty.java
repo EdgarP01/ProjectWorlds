@@ -16,8 +16,8 @@ public class CMDDifficulty implements CommandExecutor {
 
 	public CMDDifficulty() {
 		Help help = new Help("difficulty", "difficulty", " Set the difficulty level for each world");
-		help.setSyntax(" /world difficulty <world> [value]\n /w df <world> [value]");
-		help.setExample(" /world difficulty MyWorld\n /world difficulty MyWorld HARD\n /world difficulty @w PEACEFUL\n /world difficulty @a SURVIVAL");
+		help.setSyntax(" /world difficulty <world> [difficulty]\n /w df <world> [difficulty]");
+		help.setExample(" /world difficulty MyWorld\n /world difficulty MyWorld HARD");
 		help.save();
 	}
 

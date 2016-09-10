@@ -29,9 +29,9 @@ public class OceanBaseGeneratorPopulator implements GenerationPopulator {
 			for (int y = yMin; y <= yMax; y++) {
 				for (int x = xMin; x <= xMax; x++) {
 					if(y < 64) {
-						buffer.setBlockType(x, y, z, BlockTypes.WATER, Cause.of(NamedCause.source(Main.instance().getPlugin())));
+						buffer.setBlockType(x, y, z, BlockTypes.WATER, Cause.of(NamedCause.source(Main.getPlugin())));
 					} else {
-						buffer.setBlockType(x, y, z, BlockTypes.AIR, Cause.of(NamedCause.source(Main.instance().getPlugin())));
+						buffer.setBlockType(x, y, z, BlockTypes.AIR, Cause.of(NamedCause.source(Main.getPlugin())));
 					}					
 				}
 			}

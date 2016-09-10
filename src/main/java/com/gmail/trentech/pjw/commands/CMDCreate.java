@@ -29,7 +29,7 @@ public class CMDCreate implements CommandExecutor {
 
 	public CMDCreate() {
 		Help help = new Help("create", "create", " Allows you to create new worlds with any combination of optional arguments -d " + "for dimension type, -g for generator type, -s for seed and -m for generator modifiers");
-		help.setSyntax(" /world create <world> [-d <type>] [-g <generator>] [-m <modifer>]  [-s <seed>]\n /w cr <world> [-d <type>] [-g <generator>] [-m <modifer>]  [-s <seed>]");
+		help.setSyntax(" /world create <world> [-d <dimensionType>] [-g <generatorType>] [-m <modifer>]  [-s <seed>]\n /w cr <world> [-d <dimensionType>] [-g <generatorType>] [-m <modifer>]  [-s <seed>]");
 		help.setExample(" /world create NewWorld -s -12309830198412353456\n /world create NewWorld -d overworld -g overworld\n" + " /world create NewWorld -d nether -m sponge:skylands\n /world create -m pjw:void");
 		help.save();
 	}

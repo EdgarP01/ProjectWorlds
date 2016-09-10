@@ -57,7 +57,7 @@ public class CMDFill implements CommandExecutor {
 		}
 		
 		if (list.containsKey(properties.getWorldName())) {
-			if (Sponge.getScheduler().getScheduledTasks(Main.instance().getPlugin()).contains(list.get(properties.getWorldName()))) {
+			if (Sponge.getScheduler().getScheduledTasks(Main.getPlugin()).contains(list.get(properties.getWorldName()))) {
 				src.sendMessage(Text.of(TextColors.YELLOW, "Pre-Generator already running for this world"));
 				return CommandResult.empty();
 			}
@@ -80,7 +80,7 @@ public class CMDFill implements CommandExecutor {
 		border.setCenter(world.getSpawnLocation().getX(), world.getSpawnLocation().getZ());
 		border.setDiameter(diameter);
 
-		ChunkPreGenerate generator = border.newChunkPreGenerate(world).owner(Main.instance().getPlugin());
+		ChunkPreGenerate generator = border.newChunkPreGenerate(world).owner(Main.getPlugin());
 		generator.logger(Main.instance().getLog());
 		
 		if (args.hasAny("interval")) {
@@ -112,11 +112,11 @@ public class CMDFill implements CommandExecutor {
 
 	private void status(CommandSource src, Task task) {
 		Sponge.getScheduler().createTaskBuilder().delayTicks(100).execute(c -> {
-			if (!Sponge.getScheduler().getScheduledTasks(Main.instance().getPlugin()).contains(task)) {
+			if (!Sponge.getScheduler().getScheduledTasks(Main.getPlugin()).contains(task)) {
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, "Pre-Generator finished"));
 			} else {
 				status(src, task);
 			}
-		}).submit(Main.instance().getPlugin());
+		}).submit(Main.getPlugin());
 	}
 }

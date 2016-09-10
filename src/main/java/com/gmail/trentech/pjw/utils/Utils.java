@@ -74,7 +74,7 @@ public class Utils {
 		list.add(west2.getRelative(Direction.SOUTH));
 
 		for (Location<World> location : list) {
-			location.setBlock(Sponge.getRegistry().createBuilder(BlockState.Builder.class).blockType(type).build(), Cause.of(NamedCause.source(Main.instance().getPlugin())));
+			location.setBlock(Sponge.getRegistry().createBuilder(BlockState.Builder.class).blockType(type).build(), Cause.of(NamedCause.source(Main.getPlugin())));
 		}
 	}
 	

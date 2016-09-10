@@ -108,7 +108,7 @@ public class Migrator {
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-			}).submit(Main.instance().getPlugin());
+			}).submit(Main.getPlugin());
 		}
 	}
 

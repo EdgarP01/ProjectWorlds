@@ -16,8 +16,8 @@ public class CMDGamemode implements CommandExecutor {
 
 	public CMDGamemode() {
 		Help help = new Help("gamemode", "gamemode", " Change gamemode of the specified world");
-		help.setSyntax(" /world gamemode <world> <gamemode>\n /w g <world> <gamemode>");
-		help.setExample(" /world gamemode\n /world gamemode MyWorld SURVIVAL\n /world gamemode @w 1\n /world gamemode @a 2");
+		help.setSyntax(" /world gamemode <world> [gamemode]\n /w g <world> [gamemode]");
+		help.setExample(" /world gamemode\n /world gamemode MyWorld SURVIVAL");
 		help.save();
 	}
 
@@ -25,7 +25,7 @@ public class CMDGamemode implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
-		if (!args.hasAny("value")) {
+		if (!args.hasAny("gamemode")) {
 			src.sendMessage(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.WHITE, properties.getGameMode().getName().toUpperCase()));
 			return CommandResult.success();
 		}

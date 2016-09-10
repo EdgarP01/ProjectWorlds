@@ -15,7 +15,7 @@ public class CMDEnable implements CommandExecutor {
 
 	public CMDEnable() {
 		Help help = new Help("enable", "enable", " Enable and disable worlds from loading");
-		help.setSyntax(" /world enable <world> <value>\n /w e <world> <value>");
+		help.setSyntax(" /world enable <world> [boolean]\n /w e <world> [boolean]");
 		help.setExample(" /world enable MyWorld true\n /world enable MyWorld false");
 		help.save();
 	}
@@ -24,7 +24,7 @@ public class CMDEnable implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
-		if (!args.hasAny("value")) {
+		if (!args.hasAny("boolean")) {
 			src.sendMessage(Text.of(TextColors.GREEN, "Enabled: ", TextColors.WHITE, properties.isEnabled()));
 			return CommandResult.success();
 		}
