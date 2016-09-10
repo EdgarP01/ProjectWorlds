@@ -35,8 +35,7 @@ public class CMDRegen implements CommandExecutor {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		if (Sponge.getServer().getWorld(properties.getWorldName()).isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, properties.getWorldName(), " must be unloaded before you can rename"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " must be unloaded before you can rename"));
 		}
 		
 		WorldArchetype.Builder builder = WorldArchetype.builder().dimension(properties.getDimensionType()).generatorSettings(properties.getGeneratorSettings());
@@ -50,8 +49,7 @@ public class CMDRegen implements CommandExecutor {
 			while (!delete.isDone()) {
 			}
 			if (!delete.get()) {
-				src.sendMessage(Text.of(TextColors.DARK_RED, "Could not delete ", properties.getWorldName()));
-				return CommandResult.empty();
+				throw new CommandException(Text.of(TextColors.RED, "Could not delete ", properties.getWorldName()));
 			}
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
@@ -65,16 +63,14 @@ public class CMDRegen implements CommandExecutor {
 		try {
 			newProperties = Sponge.getServer().createWorldProperties(properties.getWorldName(), settings);
 		} catch (IOException e) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong. Check server log for details"));
 			e.printStackTrace();
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, "Something went wrong. Check server log for details"));
 		}
 
 		Optional<World> load = Sponge.getServer().loadWorld(newProperties);
 
 		if (!load.isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not load ", properties.getWorldName()));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, "Could not load ", properties.getWorldName()));
 		}
 
 		Utils.createPlatform(load.get().getSpawnLocation().getRelative(Direction.DOWN));

@@ -36,14 +36,12 @@ public class CMDUnload implements CommandExecutor {
 		Optional<World> optionalWorld = Sponge.getServer().getWorld(properties.getWorldName());
 		
 		if (!optionalWorld.isPresent()) {
-			src.sendMessage(Text.of(TextColors.RED, properties.getWorldName(), " is already unloaded"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " is already unloaded"));
 		}
 		World world = optionalWorld.get();
 
 		if(world.equals(Sponge.getServer().getDefaultWorld().get())) {
-			src.sendMessage(Text.of(TextColors.RED, "You cannot unload the default world"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, "You cannot unload the default world"));
 		}
 		
 		ConfigurationNode node = ConfigManager.get().getConfig().getNode("options");
@@ -68,8 +66,7 @@ public class CMDUnload implements CommandExecutor {
 		}
 
 		if (!Sponge.getServer().unloadWorld(world)) {
-			src.sendMessage(Text.of(TextColors.RED, "Could not unload ", properties.getWorldName()));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, "Could not unload ", properties.getWorldName()));
 		}
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, properties.getWorldName(), " unloaded successfully"));

@@ -38,8 +38,7 @@ public class CMDTeleport implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if (!(src instanceof Player)) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Must be a player"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, "Must be a player"));
 		}
 		Player player = (Player) src;
 
@@ -48,8 +47,7 @@ public class CMDTeleport implements CommandExecutor {
 		Optional<World> optionalWorld = Sponge.getServer().getWorld(properties.getWorldName());
 
 		if (!optionalWorld.isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, properties.getWorldName(), " does not exist"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " does not exist"));
 		}
 		World world = optionalWorld.get();
 
@@ -65,9 +63,7 @@ public class CMDTeleport implements CommandExecutor {
 
 				location = world.getLocation(x, y, z);
 			} catch (Exception e) {
-				src.sendMessage(Text.of(TextColors.RED, "Incorrect coordinates"));
-				src.sendMessage(getUsage());
-				return CommandResult.empty();
+				throw new CommandException(Text.of(TextColors.RED, "Incorrect coordinates"));
 			}
 		}
 
@@ -79,17 +75,14 @@ public class CMDTeleport implements CommandExecutor {
 			Optional<Rotation> optionalRotation = Rotation.get(direction);
 
 			if (!optionalRotation.isPresent()) {
-				src.sendMessage(Text.of(TextColors.RED, "Incorrect direction"));
-				src.sendMessage(getUsage());
-				return CommandResult.empty();
+				throw new CommandException(Text.of(TextColors.RED, "Incorrect direction"));
 			}
 
 			rotation = optionalRotation.get();
 		}
 
 		if (!src.hasPermission("pjw.worlds." + properties.getWorldName())) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "You do not have permission to travel to ", properties.getWorldName()));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, "You do not have permission to travel to ", properties.getWorldName()));
 		}
 
 		TeleportHelper teleportHelper = Sponge.getGame().getTeleportHelper();
@@ -97,8 +90,7 @@ public class CMDTeleport implements CommandExecutor {
 		Optional<Location<World>> optionalLocation = teleportHelper.getSafeLocation(location);
 
 		if (!optionalLocation.isPresent()) {
-			src.sendMessage(Text.builder().color(TextColors.DARK_RED).append(Text.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.executeCallback(Utils.unsafe(location))).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
-			return CommandResult.empty();
+			throw new CommandException(Text.builder().color(TextColors.RED).append(Text.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.executeCallback(Utils.unsafe(location))).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
 		}
 
 		player.setLocationAndRotation(optionalLocation.get(), rotation.toVector3d());
@@ -106,15 +98,5 @@ public class CMDTeleport implements CommandExecutor {
 		player.sendTitle(Title.of(Text.of(TextColors.DARK_GREEN, properties.getWorldName()), Text.of(TextColors.AQUA, "x: ", location.getBlockX(), ", y: ", location.getBlockY(), ", z: ", location.getBlockZ())));
 
 		return CommandResult.success();
-	}
-
-	private Text getUsage() {
-		Text usage = Text.of(TextColors.YELLOW, "/world teleport");
-
-		usage = Text.join(usage, Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter the world name the player will teleport to"))).append(Text.of(" <world>")).build());
-		usage = Text.join(usage, Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter x y z coordinates"))).append(Text.of(" [-c <x,y,z>]")).build());
-		usage = Text.join(usage, Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("NORTH\nNORTHEAST\nEAST\nSOUTHEAST\nSOUTH\nSOUTHWEST\nWEST\nNORTHWEST"))).append(Text.of(" [-d <direction>]]")).build());
-
-		return usage;
 	}
 }

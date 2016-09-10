@@ -31,8 +31,7 @@ public class CMDCopy implements CommandExecutor {
 		String newWorldName = args.<String> getOne("newWorld").get();
 
 		if (Sponge.getServer().getWorldProperties(newWorldName).isPresent()) {
-			src.sendMessage(Text.of(TextColors.RED, newWorldName, " already exists"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, newWorldName, " already exists"));
 		}
 
 		Optional<WorldProperties> copy = null;
@@ -43,8 +42,7 @@ public class CMDCopy implements CommandExecutor {
 		}
 
 		if (!copy.isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Could not copy ", properties.getWorldName()));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, "Could not copy ", properties.getWorldName()));
 		}
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, properties.getWorldName(), " copied to ", newWorldName));

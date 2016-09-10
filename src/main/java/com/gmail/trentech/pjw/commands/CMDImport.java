@@ -34,23 +34,21 @@ public class CMDImport implements CommandExecutor {
 		String worldName = args.<String> getOne("name").get();
 
 		if (Sponge.getServer().getWorld(worldName).isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " is already loaded"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, worldName, " is already loaded"));
 		}
 
 		WorldData worldData = new WorldData(worldName);
 
 		if (!worldData.exists()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, worldName, " is not a valid world"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, worldName, " is not a valid world"));
 		}
 
 		SpongeData spongeData = new SpongeData(worldName);
 
 		if (spongeData.exists()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Sponge world detected"));
+			src.sendMessage(Text.of(TextColors.RED, "Sponge world detected"));
 			src.sendMessage(Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.runCommand("/pjw:world load")).append(Text.of(" /world load")).build());
-			return CommandResult.empty();
+			return CommandResult.success();
 		}
 
 		DimensionType dimensionType = args.<DimensionType> getOne("dimensionType").get();
@@ -63,9 +61,8 @@ public class CMDImport implements CommandExecutor {
 		try {
 			properties = Sponge.getServer().createWorldProperties(worldName, settings);
 		} catch (IOException e) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "Something went wrong. Check server log for details"));
 			e.printStackTrace();
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, "Something went wrong. Check server log for details"));
 		}
 
 		Sponge.getServer().saveWorldProperties(properties);

@@ -33,8 +33,7 @@ public class CMDDelete implements CommandExecutor {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		if (Sponge.getServer().getWorld(properties.getWorldName()).isPresent()) {
-			src.sendMessage(Text.of(TextColors.RED, properties.getWorldName(), " must be unloaded before you can delete"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " must be unloaded before you can delete"));
 		}
 
 		new Zip(properties.getWorldName()).save();
@@ -64,7 +63,7 @@ public class CMDDelete implements CommandExecutor {
 			e.printStackTrace();
 		}
 
-		src.sendMessage(Text.of(TextColors.DARK_RED, "Could not delete ", properties.getWorldName()));
+		src.sendMessage(Text.of(TextColors.RED, "Could not delete ", properties.getWorldName()));
 
 		return CommandResult.empty();
 	}

@@ -25,8 +25,7 @@ public class CMDHelp implements CommandExecutor {
 		if (!args.hasAny("command")) {
 			Text t1 = Text.of(TextColors.YELLOW, "/world help ");
 			Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter the command you need help with"))).append(Text.of("<command> ")).build();
-			src.sendMessage(Text.of(t1, t2));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(t1, t2));
 		}
 		String command = args.<String> getOne("command").get();
 
@@ -64,7 +63,7 @@ public class CMDHelp implements CommandExecutor {
 			}
 		}
 
-		src.sendMessage(Text.of(TextColors.DARK_RED, command, " is not a valid command"));
+		src.sendMessage(Text.of(TextColors.RED, command, " is not a valid command"));
 		return CommandResult.empty();
 	}
 }
