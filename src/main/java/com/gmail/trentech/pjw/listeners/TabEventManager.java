@@ -248,8 +248,8 @@ public class TabEventManager {
 			}
 		} else if(args[1].equalsIgnoreCase("help") || args[1].equalsIgnoreCase("gr")) {
 			if(args.length == 2 || args.length == 3) {
-				for (Help help : Help.getAll()) {
-					String name = help.getCommand();
+				for (Entry<String, Help> help : Help.all().entrySet()) {
+					String name = help.getKey();
 					
 					if(args.length == 3) {
 						if(name.contains(args[2].toLowerCase()) && !name.equalsIgnoreCase(args[2])) {

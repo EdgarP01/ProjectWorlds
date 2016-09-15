@@ -9,6 +9,7 @@ import org.spongepowered.api.world.difficulty.Difficulty;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 
 import com.gmail.trentech.pjw.utils.Gamemode;
+import com.gmail.trentech.pjw.utils.Help;
 
 public class CommandManager {
 
@@ -133,7 +134,7 @@ public class CommandManager {
 	public CommandSpec cmdHelp = CommandSpec.builder()
 		    .description(Text.of(" I need help with Project Worlds"))
 		    .permission("pjw.cmd.world")
-		    .arguments(GenericArguments.string(Text.of("command")))
+		    .arguments(GenericArguments.choices(Text.of("command"), Help.all()))
 		    .executor(new CMDHelp())
 		    .build();
 	

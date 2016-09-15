@@ -22,7 +22,7 @@ public class CMDWorld implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		List<Text> list = new ArrayList<>();
 
-		list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.runCommand("/pjw:world help")).append(Text.of(" /world help")).build());
+		list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click to execute command "))).onClick(TextActions.runCommand("/pjw:world help")).append(Text.of(" /world help")).build());
 		
 		if (src.hasPermission("pjw.cmd.world.create")) {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp("create"))).append(Text.of(" /world create")).build());
@@ -67,7 +67,7 @@ public class CMDWorld implements CommandExecutor {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp("pvp"))).append(Text.of(" /world pvp")).build());
 		}
 		if (src.hasPermission("pjw.cmd.world.keepspawnloaded")) {
-			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp("keepspawnloaded"))).build());
+			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp("keepspawnloaded"))).append(Text.of(" /world keepspawnloaded")).build());
 		}
 		if (src.hasPermission("pjw.cmd.world.hardcore")) {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp("hardcore"))).append(Text.of(" /world hardcore")).build());
