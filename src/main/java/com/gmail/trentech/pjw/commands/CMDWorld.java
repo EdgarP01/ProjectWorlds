@@ -2,6 +2,7 @@ package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Map.Entry;
 
 import org.spongepowered.api.command.CommandException;
@@ -26,10 +27,17 @@ public class CMDWorld implements CommandExecutor {
 		list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click to execute command "))).onClick(TextActions.runCommand("/pjw:world help")).append(Text.of(" /world help")).build());
 		
 		for (Entry<String, Help> entry : Help.all().entrySet()) {
-			String command = entry.getKey();
+			String id = entry.getKey();
+			String command = entry.getValue().getCommand();
 
-			if (src.hasPermission("pjw.cmd.world." + command)) {
-				list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp(command))).append(Text.of(" /world " + command)).build());
+			Optional<String> optionalPermission = entry.getValue().getPermission();
+			
+			if(optionalPermission.isPresent()) {
+				if (src.hasPermission(optionalPermission.get())) {
+					list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp(id))).append(Text.of(" /world " + command)).build());
+				}
+			} else {
+				list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp(id))).append(Text.of(" /world " + command)).build());
 			}
 		}
 
