@@ -23,6 +23,7 @@ public class CMDDelete implements CommandExecutor {
 
 	public CMDDelete() {
 		Help help = new Help("delete", "delete", " Delete worlds you no longer need. Worlds must be unloaded before you can delete them");
+		help.setPermission("pjw.cmd.world.delete");
 		help.setSyntax(" /world delete <world>\n /w dl <world>");
 		help.setExample(" /world delete OldWorld");
 		help.save();
@@ -33,7 +34,7 @@ public class CMDDelete implements CommandExecutor {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		if (Sponge.getServer().getWorld(properties.getWorldName()).isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " must be unloaded before you can delete"));
+			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " must be unloaded before you can delete"), false);
 		}
 
 		new Zip(properties.getWorldName()).save();

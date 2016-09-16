@@ -15,6 +15,7 @@ public class CMDEnable implements CommandExecutor {
 
 	public CMDEnable() {
 		Help help = new Help("enable", "enable", " Enable and disable worlds from loading");
+		help.setPermission("pjw.cmd.world.enable");
 		help.setSyntax(" /world enable <world> [boolean]\n /w e <world> [boolean]");
 		help.setExample(" /world enable MyWorld true\n /world enable MyWorld false");
 		help.save();

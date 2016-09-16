@@ -22,6 +22,7 @@ public class CMDGamerule implements CommandExecutor {
 
 	public CMDGamerule() {
 		Help help = new Help("gamerule", "gamerule", " Configure varies world properties");
+		help.setPermission("pjw.cmd.world.gamerule");
 		help.setSyntax(" /gamerule <world> [rule] [value]\n /gr <world> [rule] [value]");
 		help.setExample(" /gamerule MyWorld\n /gamerule MyWorld mobGriefing false\n /gamerule @w doDaylightCycle true");
 		help.save();
@@ -57,7 +58,7 @@ public class CMDGamerule implements CommandExecutor {
 		String rule = args.<String> getOne("rule").get();
 
 		if (!properties.getGameRule(rule).isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, "Gamerule  ", rule, " does not exist"));
+			throw new CommandException(Text.of(TextColors.RED, "Gamerule  ", rule, " does not exist"), false);
 		}
 
 		if (!args.hasAny("value")) {
@@ -67,7 +68,7 @@ public class CMDGamerule implements CommandExecutor {
 		String value = args.<String> getOne("value").get();
 
 		if (!isValid(rule, value)) {
-			throw new CommandException(Text.of(TextColors.RED, value, " is not a valid value for gamerule ", rule));
+			throw new CommandException(Text.of(TextColors.RED, value, " is not a valid value for gamerule ", rule), false);
 		}
 
 		properties.setGameRule(rule, value.toLowerCase());

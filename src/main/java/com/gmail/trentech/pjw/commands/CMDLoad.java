@@ -25,6 +25,7 @@ public class CMDLoad implements CommandExecutor {
 
 	public CMDLoad() {
 		Help help = new Help("load", "load", " Loads sepcified world. If world is a non Sponge created world you will need to specify a dimension type to import");
+		help.setPermission("pjw.cmd.world.load");
 		help.setSyntax(" /world load <world> [type]\n /w l <world> [type]");
 		help.setExample(" /world load NewWorld\n /world load BukkitWorld overworld");
 		help.save();
@@ -34,14 +35,14 @@ public class CMDLoad implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
-		if (!Sponge.getServer().getWorld(properties.getUniqueId()).isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " is already loaded"));
+		if (Sponge.getServer().getWorld(properties.getUniqueId()).isPresent()) {
+			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " is already loaded"), false);
 		}
 
 		WorldData worldData = new WorldData(properties.getWorldName());
 
 		if (!worldData.exists()) {
-			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " does not exist"));
+			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " does not exist"), false);
 		}
 
 		SpongeData spongeData = new SpongeData(properties.getWorldName());

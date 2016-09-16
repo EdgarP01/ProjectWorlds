@@ -24,6 +24,7 @@ public class CMDUnload implements CommandExecutor {
 
 	public CMDUnload() {
 		Help help = new Help("unload", "unload", " Unloads specified world. If players are in world, they will be teleported to default spawn");
+		help.setPermission("pjw.cmd.world.unload");
 		help.setSyntax(" /world unload <world>\n /w u <world>");
 		help.setExample(" /world unload MyWorld");
 		help.save();
@@ -36,12 +37,12 @@ public class CMDUnload implements CommandExecutor {
 		Optional<World> optionalWorld = Sponge.getServer().getWorld(properties.getWorldName());
 		
 		if (!optionalWorld.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " is already unloaded"));
+			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " is already unloaded"), false);
 		}
 		World world = optionalWorld.get();
 
-		if(world.equals(Sponge.getServer().getDefaultWorld().get())) {
-			throw new CommandException(Text.of(TextColors.RED, "You cannot unload the default world"));
+		if(world.getUniqueId().equals(Sponge.getServer().getDefaultWorld().get().getUniqueId())) {
+			throw new CommandException(Text.of(TextColors.RED, "You cannot unload the default world"), false);
 		}
 		
 		ConfigurationNode node = ConfigManager.get().getConfig().getNode("options");
@@ -66,7 +67,7 @@ public class CMDUnload implements CommandExecutor {
 		}
 
 		if (!Sponge.getServer().unloadWorld(world)) {
-			throw new CommandException(Text.of(TextColors.RED, "Could not unload ", properties.getWorldName()));
+			throw new CommandException(Text.of(TextColors.RED, "Could not unload ", properties.getWorldName()), false);
 		}
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, properties.getWorldName(), " unloaded successfully"));

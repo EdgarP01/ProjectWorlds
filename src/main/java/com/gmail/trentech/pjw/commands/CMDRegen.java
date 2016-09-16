@@ -25,6 +25,7 @@ public class CMDRegen implements CommandExecutor {
 
 	public CMDRegen() {
 		Help help = new Help("regen", "regen", " Regenerates a world. You can preserve the seed or generate new random");
+		help.setPermission("pjw.cmd.world.regen");
 		help.setSyntax(" /world regen <world> [true/false]\n /w r <world>  [true/false]");
 		help.setExample(" /world regen MyWorld\n /world regen MyWorld true");
 		help.save();
@@ -35,7 +36,7 @@ public class CMDRegen implements CommandExecutor {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		if (Sponge.getServer().getWorld(properties.getWorldName()).isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " must be unloaded before you can rename"));
+			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " must be unloaded before you can rename"), false);
 		}
 		
 		WorldArchetype.Builder builder = WorldArchetype.builder().dimension(properties.getDimensionType()).generatorSettings(properties.getGeneratorSettings());
@@ -49,7 +50,7 @@ public class CMDRegen implements CommandExecutor {
 			while (!delete.isDone()) {
 			}
 			if (!delete.get()) {
-				throw new CommandException(Text.of(TextColors.RED, "Could not delete ", properties.getWorldName()));
+				throw new CommandException(Text.of(TextColors.RED, "Could not delete ", properties.getWorldName()), false);
 			}
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
@@ -64,13 +65,13 @@ public class CMDRegen implements CommandExecutor {
 			newProperties = Sponge.getServer().createWorldProperties(properties.getWorldName(), settings);
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new CommandException(Text.of(TextColors.RED, "Something went wrong. Check server log for details"));
+			throw new CommandException(Text.of(TextColors.RED, "Something went wrong. Check server log for details"), false);
 		}
 
 		Optional<World> load = Sponge.getServer().loadWorld(newProperties);
 
 		if (!load.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, "Could not load ", properties.getWorldName()));
+			throw new CommandException(Text.of(TextColors.RED, "Could not load ", properties.getWorldName()), false);
 		}
 
 		Utils.createPlatform(load.get().getSpawnLocation().getRelative(Direction.DOWN));

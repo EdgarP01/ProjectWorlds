@@ -24,6 +24,7 @@ public class CMDImport implements CommandExecutor {
 
 	public CMDImport() {
 		Help help = new Help("import", "import", " Import worlds not native to Sponge");
+		help.setPermission("pjw.cmd.world.import");
 		help.setSyntax(" /world import <world> <type> <generator>\n /w i <world> <type> <generator>");
 		help.setExample(" /world import NewWorld overworld overworld");
 		help.save();
@@ -34,13 +35,13 @@ public class CMDImport implements CommandExecutor {
 		String worldName = args.<String> getOne("name").get();
 
 		if (Sponge.getServer().getWorld(worldName).isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " is already loaded"));
+			throw new CommandException(Text.of(TextColors.RED, worldName, " is already loaded"), false);
 		}
 
 		WorldData worldData = new WorldData(worldName);
 
 		if (!worldData.exists()) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " is not a valid world"));
+			throw new CommandException(Text.of(TextColors.RED, worldName, " is not a valid world"), false);
 		}
 
 		SpongeData spongeData = new SpongeData(worldName);
@@ -62,7 +63,7 @@ public class CMDImport implements CommandExecutor {
 			properties = Sponge.getServer().createWorldProperties(worldName, settings);
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new CommandException(Text.of(TextColors.RED, "Something went wrong. Check server log for details"));
+			throw new CommandException(Text.of(TextColors.RED, "Something went wrong. Check server log for details"), false);
 		}
 
 		Sponge.getServer().saveWorldProperties(properties);

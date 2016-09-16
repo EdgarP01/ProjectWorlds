@@ -30,6 +30,7 @@ public class CMDTeleport implements CommandExecutor {
 
 	public CMDTeleport() {
 		Help help = new Help("teleport", "teleport", " Teleport to specified world and location");
+		help.setPermission("pjw.cmd.world.teleport");
 		help.setSyntax(" /world teleport <world> [-c <x,y,z>] [-d <direction>]\n /w tp <world> [-c <x,y,z>] [-d <direction>]");
 		help.setExample(" /world tp MyWorld\n /world teleport MyWorld -c -153,75,300\n /world tp MyWorld -c -153,75,300 -d WEST");
 		help.save();
@@ -38,7 +39,7 @@ public class CMDTeleport implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if (!(src instanceof Player)) {
-			throw new CommandException(Text.of(TextColors.RED, "Must be a player"));
+			throw new CommandException(Text.of(TextColors.RED, "Must be a player"), false);
 		}
 		Player player = (Player) src;
 
@@ -47,7 +48,7 @@ public class CMDTeleport implements CommandExecutor {
 		Optional<World> optionalWorld = Sponge.getServer().getWorld(properties.getWorldName());
 
 		if (!optionalWorld.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " does not exist"));
+			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " does not exist"), false);
 		}
 		World world = optionalWorld.get();
 
@@ -63,7 +64,7 @@ public class CMDTeleport implements CommandExecutor {
 
 				location = world.getLocation(x, y, z);
 			} catch (Exception e) {
-				throw new CommandException(Text.of(TextColors.RED, "Incorrect coordinates"));
+				throw new CommandException(Text.of(TextColors.RED, coords.toString(), " is not valid"), true);
 			}
 		}
 

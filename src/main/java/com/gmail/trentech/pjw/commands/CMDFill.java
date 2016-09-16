@@ -10,7 +10,6 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.WorldBorder;
@@ -27,6 +26,7 @@ public class CMDFill implements CommandExecutor {
 
 	public CMDFill() {
 		Help help = new Help("fill", "fill", " Pre generate chunks in a world outwards from center spawn");
+		help.setPermission("pjw.cmd.world.fill");
 		help.setSyntax(" /world fill <world> <diameter> [interval]\n /w f <world> <diameter> [interval]");
 		help.setExample(" /world fill MyWorld 1000 \n /world fill MyWorld stop");
 		help.save();
@@ -37,7 +37,7 @@ public class CMDFill implements CommandExecutor {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		if (!Sponge.getServer().getWorld(properties.getUniqueId()).isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " must be loaded"));
+			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " must be loaded"), false);
 		}
 		World world = Sponge.getServer().getWorld(properties.getUniqueId()).get();
 		
@@ -45,7 +45,7 @@ public class CMDFill implements CommandExecutor {
 
 		if (value.equalsIgnoreCase("stop")) {
 			if (!list.containsKey(properties.getWorldName())) {
-				throw new CommandException(Text.of(TextColors.YELLOW, "Pre-Generator not running for this world"));
+				throw new CommandException(Text.of(TextColors.YELLOW, "Pre-Generator not running for this world"), false);
 			}
 			list.get(properties.getWorldName()).cancel();
 			list.remove(properties.getWorldName());
@@ -56,7 +56,7 @@ public class CMDFill implements CommandExecutor {
 		
 		if (list.containsKey(properties.getWorldName())) {
 			if (Sponge.getScheduler().getScheduledTasks(Main.getPlugin()).contains(list.get(properties.getWorldName()))) {
-				throw new CommandException(Text.of(TextColors.YELLOW, "Pre-Generator already running for this world"));
+				throw new CommandException(Text.of(TextColors.YELLOW, "Pre-Generator already running for this world"), false);
 			}
 			list.remove(properties.getWorldName());
 		}
@@ -65,8 +65,7 @@ public class CMDFill implements CommandExecutor {
 		try {
 			diameter = Double.parseDouble(value);
 		} catch (Exception e) {
-			src.sendMessage(invalidArg());
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, value, " is not valid"), true);
 		}
 
 		WorldBorder border = world.getWorldBorder();
@@ -97,14 +96,6 @@ public class CMDFill implements CommandExecutor {
 		border.setCenter(center.getX(), center.getZ());
 
 		return CommandResult.success();
-	}
-
-	private Text invalidArg() {
-		Text t1 = Text.of(TextColors.YELLOW, "/world fill ");
-		Text t2 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter world name"))).append(Text.of("<world> ")).build();
-		Text t3 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter diameter or \"stop\""))).append(Text.of("<diameter> ")).build();
-		Text t4 = Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Enter the tick interval between generation runs. Default is 10"))).append(Text.of("[interval]")).build();
-		return Text.of(t1, t2, t3, t4);
 	}
 
 	private void status(CommandSource src, Task task) {

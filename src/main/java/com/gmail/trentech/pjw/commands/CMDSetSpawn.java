@@ -18,7 +18,8 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDSetSpawn implements CommandExecutor {
 
 	public CMDSetSpawn() {
-		Help help = new Help("rename", "rename", " Sets the spawn point of specified world. If no arguments present sets spawn of current world to player location");
+		Help help = new Help("setspawn", "setspawn", " Sets the spawn point of specified world. If no arguments present sets spawn of current world to player location");
+		help.setPermission("pjw.cmd.world.setspawn");
 		help.setSyntax(" /world setspawn <world> <x,y,z>\n /w s <world> <x,y,z>");
 		help.setExample(" /world setspawn\n /world setspawn MyWorld -153,75,300");
 		help.save();
@@ -36,7 +37,7 @@ public class CMDSetSpawn implements CommandExecutor {
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set spawn of world ", properties.getWorldName(), " to x: ", properties.getSpawnPosition().getX(), ", y: ", properties.getSpawnPosition().getY(), ", z: ", properties.getSpawnPosition().getZ()));
 				return CommandResult.success();
 			} else {
-				throw new CommandException(Text.of(TextColors.RED, "Must be a player"));
+				throw new CommandException(Text.of(TextColors.RED, "Must be a player"), false);
 			}
 		}
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
@@ -44,7 +45,7 @@ public class CMDSetSpawn implements CommandExecutor {
 		String[] coords = args.<String> getOne("value").get().split(",");
 
 		if (!isValidLocation(coords)) {
-			throw new CommandException(Text.of(TextColors.RED, coords, " is not valid"));
+			throw new CommandException(Text.of(TextColors.RED, coords.toString(), " is not valid"), true);
 		}
 
 		properties.setSpawnPosition(new Vector3i().add(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2])));

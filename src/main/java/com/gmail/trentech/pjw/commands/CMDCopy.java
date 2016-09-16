@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import org.spongepowered.api.Sponge;
@@ -19,6 +20,7 @@ public class CMDCopy implements CommandExecutor {
 
 	public CMDCopy() {
 		Help help = new Help("copy", "copy", " Allows you to make a new world from an existing world");
+		help.setPermission("pjw.cmd.world.copy");
 		help.setSyntax(" /world copy <oldWorld> <newWorld>\n /w cp <oldWorld> <newWorld>");
 		help.setExample(" /world copy srcWorld newWorld");
 		help.save();
@@ -31,18 +33,22 @@ public class CMDCopy implements CommandExecutor {
 		String newWorldName = args.<String> getOne("newWorld").get();
 
 		if (Sponge.getServer().getWorldProperties(newWorldName).isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, newWorldName, " already exists"));
+			throw new CommandException(Text.of(TextColors.RED, newWorldName, " already exists"), false);
 		}
 
-		Optional<WorldProperties> copy = null;
+		Optional<WorldProperties> copy = Optional.empty();
+
 		try {
-			copy = Sponge.getServer().copyWorld(properties, newWorldName).get();
+			CompletableFuture<Optional<WorldProperties>> copyFuture = Sponge.getServer().copyWorld(properties, newWorldName);
+			while (!copyFuture.isDone()) {
+			}
+			copy = copyFuture.get();
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
-
+		
 		if (!copy.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, "Could not copy ", properties.getWorldName()));
+			throw new CommandException(Text.of(TextColors.RED, "Could not copy ", properties.getWorldName()), false);
 		}
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, properties.getWorldName(), " copied to ", newWorldName));

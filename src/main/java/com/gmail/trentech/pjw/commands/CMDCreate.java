@@ -29,6 +29,7 @@ public class CMDCreate implements CommandExecutor {
 
 	public CMDCreate() {
 		Help help = new Help("create", "create", " Allows you to create new worlds with any combination of optional arguments -d " + "for dimension type, -g for generator type, -s for seed and -m for generator modifiers");
+		help.setPermission("pjw.cmd.world.create");
 		help.setSyntax(" /world create <world> [-d <dimensionType>] [-g <generatorType>] [-m <modifer>]  [-s <seed>]\n /w cr <world> [-d <dimensionType>] [-g <generatorType>] [-m <modifer>]  [-s <seed>]");
 		help.setExample(" /world create NewWorld -s -12309830198412353456\n /world create NewWorld -d overworld -g overworld\n" + " /world create NewWorld -d nether -m sponge:skylands");
 		help.save();
@@ -39,7 +40,7 @@ public class CMDCreate implements CommandExecutor {
 		String worldName = args.<String> getOne("name").get();
 
 		if (Sponge.getServer().getWorldProperties(worldName).isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " already exists"));
+			throw new CommandException(Text.of(TextColors.RED, worldName, " already exists"), false);
 		}
 
 		WorldArchetype.Builder builder = WorldArchetype.builder();
@@ -74,7 +75,7 @@ public class CMDCreate implements CommandExecutor {
 			properties = Sponge.getServer().createWorldProperties(worldName, settings);
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new CommandException(Text.of(TextColors.RED, "Something went wrong. Check server log for details"));
+			throw new CommandException(Text.of(TextColors.RED, "Something went wrong. Check server log for details"), false);
 		}
 
 		Sponge.getServer().saveWorldProperties(properties);
