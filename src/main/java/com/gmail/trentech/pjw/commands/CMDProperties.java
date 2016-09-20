@@ -9,6 +9,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
@@ -36,6 +37,8 @@ public class CMDProperties implements CommandExecutor {
 
 		list.add(Text.of(TextColors.GREEN, "Name: ", TextColors.WHITE, properties.getWorldName()));
 		list.add(Text.of(TextColors.GREEN, "UUID: ", TextColors.WHITE, properties.getUniqueId().toString()));
+		//list.add(Text.of(TextColors.GREEN, "Dimension Id: ", TextColors.WHITE, new SpongeData(properties.getWorldName()).getDimId()));
+		list.add(Text.of(TextColors.GREEN, "Dimension Id: ", TextColors.WHITE, (int) properties.getAdditionalProperties().getView(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get()));
 		list.add(Text.of(TextColors.GREEN, "Enabled: ", TextColors.WHITE, properties.isEnabled()));
 		list.add(Text.of(TextColors.GREEN, "Dimension Type: ", TextColors.WHITE, properties.getDimensionType().getName().toUpperCase()));
 		list.add(Text.of(TextColors.GREEN, "Generator Type: ", TextColors.WHITE, properties.getGeneratorType().getName()));
