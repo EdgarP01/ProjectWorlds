@@ -54,12 +54,6 @@ public class ConfigManager {
 			if (config.getNode("options", "first_join", "world").isVirtual()) {
 				config.getNode("options", "first_join", "world").setValue("world").setComment("World player spawns to when joining for the first time");
 			}
-			if (config.getNode("options", "first_join", "title").isVirtual()) {
-				config.getNode("options", "first_join", "title").setValue("&2Welcome to the server").setComment("First join title");
-			}
-			if (config.getNode("options", "first_join", "sub_title").isVirtual()) {
-				config.getNode("options", "first_join", "sub_title").setValue("&eThe best minecraft server ever").setComment("First join subtitle");
-			}
 			if (config.getNode("options", "lobby_mode").isVirtual()) {
 				config.getNode("options", "lobby_mode").setValue(false).setComment("If true, player will always spawn in first_join world on join");
 			}

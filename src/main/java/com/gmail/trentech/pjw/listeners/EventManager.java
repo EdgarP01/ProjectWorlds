@@ -19,9 +19,6 @@ import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.world.ChangeWorldWeatherEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.serializer.TextSerializers;
-import org.spongepowered.api.text.title.Title;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.PortalAgent;
 import org.spongepowered.api.world.TeleportHelper;
@@ -44,9 +41,12 @@ public class EventManager {
 		String defaultWorld = Sponge.getServer().getDefaultWorld().get().getWorldName();
 
 		boolean lobbyMode = node.getNode("lobby_mode").getBoolean();
-		boolean firstJoin = new File(defaultWorld + File.separator + "playerdata", player.getUniqueId().toString() + ".dat").exists();
+		boolean firstJoin = !new File(defaultWorld + File.separator + "playerdata", player.getUniqueId().toString() + ".dat").exists();
 
-		if (firstJoin && !lobbyMode) {
+		if (!firstJoin && !lobbyMode) {
+			if (player.hasPermission("pjw.options.gamemode")) {
+				player.offer(Keys.GAME_MODE, player.getWorld().getProperties().getGameMode());
+			}
 			return;
 		}
 
@@ -63,13 +63,6 @@ public class EventManager {
 
 		if (player.hasPermission("pjw.options.gamemode")) {
 			player.offer(Keys.GAME_MODE, world.getProperties().getGameMode());
-		}
-
-		if (!firstJoin) {
-			Text title = TextSerializers.FORMATTING_CODE.deserialize(node.getNode("first_join", "title").getString());
-			Text subTitle = TextSerializers.FORMATTING_CODE.deserialize(node.getNode("first_join", "sub_title").getString());
-
-			player.sendTitle(Title.of(title, subTitle));
 		}
 	}
 
