@@ -57,6 +57,11 @@ public class ConfigManager {
 			if (config.getNode("options", "lobby_mode").isVirtual()) {
 				config.getNode("options", "lobby_mode").setValue(false).setComment("If true, player will always spawn in first_join world on join");
 			}
+			
+			// UPDATE
+			if(!config.getNode("dimension_ids").isVirtual()) {
+				config.removeChild("dimension_ids");
+			}
 		}
 		
 		configManager.save();
