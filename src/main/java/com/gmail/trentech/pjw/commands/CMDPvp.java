@@ -17,7 +17,7 @@ public class CMDPvp implements CommandExecutor {
 		Help help = new Help("pvp", "pvp", " Toggle on and off pvp for world");
 		help.setPermission("pjw.cmd.world.pvp");
 		help.setSyntax(" /world pvp <world> [value]\n /w p <world> [value]");
-		help.setExample(" /world pvp MyWorld true\n /world pvp @w false\n /world pvp @a true");
+		help.setExample(" /world pvp MyWorld\n /world pvp MyWorld true");
 		help.save();
 	}
 

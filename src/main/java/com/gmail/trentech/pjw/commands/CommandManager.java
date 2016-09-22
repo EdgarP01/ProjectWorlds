@@ -34,7 +34,7 @@ public class CommandManager {
 	private CommandSpec cmdDiffculty = CommandSpec.builder()
 		    .description(Text.of(" Set the difficulty level for each world"))
 		    .permission("pjw.cmd.world.difficulty")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("world"))), GenericArguments.optional(GenericArguments.catalogedElement(Text.of("difficulty"), Difficulty.class)))
+		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.catalogedElement(Text.of("difficulty"), Difficulty.class)))
 		    .executor(new CMDDifficulty())
 		    .build();
 
@@ -120,7 +120,7 @@ public class CommandManager {
 		    .description(Text.of(" Imports non sponge worlds, such as bukkit worlds"))
 		    .permission("pjw.cmd.world.import")
 		    .arguments(GenericArguments.string(Text.of("world")), GenericArguments.catalogedElement(Text.of("dimensionType"), DimensionType.class),
-		    		GenericArguments.catalogedElement(Text.of("dimensionType"), GeneratorType.class))
+		    		GenericArguments.catalogedElement(Text.of("generatorType"), GeneratorType.class))
 		    .executor(new CMDImport())
 		    .build();
 	
@@ -162,7 +162,7 @@ public class CommandManager {
 	private CommandSpec cmdFill = CommandSpec.builder()
 		    .description(Text.of(" Pre generate chunks in a world"))
 		    .permission("pjw.cmd.world.fill")
-		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.string(Text.of("value")), GenericArguments.optional(GenericArguments.string(Text.of("interval"))))
+		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.string(Text.of("diameter")), GenericArguments.optional(GenericArguments.string(Text.of("interval"))))
 		    .executor(new CMDFill())
 		    .build();
 	

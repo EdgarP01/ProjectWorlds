@@ -44,26 +44,6 @@ public class TabEventManager {
 				}
 			}
 			return;
-		}// else if(args[1].equalsIgnoreCase("enable") || args[1].equalsIgnoreCase("e") 
-//				|| args[1].equalsIgnoreCase("hardcore") || args[1].equalsIgnoreCase("h")
-//				|| args[1].equalsIgnoreCase("keepspawnloaded") || args[1].equalsIgnoreCase("k")
-//				|| args[1].equalsIgnoreCase("pvp") || args[1].equalsIgnoreCase("p")
-//				|| args[1].equalsIgnoreCase("regen") || args[1].equalsIgnoreCase("r")) {			
-//			if(args.length == 3 || args.length == 4) {
-//				String t = "true";
-//				String f = "false";
-//				
-//				if(args.length == 4) {
-//					if((t.contains(args[3].toLowerCase()) && !t.equalsIgnoreCase(args[3]))) {
-//						list.add(t);
-//					} else if((f.contains(args[3].toLowerCase()) && !f.equalsIgnoreCase(args[3]))) {
-//						list.add(f);
-//					}
-//				} else if(rawMessage.substring(rawMessage.length() - 1).equalsIgnoreCase(" ")){
-//					list.add(t);
-//					list.add(f);
-//				}
-//			}
-//		}
+		}
 	}
 }

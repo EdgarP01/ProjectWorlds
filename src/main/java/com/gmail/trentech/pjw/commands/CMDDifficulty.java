@@ -34,7 +34,7 @@ public class CMDDifficulty implements CommandExecutor {
 		
 		properties.setDifficulty(difficulty);
 
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set difficulty of ", properties.getWorldName(), " to ", TextColors.YELLOW, difficulty.getName().toUpperCase()));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set difficulty of ", properties.getWorldName(), " to ", TextColors.YELLOW, difficulty.getTranslation().get().toUpperCase()));
 		
 		return CommandResult.success();
 	}

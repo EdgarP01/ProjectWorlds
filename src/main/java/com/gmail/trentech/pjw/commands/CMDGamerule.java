@@ -23,8 +23,8 @@ public class CMDGamerule implements CommandExecutor {
 	public CMDGamerule() {
 		Help help = new Help("gamerule", "gamerule", " Configure varies world properties");
 		help.setPermission("pjw.cmd.world.gamerule");
-		help.setSyntax(" /gamerule <world> [rule] [value]\n /gr <world> [rule] [value]");
-		help.setExample(" /gamerule MyWorld\n /gamerule MyWorld mobGriefing false\n /gamerule @w doDaylightCycle true");
+		help.setSyntax(" /world gamerule <world> [rule] [value]\n /w gr <world> [rule] [value]");
+		help.setExample(" /world gamerule MyWorld\n /world gamerule MyWorld mobGriefing false");
 		help.save();
 	}
 

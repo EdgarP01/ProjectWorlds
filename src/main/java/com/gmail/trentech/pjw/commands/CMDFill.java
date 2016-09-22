@@ -41,7 +41,7 @@ public class CMDFill implements CommandExecutor {
 		}
 		World world = Sponge.getServer().getWorld(properties.getUniqueId()).get();
 		
-		String value = args.<String> getOne("value").get();
+		String value = args.<String> getOne("diameter").get();
 
 		if (value.equalsIgnoreCase("stop")) {
 			if (!list.containsKey(properties.getWorldName())) {

@@ -32,7 +32,7 @@ public class CMDImport implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		String worldName = args.<String> getOne("name").get();
+		String worldName = args.<String> getOne("world").get();
 
 		if (Sponge.getServer().getWorld(worldName).isPresent()) {
 			throw new CommandException(Text.of(TextColors.RED, worldName, " is already loaded"), false);

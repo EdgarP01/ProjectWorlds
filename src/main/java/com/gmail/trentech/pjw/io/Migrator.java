@@ -23,8 +23,8 @@ public class Migrator {
 
 		File[] files = directory.listFiles();
 
-		if ((files.length - 1) > 0) {
-			Main.instance().getLog().info("Found " + (files.length - 1) + " possible worlds");
+		if (files.length > 0) {
+			Main.instance().getLog().info("Found " + files.length + " possible worlds");
 		} else {
 			Main.instance().getLog().info("No worlds to migrate");
 		}
@@ -55,21 +55,6 @@ public class Migrator {
 				}
 			}
 
-			SpongeData spongeData = new SpongeData(world);
-
-			if (spongeData.exists()) {
-				if (!spongeData.isFreeDimId()) {
-
-					Main.instance().getLog().warn("  * Repairing dimension id conflict");
-					try {
-						spongeData.setDimId(spongeData.getFreeDimId());
-					} catch (IOException e) {
-						e.printStackTrace();
-						continue;
-					}
-				}
-			}
-
 			File dest = new File(new File(Sponge.getGame().getSavesDirectory().toFile(), Sponge.getServer().getDefaultWorldName()), name);
 
 			int i = 1;
@@ -96,6 +81,8 @@ public class Migrator {
 				continue;
 			}
 
+			SpongeData spongeData = new SpongeData(world);
+			
 			if (spongeData.exists()) {
 				Main.instance().getLog().info("  * Complete!");
 			} else {

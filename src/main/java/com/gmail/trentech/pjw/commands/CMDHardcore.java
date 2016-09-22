@@ -17,7 +17,7 @@ public class CMDHardcore implements CommandExecutor {
 		Help help = new Help("hardcore", "hardcore", " Toggle on and off hardcore mode for world");
 		help.setPermission("pjw.cmd.world.hardcore");
 		help.setSyntax(" /world hardcore <world> [value]\n /w h <world> [value]");
-		help.setExample(" /world hardcore MyWorld\n /world hardcore MyWorld false\n /world hardcore @w true");
+		help.setExample(" /world hardcore MyWorld\n /world hardcore MyWorld false");
 		help.save();
 	}
 

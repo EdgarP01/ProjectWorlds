@@ -1,6 +1,5 @@
 package com.gmail.trentech.pjw.commands;
 
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.spongepowered.api.Sponge;
@@ -9,13 +8,10 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.io.SpongeData;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Zip;
 
@@ -39,22 +35,22 @@ public class CMDDelete implements CommandExecutor {
 
 		new Zip(properties.getWorldName()).save();
 
-		int dimId = (int) properties.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get();
+		//int dimId = (int) properties.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get();
 		try {
 			if (Sponge.getServer().deleteWorld(properties).get()) {
-				List<Integer> ids = SpongeData.getIds();
+				//List<Integer> ids = SpongeData.getIds();
 
-				for (int id = 0; id < ids.size(); id++) {
-					int current = ids.get(id);
-					if (current == dimId) {
-						ids.remove(id);
-						break;
-					}
-				}
-
-				ConfigManager configManager = ConfigManager.get();
-				configManager.getConfig().getNode("dimension_ids").setValue(SpongeData.getIds());
-				configManager.save();
+//				for (int id = 0; id < ids.size(); id++) {
+//					int current = ids.get(id);
+//					if (current == dimId) {
+//						ids.remove(id);
+//						break;
+//					}
+//				}
+//
+//				ConfigManager configManager = ConfigManager.get();
+//				configManager.getConfig().getNode("dimension_ids").setValue(SpongeData.getIds());
+//				configManager.save();
 
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, properties.getWorldName(), " deleted successfully"));
 

@@ -10,7 +10,6 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.DimensionType;
@@ -19,8 +18,6 @@ import org.spongepowered.api.world.WorldArchetype;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.io.SpongeData;
-import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDCreate implements CommandExecutor {
@@ -80,11 +77,11 @@ public class CMDCreate implements CommandExecutor {
 
 		Sponge.getServer().saveWorldProperties(properties);
 
-		SpongeData.getIds().add((int) properties.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get());
-
-		ConfigManager configManager = ConfigManager.get();
-		configManager.getConfig().getNode("dimension_ids").setValue(SpongeData.getIds());
-		configManager.save();
+//		SpongeData.getIds().add((int) properties.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get());
+//
+//		ConfigManager configManager = ConfigManager.get();
+//		configManager.getConfig().getNode("dimension_ids").setValue(SpongeData.getIds());
+//		configManager.save();
 
 		worlds.add(worldName);
 

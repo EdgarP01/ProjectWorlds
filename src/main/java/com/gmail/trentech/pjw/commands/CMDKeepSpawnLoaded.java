@@ -17,7 +17,7 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 		Help help = new Help("keepspawnloaded", "keepspawnloaded", " Keeps spawn point of world loaded in memory");
 		help.setPermission("pjw.cmd.world.keepspawnloaded");
 		help.setSyntax(" /world keepspawnloaded <world> [value]\n /w k <world> [value]");
-		help.setExample(" /world keepspawnloaded MyWorld\n /world keepspawnloaded MyWorld true\n /world keepspawnloaded @w false");
+		help.setExample(" /world keepspawnloaded MyWorld\n /world keepspawnloaded MyWorld true");
 		help.save();
 	}
 
