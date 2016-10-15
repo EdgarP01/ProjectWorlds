@@ -14,7 +14,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDKeepSpawnLoaded implements CommandExecutor {
 
 	public CMDKeepSpawnLoaded() {
-		Help help = new Help("keepspawnloaded", "keepspawnloaded", " Keeps spawn point of world loaded in memory");
+		Help help = new Help("world keepspawnloaded", "keepspawnloaded", " Keeps spawn point of world loaded in memory", false);
 		help.setPermission("pjw.cmd.world.keepspawnloaded");
 		help.setSyntax(" /world keepspawnloaded <world> [value]\n /w k <world> [value]");
 		help.setExample(" /world keepspawnloaded MyWorld\n /world keepspawnloaded MyWorld true");

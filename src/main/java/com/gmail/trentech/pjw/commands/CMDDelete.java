@@ -18,7 +18,7 @@ import com.gmail.trentech.pjw.utils.Zip;
 public class CMDDelete implements CommandExecutor {
 
 	public CMDDelete() {
-		Help help = new Help("delete", "delete", " Delete worlds you no longer need. Worlds must be unloaded before you can delete them");
+		Help help = new Help("world delete", "delete", " Delete worlds you no longer need. Worlds must be unloaded before you can delete them", false);
 		help.setPermission("pjw.cmd.world.delete");
 		help.setSyntax(" /world delete <world>\n /w dl <world>");
 		help.setExample(" /world delete OldWorld");

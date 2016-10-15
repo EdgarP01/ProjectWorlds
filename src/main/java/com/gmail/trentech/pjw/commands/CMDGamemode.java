@@ -15,7 +15,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDGamemode implements CommandExecutor {
 
 	public CMDGamemode() {
-		Help help = new Help("gamemode", "gamemode", " Change gamemode of the specified world");
+		Help help = new Help("world gamemode", "gamemode", " Change gamemode of the specified world", false);
 		help.setPermission("pjw.cmd.world.gamemode");
 		help.setSyntax(" /world gamemode <world> [gamemode]\n /w g <world> [gamemode]");
 		help.setExample(" /world gamemode\n /world gamemode MyWorld SURVIVAL");

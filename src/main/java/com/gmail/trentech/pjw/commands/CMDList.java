@@ -25,7 +25,7 @@ import com.google.common.collect.Lists;
 public class CMDList implements CommandExecutor {
 
 	public CMDList() {
-		Help help = new Help("list", "list", " Lists all known worlds, loaded or unloaded");
+		Help help = new Help("world list", "list", " Lists all known worlds, loaded or unloaded", false);
 		help.setPermission("pjw.cmd.world.list");
 		help.setSyntax(" /world list\n /w ls");
 		help.save();

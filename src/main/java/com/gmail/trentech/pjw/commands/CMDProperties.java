@@ -22,7 +22,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDProperties implements CommandExecutor {
 
 	public CMDProperties() {
-		Help help = new Help("properties", "properties", " View all properties associated with a world");
+		Help help = new Help("world properties", "properties", " View all properties associated with a world", false);
 		help.setPermission("pjw.cmd.world.properties");
 		help.setSyntax(" /world properties <world>\n /w pp <world>");
 		help.setExample(" /world properties\n /world properties MyWorld");

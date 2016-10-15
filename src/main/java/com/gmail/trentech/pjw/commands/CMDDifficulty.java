@@ -15,7 +15,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDDifficulty implements CommandExecutor {
 
 	public CMDDifficulty() {
-		Help help = new Help("difficulty", "difficulty", " Set the difficulty level for each world");
+		Help help = new Help("world difficulty", "difficulty", " Set the difficulty level for each world", false);
 		help.setPermission("pjw.cmd.world.difficulty");
 		help.setSyntax(" /world difficulty <world> [difficulty]\n /w df <world> [difficulty]");
 		help.setExample(" /world difficulty MyWorld\n /world difficulty MyWorld HARD");

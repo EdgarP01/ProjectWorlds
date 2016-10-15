@@ -18,7 +18,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDSetSpawn implements CommandExecutor {
 
 	public CMDSetSpawn() {
-		Help help = new Help("setspawn", "setspawn", " Sets the spawn point of specified world. If no arguments present sets spawn of current world to player location");
+		Help help = new Help("world setspawn", "setspawn", " Sets the spawn point of specified world. If no arguments present sets spawn of current world to player location", false);
 		help.setPermission("pjw.cmd.world.setspawn");
 		help.setSyntax(" /world setspawn <world> <x,y,z>\n /w s <world> <x,y,z>");
 		help.setExample(" /world setspawn\n /world setspawn MyWorld -153,75,300");

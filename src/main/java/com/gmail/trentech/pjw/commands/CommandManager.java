@@ -8,8 +8,8 @@ import org.spongepowered.api.world.GeneratorType;
 import org.spongepowered.api.world.difficulty.Difficulty;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 
+import com.gmail.trentech.pjw.commands.elements.HelpElement;
 import com.gmail.trentech.pjw.utils.Gamemode;
-import com.gmail.trentech.pjw.utils.Help;
 
 public class CommandManager {
 
@@ -134,7 +134,7 @@ public class CommandManager {
 	private CommandSpec cmdHelp = CommandSpec.builder()
 		    .description(Text.of(" I need help with Project Worlds"))
 		    .permission("pjw.cmd.world")
-		    .arguments(GenericArguments.choices(Text.of("command"), Help.all()))
+		    .arguments(new HelpElement(Text.of("rawCommand")))
 		    .executor(new CMDHelp())
 		    .build();
 	

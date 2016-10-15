@@ -23,7 +23,7 @@ import ninja.leaping.configurate.ConfigurationNode;
 public class CMDUnload implements CommandExecutor {
 
 	public CMDUnload() {
-		Help help = new Help("unload", "unload", " Unloads specified world. If players are in world, they will be teleported to default spawn");
+		Help help = new Help("world unload", "unload", " Unloads specified world. If players are in world, they will be teleported to default spawn", false);
 		help.setPermission("pjw.cmd.world.unload");
 		help.setSyntax(" /world unload <world>\n /w u <world>");
 		help.setExample(" /world unload MyWorld");

@@ -14,7 +14,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDHardcore implements CommandExecutor {
 
 	public CMDHardcore() {
-		Help help = new Help("hardcore", "hardcore", " Toggle on and off hardcore mode for world");
+		Help help = new Help("world hardcore", "hardcore", " Toggle on and off hardcore mode for world", false);
 		help.setPermission("pjw.cmd.world.hardcore");
 		help.setSyntax(" /world hardcore <world> [value]\n /w h <world> [value]");
 		help.setExample(" /world hardcore MyWorld\n /world hardcore MyWorld false");

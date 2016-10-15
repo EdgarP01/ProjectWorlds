@@ -24,7 +24,7 @@ import com.gmail.trentech.pjw.utils.Utils;
 public class CMDRegen implements CommandExecutor {
 
 	public CMDRegen() {
-		Help help = new Help("regen", "regen", " Regenerates a world. You can preserve the seed or generate new random");
+		Help help = new Help("world regen", "regen", " Regenerates a world. You can preserve the seed or generate new random", false);
 		help.setPermission("pjw.cmd.world.regen");
 		help.setSyntax(" /world regen <world> [true/false]\n /w r <world>  [true/false]");
 		help.setExample(" /world regen MyWorld\n /world regen MyWorld true");

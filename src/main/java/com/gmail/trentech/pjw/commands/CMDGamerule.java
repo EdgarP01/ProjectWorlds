@@ -21,7 +21,7 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDGamerule implements CommandExecutor {
 
 	public CMDGamerule() {
-		Help help = new Help("gamerule", "gamerule", " Configure varies world properties");
+		Help help = new Help("world gamerule", "gamerule", " Configure varies world properties", false);
 		help.setPermission("pjw.cmd.world.gamerule");
 		help.setSyntax(" /world gamerule <world> [rule] [value]\n /w gr <world> [rule] [value]");
 		help.setExample(" /world gamerule MyWorld\n /world gamerule MyWorld mobGriefing false");

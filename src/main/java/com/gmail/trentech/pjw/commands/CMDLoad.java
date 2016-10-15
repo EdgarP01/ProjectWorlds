@@ -24,7 +24,7 @@ import com.gmail.trentech.pjw.utils.Utils;
 public class CMDLoad implements CommandExecutor {
 
 	public CMDLoad() {
-		Help help = new Help("load", "load", " Loads sepcified world. If world is a non Sponge created world you will need to specify a dimension type to import");
+		Help help = new Help("world load", "load", " Loads sepcified world. If world is a non Sponge created world you will need to specify a dimension type to import", false);
 		help.setPermission("pjw.cmd.world.load");
 		help.setSyntax(" /world load <world> [type]\n /w l <world> [type]");
 		help.setExample(" /world load NewWorld\n /world load BukkitWorld overworld");

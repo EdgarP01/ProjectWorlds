@@ -25,7 +25,7 @@ public class CMDFill implements CommandExecutor {
 	public static HashMap<String, Task> list = new HashMap<>();
 
 	public CMDFill() {
-		Help help = new Help("fill", "fill", " Pre generate chunks in a world outwards from center spawn");
+		Help help = new Help("world fill", "fill", " Pre generate chunks in a world outwards from center spawn", false);
 		help.setPermission("pjw.cmd.world.fill");
 		help.setSyntax(" /world fill <world> <diameter> [interval]\n /w f <world> <diameter> [interval]");
 		help.setExample(" /world fill MyWorld 1000 \n /world fill MyWorld stop");
