@@ -14,11 +14,11 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDEnable implements CommandExecutor {
 
 	public CMDEnable() {
-		Help help = new Help("world enable", "enable", " Enable and disable worlds from loading", false);
-		help.setPermission("pjw.cmd.world.enable");
-		help.setSyntax(" /world enable <world> [boolean]\n /w e <world> [boolean]");
-		help.setExample(" /world enable MyWorld true\n /world enable MyWorld false");
-		help.save();
+		new Help("world enable", "enable", "Enable and disable worlds from loading", false)
+			.setPermission("pjw.cmd.world.enable")
+			.setUsage("/world enable <world> [boolean]\n /w e <world> [boolean]")
+			.setExample("/world enable MyWorld true\n /world enable MyWorld false")
+			.save();
 	}
 
 	@Override

@@ -22,11 +22,11 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDProperties implements CommandExecutor {
 
 	public CMDProperties() {
-		Help help = new Help("world properties", "properties", " View all properties associated with a world", false);
-		help.setPermission("pjw.cmd.world.properties");
-		help.setSyntax(" /world properties <world>\n /w pp <world>");
-		help.setExample(" /world properties\n /world properties MyWorld");
-		help.save();
+		new Help("world properties", "properties", "View all properties associated with a world", false)
+			.setPermission("pjw.cmd.world.properties")
+			.setUsage("/world properties <world>\n /w pp <world>")
+			.setExample("/world properties\n /world properties MyWorld")
+			.save();
 	}
 
 	@Override
@@ -37,7 +37,6 @@ public class CMDProperties implements CommandExecutor {
 
 		list.add(Text.of(TextColors.GREEN, "Name: ", TextColors.WHITE, properties.getWorldName()));
 		list.add(Text.of(TextColors.GREEN, "UUID: ", TextColors.WHITE, properties.getUniqueId().toString()));
-		//list.add(Text.of(TextColors.GREEN, "Dimension Id: ", TextColors.WHITE, new SpongeData(properties.getWorldName()).getDimId()));
 		list.add(Text.of(TextColors.GREEN, "Dimension Id: ", TextColors.WHITE, (int) properties.getAdditionalProperties().getView(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get()));
 		list.add(Text.of(TextColors.GREEN, "Enabled: ", TextColors.WHITE, properties.isEnabled()));
 		list.add(Text.of(TextColors.GREEN, "Dimension Type: ", TextColors.WHITE, properties.getDimensionType().getName().toUpperCase()));

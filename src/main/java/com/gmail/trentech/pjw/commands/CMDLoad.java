@@ -24,11 +24,11 @@ import com.gmail.trentech.pjw.utils.Utils;
 public class CMDLoad implements CommandExecutor {
 
 	public CMDLoad() {
-		Help help = new Help("world load", "load", " Loads sepcified world. If world is a non Sponge created world you will need to specify a dimension type to import", false);
-		help.setPermission("pjw.cmd.world.load");
-		help.setSyntax(" /world load <world> [type]\n /w l <world> [type]");
-		help.setExample(" /world load NewWorld\n /world load BukkitWorld overworld");
-		help.save();
+		new Help("world load", "load", "Loads sepcified world. If world is a non Sponge created world you will need to specify a dimension type to import", false)
+			.setPermission("pjw.cmd.world.load")
+			.setUsage("/world load <world> [type]\n /w l <world> [type]")
+			.setExample("/world load NewWorld\n /world load BukkitWorld overworld")
+			.save();
 	}
 
 	@Override

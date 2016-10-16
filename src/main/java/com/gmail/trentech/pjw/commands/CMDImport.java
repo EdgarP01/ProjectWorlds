@@ -23,11 +23,11 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDImport implements CommandExecutor {
 
 	public CMDImport() {
-		Help help = new Help("world import", "import", " Import worlds not native to Sponge", false);
-		help.setPermission("pjw.cmd.world.import");
-		help.setSyntax(" /world import <world> <type> <generator>\n /w i <world> <type> <generator>");
-		help.setExample(" /world import NewWorld overworld overworld");
-		help.save();
+		new Help("world import", "import", "Import worlds not native to Sponge", false)
+			.setPermission("pjw.cmd.world.import")
+			.setUsage("/world import <world> <type> <generator>\n /w i <world> <type> <generator>")
+			.setExample("/world import NewWorld overworld overworld")
+			.save();
 	}
 
 	@Override

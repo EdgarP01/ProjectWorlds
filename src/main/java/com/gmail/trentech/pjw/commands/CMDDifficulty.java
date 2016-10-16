@@ -15,11 +15,11 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDDifficulty implements CommandExecutor {
 
 	public CMDDifficulty() {
-		Help help = new Help("world difficulty", "difficulty", " Set the difficulty level for each world", false);
-		help.setPermission("pjw.cmd.world.difficulty");
-		help.setSyntax(" /world difficulty <world> [difficulty]\n /w df <world> [difficulty]");
-		help.setExample(" /world difficulty MyWorld\n /world difficulty MyWorld HARD");
-		help.save();
+		new Help("world difficulty", "difficulty", "Set the difficulty level for each world", false)
+			.setPermission("pjw.cmd.world.difficulty")
+			.setUsage("/world difficulty <world> [difficulty]\n /w df <world> [difficulty]")
+			.setExample("/world difficulty MyWorld\n /world difficulty MyWorld HARD")
+			.save();
 	}
 
 	@Override

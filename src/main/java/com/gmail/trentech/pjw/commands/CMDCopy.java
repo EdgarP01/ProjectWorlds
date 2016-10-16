@@ -19,11 +19,11 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDCopy implements CommandExecutor {
 
 	public CMDCopy() {
-		Help help = new Help("world copy", "copy", " Allows you to make a new world from an existing world", false);
-		help.setPermission("pjw.cmd.world.copy");
-		help.setSyntax(" /world copy <oldWorld> <newWorld>\n /w cp <oldWorld> <newWorld>");
-		help.setExample(" /world copy srcWorld newWorld");
-		help.save();
+		new Help("world copy", "copy", "Allows you to make a new world from an existing world", false)
+			.setPermission("pjw.cmd.world.copy")
+			.setUsage("/world copy <oldWorld> <newWorld>\n /w cp <oldWorld> <newWorld>")
+			.setExample("/world copy srcWorld newWorld")
+			.save();
 	}
 
 	@Override

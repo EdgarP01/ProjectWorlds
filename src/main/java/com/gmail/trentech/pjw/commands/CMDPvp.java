@@ -14,11 +14,11 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDPvp implements CommandExecutor {
 
 	public CMDPvp() {
-		Help help = new Help("world pvp", "pvp", " Toggle on and off pvp for world", false);
-		help.setPermission("pjw.cmd.world.pvp");
-		help.setSyntax(" /world pvp <world> [value]\n /w p <world> [value]");
-		help.setExample(" /world pvp MyWorld\n /world pvp MyWorld true");
-		help.save();
+		new Help("world pvp", "pvp", "Toggle on and off pvp for world", false)
+			.setPermission("pjw.cmd.world.pvp")
+			.setUsage("/world pvp <world> [value]\n /w p <world> [value]")
+			.setExample("/world pvp MyWorld\n /world pvp MyWorld true")
+			.save();
 	}
 
 	@Override

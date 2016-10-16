@@ -15,11 +15,11 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDGamemode implements CommandExecutor {
 
 	public CMDGamemode() {
-		Help help = new Help("world gamemode", "gamemode", " Change gamemode of the specified world", false);
-		help.setPermission("pjw.cmd.world.gamemode");
-		help.setSyntax(" /world gamemode <world> [gamemode]\n /w g <world> [gamemode]");
-		help.setExample(" /world gamemode\n /world gamemode MyWorld SURVIVAL");
-		help.save();
+		new Help("world gamemode", "gamemode", "Change gamemode of the specified world", false)
+			.setPermission("pjw.cmd.world.gamemode")
+			.setUsage("/world gamemode <world> [gamemode]\n /w g <world> [gamemode]")
+			.setExample("/world gamemode\n /world gamemode MyWorld SURVIVAL")
+			.save();
 	}
 
 	@Override

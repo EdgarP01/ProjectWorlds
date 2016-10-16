@@ -17,11 +17,11 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDRename implements CommandExecutor {
 
 	public CMDRename() {
-		Help help = new Help("world rename", "rename", " Allows for renaming worlds. World must be unloaded before you can rename world", false);
-		help.setPermission("pjw.cmd.world.rename");
-		help.setSyntax(" /world rename <world> <world>\n /w rn <world> <world>");
-		help.setExample(" /world rename MyWorld NewWorldName");
-		help.save();
+		new Help("world rename", "rename", "Allows for renaming worlds. World must be unloaded before you can rename world", false)
+			.setPermission("pjw.cmd.world.rename")
+			.setUsage("/world rename <world> <world>\n /w rn <world> <world>")
+			.setExample("/world rename MyWorld NewWorldName")
+			.save();
 	}
 
 	@Override

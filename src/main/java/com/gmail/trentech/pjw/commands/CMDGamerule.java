@@ -21,11 +21,11 @@ import com.gmail.trentech.pjw.utils.Help;
 public class CMDGamerule implements CommandExecutor {
 
 	public CMDGamerule() {
-		Help help = new Help("world gamerule", "gamerule", " Configure varies world properties", false);
-		help.setPermission("pjw.cmd.world.gamerule");
-		help.setSyntax(" /world gamerule <world> [rule] [value]\n /w gr <world> [rule] [value]");
-		help.setExample(" /world gamerule MyWorld\n /world gamerule MyWorld mobGriefing false");
-		help.save();
+		new Help("world gamerule", "gamerule", " Configure varies world properties", false)
+			.setPermission("pjw.cmd.world.gamerule")
+			.setUsage(" /world gamerule <world> [rule] [value]\n /w gr <world> [rule] [value]")
+			.setExample(" /world gamerule MyWorld\n /world gamerule MyWorld mobGriefing false")
+			.save();
 	}
 
 	@Override
