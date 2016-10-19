@@ -22,7 +22,7 @@ public class CMDWorld implements CommandExecutor {
 	
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if(Sponge.getPluginManager().getPlugin("helpme").isPresent()) {
+		if (Sponge.getPluginManager().isLoaded("helpme")) {
 			Help.executeList(src, Help.get("world").get().getChildren());
 			
 			return CommandResult.success();

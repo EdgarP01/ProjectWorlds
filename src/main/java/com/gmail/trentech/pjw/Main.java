@@ -65,7 +65,7 @@ public class Main {
 
 		ConfigManager.init();
 		
-		if(Sponge.getPluginManager().getPlugin("helpme").isPresent()) {
+		if (Sponge.getPluginManager().isLoaded("helpme")) {
 			Help worldCopy = new Help("world copy", "copy", "Allows you to make a new world from an existing world")
 					.setPermission("pjw.cmd.world.copy")
 					.addUsage("/world copy <oldWorld> <newWorld>")
