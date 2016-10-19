@@ -20,7 +20,6 @@ import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import com.gmail.trentech.helpme.Help;
 import com.gmail.trentech.pjw.commands.CommandManager;
 import com.gmail.trentech.pjw.extra.OceanWorldGeneratorModifier;
-import com.gmail.trentech.pjw.extra.VoidWorldGeneratorModifier;
 import com.gmail.trentech.pjw.io.Migrator;
 import com.gmail.trentech.pjw.listeners.EventManager;
 import com.gmail.trentech.pjw.listeners.TabEventManager;
@@ -60,7 +59,6 @@ public class Main {
 		Sponge.getEventManager().registerListeners(this, new EventManager());
 		Sponge.getEventManager().registerListeners(this, new TabEventManager());
 
-		Sponge.getRegistry().register(WorldGeneratorModifier.class, new VoidWorldGeneratorModifier());
 		Sponge.getRegistry().register(WorldGeneratorModifier.class, new OceanWorldGeneratorModifier());
 
 		Sponge.getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
