@@ -9,17 +9,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.utils.Help;
-
 public class CMDHardcore implements CommandExecutor {
-
-	public CMDHardcore() {
-		new Help("world hardcore", "hardcore", "Toggle on and off hardcore mode for world", false)
-			.setPermission("pjw.cmd.world.hardcore")
-			.setUsage("/world hardcore <world> [value]\n /w h <world> [value]")
-			.setExample("/world hardcore MyWorld\n /world hardcore MyWorld false")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

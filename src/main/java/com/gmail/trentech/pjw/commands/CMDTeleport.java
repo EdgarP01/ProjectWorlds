@@ -20,21 +20,12 @@ import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Rotation;
 import com.gmail.trentech.pjw.utils.Utils;
 
 public class CMDTeleport implements CommandExecutor {
 
 	public static HashMap<Player, Location<World>> players = new HashMap<>();
-
-	public CMDTeleport() {
-		new Help("world teleport", "teleport", "Teleport to specified world and location", false)
-			.setPermission("pjw.cmd.world.teleport")
-			.setUsage("/world teleport <world> [-c <x,y,z>] [-d <direction>]\n /w tp <world> [-c <x,y,z>] [-d <direction>]")
-			.setExample("/world tp MyWorld\n /world teleport MyWorld -c -153,75,300\n /world tp MyWorld -c -153,75,300 -d WEST")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

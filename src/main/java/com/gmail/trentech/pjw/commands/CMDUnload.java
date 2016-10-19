@@ -16,19 +16,10 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.utils.ConfigManager;
-import com.gmail.trentech.pjw.utils.Help;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
 public class CMDUnload implements CommandExecutor {
-
-	public CMDUnload() {
-		new Help("world unload", "unload", "Unloads specified world. If players are in world, they will be teleported to default spawn", false)
-			.setPermission("pjw.cmd.world.unload")
-			.setUsage("/world unload <world>\n /w u <world>")
-			.setExample("/world unload MyWorld")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

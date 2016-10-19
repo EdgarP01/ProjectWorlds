@@ -18,18 +18,9 @@ import org.spongepowered.api.world.storage.WorldProperties;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.io.WorldData;
-import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Utils;
 
 public class CMDLoad implements CommandExecutor {
-
-	public CMDLoad() {
-		new Help("world load", "load", "Loads sepcified world. If world is a non Sponge created world you will need to specify a dimension type to import", false)
-			.setPermission("pjw.cmd.world.load")
-			.setUsage("/world load <world> [type]\n /w l <world> [type]")
-			.setExample("/world load NewWorld\n /world load BukkitWorld overworld")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

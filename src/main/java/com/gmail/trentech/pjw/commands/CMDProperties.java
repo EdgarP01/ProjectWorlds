@@ -17,17 +17,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.utils.Help;
-
 public class CMDProperties implements CommandExecutor {
-
-	public CMDProperties() {
-		new Help("world properties", "properties", "View all properties associated with a world", false)
-			.setPermission("pjw.cmd.world.properties")
-			.setUsage("/world properties <world>\n /w pp <world>")
-			.setExample("/world properties\n /world properties MyWorld")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

@@ -14,17 +14,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.utils.Help;
-
 public class CMDCopy implements CommandExecutor {
-
-	public CMDCopy() {
-		new Help("world copy", "copy", "Allows you to make a new world from an existing world", false)
-			.setPermission("pjw.cmd.world.copy")
-			.setUsage("/world copy <oldWorld> <newWorld>\n /w cp <oldWorld> <newWorld>")
-			.setExample("/world copy srcWorld newWorld")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

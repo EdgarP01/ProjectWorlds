@@ -9,17 +9,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.utils.Help;
-
 public class CMDEnable implements CommandExecutor {
-
-	public CMDEnable() {
-		new Help("world enable", "enable", "Enable and disable worlds from loading", false)
-			.setPermission("pjw.cmd.world.enable")
-			.setUsage("/world enable <world> [boolean]\n /w e <world> [boolean]")
-			.setExample("/world enable MyWorld true\n /world enable MyWorld false")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

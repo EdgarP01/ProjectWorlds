@@ -9,17 +9,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.utils.Help;
-
 public class CMDPvp implements CommandExecutor {
-
-	public CMDPvp() {
-		new Help("world pvp", "pvp", "Toggle on and off pvp for world", false)
-			.setPermission("pjw.cmd.world.pvp")
-			.setUsage("/world pvp <world> [value]\n /w p <world> [value]")
-			.setExample("/world pvp MyWorld\n /world pvp MyWorld true")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

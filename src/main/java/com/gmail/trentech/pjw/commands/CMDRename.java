@@ -12,17 +12,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.utils.Help;
-
 public class CMDRename implements CommandExecutor {
-
-	public CMDRename() {
-		new Help("world rename", "rename", "Allows for renaming worlds. World must be unloaded before you can rename world", false)
-			.setPermission("pjw.cmd.world.rename")
-			.setUsage("/world rename <world> <world>\n /w rn <world> <world>")
-			.setExample("/world rename MyWorld NewWorldName")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

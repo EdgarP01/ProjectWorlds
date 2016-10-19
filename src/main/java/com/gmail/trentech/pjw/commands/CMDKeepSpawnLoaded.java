@@ -9,17 +9,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.utils.Help;
-
 public class CMDKeepSpawnLoaded implements CommandExecutor {
-
-	public CMDKeepSpawnLoaded() {
-		new Help("world keepspawnloaded", "keepspawnloaded", "Keeps spawn point of world loaded in memory", false)
-			.setPermission("pjw.cmd.world.keepspawnloaded")
-			.setUsage("/world keepspawnloaded <world> [value]\n /w k <world> [value]")
-			.setExample("/world keepspawnloaded MyWorld\n /world keepspawnloaded MyWorld true")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

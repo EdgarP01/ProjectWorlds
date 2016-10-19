@@ -18,19 +18,10 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDFill implements CommandExecutor {
 
 	public static HashMap<String, Task> list = new HashMap<>();
-
-	public CMDFill() {
-		new Help("world fill", "fill", "Pre generate chunks in a world outwards from center spawn", false)
-			.setPermission("pjw.cmd.world.fill")
-			.setUsage("/world fill <world> <diameter> [interval]\n /w f <world> <diameter> [interval]")
-			.setExample("/world fill MyWorld 1000 \n /world fill MyWorld stop")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

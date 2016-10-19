@@ -19,17 +19,9 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.utils.Help;
 import com.google.common.collect.Lists;
 
 public class CMDList implements CommandExecutor {
-
-	public CMDList() {
-		new Help("world list", "list", "Lists all known worlds, loaded or unloaded", false)
-			.setPermission("pjw.cmd.world.list")
-			.setUsage("/world list\n /w ls")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

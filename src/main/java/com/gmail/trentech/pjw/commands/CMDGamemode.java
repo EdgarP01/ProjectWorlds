@@ -10,17 +10,8 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.utils.Gamemode;
-import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDGamemode implements CommandExecutor {
-
-	public CMDGamemode() {
-		new Help("world gamemode", "gamemode", "Change gamemode of the specified world", false)
-			.setPermission("pjw.cmd.world.gamemode")
-			.setUsage("/world gamemode <world> [gamemode]\n /w g <world> [gamemode]")
-			.setExample("/world gamemode\n /world gamemode MyWorld SURVIVAL")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

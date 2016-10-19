@@ -16,17 +16,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.utils.Help;
-
 public class CMDGamerule implements CommandExecutor {
-
-	public CMDGamerule() {
-		new Help("world gamerule", "gamerule", " Configure varies world properties", false)
-			.setPermission("pjw.cmd.world.gamerule")
-			.setUsage(" /world gamerule <world> [rule] [value]\n /w gr <world> [rule] [value]")
-			.setExample(" /world gamerule MyWorld\n /world gamerule MyWorld mobGriefing false")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -56,10 +46,6 @@ public class CMDGamerule implements CommandExecutor {
 			return CommandResult.success();
 		}
 		String rule = args.<String> getOne("rule").get();
-
-		if (!properties.getGameRule(rule).isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, "Gamerule  ", rule, " does not exist"), false);
-		}
 
 		if (!args.hasAny("value")) {
 			src.sendMessage(Text.of(TextColors.GREEN, rule, ": ", TextColors.WHITE, properties.getGameRule(rule).get()));

@@ -18,18 +18,9 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.WorldArchetype;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Utils;
 
 public class CMDRegen implements CommandExecutor {
-
-	public CMDRegen() {
-		new Help("world regen", "regen", "Regenerates a world. You can preserve the seed or generate new random", false)
-			.setPermission("pjw.cmd.world.regen")
-			.setUsage("/world regen <world> [true/false]\n /w r <world>  [true/false]")
-			.setExample("/world regen MyWorld\n /world regen MyWorld true")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

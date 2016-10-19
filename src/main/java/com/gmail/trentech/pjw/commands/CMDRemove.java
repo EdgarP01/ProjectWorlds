@@ -12,18 +12,9 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.utils.Help;
 import com.gmail.trentech.pjw.utils.Zip;
 
-public class CMDDelete implements CommandExecutor {
-
-	public CMDDelete() {
-		new Help("world delete", "delete", "Delete worlds you no longer need. Worlds must be unloaded before you can delete them", false)
-			.setPermission("pjw.cmd.world.delete")
-			.setUsage("/world delete <world>\n /w dl <world>")
-			.setExample("/world delete OldWorld")
-			.save();
-	}
+public class CMDRemove implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -35,22 +26,8 @@ public class CMDDelete implements CommandExecutor {
 
 		new Zip(properties.getWorldName()).save();
 
-		//int dimId = (int) properties.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get();
 		try {
 			if (Sponge.getServer().deleteWorld(properties).get()) {
-				//List<Integer> ids = SpongeData.getIds();
-
-//				for (int id = 0; id < ids.size(); id++) {
-//					int current = ids.get(id);
-//					if (current == dimId) {
-//						ids.remove(id);
-//						break;
-//					}
-//				}
-//
-//				ConfigManager configManager = ConfigManager.get();
-//				configManager.getConfig().getNode("dimension_ids").setValue(SpongeData.getIds());
-//				configManager.save();
 
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, properties.getWorldName(), " deleted successfully"));
 

@@ -10,17 +10,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.difficulty.Difficulty;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.utils.Help;
-
 public class CMDDifficulty implements CommandExecutor {
-
-	public CMDDifficulty() {
-		new Help("world difficulty", "difficulty", "Set the difficulty level for each world", false)
-			.setPermission("pjw.cmd.world.difficulty")
-			.setUsage("/world difficulty <world> [difficulty]\n /w df <world> [difficulty]")
-			.setExample("/world difficulty MyWorld\n /world difficulty MyWorld HARD")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

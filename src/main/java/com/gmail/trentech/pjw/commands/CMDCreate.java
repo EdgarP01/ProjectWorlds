@@ -18,19 +18,9 @@ import org.spongepowered.api.world.WorldArchetype;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.utils.Help;
-
 public class CMDCreate implements CommandExecutor {
 
 	public static List<String> worlds = new ArrayList<>();
-
-	public CMDCreate() {
-		new Help("world create", "create", "Allows you to create new worlds with any combination of optional arguments -d " + "for dimension type, -g for generator type, -s for seed and -m for generator modifiers", false)
-			.setPermission("pjw.cmd.world.create")
-			.setUsage("/world create <world> [-d <dimensionType>] [-g <generatorType>] [-m <modifer>]  [-s <seed>]\n /w cr <world> [-d <dimensionType>] [-g <generatorType>] [-m <modifer>]  [-s <seed>]")
-			.setExample("/world create NewWorld -s -12309830198412353456\n /world create NewWorld -d overworld -g overworld\n" + " /world create NewWorld -d nether -m sponge:skylands")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

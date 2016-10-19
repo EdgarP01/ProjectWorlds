@@ -18,17 +18,8 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.io.WorldData;
-import com.gmail.trentech.pjw.utils.Help;
 
 public class CMDImport implements CommandExecutor {
-
-	public CMDImport() {
-		new Help("world import", "import", "Import worlds not native to Sponge", false)
-			.setPermission("pjw.cmd.world.import")
-			.setUsage("/world import <world> <type> <generator>\n /w i <world> <type> <generator>")
-			.setExample("/world import NewWorld overworld overworld")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

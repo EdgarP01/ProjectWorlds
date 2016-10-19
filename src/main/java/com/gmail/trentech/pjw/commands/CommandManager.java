@@ -8,7 +8,7 @@ import org.spongepowered.api.world.GeneratorType;
 import org.spongepowered.api.world.difficulty.Difficulty;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 
-import com.gmail.trentech.pjw.commands.elements.HelpElement;
+import com.gmail.trentech.pjw.commands.elements.GameruleElement;
 import com.gmail.trentech.pjw.utils.Gamemode;
 
 public class CommandManager {
@@ -24,11 +24,11 @@ public class CommandManager {
 		    .executor(new CMDCreate())
 		    .build();
 
-	private CommandSpec cmdDelete = CommandSpec.builder()
+	private CommandSpec cmdRemove = CommandSpec.builder()
 		    .description(Text.of(" Delete worlds you no longer need. Worlds must be unloaded before you can delete them"))
-		    .permission("pjw.cmd.world.delete")
+		    .permission("pjw.cmd.world.remove")
 		    .arguments(GenericArguments.world(Text.of("world")))
-		    .executor(new CMDDelete())
+		    .executor(new CMDRemove())
 		    .build();
 
 	private CommandSpec cmdDiffculty = CommandSpec.builder()
@@ -41,7 +41,7 @@ public class CommandManager {
 	private CommandSpec cmdSetSpawn = CommandSpec.builder()
 		    .description(Text.of(" Sets the spawn point of specified world. If no arguments present sets spawn of current world to player location"))
 		    .permission("pjw.cmd.world.setspawn")
-		    .arguments(GenericArguments.optional(GenericArguments.seq(GenericArguments.world(Text.of("world")), GenericArguments.integer(Text.of("x")), GenericArguments.integer(Text.of("y")), GenericArguments.integer(Text.of("z")))))
+		    .arguments(GenericArguments.optional(GenericArguments.seq(GenericArguments.world(Text.of("world")), GenericArguments.string(Text.of("x,y,z")))))
 		    .executor(new CMDSetSpawn())
 		    .build();
 	
@@ -127,17 +127,10 @@ public class CommandManager {
 	private CommandSpec cmdGamerule = CommandSpec.builder()
 		    .description(Text.of(" Configure varies world properties"))
 		    .permission("pjw.cmd.world.gamerule")
-		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.string(Text.of("rule"))), GenericArguments.optional(GenericArguments.string(Text.of("value"))))
+		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(new GameruleElement(Text.of("rule"))), GenericArguments.optional(GenericArguments.string(Text.of("value"))))
 		    .executor(new CMDGamerule())
 		    .build();
 
-	private CommandSpec cmdHelp = CommandSpec.builder()
-		    .description(Text.of(" I need help with Project Worlds"))
-		    .permission("pjw.cmd.world")
-		    .arguments(new HelpElement(Text.of("rawCommand")))
-		    .executor(new CMDHelp())
-		    .build();
-	
 	private CommandSpec cmdGamemode = CommandSpec.builder()
 		    .description(Text.of(" Change gamemode of the specified world"))
 		    .permission("pjw.cmd.world.gamemode")
@@ -171,7 +164,7 @@ public class CommandManager {
 			.permission("pjw.cmd.world")
 			.child(cmdCreate, "create", "cr")
 			.child(cmdRegen, "regen", "r")
-			.child(cmdDelete, "delete", "dl")
+			.child(cmdRemove, "remove", "rm")
 			.child(cmdProperties, "properties", "pp")
 			.child(cmdDiffculty, "difficulty", "df")
 			.child(cmdSetSpawn, "setspawn", "s")
@@ -186,7 +179,6 @@ public class CommandManager {
 			.child(cmdLoad, "load", "l")
 			.child(cmdImport, "import", "i")
 			.child(cmdEnable, "enable", "e")
-			.child(cmdHelp, "help")
 			.child(cmdGamemode, "gamemode", "gm")
 			.child(cmdGamerule, "gamerule", "gr")
 			.child(cmdFill, "fill", "f")
