@@ -75,8 +75,17 @@ public class CMDWorld implements CommandExecutor {
 		if (src.hasPermission("pjw.cmd.world.keepspawnloaded")) {
 			list.add(Text.builder().color(TextColors.GREEN).onClick(TextActions.runCommand("/pjw:world keepspawnloaded")).append(Text.of(" /world keepspawnloaded")).build());
 		}
+		if (src.hasPermission("pjw.cmd.world.loadonstartup")) {
+			list.add(Text.builder().color(TextColors.GREEN).onClick(TextActions.runCommand("/pjw:world loadonstartup")).append(Text.of(" /world loadonstartup")).build());
+		}
 		if (src.hasPermission("pjw.cmd.world.hardcore")) {
 			list.add(Text.builder().color(TextColors.GREEN).onClick(TextActions.runCommand("/pjw:world hardcore")).append(Text.of(" /world hardcore")).build());
+		}
+		if (src.hasPermission("pjw.cmd.world.time")) {
+			list.add(Text.builder().color(TextColors.GREEN).onClick(TextActions.runCommand("/pjw:world time")).append(Text.of(" /world time")).build());
+		}
+		if (src.hasPermission("pjw.cmd.world.weather")) {
+			list.add(Text.builder().color(TextColors.GREEN).onClick(TextActions.runCommand("/pjw:world weather")).append(Text.of(" /world weather")).build());
 		}
 		if (src.hasPermission("pjw.cmd.world.list")) {
 			list.add(Text.builder().color(TextColors.GREEN).onClick(TextActions.runCommand("/pjw:world list")).append(Text.of(" /world list")).build());

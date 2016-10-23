@@ -9,21 +9,25 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-public class CMDHardcore implements CommandExecutor {
+public class CMDTime implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
-		if (!args.hasAny("boolean")) {
-			src.sendMessage(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.WHITE, Boolean.toString(properties.isHardcore()).toUpperCase()));
+		if (!args.hasAny("time")) {
+			src.sendMessage(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.WHITE, properties.getWorldTime()));
 			return CommandResult.success();
 		}
-		boolean value = args.<Boolean> getOne("boolean").get();
+		long time = args.<Long> getOne("time").get();
 
-		properties.setHardcore(value);
+		if(time < 0 || time > 24000) {
+			throw new CommandException(Text.of(TextColors.RED, "Time value must be between 0 - 24000"), false);
+		}
+		
+		properties.setWorldTime(time);
 
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set hardcore of ", properties.getWorldName(), " to ", TextColors.YELLOW, value));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set time of ", properties.getWorldName(), " to ", TextColors.YELLOW, time));
 
 		return CommandResult.success();
 	}

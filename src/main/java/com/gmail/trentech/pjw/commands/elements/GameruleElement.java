@@ -67,7 +67,7 @@ public class GameruleElement extends CommandElement {
         		WorldProperties properties = context.<WorldProperties>getOne("world").get();
 
         		for(Entry<String, String> entry : properties.getGameRules().entrySet()) {
-        			if(entry.getKey().equals(next.get())) {
+        			if(entry.getKey().startsWith(next.get())) {
         				list.add(entry.getKey());
         			}
         		}

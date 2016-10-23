@@ -52,6 +52,27 @@ public class CommandManager {
 		    .executor(new CMDHardcore())
 		    .build();
 
+	private CommandSpec cmdTime = CommandSpec.builder()
+		    .description(Text.of(" Set the time of world"))
+		    .permission("pjw.cmd.world.time")
+		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.longNum(Text.of("time"))))
+		    .executor(new CMDTime())
+		    .build();
+	
+	private CommandSpec cmdLoadOnStartup = CommandSpec.builder()
+		    .description(Text.of(" Set whether to load world on startup"))
+		    .permission("pjw.cmd.world.loadonstartup")
+		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.longNum(Text.of("value"))))
+		    .executor(new CMDLoadOnStartup())
+		    .build();
+	
+	private CommandSpec cmdWeather = CommandSpec.builder()
+		    .description(Text.of(" Set the weather of world"))
+		    .permission("pjw.cmd.world.weather")
+		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.string(Text.of("clear|rain|thunder"))))
+		    .executor(new CMDWeather())
+		    .build();
+	
 	private CommandSpec cmdPvp = CommandSpec.builder()
 		    .description(Text.of(" Toggle on and off pvp for world"))
 		    .permission("pjw.cmd.world.pvp")
@@ -169,8 +190,11 @@ public class CommandManager {
 			.child(cmdDiffculty, "difficulty", "df")
 			.child(cmdSetSpawn, "setspawn", "s")
 			.child(cmdHardcore, "hardcore", "h")
+			.child(cmdTime, "time", "t")
+			.child(cmdWeather, "weather", "w")
 			.child(cmdPvp, "pvp", "p")
 			.child(cmdKeepSpawnLoaded, "keepspawnloaded", "k")
+			.child(cmdLoadOnStartup, "loadonstartup", "los")
 			.child(cmdList, "list", "ls")
 			.child(cmdTeleport, "teleport", "tp")
 			.child(cmdCopy, "copy", "cp")

@@ -129,6 +129,20 @@ public class Main {
 					.addExample("/world hardcore MyWorld false")
 					.addExample("/world hardcore MyWorld");
 			
+			Help worldTime = new Help("world time", "time", "Set the time of world")
+					.setPermission("pjw.cmd.world.time")
+					.addUsage("/world time <world> [value]")
+					.addUsage("/w t <world> [value]")
+					.addExample("/world time MyWorld 6000")
+					.addExample("/world time MyWorld");
+			
+			Help worldWeather = new Help("world weather", "weather", "Set the weather of world")
+					.setPermission("pjw.cmd.world.weather")
+					.addUsage("/world weather <world> [value]")
+					.addUsage("/w w <world> [value]")
+					.addExample("/world weather MyWorld clear")
+					.addExample("/world weather MyWorld");
+			
 			Help worldImport = new Help("world import", "import", "Import worlds not native to Sponge")
 					.setPermission("pjw.cmd.world.import")
 					.addUsage("/world import <world> <type> <generator>")
@@ -141,6 +155,13 @@ public class Main {
 					.addUsage("/w k <world> [value]")
 					.addExample("/world keepspawnloaded MyWorld true")
 					.addExample("/world keepspawnloaded MyWorld");
+			
+			Help worldLoadOnStartup = new Help("world loadonstartup", "loadonstartup", "Set whether to load world on startup")
+					.setPermission("pjw.cmd.world.loadonstartup")
+					.addUsage("/world loadonstartup <world> [value]")
+					.addUsage("/w los <world> [value]")
+					.addExample("/world loadonstartup MyWorld true")
+					.addExample("/world loadonstartup MyWorld");
 			
 			Help worldList = new Help("world list", "list", "Lists all known worlds, loaded or unloaded")
 					.setPermission("pjw.cmd.world.list")
@@ -223,7 +244,10 @@ public class Main {
 					.addChild(worldDifficulty)
 					.addChild(worldDelete)
 					.addChild(worldCreate)
-					.addChild(worldCopy);
+					.addChild(worldCopy)
+					.addChild(worldTime)
+					.addChild(worldWeather)
+					.addChild(worldLoadOnStartup);
 
 			Help.register(world);
 		}
