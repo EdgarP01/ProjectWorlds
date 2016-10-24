@@ -22,7 +22,6 @@ import com.gmail.trentech.pjw.commands.CommandManager;
 import com.gmail.trentech.pjw.extra.OceanWorldGeneratorModifier;
 import com.gmail.trentech.pjw.io.Migrator;
 import com.gmail.trentech.pjw.listeners.EventManager;
-import com.gmail.trentech.pjw.listeners.TabEventManager;
 import com.gmail.trentech.pjw.utils.ConfigManager;
 import com.gmail.trentech.pjw.utils.Resource;
 import com.google.inject.Inject;
@@ -57,7 +56,6 @@ public class Main {
 	@Listener
 	public void onInitialization(GameInitializationEvent event) {
 		Sponge.getEventManager().registerListeners(this, new EventManager());
-		Sponge.getEventManager().registerListeners(this, new TabEventManager());
 
 		Sponge.getRegistry().register(WorldGeneratorModifier.class, new OceanWorldGeneratorModifier());
 
