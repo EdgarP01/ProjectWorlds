@@ -15,11 +15,11 @@ public class CMDKeepSpawnLoaded implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
-		if (!args.hasAny("value")) {
+		if (!args.hasAny("true|false")) {
 			src.sendMessage(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.WHITE, Boolean.toString(properties.isHardcore()).toUpperCase()));
 			return CommandResult.success();
 		}
-		boolean value = args.<Boolean> getOne("boolean").get();
+		boolean value = args.<Boolean> getOne("true|false").get();
 
 		properties.setKeepSpawnLoaded(value);
 

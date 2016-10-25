@@ -48,7 +48,7 @@ public class CommandManager {
 	private CommandSpec cmdHardcore = CommandSpec.builder()
 		    .description(Text.of(" Toggle on and off hardcore mode for world"))
 		    .permission("pjw.cmd.world.hardcore")
-		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.bool(Text.of("boolean"))))
+		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))))
 		    .executor(new CMDHardcore())
 		    .build();
 
@@ -62,7 +62,7 @@ public class CommandManager {
 	private CommandSpec cmdLoadOnStartup = CommandSpec.builder()
 		    .description(Text.of(" Set whether to load world on startup"))
 		    .permission("pjw.cmd.world.loadonstartup")
-		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.longNum(Text.of("value"))))
+		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))))
 		    .executor(new CMDLoadOnStartup())
 		    .build();
 	
@@ -76,14 +76,14 @@ public class CommandManager {
 	private CommandSpec cmdPvp = CommandSpec.builder()
 		    .description(Text.of(" Toggle on and off pvp for world"))
 		    .permission("pjw.cmd.world.pvp")
-		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.bool(Text.of("boolean"))))
+		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))))
 		    .executor(new CMDPvp())
 		    .build();
 	
 	private CommandSpec cmdKeepSpawnLoaded = CommandSpec.builder()
 		    .description(Text.of(" Keeps spawn point of world loaded in memory"))
 		    .permission("pjw.cmd.world.keeploaded")
-		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.bool(Text.of("boolean"))))
+		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))))
 		    .executor(new CMDKeepSpawnLoaded())
 		    .build();
 
@@ -162,14 +162,14 @@ public class CommandManager {
 	private CommandSpec cmdRegen = CommandSpec.builder()
 		    .description(Text.of(" Regenerates a world. You can preserve the seed or generate new random"))
 		    .permission("pjw.cmd.world.regen")
-		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.bool(Text.of("boolean")))
+		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.bool(Text.of("true|false")))
 		    .executor(new CMDRegen())
 		    .build();
 	
 	private CommandSpec cmdEnable = CommandSpec.builder()
 		    .description(Text.of(" Enable and disable worlds from loading"))
 		    .permission("pjw.cmd.world.enable")
-		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.bool(Text.of("boolean"))))
+		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))))
 		    .executor(new CMDEnable())
 		    .build();
 	

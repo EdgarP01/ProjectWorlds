@@ -15,11 +15,11 @@ public class CMDEnable implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
-		if (!args.hasAny("boolean")) {
+		if (!args.hasAny("true|false")) {
 			src.sendMessage(Text.of(TextColors.GREEN, "Enabled: ", TextColors.WHITE, properties.isEnabled()));
 			return CommandResult.success();
 		}
-		boolean value = args.<Boolean> getOne("boolean").get();
+		boolean value = args.<Boolean> getOne("true|false").get();
 		
 		properties.setEnabled(value);
 

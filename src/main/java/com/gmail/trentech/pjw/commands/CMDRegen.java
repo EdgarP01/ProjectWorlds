@@ -32,7 +32,7 @@ public class CMDRegen implements CommandExecutor {
 		
 		WorldArchetype.Builder builder = WorldArchetype.builder().dimension(properties.getDimensionType()).generatorSettings(properties.getGeneratorSettings());
 
-		if (args.hasAny("value") && args.<Boolean> getOne("value").get()) {
+		if (args.hasAny("value") && args.<Boolean> getOne("true|false").get()) {
 			builder.seed(properties.getSeed());
 		}
 

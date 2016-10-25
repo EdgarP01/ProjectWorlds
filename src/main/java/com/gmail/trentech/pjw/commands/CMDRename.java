@@ -16,13 +16,13 @@ public class CMDRename implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		WorldProperties properties = args.<WorldProperties> getOne("world").get();
+		WorldProperties properties = args.<WorldProperties> getOne("srcWorld").get();
 
 		if (Sponge.getServer().getWorld(properties.getWorldName()).isPresent()) {
 			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " must be unloaded before you can rename"), false);
 		}
 
-		String newWorldName = args.<String> getOne("new").get();
+		String newWorldName = args.<String> getOne("newWorld").get();
 
 		if (Sponge.getServer().getWorldProperties(newWorldName).isPresent()) {
 			throw new CommandException(Text.of(TextColors.RED, newWorldName, " already exists"), false);
