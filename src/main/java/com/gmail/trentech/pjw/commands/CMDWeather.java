@@ -67,7 +67,7 @@ public class CMDWeather implements CommandExecutor {
 			}
 		}
 
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set wheather of ", properties.getWorldName(), " to ", TextColors.YELLOW, value, TextColors.DARK_GREEN, " for ", TextColors.YELLOW, world.getRemainingDuration()));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set weather of ", properties.getWorldName(), " to ", TextColors.YELLOW, value, TextColors.DARK_GREEN, " for ", TextColors.YELLOW, world.getRemainingDuration()));
 
 		return CommandResult.success();
 	}
