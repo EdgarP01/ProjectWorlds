@@ -3,7 +3,9 @@ package com.gmail.trentech.pjw.commands;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -14,6 +16,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
@@ -57,6 +60,12 @@ public class CMDProperties implements CommandExecutor {
 		}
 
 		list.add(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, time));
+		
+		Optional<World> optionalWorld = Sponge.getServer().getWorld(properties.getUniqueId());
+		
+		if(optionalWorld.isPresent()) {
+			list.add(Text.of(TextColors.GREEN, "Weather: ", TextColors.WHITE, optionalWorld.get().getWeather().getName()));
+		}
 		
 		if (src instanceof Player) {
 			PaginationList.Builder pages = PaginationList.builder();
