@@ -17,7 +17,7 @@ public class CMDDifficulty implements CommandExecutor {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		if (!args.hasAny("difficulty")) {
-			src.sendMessage(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.WHITE, properties.getDifficulty().getName().toUpperCase()));	
+			src.sendMessage(Text.of(TextColors.GREEN, "Difficulty: ", TextColors.WHITE, properties.getDifficulty().getName().toUpperCase()));	
 			return CommandResult.success();
 		}
 		Difficulty difficulty = args.<Difficulty> getOne("difficulty").get();

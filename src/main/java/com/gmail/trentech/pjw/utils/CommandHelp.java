@@ -101,7 +101,8 @@ public class CommandHelp {
 					.addExample("/world time MyWorld");
 			
 			Usage usageWeather = new Usage(Argument.of("<world>", "Specifies the targetted world"))
-					.addArgument(Argument.of("[clear|rain|thunder]", "clear: Set the weather to clear, rain: Set the weather to rain (or snow in cold biomes), thunder: Set the weather to a thunderstorm (or a thunder snowstorm in cold biomes)"));
+					.addArgument(Argument.of("[clear|rain|thunder]", "clear: Set the weather to clear, rain: Set the weather to rain (or snow in cold biomes), thunder: Set the weather to a thunderstorm (or a thunder snowstorm in cold biomes)"))
+					.addArgument(Argument.of("[duration]", "Specifies the duration the set weather will occur."));
 			
 			Help worldWeather = new Help("world weather", "weather", "Set the weather of world")
 					.setPermission("pjw.cmd.world.weather")

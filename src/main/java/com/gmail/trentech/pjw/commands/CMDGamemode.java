@@ -18,7 +18,7 @@ public class CMDGamemode implements CommandExecutor {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		if (!args.hasAny("gamemode")) {
-			src.sendMessage(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.WHITE, properties.getGameMode().getName().toUpperCase()));
+			src.sendMessage(Text.of(TextColors.GREEN, "Gamemode: ", TextColors.WHITE, properties.getGameMode().getName().toUpperCase()));
 			return CommandResult.success();
 		}
 		Gamemode gamemode = args.<Gamemode> getOne("gamemode").get();

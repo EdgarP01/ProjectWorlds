@@ -69,7 +69,8 @@ public class CommandManager {
 	private CommandSpec cmdWeather = CommandSpec.builder()
 		    .description(Text.of(" Set the weather of world"))
 		    .permission("pjw.cmd.world.weather")
-		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.string(Text.of("clear|rain|thunder"))))
+		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.string(Text.of("clear|rain|thunder"))),
+		    		GenericArguments.optional(GenericArguments.integer(Text.of("duration"))))
 		    .executor(new CMDWeather())
 		    .build();
 	

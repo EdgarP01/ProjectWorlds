@@ -16,7 +16,7 @@ public class CMDLoadOnStartup implements CommandExecutor {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		if (!args.hasAny("true|false")) {
-			src.sendMessage(Text.of(TextColors.GREEN, properties.getWorldName(), ": ", TextColors.WHITE, Boolean.toString(properties.loadOnStartup()).toUpperCase()));
+			src.sendMessage(Text.of(TextColors.GREEN, "Load on Startup: ", TextColors.WHITE, Boolean.toString(properties.loadOnStartup()).toUpperCase()));
 			return CommandResult.success();
 		}
 		boolean value = args.<Boolean> getOne("true|false").get();
