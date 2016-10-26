@@ -56,7 +56,7 @@ public class CMDProperties implements CommandExecutor {
 			}
 		}
 
-		list.add(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, properties.getWorldTime()));
+		list.add(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, time));
 		
 		if (src instanceof Player) {
 			PaginationList.Builder pages = PaginationList.builder();
