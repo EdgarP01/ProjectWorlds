@@ -16,14 +16,7 @@ public class CMDTime implements CommandExecutor {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		if (!args.hasAny("time")) {
-			long time = properties.getWorldTime();
-
-			if(time >= 24000) {
-				for(int i = 0;(time / 24000) > i; i++) {
-					time = time - 24000;
-				}
-			}
-			src.sendMessage(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, time));
+			src.sendMessage(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, properties.getWorldTime() % 24000));
 			
 			return CommandResult.success();
 		}

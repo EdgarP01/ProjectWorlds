@@ -50,16 +50,7 @@ public class CMDProperties implements CommandExecutor {
 		list.add(Text.of(TextColors.GREEN, "PVP: ", TextColors.WHITE, properties.isPVPEnabled()));
 		list.add(Text.of(TextColors.GREEN, "Keep Spawn Loaded: ", TextColors.WHITE, properties.doesKeepSpawnLoaded()));
 		list.add(Text.of(TextColors.GREEN, "Load on Startup: ", TextColors.WHITE, properties.loadOnStartup()));
-		
-		long time = properties.getWorldTime();
-
-		if(time >= 24000) {
-			for(int i = 0;(time / 24000) > i; i++) {
-				time = time - 24000;
-			}
-		}
-
-		list.add(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, time));
+		list.add(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, properties.getWorldTime() % 24000));
 		
 		Optional<World> optionalWorld = Sponge.getServer().getWorld(properties.getUniqueId());
 		
