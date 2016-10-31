@@ -9,6 +9,8 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.gmail.trentech.pjw.utils.Utils;
+
 public class CMDTime implements CommandExecutor {
 
 	@Override
@@ -16,8 +18,7 @@ public class CMDTime implements CommandExecutor {
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		if (!args.hasAny("time")) {
-			src.sendMessage(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, properties.getWorldTime() % 24000));
-			
+			src.sendMessage(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, Utils.getTime(properties.getWorldTime()), TextColors.GREEN, " Ticks: ", TextColors.WHITE, properties.getWorldTime() % 24000));			
 			return CommandResult.success();
 		}
 		long time = args.<Long> getOne("time").get();
@@ -25,10 +26,10 @@ public class CMDTime implements CommandExecutor {
 		if(time < 0 || time > 24000) {
 			throw new CommandException(Text.of(TextColors.RED, "Time value must be between 0 - 24000"), false);
 		}
-		
-		properties.setWorldTime(time);
 
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set time of ", properties.getWorldName(), " to ", TextColors.YELLOW, time));
+		properties.setWorldTime(time);
+		
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set time of ", properties.getWorldName(), " to ", TextColors.YELLOW, Utils.getTime(properties.getWorldTime())));
 
 		return CommandResult.success();
 	}

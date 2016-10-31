@@ -20,6 +20,8 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.gmail.trentech.pjw.utils.Utils;
+
 public class CMDProperties implements CommandExecutor {
 
 	@Override
@@ -50,7 +52,8 @@ public class CMDProperties implements CommandExecutor {
 		list.add(Text.of(TextColors.GREEN, "PVP: ", TextColors.WHITE, properties.isPVPEnabled()));
 		list.add(Text.of(TextColors.GREEN, "Keep Spawn Loaded: ", TextColors.WHITE, properties.doesKeepSpawnLoaded()));
 		list.add(Text.of(TextColors.GREEN, "Load on Startup: ", TextColors.WHITE, properties.loadOnStartup()));
-		list.add(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, properties.getWorldTime() % 24000));
+		list.add(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, Utils.getTime(properties.getWorldTime()), TextColors.GREEN, " Ticks: ", TextColors.WHITE, properties.getWorldTime() % 24000));
+		list.add(Text.of(TextColors.GREEN, "Ticks: ", TextColors.WHITE, properties.getWorldTime() % 24000));
 		
 		Optional<World> optionalWorld = Sponge.getServer().getWorld(properties.getUniqueId());
 		

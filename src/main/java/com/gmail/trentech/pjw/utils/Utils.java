@@ -12,6 +12,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -20,6 +21,42 @@ import com.gmail.trentech.pjw.Main;
 
 public class Utils {
 
+	public static Text getTime(long time) {		
+		int ticks = (int) (time % 24000);
+        int hours = (ticks / 1000) + 6;
+        
+        if(hours > 24) {
+        	hours = hours - 24;
+        }
+        
+        Text text;
+
+        if(hours > 12) {
+        	hours = hours - 12;
+        	if(hours == 12) {
+        		text = Text.of("AM");
+        	} else {
+        		text = Text.of("PM");
+        	}
+        } else if(hours == 12){ 	
+        	text = Text.of("PM");
+        } else {
+        	text = Text.of("AM");
+        }
+        
+        if(hours < 1) {
+        	hours = 12;
+        }
+        
+        double minutes = (ticks % 1000) / 16.6666666667;
+        
+        if(minutes < 10) {
+        	return Text.join(Text.of(hours, ":0" + (int)minutes), text);
+        } else {
+        	return Text.join(Text.of(hours, ":" + (int)minutes), text);
+        }
+	}
+	
 	public static void createPlatform(Location<World> center) {
 		platform(center, BlockTypes.STONE);
 
