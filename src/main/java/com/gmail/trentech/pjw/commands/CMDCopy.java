@@ -18,7 +18,7 @@ public class CMDCopy implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		WorldProperties properties = args.<WorldProperties> getOne("oldWorld").get();
+		WorldProperties properties = args.<WorldProperties> getOne("srcWorld").get();
 
 		String newWorldName = args.<String> getOne("newWorld").get();
 
