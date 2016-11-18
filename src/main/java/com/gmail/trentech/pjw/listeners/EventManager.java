@@ -11,28 +11,30 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.player.RespawnPlayerEvent;
-import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.filter.Getter;
+import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.world.ChangeWorldWeatherEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.PortalAgent;
-import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjw.utils.Utils;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
 public class EventManager {
 
-	@Listener
+	@Listener(order = Order.LAST)
 	public void onClientConnectionEventJoin(ClientConnectionEvent.Join event) {
 		Player player = event.getTargetEntity();
 
@@ -44,8 +46,12 @@ public class EventManager {
 		boolean firstJoin = !new File(defaultWorld + File.separator + "playerdata", player.getUniqueId().toString() + ".dat").exists();
 
 		if (!firstJoin && !lobbyMode) {
-			if (player.hasPermission("pjw.options.gamemode")) {
-				player.offer(Keys.GAME_MODE, player.getWorld().getProperties().getGameMode());
+			if (!player.hasPermission("pjw.override.gamemode")) {
+				World world = player.getWorld();
+				
+				if(world.getGameRule("forceGamemode").get().equalsIgnoreCase("true")) {
+					player.offer(Keys.GAME_MODE, player.getWorld().getProperties().getGameMode());
+				}			
 			}
 			return;
 		}
@@ -61,8 +67,10 @@ public class EventManager {
 
 		player.setLocationSafely(world.getSpawnLocation());
 
-		if (player.hasPermission("pjw.options.gamemode")) {
-			player.offer(Keys.GAME_MODE, world.getProperties().getGameMode());
+		if (!player.hasPermission("pjw.override.gamemode")) {
+			if(world.getGameRule("forceGamemode").get().equalsIgnoreCase("true")) {
+				player.offer(Keys.GAME_MODE, world.getProperties().getGameMode());
+			}	
 		}
 	}
 
@@ -91,51 +99,24 @@ public class EventManager {
 		}
 		
 		if (!properties.getGameRule("spawnOnDeath").isPresent()) {
-			if (properties.getGameRule("respawnWorld").isPresent()) {
-				properties.setGameRule("spawnOnDeath", properties.getGameRule("respawnWorld").get());
-			} else {
-				properties.setGameRule("spawnOnDeath", world.getName());
-			}
+			properties.setGameRule("spawnOnDeath", "default");
 		}
-
 		if (!properties.getGameRule("doWeatherCycle").isPresent()) {
 			properties.setGameRule("doWeatherCycle", "true");
 		}
 		if (!properties.getGameRule("netherPortal").isPresent()) {
-			properties.setGameRule("netherPortal", "DIM-1");
+			properties.setGameRule("netherPortal", "default");
 		}
 		if (!properties.getGameRule("endPortal").isPresent()) {
-			properties.setGameRule("endPortal", "DIM1");
+			properties.setGameRule("endPortal", "default");
+		}
+		if (!properties.getGameRule("forceGamemode").isPresent()) {
+			properties.setGameRule("forceGamemode", "false");
 		}
 	}
 
 	@Listener
-	public void onMoveEntityEventEventTeleport(MoveEntityEvent.Teleport event) {
-		Entity entity = event.getTargetEntity();
-
-		if (!(entity instanceof Player)) {
-			return;
-		}
-		Player player = (Player) entity;
-
-		if (!player.hasPermission("pjw.options.gamemode")) {
-			return;
-		}
-
-		World from = event.getFromTransform().getExtent();
-		World to = event.getToTransform().getExtent();
-
-		WorldProperties properties = to.getProperties();
-
-		if (!from.equals(to)) {
-			if (!properties.getGameMode().equals(player.gameMode().get())) {
-				player.offer(Keys.GAME_MODE, properties.getGameMode());
-			}
-		}
-	}
-
-	@Listener
-	public void onDamageEntityEvent(DamageEntityEvent event, @First EntityDamageSource damageSource) {
+	public void onDamageEntityEvent(DamageEntityEvent event, @Root EntityDamageSource damageSource) {
 		if (!(event.getTargetEntity() instanceof Player)) {
 			return;
 		}
@@ -149,7 +130,7 @@ public class EventManager {
 		World world = victim.getWorld();
 		WorldProperties properties = world.getProperties();
 
-		if (!properties.isPVPEnabled() && !victim.hasPermission("pjw.options.pvp")) {
+		if (!properties.isPVPEnabled() || victim.hasPermission("pjw.override.pvp")) {
 			event.setCancelled(true);
 		}
 	}
@@ -182,16 +163,66 @@ public class EventManager {
 		event.setToTransform(transform);
 	}
 
-	// @Listener
-	public void onMoveEntityEventPortal(MoveEntityEvent.Teleport.Portal event, @First Player player) {
+	@Listener(order = Order.LAST)
+	public void onRespawnPlayerEvent2(RespawnPlayerEvent event) {
+		Player player = event.getTargetEntity();
+		
+		if (player.hasPermission("pjw.override.gamemode")) {
+			return;
+		}
+
+		World from = event.getFromTransform().getExtent();
+		World to = event.getToTransform().getExtent();
+
+		WorldProperties properties = to.getProperties();
+
+		if (!from.equals(to)) {
+			if(properties.getGameRule("forceGamemode").get().equalsIgnoreCase("true")) {
+				if (!properties.getGameMode().equals(player.gameMode().get())) {
+					player.offer(Keys.GAME_MODE, properties.getGameMode());
+				}
+			}
+		}
+	}
+	
+	@Listener
+	public void onMoveEntityEventEventTeleport(MoveEntityEvent.Teleport event, @Getter("getTargetEntity") Player player) {
+		if (player.hasPermission("pjw.override.gamemode")) {
+			return;
+		}
+
+		World from = event.getFromTransform().getExtent();
+		World to = event.getToTransform().getExtent();
+
+		WorldProperties properties = to.getProperties();
+
+		if (!from.equals(to)) {
+			if(properties.getGameRule("forceGamemode").get().equalsIgnoreCase("true")) {
+				if (!properties.getGameMode().equals(player.gameMode().get())) {
+					player.offer(Keys.GAME_MODE, properties.getGameMode());
+				}
+			}
+		}
+	}
+	
+	@Listener
+	public void onMoveEntityEventPortal(MoveEntityEvent.Teleport.Portal event, @Getter("getTargetEntity") Player player) {
 		World from = event.getFromTransform().getExtent();
 		World to = event.getToTransform().getExtent();
 
 		String toName;
 		if (to.getName().equals("DIM-1")) {
 			toName = from.getGameRule("netherPortal").get();
+			
+			if(toName.equals("DIM-1") || toName.equalsIgnoreCase("default")) {
+				return;
+			}
 		} else if (to.getName().equals("DIM1")) {
 			toName = from.getGameRule("endPortal").get();
+			
+			if(toName.equals("DIM1") || toName.equalsIgnoreCase("default")) {
+				return;
+			}
 		} else {
 			return;
 		}
@@ -199,36 +230,30 @@ public class EventManager {
 		Optional<World> optionalWorld = Sponge.getServer().getWorld(toName);
 
 		if (!optionalWorld.isPresent()) {
+			event.setCancelled(true);
 			return;
 		}
 		World world = optionalWorld.get();
 
-		Location<World> location = event.getFromTransform().getLocation();
+		Optional<Location<World>> optionalLocation = Utils.getRandomLocation(world);
 
-		location = new Location<World>(world, location.getBlockX(), location.getBlockY(), location.getBlockZ());
-
-		TeleportHelper teleportHelper = Sponge.getGame().getTeleportHelper();
-
-		Optional<Location<World>> optionalLocation = teleportHelper.getSafeLocation(location);
-
-		if (optionalLocation.isPresent()) {
-			location = optionalLocation.get();
+		if(!optionalLocation.isPresent()) {
+			event.setCancelled(true);
+			return;
 		}
+		
+		Location<World> location = optionalLocation.get();
 
 		Transform<World> transform = new Transform<>(location.getExtent(), location.getPosition());
-
-		event.setToTransform(transform);
 
 		PortalAgent portalAgent = event.getPortalAgent();
 
 		optionalLocation = portalAgent.findOrCreatePortal(location);
 
 		if (!portalAgent.findPortal(location).isPresent()) {
-			portalAgent.createPortal(location);
+			event.setToTransform(transform);
 		}
 
 		event.setUsePortalAgent(true);
-
-		event.setPortalAgent(portalAgent);
 	}
 }

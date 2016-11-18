@@ -16,7 +16,6 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.text.title.Title;
 import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
@@ -77,9 +76,7 @@ public class CMDTeleport implements CommandExecutor {
 			throw new CommandException(Text.of(TextColors.RED, "You do not have permission to travel to ", properties.getWorldName()));
 		}
 
-		TeleportHelper teleportHelper = Sponge.getGame().getTeleportHelper();
-
-		Optional<Location<World>> optionalLocation = teleportHelper.getSafeLocation(location);
+		Optional<Location<World>> optionalLocation = Utils.getSafeLocation(location);
 
 		if (!optionalLocation.isPresent()) {
 			throw new CommandException(Text.builder().color(TextColors.RED).append(Text.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.executeCallback(Utils.unsafe(location))).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());

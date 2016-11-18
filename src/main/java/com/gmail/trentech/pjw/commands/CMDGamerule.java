@@ -81,17 +81,17 @@ public class CMDGamerule implements CommandExecutor {
 				return false;
 			}
 		case "spawnOnDeath":
-			if (Sponge.getServer().getWorld(value).isPresent()) {
+			if (Sponge.getServer().getWorld(value).isPresent() || rule.equals("default")) {
 				return true;
 			}
 			return false;
 		case "netherPortal":
-			if (Sponge.getServer().getWorld(value).isPresent()) {
+			if (Sponge.getServer().getWorld(value).isPresent() || rule.equals("default")) {
 				return true;
 			}
 			return false;
 		case "endPortal":
-			if (Sponge.getServer().getWorld(value).isPresent()) {
+			if (Sponge.getServer().getWorld(value).isPresent() || rule.equals("default")) {
 				return true;
 			}
 			return false;
