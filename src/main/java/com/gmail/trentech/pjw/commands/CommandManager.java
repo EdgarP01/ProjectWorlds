@@ -142,7 +142,7 @@ public class CommandManager {
 		    .description(Text.of(" Imports non sponge worlds, such as bukkit worlds"))
 		    .permission("pjw.cmd.world.import")
 		    .arguments(GenericArguments.string(Text.of("world")), GenericArguments.catalogedElement(Text.of("dimensionType"), DimensionType.class),
-		    		GenericArguments.catalogedElement(Text.of("generatorType"), GeneratorType.class))
+		    		GenericArguments.catalogedElement(Text.of("generatorType"), GeneratorType.class), GenericArguments.optional(GenericArguments.catalogedElement(Text.of("modifier"), WorldGeneratorModifier.class)))
 		    .executor(new CMDImport())
 		    .build();
 	

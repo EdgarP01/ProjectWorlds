@@ -14,6 +14,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.DimensionType;
 import org.spongepowered.api.world.GeneratorType;
 import org.spongepowered.api.world.WorldArchetype;
+import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjw.io.SpongeData;
@@ -46,9 +47,15 @@ public class CMDImport implements CommandExecutor {
 		DimensionType dimensionType = args.<DimensionType> getOne("dimensionType").get();
 		GeneratorType generatorType = args.<GeneratorType> getOne("generatorType").get();
 
-		WorldArchetype settings = WorldArchetype.builder().dimension(dimensionType)
-				.generator(generatorType).enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true).build(worldName, worldName);
+		WorldArchetype.Builder builder = WorldArchetype.builder().dimension(dimensionType)
+				.generator(generatorType).enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true);
 
+		if(args.hasAny("modifier")) {
+			builder.generatorModifiers(args.<WorldGeneratorModifier> getOne("modifier").get());
+		}
+		
+		WorldArchetype settings = builder.build(worldName, worldName);
+		
 		WorldProperties properties;
 		try {
 			properties = Sponge.getServer().createWorldProperties(worldName, settings);

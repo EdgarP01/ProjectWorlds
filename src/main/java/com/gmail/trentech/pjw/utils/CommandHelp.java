@@ -21,7 +21,7 @@ public class CommandHelp {
 			Usage usageCreate = new Usage(Argument.of("<world>", "Specifies the name of the world"))
 					.addArgument(Argument.of("[-d <dimensionType>]", "Sets the DimensionType. Vanilla types are minecraft:overworld, minecraft:nether and minecraft:the_end"))
 					.addArgument(Argument.of("[-g <generatorType>]", "Sets the GeneratorType. Vanilla types are OVERWORLD, NETHER, THE_END, LARGE_BIOMES, FLAT and AMPLIFIED"))
-					.addArgument(Argument.of("[-m <modifer>]", "Sets the WorldGeneratorModifer. Sponge modifers included are sponge:void and sponge:skylands"))
+					.addArgument(Argument.of("[-m <modifer>]", "Sets the WorldGeneratorModifer. Sponge modifers included by Sponge are sponge:void and sponge:skylands"))
 					.addArgument(Argument.of("[-s <seed>]", "Sets the seed. If not specified this will default to using a random seed."));
 			
 			Help worldCreate = new Help("world create", "create", "Allows you to creating new worlds with a combination of features. This does not automatically load newly created worlds.")
@@ -112,11 +112,13 @@ public class CommandHelp {
 			
 			Usage usageImport = new Usage(Argument.of("<world>", "Specifies the targetted world"))
 					.addArgument(Argument.of("<dimensionType>", "Sets the DimensionType. Vanilla types are minecraft:overworld, minecraft:nether and minecraft:the_end"))
-					.addArgument(Argument.of("<generatorType>", "Sets the GeneratorType. Vanilla types are OVERWORLD, NETHER, THE_END, LARGE_BIOMES, FLAT and AMPLIFIED"));
+					.addArgument(Argument.of("<generatorType>", "Sets the GeneratorType. Vanilla types are OVERWORLD, NETHER, THE_END, LARGE_BIOMES, FLAT and AMPLIFIED"))
+					.addArgument(Argument.of("[modifer]", "Sets the WorldGeneratorModifer. Sponge modifers included by Sponge are sponge:void and sponge:skylands"));
 			
 			Help worldImport = new Help("world import", "import", "Import worlds not native to Sponge")
 					.setPermission("pjw.cmd.world.import")
 					.setUsage(usageImport)
+					.addExample("/world import NewWorld minecraft:overworld overworld sponge:void")
 					.addExample("/world import NewWorld minecraft:overworld overworld");
 			
 			
