@@ -62,7 +62,7 @@ public class GameruleElement extends CommandElement {
 
     	Optional<String> next = args.nextIfPresent();
     	
-    	if(next.isPresent() && !next.get().equals("")) {
+    	if(next.isPresent()) {
     		if(context.hasAny("world")) {
         		WorldProperties properties = context.<WorldProperties>getOne("world").get();
 
@@ -72,16 +72,8 @@ public class GameruleElement extends CommandElement {
         			}
         		}
         	}
-    	} else {
-    		if(context.hasAny("world")) {
-        		WorldProperties properties = context.<WorldProperties>getOne("world").get();
+    	} 
 
-        		for(Entry<String, String> entry : properties.getGameRules().entrySet()) {
-        			list.add(entry.getKey());
-        		}
-        	}
-    	}
-		
 		return list;
     }
 
