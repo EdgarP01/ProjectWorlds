@@ -8,8 +8,8 @@ import org.spongepowered.api.world.GeneratorType;
 import org.spongepowered.api.world.difficulty.Difficulty;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 
+import com.gmail.trentech.pjw.commands.elements.GameModeElement;
 import com.gmail.trentech.pjw.commands.elements.GameruleElement;
-import com.gmail.trentech.pjw.utils.Gamemode;
 
 public class CommandManager {
 
@@ -156,7 +156,7 @@ public class CommandManager {
 	private CommandSpec cmdGamemode = CommandSpec.builder()
 		    .description(Text.of(" Change gamemode of the specified world"))
 		    .permission("pjw.cmd.world.gamemode")
-		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.enumValue(Text.of("gamemode"), Gamemode.class)))
+		    .arguments(GenericArguments.world(Text.of("world")), new GameModeElement(Text.of("gamemode")))
 		    .executor(new CMDGamemode())
 		    .build();
 	

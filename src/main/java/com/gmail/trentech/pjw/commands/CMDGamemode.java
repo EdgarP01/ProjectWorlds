@@ -5,11 +5,10 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
-
-import com.gmail.trentech.pjw.utils.Gamemode;
 
 public class CMDGamemode implements CommandExecutor {
 
@@ -21,11 +20,11 @@ public class CMDGamemode implements CommandExecutor {
 			src.sendMessage(Text.of(TextColors.GREEN, "Gamemode: ", TextColors.WHITE, properties.getGameMode().getName().toUpperCase()));
 			return CommandResult.success();
 		}
-		Gamemode gamemode = args.<Gamemode> getOne("gamemode").get();
+		GameMode gamemode = args.<GameMode> getOne("gamemode").get();
 		
-		properties.setGameMode(gamemode.getGameMode());
+		properties.setGameMode(gamemode);
 		
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set gamemode of ", properties.getWorldName(), " to ", TextColors.YELLOW, gamemode.getGameMode().getName().toUpperCase()));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Set gamemode of ", properties.getWorldName(), " to ", TextColors.YELLOW, gamemode.getTranslation()));
 
 		return CommandResult.success();
 	}
