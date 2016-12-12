@@ -31,7 +31,7 @@ public class CMDWorld implements CommandExecutor {
 		List<Text> list = new ArrayList<>();
 
 		if (src.hasPermission("pjw.cmd.world.create")) {
-			list.add(Text.builder().color(TextColors.GREEN).onClick(TextActions.runCommand("/pjw:world delete")).append(Text.of(" /world create")).build());
+			list.add(Text.builder().color(TextColors.GREEN).onClick(TextActions.runCommand("/pjw:world create")).append(Text.of(" /world create")).build());
 		}
 		if (src.hasPermission("pjw.cmd.world.delete")) {
 			list.add(Text.builder().color(TextColors.GREEN).onClick(TextActions.runCommand("/pjw:world delete")).append(Text.of(" /world delete")).build());
