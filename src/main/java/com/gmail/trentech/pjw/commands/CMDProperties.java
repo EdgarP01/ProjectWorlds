@@ -15,17 +15,23 @@ import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.gmail.trentech.helpme.help.Help;
 import com.gmail.trentech.pjw.utils.Utils;
 
 public class CMDProperties implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		if (!args.hasAny("world")) {
+			Help help = Help.get("world properties").get();
+			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
+		}
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		List<Text> list = new ArrayList<>();

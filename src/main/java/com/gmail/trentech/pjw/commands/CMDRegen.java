@@ -12,18 +12,24 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.WorldArchetype;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.gmail.trentech.helpme.help.Help;
 import com.gmail.trentech.pjw.utils.Utils;
 
 public class CMDRegen implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		if (!args.hasAny("world")) {
+			Help help = Help.get("world regen").get();
+			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
+		}
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		if (Sponge.getServer().getWorld(properties.getWorldName()).isPresent()) {
@@ -32,7 +38,12 @@ public class CMDRegen implements CommandExecutor {
 		
 		WorldArchetype.Builder builder = WorldArchetype.builder().dimension(properties.getDimensionType()).generatorSettings(properties.getGeneratorSettings());
 
-		if (args.hasAny("value") && args.<Boolean> getOne("true|false").get()) {
+		if (args.hasAny("value")) {
+			if(!args.hasAny("true|false")) {
+				Help help = Help.get("world regen").get();
+				throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
+			}
+			
 			builder.seed(properties.getSeed());
 		}
 

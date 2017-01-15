@@ -11,6 +11,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.DimensionType;
 import org.spongepowered.api.world.GeneratorType;
@@ -18,12 +19,18 @@ import org.spongepowered.api.world.WorldArchetype;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.gmail.trentech.helpme.help.Help;
+
 public class CMDCreate implements CommandExecutor {
 
 	public static List<String> worlds = new ArrayList<>();
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		if (!args.hasAny("name")) {
+			Help help = Help.get("world create").get();
+			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
+		}
 		String worldName = args.<String> getOne("name").get();
 
 		if (Sponge.getServer().getWorldProperties(worldName).isPresent()) {

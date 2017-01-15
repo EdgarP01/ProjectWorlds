@@ -17,6 +17,7 @@ import org.spongepowered.api.world.WorldArchetype;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.gmail.trentech.helpme.help.Help;
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.io.WorldData;
 
@@ -24,6 +25,10 @@ public class CMDImport implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		if (!args.hasAny("world")) {
+			Help help = Help.get("world import").get();
+			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
+		}
 		String worldName = args.<String> getOne("world").get();
 
 		if (Sponge.getServer().getWorld(worldName).isPresent()) {
@@ -44,11 +49,19 @@ public class CMDImport implements CommandExecutor {
 			return CommandResult.success();
 		}
 
+		if (!args.hasAny("dimensionType")) {
+			Help help = Help.get("world import").get();
+			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
+		}
 		DimensionType dimensionType = args.<DimensionType> getOne("dimensionType").get();
+		
+		if (!args.hasAny("generatorType")) {
+			Help help = Help.get("world import").get();
+			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
+		}
 		GeneratorType generatorType = args.<GeneratorType> getOne("generatorType").get();
 
-		WorldArchetype.Builder builder = WorldArchetype.builder().dimension(dimensionType)
-				.generator(generatorType).enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true);
+		WorldArchetype.Builder builder = WorldArchetype.builder().dimension(dimensionType).generator(generatorType).enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true);
 
 		if(args.hasAny("modifier")) {
 			builder.generatorModifiers(args.<WorldGeneratorModifier> getOne("modifier").get());

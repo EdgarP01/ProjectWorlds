@@ -19,6 +19,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.gmail.trentech.helpme.help.Help;
 import com.gmail.trentech.pjw.utils.Rotation;
 import com.gmail.trentech.pjw.utils.Utils;
 
@@ -33,6 +34,10 @@ public class CMDTeleport implements CommandExecutor {
 		}
 		Player player = (Player) src;
 
+		if (!args.hasAny("world")) {
+			Help help = Help.get("world teleport").get();
+			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
+		}
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		Optional<World> optionalWorld = Sponge.getServer().getWorld(properties.getWorldName());

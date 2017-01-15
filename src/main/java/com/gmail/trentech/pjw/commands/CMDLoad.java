@@ -15,6 +15,7 @@ import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.gmail.trentech.helpme.help.Help;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.io.WorldData;
@@ -24,6 +25,10 @@ public class CMDLoad implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		if (!args.hasAny("world")) {
+			Help help = Help.get("world load").get();
+			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
+		}
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		if (Sponge.getServer().getWorld(properties.getUniqueId()).isPresent()) {
@@ -46,25 +51,20 @@ public class CMDLoad implements CommandExecutor {
 		
 		src.sendMessage(Text.of(TextColors.YELLOW, "Preparing spawn area. This may take a minute."));
 
-		Sponge.getScheduler().createTaskBuilder().name("PJW" + properties.getWorldName()).delayTicks(20).execute(new Runnable() {
+		Sponge.getScheduler().createTaskBuilder().delayTicks(20).execute(c -> {
+			Optional<World> load = Sponge.getServer().loadWorld(properties);
 
-			@Override
-			public void run() {
-				Optional<World> load = Sponge.getServer().loadWorld(properties);
-
-				if (!load.isPresent()) {
-					src.sendMessage(Text.of(TextColors.RED, "Could not load ", properties.getWorldName()));
-					return;
-				}
-
-				if (CMDCreate.worlds.contains(properties.getWorldName())) {
-					Utils.createPlatform(load.get().getSpawnLocation().getRelative(Direction.DOWN));
-					CMDCreate.worlds.remove(properties.getWorldName());
-				}
-
-				src.sendMessage(Text.of(TextColors.DARK_GREEN, properties.getWorldName(), " loaded successfully"));
+			if (!load.isPresent()) {
+				src.sendMessage(Text.of(TextColors.RED, "Could not load ", properties.getWorldName()));
+				return;
 			}
 
+			if (CMDCreate.worlds.contains(properties.getWorldName())) {
+				Utils.createPlatform(load.get().getSpawnLocation().getRelative(Direction.DOWN));
+				CMDCreate.worlds.remove(properties.getWorldName());
+			}
+
+			src.sendMessage(Text.of(TextColors.DARK_GREEN, properties.getWorldName(), " loaded successfully"));
 		}).submit(Main.getPlugin());
 
 		return CommandResult.success();
