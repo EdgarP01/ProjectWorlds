@@ -19,7 +19,7 @@ import org.spongepowered.api.world.WorldArchetype;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.helpme.help.Help;
+import com.gmail.trentech.pjc.help.Help;
 
 public class CMDCreate implements CommandExecutor {
 
@@ -76,7 +76,7 @@ public class CMDCreate implements CommandExecutor {
 
 //		SpongeData.getIds().add((int) properties.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get());
 //
-//		ConfigManager configManager = ConfigManager.get();
+//		ConfigManager configManager = ConfigManager.get(Main.getPlugin());
 //		configManager.getConfig().getNode("dimension_ids").setValue(SpongeData.getIds());
 //		configManager.save();
 

@@ -21,7 +21,7 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.helpme.help.Help;
+import com.gmail.trentech.pjc.help.Help;
 import com.gmail.trentech.pjw.utils.Utils;
 
 public class CMDProperties implements CommandExecutor {
@@ -36,13 +36,16 @@ public class CMDProperties implements CommandExecutor {
 
 		List<Text> list = new ArrayList<>();
 
-		list.add(Text.of(TextColors.GREEN, "Name: ", TextColors.WHITE, properties.getWorldName()));
-		list.add(Text.of(TextColors.GREEN, "UUID: ", TextColors.WHITE, properties.getUniqueId().toString()));
-		list.add(Text.of(TextColors.GREEN, "Dimension Id: ", TextColors.WHITE, (int) properties.getAdditionalProperties().getView(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get()));
-		list.add(Text.of(TextColors.GREEN, "Enabled: ", TextColors.WHITE, properties.isEnabled()));
-		list.add(Text.of(TextColors.GREEN, "Dimension Type: ", TextColors.WHITE, properties.getDimensionType().getName().toUpperCase()));
-		list.add(Text.of(TextColors.GREEN, "Generator Type: ", TextColors.WHITE, properties.getGeneratorType().getName()));
+		Optional<World> optionalWorld = Sponge.getServer().getWorld(properties.getUniqueId());
 		
+		if(optionalWorld.isPresent()) {
+			list.add(Text.of(TextColors.GREEN, "Name: ", TextColors.WHITE, properties.getWorldName(), TextColors.GREEN, ", DimId: ", TextColors.WHITE, (int) properties.getAdditionalProperties().getView(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get(), TextColors.GREEN, ", Loaded: ", TextColors.WHITE, "true", TextColors.GREEN, ", Enabled: ", TextColors.WHITE, properties.isEnabled()));
+		} else {
+			list.add(Text.of(TextColors.GREEN, "Name: ", TextColors.WHITE, properties.getWorldName(), TextColors.GREEN, ", Loaded: ", TextColors.WHITE, "false", TextColors.GREEN, ", Enabled: ", TextColors.WHITE, properties.isEnabled()));
+		}
+		
+		list.add(Text.of(TextColors.GREEN, "Generator: ", TextColors.WHITE, properties.getGeneratorType().getName().toLowerCase(), TextColors.GREEN, ", Dimension: ", TextColors.WHITE, properties.getDimensionType().getName().toLowerCase()));
+
 		Collection<WorldGeneratorModifier> modifiers = properties.getGeneratorModifiers();
 		
 		if(!modifiers.isEmpty()) {
@@ -51,21 +54,18 @@ public class CMDProperties implements CommandExecutor {
 		for(WorldGeneratorModifier modifier : modifiers) {
 			list.add(Text.of(TextColors.GREEN, "  - ", TextColors.WHITE, modifier.getId()));
 		}
-		
-		list.add(Text.of(TextColors.GREEN, "Seed: ", TextColors.WHITE, properties.getSeed()));
-		list.add(Text.of(TextColors.GREEN, "GameMode: ", TextColors.WHITE, properties.getGameMode().getName().toUpperCase()));
-		list.add(Text.of(TextColors.GREEN, "Difficulty: ", TextColors.WHITE, properties.getDifficulty().getName().toUpperCase()));
-		list.add(Text.of(TextColors.GREEN, "PVP: ", TextColors.WHITE, properties.isPVPEnabled()));
-		list.add(Text.of(TextColors.GREEN, "Keep Spawn Loaded: ", TextColors.WHITE, properties.doesKeepSpawnLoaded()));
-		list.add(Text.of(TextColors.GREEN, "Load on Startup: ", TextColors.WHITE, properties.loadOnStartup()));
-		list.add(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, Utils.getTime(properties.getWorldTime()), TextColors.GREEN, " Ticks: ", TextColors.WHITE, properties.getWorldTime() % 24000));
-		list.add(Text.of(TextColors.GREEN, "Ticks: ", TextColors.WHITE, properties.getWorldTime() % 24000));
-		
-		Optional<World> optionalWorld = Sponge.getServer().getWorld(properties.getUniqueId());
+
+		list.add(Text.of(TextColors.GREEN, "GameMode: ", TextColors.WHITE, properties.getGameMode().getTranslation().get().toLowerCase(), TextColors.GREEN, ", Difficulty: ", TextColors.WHITE, properties.getDifficulty().getTranslation().get().toLowerCase(), TextColors.GREEN, ", PVP: ", TextColors.WHITE, properties.isPVPEnabled()));
+		list.add(Text.of(TextColors.GREEN, "Keep Spawn Loaded: ", TextColors.WHITE, properties.doesKeepSpawnLoaded(), TextColors.GREEN, ", Load on Startup: ", TextColors.WHITE, properties.loadOnStartup()));
 		
 		if(optionalWorld.isPresent()) {
-			list.add(Text.of(TextColors.GREEN, "Weather: ", TextColors.WHITE, optionalWorld.get().getWeather().getName()));
+			list.add(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, Utils.getTime(properties.getWorldTime()), TextColors.GREEN, ", Ticks: ", TextColors.WHITE, (properties.getWorldTime() % 24000), TextColors.GREEN, ", Weather: ", TextColors.WHITE, optionalWorld.get().getWeather().getName()));
+		} else {
+			list.add(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, Utils.getTime(properties.getWorldTime()), TextColors.GREEN, ", Ticks: ", TextColors.WHITE, (properties.getWorldTime() % 24000)));
 		}
+
+		list.add(Text.of(TextColors.GREEN, "UUID: ", TextColors.WHITE, properties.getUniqueId().toString()));
+		list.add(Text.of(TextColors.GREEN, "Seed: ", TextColors.WHITE, properties.getSeed()));
 		
 		if (src instanceof Player) {
 			PaginationList.Builder pages = PaginationList.builder();

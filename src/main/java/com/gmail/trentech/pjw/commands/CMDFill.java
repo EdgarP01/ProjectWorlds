@@ -8,22 +8,22 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.ChunkPreGenerate;
+import org.spongepowered.api.world.ChunkPreGenerate.Builder;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.WorldBorder;
-import org.spongepowered.api.world.WorldBorder.ChunkPreGenerate;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.gmail.trentech.helpme.help.Help;
+import com.gmail.trentech.pjc.help.Help;
 import com.gmail.trentech.pjw.Main;
 
 public class CMDFill implements CommandExecutor {
 
-	public static HashMap<String, Task> list = new HashMap<>();
+	public static HashMap<String, ChunkPreGenerate> list = new HashMap<>();
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -77,14 +77,14 @@ public class CMDFill implements CommandExecutor {
 		border.setCenter(world.getSpawnLocation().getX(), world.getSpawnLocation().getZ());
 		border.setDiameter(diameter);
 
-		ChunkPreGenerate generator = border.newChunkPreGenerate(world).owner(Main.getPlugin());
+		Builder generator = border.newChunkPreGenerate(world).owner(Main.getPlugin());
 		generator.logger(Main.instance().getLog());
 		
 		if (args.hasAny("interval")) {
 			generator.tickInterval(args.<Integer> getOne("interval").get());		
 		}
 
-		Task task = generator.start();
+		ChunkPreGenerate task = generator.start();
 
 		list.put(properties.getWorldName(), task);
 
@@ -99,7 +99,7 @@ public class CMDFill implements CommandExecutor {
 		return CommandResult.success();
 	}
 
-	private void status(CommandSource src, Task task) {
+	private void status(CommandSource src, ChunkPreGenerate task) {
 		Sponge.getScheduler().createTaskBuilder().delayTicks(100).execute(c -> {
 			if (!Sponge.getScheduler().getScheduledTasks(Main.getPlugin()).contains(task)) {
 				src.sendMessage(Text.of(TextColors.DARK_GREEN, "Pre-Generator finished"));

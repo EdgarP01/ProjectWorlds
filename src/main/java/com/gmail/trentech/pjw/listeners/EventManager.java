@@ -27,7 +27,8 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjc.core.ConfigManager;
+import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.utils.Utils;
 
 import ninja.leaping.configurate.ConfigurationNode;
@@ -38,7 +39,7 @@ public class EventManager {
 	public void onClientConnectionEventJoin(ClientConnectionEvent.Join event) {
 		Player player = event.getTargetEntity();
 
-		ConfigurationNode node = ConfigManager.get().getConfig().getNode("options");
+		ConfigurationNode node = ConfigManager.get(Main.getPlugin()).getConfig().getNode("options");
 
 		String defaultWorld = Sponge.getServer().getDefaultWorld().get().getWorldName();
 

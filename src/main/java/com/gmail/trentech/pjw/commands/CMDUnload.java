@@ -16,8 +16,9 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-import com.gmail.trentech.helpme.help.Help;
-import com.gmail.trentech.pjw.utils.ConfigManager;
+import com.gmail.trentech.pjc.core.ConfigManager;
+import com.gmail.trentech.pjc.help.Help;
+import com.gmail.trentech.pjw.Main;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
@@ -42,7 +43,7 @@ public class CMDUnload implements CommandExecutor {
 			throw new CommandException(Text.of(TextColors.RED, "You cannot unload the default world"), false);
 		}
 		
-		ConfigurationNode node = ConfigManager.get().getConfig().getNode("options");
+		ConfigurationNode node = ConfigManager.get(Main.getPlugin()).getConfig().getNode("options");
 
 		World defaultWorld = Sponge.getServer().getWorld(Sponge.getServer().getDefaultWorld().get().getWorldName()).get();
 
