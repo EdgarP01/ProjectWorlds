@@ -1,32 +1,22 @@
 package com.gmail.trentech.pjw.io;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
 
 import org.spongepowered.api.Sponge;
 
+import com.gmail.trentech.pjc.core.ConfigManager;
 import com.gmail.trentech.pjw.Main;
 
 public class Migrator {
 
 	public static void init() {
-		Main.instance().getLog().info("Running World Migration tool..");
-
-		File directory = new File(Sponge.getGame().getSavesDirectory().toFile(), "imports");
+		String defaultWorld = ConfigManager.get(Main.getPlugin()).getConfig().getNode("options", "world_root").getString();
+		
+		File directory = new File(Sponge.getGame().getSavesDirectory().toFile(), defaultWorld);
 
 		if (!directory.exists()) {
-			directory.mkdir();
-		}
-
-		File[] files = directory.listFiles();
-
-		if (files.length > 0) {
-			Main.instance().getLog().info("Found " + files.length + " possible worlds");
-		} else {
-			Main.instance().getLog().info("No worlds to migrate");
+			return;
 		}
 
 		for (File world : directory.listFiles()) {
@@ -42,89 +32,41 @@ public class Migrator {
 
 			String name = world.getName();
 
-			Main.instance().getLog().info("Migrating world: " + name);
-
 			if (!worldData.isCorrectLevelName()) {
-				Main.instance().getLog().warn("  * Repairing level name mismatch");
-
-				try {
-					worldData.setLevelName(world.getName());
-				} catch (IOException e) {
-					e.printStackTrace();
-					continue;
-				}
-			}
-
-			File dest = new File(new File(Sponge.getGame().getSavesDirectory().toFile(), Sponge.getServer().getDefaultWorldName()), name);
-
-			int i = 1;
-			while (name.equalsIgnoreCase(Sponge.getServer().getDefaultWorldName()) || dest.exists()) {
-				Main.instance().getLog().error(" * A world with this name already exists");
-				name = world.getName() + "_" + i;
+				Main.instance().getLog().warn(worldData.getLevelName() + " -> " + name + ": Repairing level name mismatch");
 
 				try {
 					worldData.setLevelName(name);
-					dest = new File(new File(Sponge.getGame().getSavesDirectory().toFile(), Sponge.getServer().getDefaultWorldName()), name);
 				} catch (IOException e) {
 					e.printStackTrace();
 					continue;
 				}
-				i++;
 			}
 
-			try {
-				Main.instance().getLog().info("  * Copying world to final resting place");
-				copyWorld(world, dest);
-			} catch (IOException e) {
-				Main.instance().getLog().error(" * Could not copy world");
-				e.printStackTrace();
-				continue;
-			}
+			File dest = world;
 
-			SpongeData spongeData = new SpongeData(world);
-			
-			if (spongeData.exists()) {
-				Main.instance().getLog().info("  * Complete!");
-			} else {
-				Main.instance().getLog().warn("  * Complete! Requires importing. /world import " + world.getName() + " <type> <generator>");
-			}
+			if (name.equalsIgnoreCase(defaultWorld)) {
+				name = world.getName() + "_1";
+				
+				Main.instance().getLog().warn(defaultWorld + " -> " + name + ": Repairing duplicate world name");
 
-			Sponge.getScheduler().createTaskBuilder().delayTicks(40).execute(e -> {
 				try {
-					deleteWorld(world);
-				} catch (Exception e1) {
-					e1.printStackTrace();
+					worldData.setLevelName(name);
+					
+					dest = new File(new File(Sponge.getGame().getSavesDirectory().toFile(), defaultWorld), name);
+					
+					world.renameTo(dest);
+				} catch (IOException e) {
+					e.printStackTrace();
+					continue;
 				}
-			}).submit(Main.getPlugin());
-		}
-	}
-
-	private static void copyWorld(File src, File dest) throws IOException {
-		dest.mkdirs();
-
-		for (String file : src.list()) {
-			File srcFile = new File(src, file);
-			File destFile = new File(dest, file);
-
-			if (srcFile.isDirectory()) {
-				copyWorld(srcFile, destFile);
-			} else {
-				Files.copy(new FileInputStream(srcFile), destFile.toPath(), new CopyOption[0]);
+			}
+			
+			SpongeData spongeData = new SpongeData(dest);
+			
+			if (!spongeData.exists()) {
+				Main.instance().getLog().warn(name + ": Requires importing. /world import " + name + " <type> <generator>");
 			}
 		}
-	}
-
-	private static synchronized void deleteWorld(File src) throws IOException {
-		for (String file : src.list()) {
-			File srcFile = new File(src, file);
-
-			if (srcFile.isDirectory()) {
-				deleteWorld(srcFile);
-			} else {
-				Files.delete(srcFile.toPath());
-			}
-		}
-
-		Files.delete(src.toPath());
 	}
 }

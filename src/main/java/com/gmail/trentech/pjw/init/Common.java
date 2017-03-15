@@ -37,6 +37,15 @@ public class Common {
 				.addExample("/world create NewWorld -d minecraft:nether -m sponge:skylands")
 				.addExample("/world create NewWorld -s -12309830198412353456");
 		
+		Usage usageModifier = new Usage(Argument.of("<modifier>", "Specifies the name of the WorldGeneratorModifier you want to add or remove."))
+				.addArgument(Argument.of("[-r]", "Adding this flag removes the specified modifier from the given world"));
+		
+		Help worldModifier = new Help("world modifier", "modifier", "Allows you to Add or remove WorldGeneratorModifier's from the given world. This will have no effect on existing chunks only ungenerated chunks")
+				.setPermission("pjw.cmd.world.modifier")
+				.setUsage(usageModifier)
+				.addExample("/world modifier World sponge:void")
+				.addExample("/world modifier World sponge:skylands -s");
+		
 		Usage usageRemove = new Usage(Argument.of("<world>", "Specifies the targetted world"));
 		
 		Help worldRemove = new Help("world remove", "remove", "Delete worlds you no longer need. Worlds must be unloaded before you can delete them")
@@ -226,7 +235,8 @@ public class Common {
 				.addChild(worldCopy)
 				.addChild(worldTime)
 				.addChild(worldWeather)
-				.addChild(worldLoadOnStartup);
+				.addChild(worldLoadOnStartup)
+				.addChild(worldModifier);
 
 		Help.register(world);
 	}
@@ -241,10 +251,8 @@ public class Common {
 		if (config.getNode("options", "lobby_mode").isVirtual()) {
 			config.getNode("options", "lobby_mode").setValue(false).setComment("If true, player will always spawn in first_join world on join");
 		}
-		
-		// UPDATE
-		if(!config.getNode("dimension_ids").isVirtual()) {
-			config.removeChild("dimension_ids");
+		if(config.getNode("options", "world_root").isVirtual()) {
+			config.getNode("options", "world_root").setValue("world").setComment("The directory name of the main world. Unless you rename the default world, leave this set to 'world'");
 		}
 		
 		configManager.save();

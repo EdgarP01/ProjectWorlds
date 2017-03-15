@@ -78,11 +78,23 @@ public class WorldData {
 			if (levelName.equalsIgnoreCase(worldName)) {
 				return true;
 			}
-			return false;
+			//return false;
 		}
 		return false;
 	}
 
+	public String getLevelName() {
+		for (Entry<String, NBTTag> entry : compoundTag.entrySet()) {
+			if (!entry.getKey().equalsIgnoreCase("LevelName")) {
+				continue;
+			}
+
+			return (String) entry.getValue().getPayload();
+		}
+		
+		return null;
+	}
+	
 	public void setLevelName(String name) throws IOException {
 		compoundTag.put(new StringTag("LevelName", name));
 

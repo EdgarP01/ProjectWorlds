@@ -74,12 +74,6 @@ public class CMDCreate implements CommandExecutor {
 
 		Sponge.getServer().saveWorldProperties(properties);
 
-//		SpongeData.getIds().add((int) properties.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get());
-//
-//		ConfigManager configManager = ConfigManager.get(Main.getPlugin());
-//		configManager.getConfig().getNode("dimension_ids").setValue(SpongeData.getIds());
-//		configManager.save();
-
 		worlds.add(worldName);
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " created successfully"));

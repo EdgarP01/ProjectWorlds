@@ -1,6 +1,5 @@
 package com.gmail.trentech.pjw;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,9 +8,8 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GameAboutToStartServerEvent;
+import org.spongepowered.api.event.game.state.GameConstructionEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
-import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -41,15 +39,19 @@ public class Main {
 	private static Main instance;
 	
 	@Listener
-	public void onPreInitializationEvent(GamePreInitializationEvent event) {
+	public void onGameConstructionEvent(GameConstructionEvent event) {
 		plugin = Sponge.getPluginManager().getPlugin(Resource.ID).get();
 		instance = this;
-		
+
 		try {			
 			Files.createDirectories(path);		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		Common.initConfig();
+		
+		Migrator.init();
 	}
 
 	@Listener
@@ -60,15 +62,7 @@ public class Main {
 
 		Sponge.getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
 
-		Common.initConfig();
 		Common.initHelp();
-	}
-
-	@Listener
-	public void onAboutToStartServer(GameAboutToStartServerEvent event) {
-		if (new File(Sponge.getServer().getDefaultWorldName()).exists()) {
-			Migrator.init();
-		}
 	}
 
 	public Logger getLog() {

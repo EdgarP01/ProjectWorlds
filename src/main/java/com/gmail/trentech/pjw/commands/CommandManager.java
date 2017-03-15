@@ -24,6 +24,15 @@ public class CommandManager {
 		    .executor(new CMDCreate())
 		    .build();
 
+	private CommandSpec cmdModifier = CommandSpec.builder()
+		    .description(Text.of(" Allows you to Add or remove WorldGeneratorModifier's from the given world. This will have no effect on existing chunks only ungenerated chunks."))
+		    .permission("pjw.cmd.world.modifier")	    
+		    .arguments(GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
+		    		GenericArguments.catalogedElement(Text.of("modifier"), WorldGeneratorModifier.class),
+    				GenericArguments.flags().flag("r").buildWith(GenericArguments.none()))
+		    .executor(new CMDCreate())
+		    .build();
+	
 	private CommandSpec cmdRemove = CommandSpec.builder()
 		    .description(Text.of(" Delete worlds you no longer need. Worlds must be unloaded before you can delete them"))
 		    .permission("pjw.cmd.world.remove")
@@ -207,6 +216,7 @@ public class CommandManager {
 			.child(cmdGamemode, "gamemode", "gm")
 			.child(cmdGamerule, "gamerule", "gr")
 			.child(cmdFill, "fill", "f")
+			.child(cmdModifier, "modifier", "m")
 			.executor(new CMDWorld())
 			.build();
 }
