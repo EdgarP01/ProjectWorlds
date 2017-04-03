@@ -4,12 +4,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
@@ -28,8 +29,8 @@ import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjc.core.ConfigManager;
+import com.gmail.trentech.pjc.core.TeleportManager;
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.utils.Utils;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
@@ -123,8 +124,7 @@ public class EventManager {
 		}
 		Player victim = (Player) event.getTargetEntity();
 
-		Entity source = damageSource.getSource();
-		if (!(source instanceof Player)) {
+		if(!isValidPlayer(damageSource)) {
 			return;
 		}
 
@@ -136,6 +136,30 @@ public class EventManager {
 		}
 	}
 
+	private boolean isValidPlayer(EntityDamageSource src) {
+		if (src instanceof Player) {
+			return true;
+		} else if (src instanceof Projectile) {
+			Projectile projectile = (Projectile) src;
+
+			Optional<UUID> optionalUUID = projectile.getCreator();
+
+			if (!optionalUUID.isPresent()) {
+				return false;
+			}
+
+			Optional<Player> optionalPlayer = Sponge.getServer().getPlayer(optionalUUID.get());
+
+			if (!optionalPlayer.isPresent()) {
+				return false;
+			}
+
+			return true;
+		}
+		
+		return false;
+	}
+	
 	@Listener
 	public void onChangeWorldWeatherEvent(ChangeWorldWeatherEvent event) {
 		World world = event.getTargetWorld();
@@ -236,7 +260,7 @@ public class EventManager {
 		}
 		World world = optionalWorld.get();
 
-		Optional<Location<World>> optionalLocation = Utils.getRandomLocation(world);
+		Optional<Location<World>> optionalLocation = TeleportManager.getRandomLocation(world, 2000);
 
 		if(!optionalLocation.isPresent()) {
 			event.setCancelled(true);

@@ -19,9 +19,9 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.gmail.trentech.pjc.core.TeleportManager;
 import com.gmail.trentech.pjc.help.Help;
 import com.gmail.trentech.pjw.utils.Rotation;
-import com.gmail.trentech.pjw.utils.Utils;
 
 public class CMDTeleport implements CommandExecutor {
 
@@ -50,16 +50,28 @@ public class CMDTeleport implements CommandExecutor {
 		Location<World> location = world.getSpawnLocation();
 
 		if (args.hasAny("x,y,z")) {
-			String[] coords = args.<String> getOne("x,y,z").get().split(",");
+			String arg = args.<String> getOne("x,y,z").get();
+			
+			if(arg.equalsIgnoreCase("random")) {
+				Optional<Location<World>> optionalLocation = TeleportManager.getRandomLocation(world, 2000);
+				
+				if(!optionalLocation.isPresent()) {
+					throw new CommandException(Text.of(TextColors.RED, "Took to long to find a safe random location. Try again"), false);
+				}
+				
+				location = optionalLocation.get();
+			} else {
+				String[] coords = args.<String> getOne("x,y,z").get().split(",");
 
-			try {
-				int x = Integer.parseInt(coords[0]);
-				int y = Integer.parseInt(coords[1]);
-				int z = Integer.parseInt(coords[2]);
+				try {
+					int x = Integer.parseInt(coords[0]);
+					int y = Integer.parseInt(coords[1]);
+					int z = Integer.parseInt(coords[2]);
 
-				location = world.getLocation(x, y, z);
-			} catch (Exception e) {
-				throw new CommandException(Text.of(TextColors.RED, coords.toString(), " is not valid"), true);
+					location = world.getLocation(x, y, z);
+				} catch (Exception e) {
+					throw new CommandException(Text.of(TextColors.RED, coords.toString(), " is not valid"), true);
+				}
 			}
 		}
 
@@ -81,10 +93,10 @@ public class CMDTeleport implements CommandExecutor {
 			throw new CommandException(Text.of(TextColors.RED, "You do not have permission to travel to ", properties.getWorldName()));
 		}
 
-		Optional<Location<World>> optionalLocation = Utils.getSafeLocation(location);
+		Optional<Location<World>> optionalLocation = TeleportManager.getSafeLocation(location);
 
 		if (!optionalLocation.isPresent()) {
-			throw new CommandException(Text.builder().color(TextColors.RED).append(Text.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.executeCallback(Utils.unsafe(location))).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
+			throw new CommandException(Text.builder().color(TextColors.RED).append(Text.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.executeCallback(TeleportManager.setUnsafeLocation(location))).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
 		}
 
 		player.setLocationAndRotation(optionalLocation.get(), rotation.toVector3d());
