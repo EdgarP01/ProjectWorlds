@@ -17,10 +17,12 @@ public class CommandManager {
 		    .description(Text.of(" Allows you to create new worlds with any combination of optional arguments -d for dimension type, -g for generator type, -s for seed and -m for generator modifiers."))
 		    .permission("pjw.cmd.world.create")	    
 		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name"))), GenericArguments.flags()
-    				.valueFlag(GenericArguments.catalogedElement(Text.of("dimensionType"), DimensionType.class), "d")
+    				.valueFlag(GenericArguments.dimension(Text.of("dimensionType")), "d")
     				.valueFlag(GenericArguments.catalogedElement(Text.of("generatorType"), GeneratorType.class), "g")
-    				.valueFlag(GenericArguments.catalogedElement(Text.of("modifier"), WorldGeneratorModifier.class), "m")
-    				.valueFlag(GenericArguments.string(Text.of("seed")), "s").buildWith(GenericArguments.none()))
+    				.valueFlag(GenericArguments.allOf(GenericArguments.catalogedElement(Text.of("modifier"), WorldGeneratorModifier.class)), "m")
+    				.valueFlag(GenericArguments.string(Text.of("seed")), "s")
+    				.valueFlag(GenericArguments.bool(Text.of("useMapFeatures")), "f")
+    				.valueFlag(GenericArguments.bool(Text.of("generateBonusChest")), "c").buildWith(GenericArguments.none()))
 		    .executor(new CMDCreate())
 		    .build();
 
@@ -30,7 +32,7 @@ public class CommandManager {
 		    .arguments(GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
 		    		GenericArguments.catalogedElement(Text.of("modifier"), WorldGeneratorModifier.class),
     				GenericArguments.flags().flag("r").buildWith(GenericArguments.none()))
-		    .executor(new CMDCreate())
+		    .executor(new CMDModifier())
 		    .build();
 	
 	private CommandSpec cmdRemove = CommandSpec.builder()
@@ -92,11 +94,18 @@ public class CommandManager {
 	
 	private CommandSpec cmdKeepSpawnLoaded = CommandSpec.builder()
 		    .description(Text.of(" Keeps spawn point of world loaded in memory"))
-		    .permission("pjw.cmd.world.keeploaded")
+		    .permission("pjw.cmd.world.keepspawnloaded")
 		    .arguments(GenericArguments.optional(GenericArguments.world(Text.of("world"))), GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))))
 		    .executor(new CMDKeepSpawnLoaded())
 		    .build();
 
+	private CommandSpec cmdUseMapFeatures = CommandSpec.builder()
+		    .description(Text.of(" Keeps spawn point of world loaded in memory"))
+		    .permission("pjw.cmd.world.usemapfeatures")
+		    .arguments(GenericArguments.optional(GenericArguments.world(Text.of("world"))), GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))))
+		    .executor(new CMDUseMapFeatures())
+		    .build();
+	
 	private CommandSpec cmdProperties = CommandSpec.builder()
 		    .description(Text.of(" View all properties associated with a world"))
 		    .permission("pjw.cmd.world.properties")
@@ -151,7 +160,7 @@ public class CommandManager {
 		    .description(Text.of(" Imports non sponge worlds, such as bukkit worlds"))
 		    .permission("pjw.cmd.world.import")
 		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("world"))), GenericArguments.optional(GenericArguments.catalogedElement(Text.of("dimensionType"), DimensionType.class)),
-		    		GenericArguments.optional(GenericArguments.catalogedElement(Text.of("generatorType"), GeneratorType.class)), GenericArguments.optional(GenericArguments.catalogedElement(Text.of("modifier"), WorldGeneratorModifier.class)))
+		    		GenericArguments.optional(GenericArguments.catalogedElement(Text.of("generatorType"), GeneratorType.class)), GenericArguments.allOf(GenericArguments.catalogedElement(Text.of("modifier"), WorldGeneratorModifier.class)))
 		    .executor(new CMDImport())
 		    .build();
 	
@@ -204,6 +213,7 @@ public class CommandManager {
 			.child(cmdWeather, "weather", "w")
 			.child(cmdPvp, "pvp", "p")
 			.child(cmdKeepSpawnLoaded, "keepspawnloaded", "k")
+			.child(cmdUseMapFeatures, "usemapfeatures", "u")
 			.child(cmdLoadOnStartup, "loadonstartup", "los")
 			.child(cmdList, "list", "ls")
 			.child(cmdTeleport, "teleport", "tp")

@@ -2,6 +2,8 @@ package com.gmail.trentech.pjw.commands;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.spongepowered.api.Sponge;
@@ -47,8 +49,10 @@ public class CMDCreate implements CommandExecutor {
 			builder.generator(args.<GeneratorType> getOne("generatorType").get());
 		}
 
+		Collection<WorldGeneratorModifier> modifiers = Collections.<WorldGeneratorModifier>emptyList();
+		
 		if (args.hasAny("modifier")) {
-			builder.generatorModifiers(args.<WorldGeneratorModifier> getOne("modifier").get());
+			modifiers = args.<WorldGeneratorModifier> getAll("modifier");
 		}
 
 		if (args.hasAny("seed")) {
@@ -62,11 +66,21 @@ public class CMDCreate implements CommandExecutor {
 			}
 		}
 
+		if (args.hasAny("f")) {
+			builder.generator(args.<GeneratorType> getOne("generatorType").get());
+		}
+		
+		if (args.hasAny("c")) {
+			builder.generateBonusChest(true);
+		}
+		
 		WorldArchetype settings = builder.enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true).build(worldName, worldName);
 
 		WorldProperties properties;
 		try {
 			properties = Sponge.getServer().createWorldProperties(worldName, settings);
+			
+			properties.setGeneratorModifiers(modifiers);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new CommandException(Text.of(TextColors.RED, "Something went wrong. Check server log for details"), false);

@@ -27,9 +27,10 @@ public class Common {
 		Usage usageCreate = new Usage(Argument.of("<world>", "Specifies the name of the world"))
 				.addArgument(Argument.of("[-d <dimensionType>]", "Sets the DimensionType. Vanilla types are minecraft:overworld, minecraft:nether and minecraft:the_end"))
 				.addArgument(Argument.of("[-g <generatorType>]", "Sets the GeneratorType. Vanilla types are OVERWORLD, NETHER, THE_END, LARGE_BIOMES, FLAT and AMPLIFIED"))
-				.addArgument(Argument.of("[-m <modifer>]", "Sets the WorldGeneratorModifer. Sponge modifers included by Sponge are sponge:void and sponge:skylands"))
-				.addArgument(Argument.of("[-s <seed>]", "Sets the seed. If not specified this will default to using a random seed."));
-		
+				.addArgument(Argument.of("[-m <modifer>]", "Sets the WorldGeneratorModifer. Sponge modifers included by Sponge are sponge:void and sponge:skylands. Multiple values accepted"))
+				.addArgument(Argument.of("[-s <seed>]", "Sets the seed. If not specified this will default to using a random seed."))
+				.addArgument(Argument.of("[-c <true|false>]", "Set whether to generator bonus chest. Default is false"))
+				.addArgument(Argument.of("[-f <true|false>]", "Sets whether this world will generate map features such as villages and strongholds. Default is true"));
 		Help worldCreate = new Help("world create", "create", "Allows you to creating new worlds with a combination of features. This does not automatically load newly created worlds.")
 				.setPermission("pjw.cmd.world.create")
 				.setUsage(usageCreate)
@@ -40,7 +41,7 @@ public class Common {
 		Usage usageModifier = new Usage(Argument.of("<modifier>", "Specifies the name of the WorldGeneratorModifier you want to add or remove."))
 				.addArgument(Argument.of("[-r]", "Adding this flag removes the specified modifier from the given world"));
 		
-		Help worldModifier = new Help("world modifier", "modifier", "Allows you to Add or remove WorldGeneratorModifier's from the given world. This will have no effect on existing chunks only ungenerated chunks")
+		Help worldModifier = new Help("world modifier", "modifier", "Allows you to add or remove WorldGeneratorModifier's from the given world. This will have no effect on existing chunks only ungenerated chunks.")
 				.setPermission("pjw.cmd.world.modifier")
 				.setUsage(usageModifier)
 				.addExample("/world modifier World sponge:void")
@@ -70,6 +71,12 @@ public class Common {
 				.setUsage(usageEnable)
 				.addExample("/world enable MyWorld false")
 				.addExample("/world enable MyWorld true");
+		
+		Help worldUseMapFeatures = new Help("world usemapfeatures", "usemapfeatures", "Sets whether this world will generate map features such as villages and strongholds")
+				.setPermission("pjw.cmd.world.usemapfeatures")
+				.setUsage(usageEnable)
+				.addExample("/world usemapfeatures MyWorld false")
+				.addExample("/world usemapfeatures MyWorld true");
 		
 		Usage usageFill = new Usage(Argument.of("<world>", "Specifies the targetted world"))
 				.addArgument(Argument.of("<diameter>", "Set the diameter of the world border or enter 'stop' to cancel already running process. The specified diameter applies to the x and z axis. The world border extends over the entire y-axis"))
@@ -225,6 +232,7 @@ public class Common {
 				.addChild(worldLoad)
 				.addChild(worldList)
 				.addChild(worldKeepSpawnLoaded)
+				.addChild(worldUseMapFeatures)
 				.addChild(worldImport)
 				.addChild(worldHardcore)
 				.addChild(worldGamerule)

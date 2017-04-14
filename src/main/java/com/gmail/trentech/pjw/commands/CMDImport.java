@@ -1,6 +1,8 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
@@ -63,15 +65,18 @@ public class CMDImport implements CommandExecutor {
 
 		WorldArchetype.Builder builder = WorldArchetype.builder().dimension(dimensionType).generator(generatorType).enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true);
 
-		if(args.hasAny("modifier")) {
-			builder.generatorModifiers(args.<WorldGeneratorModifier> getOne("modifier").get());
-		}
+		Collection<WorldGeneratorModifier> modifiers = Collections.<WorldGeneratorModifier>emptyList();
 		
+		if (args.hasAny("modifier")) {
+			modifiers = args.<WorldGeneratorModifier> getAll("modifier");
+		}
+
 		WorldArchetype settings = builder.build(worldName, worldName);
 		
 		WorldProperties properties;
 		try {
 			properties = Sponge.getServer().createWorldProperties(worldName, settings);
+			properties.setGeneratorModifiers(modifiers);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new CommandException(Text.of(TextColors.RED, "Something went wrong. Check server log for details"), false);

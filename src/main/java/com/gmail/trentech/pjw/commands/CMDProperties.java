@@ -57,6 +57,7 @@ public class CMDProperties implements CommandExecutor {
 
 		list.add(Text.of(TextColors.GREEN, "GameMode: ", TextColors.WHITE, properties.getGameMode().getTranslation().get().toLowerCase(), TextColors.GREEN, ", Difficulty: ", TextColors.WHITE, properties.getDifficulty().getTranslation().get().toLowerCase(), TextColors.GREEN, ", PVP: ", TextColors.WHITE, properties.isPVPEnabled()));
 		list.add(Text.of(TextColors.GREEN, "Keep Spawn Loaded: ", TextColors.WHITE, properties.doesKeepSpawnLoaded(), TextColors.GREEN, ", Load on Startup: ", TextColors.WHITE, properties.loadOnStartup()));
+		list.add(Text.of(TextColors.GREEN, "Bonus Chest: ", TextColors.WHITE, properties.doesGenerateBonusChest(), TextColors.GREEN, "Map Features: ", TextColors.WHITE, properties.usesMapFeatures()));
 		
 		if(optionalWorld.isPresent()) {
 			list.add(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, Utils.getTime(properties.getWorldTime()), TextColors.GREEN, ", Ticks: ", TextColors.WHITE, (properties.getWorldTime() % 24000), TextColors.GREEN, ", Weather: ", TextColors.WHITE, optionalWorld.get().getWeather().getName()));
@@ -65,8 +66,8 @@ public class CMDProperties implements CommandExecutor {
 		}
 
 		list.add(Text.of(TextColors.GREEN, "UUID: ", TextColors.WHITE, properties.getUniqueId().toString()));
-		list.add(Text.of(TextColors.GREEN, "Seed: ", TextColors.WHITE, properties.getSeed()));
-		
+		list.add(Text.of(TextColors.GREEN, "Seed: ", TextColors.WHITE, properties.getSeed()));	
+
 		if (src instanceof Player) {
 			PaginationList.Builder pages = PaginationList.builder();
 
