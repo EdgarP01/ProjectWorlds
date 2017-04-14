@@ -22,6 +22,8 @@ import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.world.ChangeWorldWeatherEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.PortalAgent;
 import org.spongepowered.api.world.World;
@@ -222,6 +224,11 @@ public class EventManager {
 		WorldProperties properties = to.getProperties();
 
 		if (!from.equals(to)) {
+			if (!player.hasPermission("pjw.worlds." + properties.getWorldName())) {
+				player.sendMessage(Text.of(TextColors.RED, "You do not have permission to travel to ", properties.getWorldName()));
+				event.setCancelled(true);
+			}
+			
 			if(properties.getGameRule("forceGamemode").get().equalsIgnoreCase("true")) {
 				if (!properties.getGameMode().equals(player.gameMode().get())) {
 					player.offer(Keys.GAME_MODE, properties.getGameMode());

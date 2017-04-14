@@ -89,17 +89,21 @@ public class CMDTeleport implements CommandExecutor {
 			rotation = optionalRotation.get();
 		}
 
-		if (!src.hasPermission("pjw.worlds." + properties.getWorldName())) {
-			throw new CommandException(Text.of(TextColors.RED, "You do not have permission to travel to ", properties.getWorldName()));
+//		if (!src.hasPermission("pjw.worlds." + properties.getWorldName())) {
+//			throw new CommandException(Text.of(TextColors.RED, "You do not have permission to travel to ", properties.getWorldName()));
+//		}
+		
+		if(!args.hasAny("f")) {
+			Optional<Location<World>> optionalLocation = TeleportManager.getSafeLocation(location);
+
+			if (!optionalLocation.isPresent()) {
+				throw new CommandException(Text.of(Text.builder().color(TextColors.RED).append(Text.of("Unsafe spawn point detected. ")).onClick(TextActions.executeCallback(TeleportManager.setUnsafeLocation(location))).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build(), TextColors.RED, " or use the -f flag to force teleport."));
+			}
+			
+			location = optionalLocation.get();
 		}
 
-		Optional<Location<World>> optionalLocation = TeleportManager.getSafeLocation(location);
-
-		if (!optionalLocation.isPresent()) {
-			throw new CommandException(Text.builder().color(TextColors.RED).append(Text.of("Unsafe spawn point detected. Teleport anyway? ")).onClick(TextActions.executeCallback(TeleportManager.setUnsafeLocation(location))).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build());
-		}
-
-		player.setLocationAndRotation(optionalLocation.get(), rotation.toVector3d());
+		player.setLocationAndRotation(location, rotation.toVector3d());
 
 		player.sendTitle(Title.of(Text.of(TextColors.DARK_GREEN, properties.getWorldName()), Text.of(TextColors.AQUA, "x: ", location.getBlockX(), ", y: ", location.getBlockY(), ", z: ", location.getBlockZ())));
 

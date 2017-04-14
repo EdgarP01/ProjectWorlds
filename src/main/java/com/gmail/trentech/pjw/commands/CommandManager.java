@@ -115,7 +115,7 @@ public class CommandManager {
 		    .permission("pjw.cmd.world.teleport")
 		    .arguments(GenericArguments.optional(GenericArguments.world(Text.of("world"))), GenericArguments.flags()
     				.valueFlag(GenericArguments.string(Text.of("x,y,z")), "c")
-    				.valueFlag(GenericArguments.string(Text.of("direction")), "d").buildWith(GenericArguments.none()))
+    				.valueFlag(GenericArguments.string(Text.of("direction")), "d").flag("f").buildWith(GenericArguments.none()))
 		    .executor(new CMDTeleport())
 		    .build();
 	

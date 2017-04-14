@@ -196,15 +196,17 @@ public class Common {
 				.addExample("/world setspawn");
 		
 		Usage usageTeleport = new Usage(Argument.of("<world>", "Specifies the targetted world"))
-				.addArgument(Argument.of("[-c <x,y,z>]", "Specifies the coordinates to teleport to. x and z must fall within the range -30,000,000 to 30,000,000 (exclusive, without the commas), and y must be within the range -4096 to 4096 inclusive."))
-				.addArgument(Argument.of("[-d <direction>]", "Specifies the direction player will face upon teleporting. The following can be used: NORTH, NORTH_WEST, WEST, SOUTH_WEST, SOUTH, SOUTH_EAST, EAST, NORTH_EAST"));
+				.addArgument(Argument.of("[-c <x,y,z>]", "Specifies the coordinates to teleport to. x and z must fall within the range -30,000,000 to 30,000,000 (exclusive, without the commas), and y must be within the range -4096 to 4096 inclusive. Set to 'random' to teleport to random location"))
+				.addArgument(Argument.of("[-d <direction>]", "Specifies the direction player will face upon teleporting. The following can be used: NORTH, NORTH_WEST, WEST, SOUTH_WEST, SOUTH, SOUTH_EAST, EAST, NORTH_EAST"))
+				.addArgument(Argument.of("[-f]", "Skip safe location check. This flag has no effect with '-c random'"));
 		
 		Help worldTeleport = new Help("world teleport", "teleport", "Teleport to specified world and location")
 				.setPermission("pjw.cmd.world.teleport")
 				.setUsage(usageTeleport)
-				.addExample("/world tp MyWorld -c -153,75,300 -d WEST")
+				.addExample("/world teleport MyWorld -c -153,75,300 -d WEST")
 				.addExample("/world teleport MyWorld -c -153,75,300")
-				.addExample("/world tp MyWorld");
+				.addExample("/world teleport MyWorld")
+				.addExample("/world teleport MyWorld -f");
 		
 		Help worldUnload = new Help("world unload", "unload", "Unloads specified world. If players are in world, they will be teleported to default spawn")
 				.setPermission("pjw.cmd.world.unload")
