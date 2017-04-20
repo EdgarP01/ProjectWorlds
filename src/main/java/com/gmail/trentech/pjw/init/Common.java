@@ -179,11 +179,15 @@ public class Common {
 				.addExample("/world pvp MyWorld true")
 				.addExample("/world pvp MyWorld");
 		
-		Help worldRegen = new Help("world regen", "regen", "Regenerates a world. You can preserve the seed or generate new random")
+		Usage usageRegen = new Usage(Argument.of("<world>", "Specifies the targetted world"))
+				.addArgument(Argument.of("[true|false]", "Set whether or not to preserve the seed. Default value is 'true'"))
+				.addArgument(Argument.of("[seed]", "Specifies a seed. Optional. Random seed is chosen if previous argument is false and this is not set"));
+		
+		Help worldRegen = new Help("world regen", "regen", "Regenerates a world. You can preserve seed by setting true (true is default if none specified), or generate a new seed, random or specified")
 				.setPermission("pjw.cmd.world.regen")
-				.setUsage(usageEnable)
+				.setUsage(usageRegen)
 				.addExample("/world regen MyWorld true")
-				.addExample("/world regen MyWorld");
+				.addExample("/world regen MyWorld false 3700507149557916849");
 		
 		Usage usageRename = new Usage(Argument.of("<srcWorld>", "Specifies the targetted world"))
 				.addArgument(Argument.of("<newWorld>", "Specifies the new world name"));

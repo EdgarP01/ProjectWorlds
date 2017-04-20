@@ -1,5 +1,6 @@
 package com.gmail.trentech.pjw.commands;
 
+import org.spongepowered.api.CatalogTypes;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
@@ -17,12 +18,17 @@ public class CommandManager {
 		    .description(Text.of(" Allows you to create new worlds with any combination of optional arguments -d for dimension type, -g for generator type, -s for seed and -m for generator modifiers."))
 		    .permission("pjw.cmd.world.create")	    
 		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name"))), GenericArguments.flags()
-    				.valueFlag(GenericArguments.dimension(Text.of("dimensionType")), "d")
-    				.valueFlag(GenericArguments.catalogedElement(Text.of("generatorType"), GeneratorType.class), "g")
-    				.valueFlag(GenericArguments.allOf(GenericArguments.catalogedElement(Text.of("modifier"), WorldGeneratorModifier.class)), "m")
-    				.valueFlag(GenericArguments.string(Text.of("seed")), "s")
-    				.valueFlag(GenericArguments.bool(Text.of("useMapFeatures")), "f")
-    				.valueFlag(GenericArguments.bool(Text.of("generateBonusChest")), "c").buildWith(GenericArguments.none()))
+	                .valueFlag(GenericArguments.onlyOne(GenericArguments.dimension(Text.of("dimension"))), "d", "-dimension")
+	                .valueFlag(GenericArguments.onlyOne(GenericArguments.catalogedElement(Text.of("generator"), CatalogTypes.GENERATOR_TYPE)), "g", "-generator")
+					.valueFlag(GenericArguments.catalogedElement(Text.of("modifier"), CatalogTypes.WORLD_GENERATOR_MODIFIER), "m", "-modifer")
+					.valueFlag(GenericArguments.onlyOne(GenericArguments.string(Text.of("seed"))), "s", "-seed")
+					.valueFlag(GenericArguments.onlyOne(new GameModeElement(Text.of("gamemode"))), "-gm", "-gamemode")
+	                .valueFlag(GenericArguments.onlyOne(GenericArguments.catalogedElement(Text.of("difficulty"), CatalogTypes.DIFFICULTY)), "-di", "-difficulty")
+	                .valueFlag(GenericArguments.bool(Text.of("l")), "l", "-loadonstartup")
+	                .valueFlag(GenericArguments.bool(Text.of("k")), "k", "-keepspawnloaded")
+	                .valueFlag(GenericArguments.bool(Text.of("c")), "c", "-allowcommands")
+	                .valueFlag(GenericArguments.bool(Text.of("b")), "b", "-bonuschest")
+	                .valueFlag(GenericArguments.bool(Text.of("f")), "f", "-mapfeatures").buildWith(GenericArguments.none()))
 		    .executor(new CMDCreate())
 		    .build();
 
@@ -181,7 +187,7 @@ public class CommandManager {
 	private CommandSpec cmdRegen = CommandSpec.builder()
 		    .description(Text.of(" Regenerates a world. You can preserve the seed or generate new random"))
 		    .permission("pjw.cmd.world.regen")
-		    .arguments(GenericArguments.optional(GenericArguments.world(Text.of("world"))), GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))))
+		    .arguments(GenericArguments.optional(GenericArguments.world(Text.of("world"))), GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))), GenericArguments.optional(GenericArguments.string(Text.of("seed"))))
 		    .executor(new CMDRegen())
 		    .build();
 	
@@ -195,7 +201,7 @@ public class CommandManager {
 	private CommandSpec cmdFill = CommandSpec.builder()
 		    .description(Text.of(" Pre generate chunks in a world"))
 		    .permission("pjw.cmd.world.fill")
-		    .arguments(GenericArguments.optional(GenericArguments.world(Text.of("world"))), GenericArguments.optional(GenericArguments.string(Text.of("diameter"))), GenericArguments.optional(GenericArguments.string(Text.of("interval"))))
+		    .arguments(GenericArguments.optional(GenericArguments.world(Text.of("world"))), GenericArguments.optional(GenericArguments.string(Text.of("diameter"))), GenericArguments.optional(GenericArguments.integer(Text.of("interval"))))
 		    .executor(new CMDFill())
 		    .build();
 	

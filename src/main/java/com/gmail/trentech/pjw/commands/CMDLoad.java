@@ -8,6 +8,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
@@ -51,7 +52,8 @@ public class CMDLoad implements CommandExecutor {
 		
 		src.sendMessage(Text.of(TextColors.YELLOW, "Preparing spawn area. This may take a minute."));
 
-		Sponge.getScheduler().createTaskBuilder().delayTicks(20).execute(c -> {
+		
+		Task.builder().async().delayTicks(20).execute(c -> {
 			Optional<World> load = Sponge.getServer().loadWorld(properties);
 
 			if (!load.isPresent()) {

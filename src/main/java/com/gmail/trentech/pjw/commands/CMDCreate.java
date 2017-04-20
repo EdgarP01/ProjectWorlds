@@ -12,12 +12,14 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.DimensionType;
 import org.spongepowered.api.world.GeneratorType;
 import org.spongepowered.api.world.WorldArchetype;
+import org.spongepowered.api.world.difficulty.Difficulty;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
@@ -41,12 +43,12 @@ public class CMDCreate implements CommandExecutor {
 
 		WorldArchetype.Builder builder = WorldArchetype.builder();
 
-		if (args.hasAny("dimensionType")) {
-			builder.dimension(args.<DimensionType> getOne("dimensionType").get());
+		if (args.hasAny("dimension")) {
+			builder.dimension(args.<DimensionType> getOne("dimension").get());
 		}
 
-		if (args.hasAny("generatorType")) {
-			builder.generator(args.<GeneratorType> getOne("generatorType").get());
+		if (args.hasAny("generator")) {
+			builder.generator(args.<GeneratorType> getOne("generator").get());
 		}
 
 		Collection<WorldGeneratorModifier> modifiers = Collections.<WorldGeneratorModifier>emptyList();
@@ -66,12 +68,32 @@ public class CMDCreate implements CommandExecutor {
 			}
 		}
 
-		if (args.hasAny("f")) {
-			builder.generator(args.<GeneratorType> getOne("generatorType").get());
+		if (args.hasAny("gamemode")) {
+			builder.gameMode(args.<GameMode> getOne("gamemode").get());
+		}
+		
+		if (args.hasAny("difficulty")) {
+			builder.difficulty(args.<Difficulty> getOne("difficulty").get());
+		}
+
+		if (args.hasAny("l")) {
+			builder.loadsOnStartup(args.<Boolean> getOne("l").get());
+		}
+		
+		if (args.hasAny("k")) {
+			builder.keepsSpawnLoaded(args.<Boolean> getOne("k").get());
 		}
 		
 		if (args.hasAny("c")) {
-			builder.generateBonusChest(true);
+			builder.commandsAllowed(args.<Boolean> getOne("c").get());
+		}
+		
+		if (args.hasAny("b")) {
+			builder.generateBonusChest(args.<Boolean> getOne("b").get());
+		}
+		
+		if (args.hasAny("f")) {
+			builder.usesMapFeatures(args.<Boolean> getOne("f").get());
 		}
 		
 		WorldArchetype settings = builder.enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true).build(worldName, worldName);
