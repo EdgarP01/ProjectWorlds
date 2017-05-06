@@ -8,20 +8,20 @@
 		<newWorld> - Enter the name of the new world.
 	
 /world create
-    Description: Allows you to creating new worlds with a combination of features. This does not automatically load newly created worlds.
+    	Description: Allows you to creating new worlds with a combination of features. This does not automatically load newly created 		worlds.
 	Permission: pjw.cmd.world.create
-	Usage: /world create <world> [-d <dimensionType>] [-g <generatorType>] [-m <modifer>] [-s <seed>] [-c <true|false>] [-f <true|false>]
+	Usage: /world create <world> [-d <dimensionType>] [-g <generatorType>] [-m <modifer>] [-s <seed>] [-c <true|false>] [-f 		<true|false>]
 	Arguments:
 		<world> - Specifies the name of the world
-		[-d <dimensionType>] - Sets the DimensionType. Vanilla types are minecraft:overworld, minecraft:nether and minecraft:the_end.
-		[-g <generatorType>] - Sets the GeneratorType. Vanilla types are OVERWORLD, NETHER, THE_END, LARGE_BIOMES, FLAT and AMPLIFIED.
-		[-m <modifer>] - Sets the WorldGeneratorModifer. Sponge modifers included by Sponge are sponge:void and sponge:skylands. Multiple values accepted.
+		[-d <dimensionType>] - Sets the DimensionType. Vanilla types are minecraft:overworld, minecraft:nether and 				minecraft:the_end.
+		[-g <generatorType>] - Sets the GeneratorType. Vanilla types are OVERWORLD, NETHER, THE_END, LARGE_BIOMES, FLAT and 			AMPLIFIED.
+		[-m <modifer>] - Sets the WorldGeneratorModifer. Sponge modifers included by Sponge are sponge:void and sponge:skylands. 		 Multiple values accepted.
 		[-s <seed>] - Sets the seed. If not specified this will default to using a random seed.
 		[-c <true|false>] - Set whether to generator bonus chest. Default is false.
 		[-f <true|false>] - Sets whether this world will generate map features such as villages and strongholds. Default is true.
 
 /world modifier
-	Description: Allows you to add or remove WorldGeneratorModifier's from the given world. This will have no effect on existing chunks only ungenerated chunks.
+	Description: Allows you to add or remove WorldGeneratorModifier's from the given world. This will have no effect on existing 		chunks only ungenerated chunks.
 	Permission: pjw.cmd.world.modifier
 	Usage: /world modifier <world> <modifier> [-r]
 	Arguments:
@@ -66,7 +66,7 @@
 	Usage: /world fill <world> <diameter> [interval]
 	Arguments:
 		<world> - Specifies the name of the world.
-		<diameter> - Set the diameter of the world border or enter 'stop' to cancel already running process. The specified diameter applies to the x and z axis. The world border extends over the entire y-axis.
+		<diameter> - Set the diameter of the world border or enter 'stop' to cancel already running process. The specified 			diameter applies to the x and z axis. The world border extends over the entire y-axis.
 		[interval] - Sets the interval between generation runs. Must be greater than 0. Default is 10.
 
 /world gamemode
@@ -83,8 +83,8 @@
 	Usage: /world gamerule <world> [rule] [value]
 	Arguments:
 		<world> - Specifies the name of the world.
-		[rule] - Specifies the game rule to set or query. May be any value, but only certain predefined game rules will affect gameplay.
-		[value] - Specifies the value to set the game rule to. May be any value, though only true or false specified for predefined game rules will actually affect gameplay, except in the case of randomTickSpeed and spawnRadius, where any integer 0 or greater will affect gameplay.
+		[rule] - Specifies the game rule to set or query. May be any value, but only certain predefined game rules will affect 			gameplay.
+		[value] - Specifies the value to set the game rule to. May be any value, though only true or false specified for 			predefined game rules will actually affect gameplay, except in the case of randomTickSpeed and spawnRadius, where any 			integer 0 or greater will affect gameplay.
 
 /world hardcore
 	Description: Toggle on and off hardcore mode for world.
@@ -100,7 +100,7 @@
 	Usage: /world time <world> [time]
 	Arguments:
 		<world> - Specifies the name of the world.
-		[time] - Sets the time of day, in ticks. The total number of ticks in a day is 24000, however this value does not reset to zero at the start of each day but rather keeps counting passed 24000.
+		[time] - Sets the time of day, in ticks. The total number of ticks in a day is 24000, however this value does not reset 		to zero at the start of each day but rather keeps counting passed 24000.
 
 /world weather
 	Description: Set the weather of world.
@@ -108,7 +108,7 @@
 	Usage: /world weather <world> [clear|rain|thunder] [duration]
 	Arguments:
 		<world> - Specifies the name of the world.
-		[clear|rain|thunder] - clear: Set the weather to clear, rain: Set the weather to rain (or snow in cold biomes), thunder: Set the weather to a thunderstorm (or a thunder snowstorm in cold biomes).
+		[clear|rain|thunder] - clear: Set the weather to clear, rain: Set the weather to rain (or snow in cold biomes), thunder: 		Set the weather to a thunderstorm (or a thunder snowstorm in cold biomes).
 		[duration] - Specifies the duration the set weather will occur.
 
 /world import
@@ -118,7 +118,7 @@
 	Arguments:
 		<world> - Specifies the name of the world.
 		<dimensionType> - Sets the DimensionType. Vanilla types are minecraft:overworld, minecraft:nether and minecraft:the_end.
-		<generatorType> - Sets the GeneratorType. Vanilla types are OVERWORLD, NETHER, THE_END, LARGE_BIOMES, FLAT and AMPLIFIED.
+		<generatorType> - Sets the GeneratorType. Vanilla types are OVERWORLD, NETHER, THE_END, LARGE_BIOMES, FLAT and 				AMPLIFIED.
 		[modifer] - Sets the WorldGeneratorModifer. Sponge modifers included by Sponge are sponge:void and sponge:skylands.
 
 /world keepspawnloaded
@@ -165,7 +165,7 @@
 		[true|false]
 
 /world regen
-	Description: Regenerates a world. You can preserve seed by setting true (true is default if none specified), or generate a new seed, random or specified
+	Description: Regenerates a world. You can preserve seed by setting true (true is default if none specified), or generate a new 		seed, random or specified
 	Permission: pjw.cmd.world.regen
 	Usage: /world regen <world> [true|false] [seed]
 	Arguments:
@@ -187,7 +187,7 @@
 	Usage: /world setspawn [<world> [x,y,z]]
 	Arguments:
 		[world] - Specifies the name of the world.
-		[x,y,z] - Specifies the coordinates to set spawn to. x and z must fall within the range -30,000,000 to 30,000,000 (exclusive, without the commas), and y must be within the range -4096 to 4096 inclusive.
+		[x,y,z] - Specifies the coordinates to set spawn to. x and z must fall within the range -30,000,000 to 30,000,000 			(exclusive, without the commas), and y must be within the range -4096 to 4096 inclusive.
 
 /world teleport
 	Description: Teleport to specified world and location.
@@ -195,8 +195,8 @@
 	Usage: /world teleport <world> [-c <x,y,z>] [-d <direction>] [-f]
 	Arguments:
 		<world> - Specifies the name of the world.
-		[-c <x,y,z>] - Specifies the coordinates to teleport to. x and z must fall within the range -30,000,000 to 30,000,000 (exclusive, without the commas), and y must be within the range -4096 to 4096 inclusive. Set to 'random' to teleport to random location.
-		[-d <direction>] - Specifies the direction player will face upon teleporting. The following can be used: NORTH, NORTH_WEST, WEST, SOUTH_WEST, SOUTH, SOUTH_EAST, EAST, NORTH_EAST.
+		[-c <x,y,z>] - Specifies the coordinates to teleport to. x and z must fall within the range -30,000,000 to 30,000,000 			(exclusive, without the commas), and y must be within the range -4096 to 4096 inclusive. Set to 'random' to teleport to 		random location.
+		[-d <direction>] - Specifies the direction player will face upon teleporting. The following can be used: NORTH, 			NORTH_WEST, WEST, SOUTH_WEST, SOUTH, SOUTH_EAST, EAST, NORTH_EAST.
 		[-f] - Skip safe location check. This flag has no effect with '-c random'.
 
 /world unload
