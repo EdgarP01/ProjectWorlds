@@ -38,7 +38,8 @@ public class Common {
 				.addExample("/world create NewWorld -d minecraft:nether -m sponge:skylands")
 				.addExample("/world create NewWorld -s -12309830198412353456");
 		
-		Usage usageModifier = new Usage(Argument.of("<modifier>", "Specifies the name of the WorldGeneratorModifier you want to add or remove."))
+		Usage usageModifier = new Usage(Argument.of("<world>", "Specifies the targetted world"))
+				.addArgument(Argument.of("<modifier>", "Specifies the name of the WorldGeneratorModifier you want to add or remove."));
 				.addArgument(Argument.of("[-r]", "Adding this flag removes the specified modifier from the given world"));
 		
 		Help worldModifier = new Help("world modifier", "modifier", "Allows you to add or remove WorldGeneratorModifier's from the given world. This will have no effect on existing chunks only ungenerated chunks.")
