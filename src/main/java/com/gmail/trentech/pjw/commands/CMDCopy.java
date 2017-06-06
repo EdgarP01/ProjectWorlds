@@ -11,13 +11,20 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
+
+import com.gmail.trentech.pjc.help.Help;
 
 public class CMDCopy implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		if (!args.hasAny("srcWorld")) {
+			Help help = Help.get("world copy").get();
+			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
+		}
 		WorldProperties properties = args.<WorldProperties> getOne("srcWorld").get();
 
 		String newWorldName = args.<String> getOne("newWorld").get();
