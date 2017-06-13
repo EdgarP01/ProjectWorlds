@@ -19,8 +19,14 @@ public class CMDRename implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		Help help = Help.get("world rename").get();
+		
+		if (args.hasAny("help")) {		
+			help.execute(src);
+			return CommandResult.empty();
+		}
+		
 		if (!args.hasAny("srcWorld")) {
-			Help help = Help.get("world rename").get();
 			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
 		}
 		WorldProperties properties = args.<WorldProperties> getOne("srcWorld").get();
@@ -30,7 +36,6 @@ public class CMDRename implements CommandExecutor {
 		}
 
 		if (!args.hasAny("newWorld")) {
-			Help help = Help.get("world rename").get();
 			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
 		}
 		String newWorldName = args.<String> getOne("newWorld").get();

@@ -15,8 +15,8 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 
-import com.gmail.trentech.pjw.commands.CommandManager;
 import com.gmail.trentech.pjw.extra.OceanWorldGeneratorModifier;
+import com.gmail.trentech.pjw.init.Commands;
 import com.gmail.trentech.pjw.init.Common;
 import com.gmail.trentech.pjw.io.Migrator;
 import com.gmail.trentech.pjw.listeners.EventManager;
@@ -60,7 +60,7 @@ public class Main {
 
 		Sponge.getRegistry().register(WorldGeneratorModifier.class, new OceanWorldGeneratorModifier());
 
-		Sponge.getCommandManager().register(this, new CommandManager().cmdWorld, "world", "w");
+		Sponge.getCommandManager().register(this, new Commands().cmdWorld, "world", "w");
 
 		Common.initHelp();
 	}

@@ -11,11 +11,19 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.flowpowered.math.vector.Vector3i;
+import com.gmail.trentech.pjc.help.Help;
 
 public class CMDSetSpawn implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		Help help = Help.get("world setspawn").get();
+		
+		if (args.hasAny("help")) {		
+			help.execute(src);
+			return CommandResult.empty();
+		}
+		
 		WorldProperties properties;
 		Vector3i vector3i;
 		

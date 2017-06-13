@@ -27,8 +27,14 @@ public class CMDFill implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		Help help = Help.get("world fill").get();
+		
+		if (args.hasAny("help")) {		
+			help.execute(src);
+			return CommandResult.empty();
+		}
+		
 		if (!args.hasAny("world")) {
-			Help help = Help.get("world fill").get();
 			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
 		}
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
@@ -39,7 +45,6 @@ public class CMDFill implements CommandExecutor {
 		World world = Sponge.getServer().getWorld(properties.getUniqueId()).get();
 		
 		if (!args.hasAny("diameter")) {
-			Help help = Help.get("world fill").get();
 			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
 		}
 		String value = args.<String> getOne("diameter").get();

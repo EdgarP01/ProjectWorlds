@@ -19,12 +19,20 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.gmail.trentech.pjc.help.Help;
 import com.google.common.collect.Lists;
 
 public class CMDList implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		Help help = Help.get("world list").get();
+		
+		if (args.hasAny("help")) {		
+			help.execute(src);
+			return CommandResult.empty();
+		}
+		
 		List<Text> list = new ArrayList<>();
 
 		for (WorldProperties properties : Sponge.getServer().getAllWorldProperties()) {
