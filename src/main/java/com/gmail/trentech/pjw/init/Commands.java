@@ -1,7 +1,6 @@
 package com.gmail.trentech.pjw.init;
 
 import org.spongepowered.api.CatalogTypes;
-import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
@@ -14,7 +13,6 @@ import com.gmail.trentech.pjw.commands.CMDCopy;
 import com.gmail.trentech.pjw.commands.CMDCreate;
 import com.gmail.trentech.pjw.commands.CMDDifficulty;
 import com.gmail.trentech.pjw.commands.CMDEnable;
-import com.gmail.trentech.pjw.commands.CMDFill;
 import com.gmail.trentech.pjw.commands.CMDGamemode;
 import com.gmail.trentech.pjw.commands.CMDGamerule;
 import com.gmail.trentech.pjw.commands.CMDHardcore;
@@ -41,12 +39,12 @@ import com.gmail.trentech.pjw.commands.elements.GameruleElement;
 
 public class Commands {
 
-	private CommandElement element = GenericArguments.flags().flag("help").setAcceptsArbitraryLongFlags(true).buildWith(GenericArguments.none());
+	//private CommandElement element = GenericArguments.flags().flag("help").setAcceptsArbitraryLongFlags(true).buildWith(GenericArguments.none());
 	
 	private CommandSpec cmdCreate = CommandSpec.builder()
 		    .description(Text.of(" Allows you to create new worlds with any combination of optional arguments -d for dimension type, -g for generator type, -s for seed and -m for generator modifiers."))
 		    .permission("pjw.cmd.world.create")	    
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.string(Text.of("name"))), GenericArguments.flags()
 	                .valueFlag(GenericArguments.onlyOne(GenericArguments.dimension(Text.of("dimension"))), "d", "-dimension")
 	                .valueFlag(GenericArguments.onlyOne(GenericArguments.catalogedElement(Text.of("generator"), CatalogTypes.GENERATOR_TYPE)), "g", "-generator")
@@ -65,7 +63,7 @@ public class Commands {
 	private CommandSpec cmdModifier = CommandSpec.builder()
 		    .description(Text.of(" Allows you to Add or remove WorldGeneratorModifier's from the given world. This will have no effect on existing chunks only ungenerated chunks."))
 		    .permission("pjw.cmd.world.modifier")	    
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
 		    		GenericArguments.catalogedElement(Text.of("modifier"), WorldGeneratorModifier.class),
     				GenericArguments.flags().flag("r").buildWith(GenericArguments.none()))
@@ -75,7 +73,7 @@ public class Commands {
 	private CommandSpec cmdRemove = CommandSpec.builder()
 		    .description(Text.of(" Delete worlds you no longer need. Worlds must be unloaded before you can delete them"))
 		    .permission("pjw.cmd.world.remove")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))))
 		    .executor(new CMDRemove())
 		    .build();
@@ -83,7 +81,7 @@ public class Commands {
 	private CommandSpec cmdDiffculty = CommandSpec.builder()
 		    .description(Text.of(" Set the difficulty level for each world"))
 		    .permission("pjw.cmd.world.difficulty")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
 		    		GenericArguments.optional(GenericArguments.catalogedElement(Text.of("difficulty"), Difficulty.class)))
 		    .executor(new CMDDifficulty())
@@ -92,7 +90,7 @@ public class Commands {
 	private CommandSpec cmdSetSpawn = CommandSpec.builder()
 		    .description(Text.of(" Sets the spawn point of specified world. If no arguments present sets spawn of current world to player location"))
 		    .permission("pjw.cmd.world.setspawn")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.seq(GenericArguments.world(Text.of("world")), GenericArguments.string(Text.of("x,y,z")))))
 		    .executor(new CMDSetSpawn())
 		    .build();
@@ -100,7 +98,7 @@ public class Commands {
 	private CommandSpec cmdHardcore = CommandSpec.builder()
 		    .description(Text.of(" Toggle on and off hardcore mode for world"))
 		    .permission("pjw.cmd.world.hardcore")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
 		    		GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))))
 		    .executor(new CMDHardcore())
@@ -109,7 +107,7 @@ public class Commands {
 	private CommandSpec cmdTime = CommandSpec.builder()
 		    .description(Text.of(" Set the time of world"))
 		    .permission("pjw.cmd.world.time")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
 		    		GenericArguments.optional(GenericArguments.longNum(Text.of("time"))))
 		    .executor(new CMDTime())
@@ -118,7 +116,7 @@ public class Commands {
 	private CommandSpec cmdLoadOnStartup = CommandSpec.builder()
 		    .description(Text.of(" Set whether to load world on startup"))
 		    .permission("pjw.cmd.world.loadonstartup")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
 		    		GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))))
 		    .executor(new CMDLoadOnStartup())
@@ -127,7 +125,7 @@ public class Commands {
 	private CommandSpec cmdWeather = CommandSpec.builder()
 		    .description(Text.of(" Set the weather of world"))
 		    .permission("pjw.cmd.world.weather")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
 		    		GenericArguments.optional(GenericArguments.string(Text.of("clear|rain|thunder"))),
 		    		GenericArguments.optional(GenericArguments.integer(Text.of("duration"))))
@@ -137,7 +135,7 @@ public class Commands {
 	private CommandSpec cmdPvp = CommandSpec.builder()
 		    .description(Text.of(" Toggle on and off pvp for world"))
 		    .permission("pjw.cmd.world.pvp")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
 		    		GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))))
 		    .executor(new CMDPvp())
@@ -146,7 +144,7 @@ public class Commands {
 	private CommandSpec cmdKeepSpawnLoaded = CommandSpec.builder()
 		    .description(Text.of(" Keeps spawn point of world loaded in memory"))
 		    .permission("pjw.cmd.world.keepspawnloaded")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
 		    		GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))))
 		    .executor(new CMDKeepSpawnLoaded())
@@ -155,7 +153,7 @@ public class Commands {
 	private CommandSpec cmdUseMapFeatures = CommandSpec.builder()
 		    .description(Text.of(" Keeps spawn point of world loaded in memory"))
 		    .permission("pjw.cmd.world.usemapfeatures")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
 		    		GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))))
 		    .executor(new CMDUseMapFeatures())
@@ -164,7 +162,7 @@ public class Commands {
 	private CommandSpec cmdProperties = CommandSpec.builder()
 		    .description(Text.of(" View all properties associated with a world"))
 		    .permission("pjw.cmd.world.properties")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))))
 		    .executor(new CMDProperties())
 		    .build();
@@ -178,7 +176,7 @@ public class Commands {
 	private CommandSpec cmdTeleport = CommandSpec.builder()
 		    .description(Text.of(" Teleport to specified world and location"))
 		    .permission("pjw.cmd.world.teleport")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
 		    		GenericArguments.flags()
     				.valueFlag(GenericArguments.string(Text.of("x,y,z")), "c")
@@ -189,7 +187,7 @@ public class Commands {
 	private CommandSpec cmdCopy = CommandSpec.builder()
 		    .description(Text.of(" Allows you to make a new world from an existing world"))
 		    .permission("pjw.cmd.world.copy")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("srcWorld"))), 
 		    		GenericArguments.optional(GenericArguments.string(Text.of("newWorld"))))
 		    .executor(new CMDCopy())
@@ -198,7 +196,7 @@ public class Commands {
 	private CommandSpec cmdRename = CommandSpec.builder()
 		    .description(Text.of(" Allows for renaming worlds. World must be unloaded before you can rename world"))
 		    .permission("pjw.cmd.world.rename")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("srcWorld"))), 
 		    		GenericArguments.optional(GenericArguments.string(Text.of("newWorld"))))
 		    .executor(new CMDRename())
@@ -207,7 +205,7 @@ public class Commands {
 	private CommandSpec cmdUnload = CommandSpec.builder()
 		    .description(Text.of(" Unloads specified world. If players are in world, they will be teleported to default spawn"))
 		    .permission("pjw.cmd.world.unload")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))))
 		    .executor(new CMDUnload())
 		    .build();
@@ -215,7 +213,7 @@ public class Commands {
 	private CommandSpec cmdLoad = CommandSpec.builder()
 		    .description(Text.of(" Loads specified world if exists"))
 		    .permission("pjw.cmd.world.load")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))))
 		    .executor(new CMDLoad())
 		    .build();
@@ -223,7 +221,7 @@ public class Commands {
 	private CommandSpec cmdImport = CommandSpec.builder()
 		    .description(Text.of(" Imports non sponge worlds, such as bukkit worlds"))
 		    .permission("pjw.cmd.world.import")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.string(Text.of("world"))), 
 		    		GenericArguments.optional(GenericArguments.catalogedElement(Text.of("dimensionType"), DimensionType.class)),
 		    		GenericArguments.optional(GenericArguments.catalogedElement(Text.of("generatorType"), GeneratorType.class)), 
@@ -234,7 +232,7 @@ public class Commands {
 	private CommandSpec cmdGamerule = CommandSpec.builder()
 		    .description(Text.of(" Configure varies world properties"))
 		    .permission("pjw.cmd.world.gamerule")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
 		    		GenericArguments.optional(new GameruleElement(Text.of("rule"))), 
 		    		GenericArguments.optional(GenericArguments.string(Text.of("value"))))
@@ -244,7 +242,7 @@ public class Commands {
 	private CommandSpec cmdGamemode = CommandSpec.builder()
 		    .description(Text.of(" Change gamemode of the specified world"))
 		    .permission("pjw.cmd.world.gamemode")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
 		    		GenericArguments.optional(new GameModeElement(Text.of("gamemode"))))
 		    .executor(new CMDGamemode())
@@ -253,7 +251,7 @@ public class Commands {
 	private CommandSpec cmdRegen = CommandSpec.builder()
 		    .description(Text.of(" Regenerates a world. You can preserve the seed or generate new random"))
 		    .permission("pjw.cmd.world.regen")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
 		    		GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))), 
 		    		GenericArguments.optional(GenericArguments.string(Text.of("seed"))))
@@ -263,20 +261,10 @@ public class Commands {
 	private CommandSpec cmdEnable = CommandSpec.builder()
 		    .description(Text.of(" Enable and disable worlds from loading"))
 		    .permission("pjw.cmd.world.enable")
-		    .arguments(element,
+		    .arguments(//element,
 		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
 		    		GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))))
 		    .executor(new CMDEnable())
-		    .build();
-	
-	private CommandSpec cmdFill = CommandSpec.builder()
-		    .description(Text.of(" Pre generate chunks in a world"))
-		    .permission("pjw.cmd.world.fill")
-		    .arguments(element,
-		    		GenericArguments.optional(GenericArguments.world(Text.of("world"))), 
-		    		GenericArguments.optional(GenericArguments.string(Text.of("diameter"))), 
-		    		GenericArguments.optional(GenericArguments.integer(Text.of("interval"))))
-		    .executor(new CMDFill())
 		    .build();
 	
 	public CommandSpec cmdWorld = CommandSpec.builder()
@@ -293,7 +281,7 @@ public class Commands {
 			.child(cmdWeather, "weather", "w")
 			.child(cmdPvp, "pvp", "p")
 			.child(cmdKeepSpawnLoaded, "keepspawnloaded", "k")
-			.child(cmdUseMapFeatures, "usemapfeatures", "u")
+			.child(cmdUseMapFeatures, "usemapfeatures", "f")
 			.child(cmdLoadOnStartup, "loadonstartup", "los")
 			.child(cmdList, "list", "ls")
 			.child(cmdTeleport, "teleport", "tp")
@@ -305,7 +293,6 @@ public class Commands {
 			.child(cmdEnable, "enable", "e")
 			.child(cmdGamemode, "gamemode", "gm")
 			.child(cmdGamerule, "gamerule", "gr")
-			.child(cmdFill, "fill", "f")
 			.child(cmdModifier, "modifier", "m")
 			.executor(new CMDWorld())
 			.build();

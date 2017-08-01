@@ -45,7 +45,7 @@ public class CMDUnload implements CommandExecutor {
 		}
 		World world = optionalWorld.get();
 
-		if(world.getUniqueId().equals(ConfigManager.get(Main.getPlugin()).getConfig().getNode("options", "world_root").getString())) {
+		if(world.getUniqueId().toString().equals(ConfigManager.get(Main.getPlugin()).getConfig().getNode("options", "world_root").getString())) {
 			throw new CommandException(Text.of(TextColors.RED, "You cannot unload the default world"), false);
 		}
 		
