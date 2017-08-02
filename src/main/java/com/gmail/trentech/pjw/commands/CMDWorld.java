@@ -15,7 +15,7 @@ public class CMDWorld implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		Help.executeList(src, Help.get("world").get().getChildren());
-		src.sendMessage(Text.of(TextColors.YELLOW, "world <command> --help"));	
+		src.sendMessage(Text.of(TextColors.YELLOW, " /helpme world <rawCommand>"));	
 		return CommandResult.success();
 	}
 

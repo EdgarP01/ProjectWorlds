@@ -262,29 +262,38 @@ public class EventManager {
 		Optional<World> optionalWorld = Sponge.getServer().getWorld(toName);
 
 		if (!optionalWorld.isPresent()) {
-			event.setCancelled(true);
 			return;
 		}
 		World world = optionalWorld.get();
 
 		Optional<Location<World>> optionalLocation = TeleportManager.getRandomLocation(world, 2000);
 
-		if(!optionalLocation.isPresent()) {
-			event.setCancelled(true);
-			return;
-		}
+		Location<World> location;
 		
-		Location<World> location = optionalLocation.get();
-
-		Transform<World> transform = new Transform<>(location.getExtent(), location.getPosition());
+		if(!optionalLocation.isPresent()) {
+			location = world.getSpawnLocation();
+		} else {
+			location = optionalLocation.get();
+		}
 
 		PortalAgent portalAgent = event.getPortalAgent();
 
-		optionalLocation = portalAgent.findOrCreatePortal(location);
+		optionalLocation = portalAgent.findPortal(location);
 
-		if (!portalAgent.findPortal(location).isPresent()) {
-			event.setToTransform(transform);
+		if(!optionalLocation.isPresent()) {
+			optionalLocation = portalAgent.createPortal(location);
+			
+			if(!optionalLocation.isPresent()) {
+				event.setCancelled(true);
+				return;
+			}
 		}
+		
+		location = optionalLocation.get();	
+		
+		Transform<World> transform = new Transform<>(location.getExtent(), location.getPosition());
+		
+		event.setToTransform(transform);
 
 		event.setUsePortalAgent(true);
 	}
