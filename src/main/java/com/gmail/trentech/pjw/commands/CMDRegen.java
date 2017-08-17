@@ -57,8 +57,6 @@ public class CMDRegen implements CommandExecutor {
 					} catch (Exception e) {
 						builder.seed(seed.hashCode());
 					}
-				} else {
-					builder.randomSeed();
 				}
 			}
 		}
@@ -76,7 +74,7 @@ public class CMDRegen implements CommandExecutor {
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Regenerating world.."));		
 
-		WorldArchetype settings = builder.enabled(true).loadsOnStartup(true).randomSeed().build(properties.getWorldName(), properties.getWorldName());
+		WorldArchetype settings = builder.enabled(true).loadsOnStartup(true).build(properties.getWorldName(), properties.getWorldName());
 
 		WorldProperties newProperties;
 		try {
