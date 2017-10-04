@@ -1,15 +1,12 @@
 package com.gmail.trentech.pjw.extra;
 
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.ImmutableBiomeVolume;
 import org.spongepowered.api.world.extent.MutableBlockVolume;
 import org.spongepowered.api.world.gen.GenerationPopulator;
 
 import com.flowpowered.math.vector.Vector3i;
-import com.gmail.trentech.pjw.Main;
 
 public class OceanBaseGeneratorPopulator implements GenerationPopulator {
 
@@ -29,9 +26,9 @@ public class OceanBaseGeneratorPopulator implements GenerationPopulator {
 			for (int y = yMin; y <= yMax; y++) {
 				for (int x = xMin; x <= xMax; x++) {
 					if(y < 64) {
-						buffer.setBlockType(x, y, z, BlockTypes.WATER, Cause.of(NamedCause.source(Main.getPlugin())));
+						buffer.setBlockType(x, y, z, BlockTypes.WATER);
 					} else {
-						buffer.setBlockType(x, y, z, BlockTypes.AIR, Cause.of(NamedCause.source(Main.getPlugin())));
+						buffer.setBlockType(x, y, z, BlockTypes.AIR);
 					}					
 				}
 			}
