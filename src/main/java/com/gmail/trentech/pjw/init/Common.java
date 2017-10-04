@@ -1,10 +1,17 @@
 package com.gmail.trentech.pjw.init;
 
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.world.DimensionType;
+import org.spongepowered.api.world.GeneratorType;
+import org.spongepowered.api.world.difficulty.Difficulty;
+import org.spongepowered.api.world.gen.WorldGeneratorModifier;
+
 import com.gmail.trentech.pjc.core.ConfigManager;
 import com.gmail.trentech.pjc.help.Argument;
 import com.gmail.trentech.pjc.help.Help;
 import com.gmail.trentech.pjc.help.Usage;
 import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.utils.Gamemode;
 
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 
@@ -24,22 +31,73 @@ public class Common {
 				.setUsage(usageCopy)
 				.addExample("/world copy srcWorld newWorld");
 		
-		Usage usageCreate = new Usage(Argument.of("<world>", "Specifies the name of the world"))
-				.addArgument(Argument.of("[-d <dimensionType>]", "Sets the DimensionType. Vanilla types are minecraft:overworld, minecraft:nether and minecraft:the_end"))
-				.addArgument(Argument.of("[-g <generatorType>]", "Sets the GeneratorType. Vanilla types are OVERWORLD, NETHER, THE_END, LARGE_BIOMES, FLAT and AMPLIFIED"))
-				.addArgument(Argument.of("[-m <modifer>]", "Sets the WorldGeneratorModifer. Sponge modifers included by Sponge are sponge:void and sponge:skylands. Multiple values accepted"))
+		String dimTypes = null;
+	    for(DimensionType type : Sponge.getRegistry().getAllOf(DimensionType.class)) {
+	    	if(dimTypes == null) {
+	    		dimTypes = type.getId();
+	    	} else {
+	    		dimTypes = dimTypes + "\n" + type.getId();
+	    	}
+	    }
+	    
+		String genTypes = null;
+	    for(GeneratorType type : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
+	    	if(genTypes == null) {
+	    		genTypes = type.getId();
+	    	} else {
+	    		genTypes = genTypes + "\n" + type.getId();
+	    	}
+	    }
+	    
+		String modTypes = null;
+	    for(WorldGeneratorModifier type : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
+	    	if(modTypes == null) {
+	    		modTypes = type.getId();
+	    	} else {
+	    		modTypes = modTypes + "\n" + type.getId();
+	    	}
+	    }
+	    
+		String gameModes = null;
+	    for(Gamemode type : Gamemode.values()) {
+	    	if(gameModes == null) {
+	    		gameModes = type.getGameMode().getName() + "(" + type.getIndex() + ")";
+	    	} else {
+	    		gameModes = gameModes + "\n" + type.getGameMode().getName() + " -or- " + type.getIndex();
+	    	}
+	    }
+	    
+		String difficulties = null;
+	    for(Difficulty type : Sponge.getRegistry().getAllOf(Difficulty.class)) {
+	    	if(difficulties == null) {
+	    		difficulties = type.getId();
+	    	} else {
+	    		difficulties = difficulties + "\n" + type.getId();
+	    	}
+	    }
+	    
+	    Usage usageCreate = new Usage(Argument.of("<world>", "Specifies the name of the world"))
+				.addArgument(Argument.of("[-d <dimensionType>]", dimTypes))
+				.addArgument(Argument.of("[-g <generatorType>]", genTypes))
+				.addArgument(Argument.of("[-m <modifier>]", modTypes))
+				.addArgument(Argument.of("[-df <difficulty>]", difficulties))
+				.addArgument(Argument.of("[-gm <gameMode>]", gameModes))
 				.addArgument(Argument.of("[-s <seed>]", "Sets the seed. If not specified this will default to using a random seed."))
-				.addArgument(Argument.of("[-c <true|false>]", "Set whether to generator bonus chest. Default is false"))
+				.addArgument(Argument.of("[-l <true|false>]", "Sets whether to load when the server starts. Default is true"))
+				.addArgument(Argument.of("[-k <true|false>]", "Sets whether the spawn chunks should remain loaded when no players are present. Default is true"))
+				.addArgument(Argument.of("[-b <true|false>]", "Set whether to generator bonus chest. Default is false"))
+				.addArgument(Argument.of("[-c <true|false>]", "Sets whether commands are allowed to be executed. Default is true"))
 				.addArgument(Argument.of("[-f <true|false>]", "Sets whether this world will generate map features such as villages and strongholds. Default is true"));
+	    
 		Help worldCreate = new Help("world create", "create", "Allows you to creating new worlds with a combination of features. This does not automatically load newly created worlds.")
 				.setPermission("pjw.cmd.world.create")
 				.setUsage(usageCreate)
-				.addExample("/world create NewWorld -d minecraft:overworld -g overworld")
-				.addExample("/world create NewWorld -d minecraft:nether -m sponge:skylands")
+				.addExample("/world create NewWorld -d minecraft:overworld -g minecraft:overworld")
+				.addExample("/world create NewWorld -d sponge:nether -m sponge:skylands")
 				.addExample("/world create NewWorld -s -12309830198412353456");
 		
 		Usage usageModifier = new Usage(Argument.of("<world>", "Specifies the targetted world"))
-				.addArgument(Argument.of("<modifier>", "Specifies the name of the WorldGeneratorModifier you want to add or remove."))
+				.addArgument(Argument.of("<modifier>", modTypes))
 				.addArgument(Argument.of("[-r]", "Adding this flag removes the specified modifier from the given world"));
 		
 		Help worldModifier = new Help("world modifier", "modifier", "Allows you to add or remove WorldGeneratorModifier's from the given world. This will have no effect on existing chunks only ungenerated chunks.")
@@ -56,7 +114,7 @@ public class Common {
 				.addExample("/world remove OldWorld");
 		
 		Usage usageDifficulty = new Usage(Argument.of("<world>", "Specifies the targetted world"))
-				.addArgument(Argument.of("[difficulty]", "Specifies the new difficulty level. Must be one of the following: PEACEFUL, EASY, NORMAL, HARD"));
+				.addArgument(Argument.of("[difficulty]", difficulties));
 		
 		Help worldDifficulty = new Help("world difficulty", "difficulty", "Set the difficulty level for each world")
 				.setPermission("pjw.cmd.world.difficulty")
@@ -90,7 +148,7 @@ public class Common {
 				.addExample("/world fill MyWorld 1000");
 		
 		Usage usageGamemode = new Usage(Argument.of("<world>", "Specifies the targetted world"))
-				.addArgument(Argument.of("[gamemode]", "Must be one of the following: survival(0), creative(1), adventure(2), spectator(3)"));
+				.addArgument(Argument.of("[gamemode]", gameModes));
 		
 		Help worldGamemode = new Help("world gamemode", "gamemode", "Change gamemode of the specified world")
 				.setPermission("pjw.cmd.world.gamemode")
@@ -134,9 +192,9 @@ public class Common {
 				.addExample("/world weather MyWorld");
 		
 		Usage usageImport = new Usage(Argument.of("<world>", "Specifies the targetted world"))
-				.addArgument(Argument.of("<dimensionType>", "Sets the DimensionType. Vanilla types are minecraft:overworld, minecraft:nether and minecraft:the_end"))
-				.addArgument(Argument.of("<generatorType>", "Sets the GeneratorType. Vanilla types are OVERWORLD, NETHER, THE_END, LARGE_BIOMES, FLAT and AMPLIFIED"))
-				.addArgument(Argument.of("[modifer]", "Sets the WorldGeneratorModifer. Sponge modifers included by Sponge are sponge:void and sponge:skylands"));
+				.addArgument(Argument.of("<dimensionType>", dimTypes))
+				.addArgument(Argument.of("<generatorType>", genTypes))
+				.addArgument(Argument.of("[modifer]", modTypes));
 		
 		Help worldImport = new Help("world import", "import", "Import worlds not native to Sponge")
 				.setPermission("pjw.cmd.world.import")

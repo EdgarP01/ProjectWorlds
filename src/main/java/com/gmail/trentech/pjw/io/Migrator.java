@@ -65,7 +65,7 @@ public class Migrator {
 			SpongeData spongeData = new SpongeData(dest);
 			
 			if (!spongeData.exists()) {
-				Main.instance().getLog().warn(name + ": Requires importing. /world import " + name + " <dimensionType> <generatorType> [modifier..]");
+				Main.instance().getLog().warn(name + ": Requires importing. /world import " + name + " <type> <generator>");
 			}
 		}
 	}
