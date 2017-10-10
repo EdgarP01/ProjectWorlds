@@ -12,6 +12,8 @@ import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -88,13 +90,19 @@ public class CommandCreate implements CommandCallable {
 					}			
 					builder.dimension(optionalDimension.get());
 				} else if (arg.equalsIgnoreCase("-g") || arg.equalsIgnoreCase("-generator")) {
-					Optional<GeneratorType> optionalGenerator = Sponge.getRegistry().getType(GeneratorType.class, value);
+					String[] split = value.split(",");
+					
+					Optional<GeneratorType> optionalGenerator = Sponge.getRegistry().getType(GeneratorType.class, split[0]);
 					
 					if(!optionalGenerator.isPresent()) {
 						source.sendMessage(Text.of(TextColors.YELLOW, value, " is not a valid GeneratorType"));
 						throw new CommandException(getHelp().getUsageText());
-					}			
+					}
 					builder.generator(optionalGenerator.get());
+
+					if(split.length == 2) {
+						builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), split[1]));
+					}
 				} else if (arg.equalsIgnoreCase("-gm") || arg.equalsIgnoreCase("-gamemode")) {
 					Optional<GameMode> optionalGamemode = Optional.empty();
 					
