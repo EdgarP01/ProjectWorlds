@@ -227,6 +227,7 @@ public class EventManager {
 			if (!player.hasPermission("pjw.worlds." + properties.getWorldName())) {
 				player.sendMessage(Text.of(TextColors.RED, "You do not have permission to travel to ", properties.getWorldName()));
 				event.setCancelled(true);
+				return;
 			}
 			
 			if(properties.getGameRule("forceGamemode").get().equalsIgnoreCase("true")) {
