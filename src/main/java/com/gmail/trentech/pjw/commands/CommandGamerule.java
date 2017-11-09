@@ -86,7 +86,7 @@ public class CommandGamerule implements CommandCallable {
 		String value;
 		
 		try {
-			value = args[1];
+			value = args[2];
 			
 			if (!isValid(rule, value)) {
 				source.sendMessage(Text.of(TextColors.YELLOW, value, " is not a valid Value for Gamerule ", rule));
