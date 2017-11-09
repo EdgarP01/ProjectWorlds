@@ -28,10 +28,6 @@ public class CommandList implements CommandCallable {
 
 	@Override
 	public CommandResult process(CommandSource source, String arguments) throws CommandException {
-		if(arguments.equalsIgnoreCase("list")) {
-			throw new CommandException(getHelp().getUsageText());
-		}
-
 		if(arguments.equalsIgnoreCase("--help")) {
 			help.execute(source);
 			return CommandResult.success();
