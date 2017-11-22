@@ -20,7 +20,6 @@ import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjc.help.Help;
 import com.gmail.trentech.pjw.Main;
-import com.gmail.trentech.pjw.commands.old.CMDCreate;
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.io.WorldData;
 import com.gmail.trentech.pjw.utils.Utils;
@@ -76,9 +75,9 @@ public class CommandLoad implements CommandCallable {
 				return;
 			}
 
-			if (CMDCreate.worlds.contains(world.getWorldName())) {
+			if (CommandCreate.worlds.contains(world.getWorldName())) {
 				Utils.createPlatform(load.get().getSpawnLocation().getRelative(Direction.DOWN));
-				CMDCreate.worlds.remove(world.getWorldName());
+				CommandCreate.worlds.remove(world.getWorldName());
 			}
 
 			source.sendMessage(Text.of(TextColors.DARK_GREEN, world.getWorldName(), " loaded successfully"));
