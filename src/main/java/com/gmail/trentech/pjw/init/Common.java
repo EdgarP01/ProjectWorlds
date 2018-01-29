@@ -61,7 +61,7 @@ public class Common {
 		String gameModes = null;
 	    for(Gamemode type : Gamemode.values()) {
 	    	if(gameModes == null) {
-	    		gameModes = type.getGameMode().getName() + "(" + type.getIndex() + ")";
+	    		gameModes = type.getGameMode().getName() + " -or- " + type.getIndex();
 	    	} else {
 	    		gameModes = gameModes + "\n" + type.getGameMode().getName() + " -or- " + type.getIndex();
 	    	}
