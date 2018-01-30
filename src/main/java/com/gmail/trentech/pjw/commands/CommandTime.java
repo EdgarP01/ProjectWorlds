@@ -70,6 +70,7 @@ public class CommandTime implements CommandCallable {
 		}
 
 		world.setWorldTime(time);
+		Sponge.getServer().saveWorldProperties(world);
 		
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Set time of ", world.getWorldName(), " to ", TextColors.YELLOW, Utils.getTime(world.getWorldTime())));
 		return CommandResult.success();

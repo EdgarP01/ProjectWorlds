@@ -59,6 +59,7 @@ public class CommandEnable implements CommandCallable {
 		if(bool.equalsIgnoreCase("true") || bool.equalsIgnoreCase("false")) {
 			world.setEnabled(Boolean.valueOf(bool));
 		}
+		Sponge.getServer().saveWorldProperties(world);
 		
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Set enabled of ", world.getWorldName(), " to ", TextColors.YELLOW, bool));
 

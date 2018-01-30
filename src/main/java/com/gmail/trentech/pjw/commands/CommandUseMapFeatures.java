@@ -59,6 +59,7 @@ public class CommandUseMapFeatures implements CommandCallable {
 		if(bool.equalsIgnoreCase("true") || bool.equalsIgnoreCase("false")) {
 			world.setMapFeaturesEnabled(Boolean.valueOf(bool));
 		}
+		Sponge.getServer().saveWorldProperties(world);
 		
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Set use map features of ", world.getWorldName(), " to ", TextColors.YELLOW, bool));
 

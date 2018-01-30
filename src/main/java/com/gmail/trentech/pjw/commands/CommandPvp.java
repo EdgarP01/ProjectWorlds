@@ -57,8 +57,9 @@ public class CommandPvp implements CommandCallable {
 		WorldProperties world = optionalWorld.get();
 
 		if(bool.equalsIgnoreCase("true") || bool.equalsIgnoreCase("false")) {
-			world.setEnabled(Boolean.valueOf(bool));
+			world.setPVPEnabled(Boolean.valueOf(bool));
 		}
+		Sponge.getServer().saveWorldProperties(world);
 		
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Set pvp of ", world.getWorldName(), " to ", TextColors.YELLOW, bool));
 

@@ -59,6 +59,7 @@ public class CommandKeepSpawnLoaded implements CommandCallable {
 		if(bool.equalsIgnoreCase("true") || bool.equalsIgnoreCase("false")) {
 			world.setKeepSpawnLoaded(Boolean.valueOf(bool));
 		}
+		Sponge.getServer().saveWorldProperties(world);
 		
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Set keep spawn loaded of ", world.getWorldName(), " to ", TextColors.YELLOW, bool));
 

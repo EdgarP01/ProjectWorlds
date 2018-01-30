@@ -66,7 +66,8 @@ public class CommandDifficulty implements CommandCallable {
 		Difficulty difficulty = optionalDifficulty.get();
 		
 		world.setDifficulty(difficulty);
-
+		Sponge.getServer().saveWorldProperties(world);
+		
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Set difficulty of ", world.getWorldName(), " to ", TextColors.YELLOW, difficulty.getTranslation().get().toUpperCase()));
 		
 		return CommandResult.success();

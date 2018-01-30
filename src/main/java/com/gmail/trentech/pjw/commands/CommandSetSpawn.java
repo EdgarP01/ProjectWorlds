@@ -79,7 +79,8 @@ public class CommandSetSpawn implements CommandCallable {
 		}
 
 		properties.setSpawnPosition(vector3i);
-
+		Sponge.getServer().saveWorldProperties(properties);
+		
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Set spawn of world ", properties.getWorldName(), " to x: ", properties.getSpawnPosition().getX(), ", y: ", properties.getSpawnPosition().getY(), ", z: ", properties.getSpawnPosition().getZ()));
 
 		return CommandResult.success();

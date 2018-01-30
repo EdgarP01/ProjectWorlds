@@ -59,6 +59,7 @@ public class CommandHardcore implements CommandCallable {
 		if(bool.equalsIgnoreCase("true") || bool.equalsIgnoreCase("false")) {
 			world.setHardcore(Boolean.valueOf(bool));
 		}
+		Sponge.getServer().saveWorldProperties(world);
 		
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Set hardcore of ", world.getWorldName(), " to ", TextColors.YELLOW, bool));
 

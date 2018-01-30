@@ -59,6 +59,7 @@ public class CommandLoadOnStartup implements CommandCallable {
 		if(bool.equalsIgnoreCase("true") || bool.equalsIgnoreCase("false")) {
 			world.setLoadOnStartup(Boolean.valueOf(bool));
 		}
+		Sponge.getServer().saveWorldProperties(world);
 		
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Set load on startup of ", world.getWorldName(), " to ", TextColors.YELLOW, bool));
 
