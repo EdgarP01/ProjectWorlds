@@ -67,7 +67,7 @@ public class CommandLoad implements CommandCallable {
 		source.sendMessage(Text.of(TextColors.YELLOW, "Preparing spawn area. This may take a minute."));
 
 		
-		Task.builder().async().delayTicks(20).execute(c -> {
+		Task.builder().delayTicks(20).execute(c -> {
 			Optional<World> load = Sponge.getServer().loadWorld(world);
 
 			if (!load.isPresent()) {
