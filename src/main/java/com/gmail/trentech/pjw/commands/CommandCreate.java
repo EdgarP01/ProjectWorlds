@@ -2,8 +2,6 @@ package com.gmail.trentech.pjw.commands;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,7 +59,7 @@ public class CommandCreate implements CommandCallable {
 
 		WorldArchetype.Builder builder = WorldArchetype.builder();
 		
-		Collection<WorldGeneratorModifier> modifiers = Collections.<WorldGeneratorModifier>emptyList();
+		List<WorldGeneratorModifier> modifiers = new ArrayList<>();
 		
 		if(args.length > 2) {
 			boolean skip = false;
@@ -123,7 +121,7 @@ public class CommandCreate implements CommandCallable {
 					if(!optionalModifier.isPresent()) {
 						source.sendMessage(Text.of(TextColors.YELLOW, value, " is not a valid WorldGeneratorModifier"));
 						throw new CommandException(getHelp().getUsageText());
-					}			
+					}
 					modifiers.add(optionalModifier.get());
 				} else if (arg.equalsIgnoreCase("-s") || arg.equalsIgnoreCase("-seed")) {
 					try {
