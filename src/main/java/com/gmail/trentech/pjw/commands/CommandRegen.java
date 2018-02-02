@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
@@ -88,7 +89,7 @@ public class CommandRegen implements CommandCallable {
 				builder.randomSeed();
 			}
 		} catch(Exception e) {}
-		
+
 		try {
 			CompletableFuture<Boolean> delete = Sponge.getServer().deleteWorld(properties);
 			while (!delete.isDone()) {
@@ -102,7 +103,7 @@ public class CommandRegen implements CommandCallable {
 
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Regenerating world.."));		
 
-		WorldArchetype settings = builder.enabled(true).loadsOnStartup(true).randomSeed().build(properties.getWorldName(), properties.getWorldName());
+		WorldArchetype settings = builder.enabled(true).loadsOnStartup(true).build(properties.getWorldName() + "_" + (ThreadLocalRandom.current().nextInt(100) + 1), properties.getWorldName());
 
 		WorldProperties newProperties;
 		try {
@@ -113,7 +114,7 @@ public class CommandRegen implements CommandCallable {
 		}
 
 		
-		Task.builder().async().delayTicks(20).execute(c -> {
+		Task.builder().delayTicks(20).execute(c -> {
 			Optional<World> load = Sponge.getServer().loadWorld(newProperties);
 
 			if (!load.isPresent()) {
