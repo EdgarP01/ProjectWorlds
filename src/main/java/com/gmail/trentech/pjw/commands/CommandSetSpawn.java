@@ -25,56 +25,62 @@ public class CommandSetSpawn implements CommandCallable {
 
 	@Override
 	public CommandResult process(CommandSource source, String arguments) throws CommandException {
-		if(arguments.equalsIgnoreCase("setspawn")) {
-			throw new CommandException(getHelp().getUsageText());
-		}
-
-		String[] args = arguments.split(" ");
-		
-		if(args[args.length - 1].equalsIgnoreCase("--help")) {
-			getHelp().execute(source);
-			return CommandResult.success();
-		}
-		
 		String worldName;
 		WorldProperties properties;
-		
-		try {
-			worldName = args[0];
-			
-			Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(worldName);
-			
-			if(!optionalProperties.isPresent()) {
-				throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"), false);
-			}
-			properties = optionalProperties.get();
-		} catch(Exception e) {
-			if(source instanceof Player) {
-				properties = ((Player) source).getWorld().getProperties();
-			} else {
-				source.sendMessage(Text.of(TextColors.YELLOW, "Console must provide <world> and <x,y,z>"));
-				throw new CommandException(getHelp().getUsageText());
-			}
-		}
-
-		String coords;
 		Vector3i vector3i;
 		
-		try {
-			coords = args[1];
-			String[] coordinates = args[1].split(",");
-
-			if (!isValidLocation(coordinates)) {
-				throw new CommandException(Text.of(TextColors.RED, coords.toString(), " is not valid"), true);
-			}
-			
-			vector3i = new Vector3i().add(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]), Integer.parseInt(coordinates[2]));
-		} catch (Exception e) {
+		if(arguments.equalsIgnoreCase("setspawn")) {
 			if(source instanceof Player) {
+				properties = ((Player) source).getWorld().getProperties();
 				vector3i = ((Player) source).getLocation().getBlockPosition();
 			} else {
 				source.sendMessage(Text.of(TextColors.YELLOW, "Console must provide <world> and <x,y,z>"));
 				throw new CommandException(getHelp().getUsageText());
+			}
+		} else {
+			String[] args = arguments.split(" ");
+			
+			if(args[args.length - 1].equalsIgnoreCase("--help")) {
+				getHelp().execute(source);
+				return CommandResult.success();
+			}
+			
+			try {
+				worldName = args[0];
+				
+				Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(worldName);
+				
+				if(!optionalProperties.isPresent()) {
+					throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"), false);
+				}
+				properties = optionalProperties.get();
+			} catch(Exception e) {
+				if(source instanceof Player) {
+					properties = ((Player) source).getWorld().getProperties();
+				} else {
+					source.sendMessage(Text.of(TextColors.YELLOW, "Console must provide <world> and <x,y,z>"));
+					throw new CommandException(getHelp().getUsageText());
+				}
+			}
+			
+			String coords;
+
+			try {
+				coords = args[1];
+				String[] coordinates = args[1].split(",");
+
+				if (!isValidLocation(coordinates)) {
+					throw new CommandException(Text.of(TextColors.RED, coords.toString(), " is not valid"), true);
+				}
+				
+				vector3i = new Vector3i().add(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]), Integer.parseInt(coordinates[2]));
+			} catch (Exception e) {
+				if(source instanceof Player) {
+					vector3i = ((Player) source).getLocation().getBlockPosition();
+				} else {
+					source.sendMessage(Text.of(TextColors.YELLOW, "Console must provide <world> and <x,y,z>"));
+					throw new CommandException(getHelp().getUsageText());
+				}
 			}
 		}
 
