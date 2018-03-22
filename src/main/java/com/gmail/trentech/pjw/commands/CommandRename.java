@@ -47,7 +47,7 @@ public class CommandRename implements CommandCallable {
 			newWorldName = args[1];
 		} catch(Exception e) {
 			throw new CommandException(getHelp().getUsageText());
-		}
+		}	
 		
 		Optional<WorldProperties> optionalWorld = Sponge.getServer().getWorldProperties(srcWorldName);
 		
@@ -56,6 +56,10 @@ public class CommandRename implements CommandCallable {
 		}
 		WorldProperties world = optionalWorld.get();
 
+		if (Sponge.getServer().getWorld(world.getWorldName()).isPresent()) {
+			throw new CommandException(Text.of(TextColors.RED, world.getWorldName(), " must be unloaded before you can delete"), false);
+		}
+		
 		if (Sponge.getServer().getWorldProperties(newWorldName).isPresent()) {
 			throw new CommandException(Text.of(TextColors.RED, newWorldName, " already exists"), false);
 		}
