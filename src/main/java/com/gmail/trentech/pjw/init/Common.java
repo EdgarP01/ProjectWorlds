@@ -93,7 +93,7 @@ public class Common {
 				.setPermission("pjw.cmd.world.create")
 				.setUsage(usageCreate)
 				.addExample("/world create NewWorld -d minecraft:overworld -g minecraft:overworld")
-				.addExample("/world create NewWorld -g minecraft:flat,3;30*minecraft:bedrock;1")
+				.addExample("/world create NewWorld -g minecraft:flat{3;30*minecraft:bedrock;1}")
 				.addExample("/world create NewWorld -d sponge:nether -m sponge:skylands")
 				.addExample("/world create NewWorld -s -12309830198412353456");
 		

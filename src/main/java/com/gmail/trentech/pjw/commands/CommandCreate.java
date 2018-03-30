@@ -88,7 +88,7 @@ public class CommandCreate implements CommandCallable {
 					}			
 					builder.dimension(optionalDimension.get());
 				} else if (arg.equalsIgnoreCase("-g") || arg.equalsIgnoreCase("-generator")) {
-					String[] split = value.split(",");
+					String[] split = value.split("\\{");
 					
 					Optional<GeneratorType> optionalGenerator = Sponge.getRegistry().getType(GeneratorType.class, split[0]);
 					
@@ -99,7 +99,7 @@ public class CommandCreate implements CommandCallable {
 					builder.generator(optionalGenerator.get());
 
 					if(split.length == 2) {
-						builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), split[1]));
+						builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), split[1].replace("\\}", "")));
 					}
 				} else if (arg.equalsIgnoreCase("-gm") || arg.equalsIgnoreCase("-gamemode")) {
 					Optional<GameMode> optionalGamemode = Optional.empty();
