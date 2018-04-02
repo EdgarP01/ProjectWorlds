@@ -99,6 +99,7 @@ public class CommandCreate implements CommandCallable {
 					builder.generator(optionalGenerator.get());
 
 					if(split.length == 2) {
+						source.sendMessage(Text.of(TextColors.YELLOW, "Custom Settings are not validated. Any errors and it will not apply correctly."));
 						builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), split[1].replace("\\}", "")));
 					}
 				} else if (arg.equalsIgnoreCase("-gm") || arg.equalsIgnoreCase("-gamemode")) {
