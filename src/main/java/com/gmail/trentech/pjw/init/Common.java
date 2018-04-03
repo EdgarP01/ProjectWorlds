@@ -79,6 +79,7 @@ public class Common {
 	    Usage usageCreate = new Usage(Argument.of("<world>", "Specifies the name of the world"))
 				.addArgument(Argument.of("[-d <dimensionType>]", dimTypes))
 				.addArgument(Argument.of("[-g <generatorType>]", genTypes))
+				.addArgument(Argument.of("[-o <options>]", "Sets custom world generator settings. Create unique worlds or simply customize flat worlds."))
 				.addArgument(Argument.of("[-m <modifier>]", modTypes))
 				.addArgument(Argument.of("[-df <difficulty>]", difficulties))
 				.addArgument(Argument.of("[-gm <gameMode>]", gameModes))
@@ -93,7 +94,7 @@ public class Common {
 				.setPermission("pjw.cmd.world.create")
 				.setUsage(usageCreate)
 				.addExample("/world create NewWorld -d minecraft:overworld -g minecraft:overworld")
-				.addExample("/world create NewWorld -g minecraft:flat{3;30*minecraft:bedrock;1}")
+				.addExample("/world create NewWorld -g minecraft:flat -o 3;30*minecraft:bedrock;1")
 				.addExample("/world create NewWorld -d sponge:nether -m sponge:skylands")
 				.addExample("/world create NewWorld -s -12309830198412353456");
 		

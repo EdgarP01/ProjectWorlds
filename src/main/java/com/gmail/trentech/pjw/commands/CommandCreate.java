@@ -17,7 +17,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.DimensionType;
 import org.spongepowered.api.world.GeneratorType;
-import org.spongepowered.api.world.GeneratorTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.WorldArchetype;
@@ -89,9 +88,9 @@ public class CommandCreate implements CommandCallable {
 					}			
 					builder.dimension(optionalDimension.get());
 				} else if (arg.equalsIgnoreCase("-g") || arg.equalsIgnoreCase("-generator")) {
-					String[] split = value.split("\\{");
+					//String[] split = value.split("\\{");
 					
-					Optional<GeneratorType> optionalGenerator = Sponge.getRegistry().getType(GeneratorType.class, split[0]);
+					Optional<GeneratorType> optionalGenerator = Sponge.getRegistry().getType(GeneratorType.class, value);
 					
 					if(!optionalGenerator.isPresent()) {
 						source.sendMessage(Text.of(TextColors.YELLOW, value, " is not a valid GeneratorType"));
@@ -99,15 +98,18 @@ public class CommandCreate implements CommandCallable {
 					}
 					builder.generator(optionalGenerator.get());
 
-					if(split.length == 2) {
-						source.sendMessage(Text.of(TextColors.YELLOW, "Custom Settings are not validated. Any errors and it will not apply correctly."));
-						
-						if(optionalGenerator.get().equals(GeneratorTypes.FLAT)) {
-							builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), split[1].replace("}", "")));
-						} else {
-							builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), "{" + split[1]));
-						}
-					}
+//					if(split.length == 2) {
+//						source.sendMessage(Text.of(TextColors.YELLOW, "Custom Settings are not validated. Any errors and it will not apply correctly."));
+//						
+//						if(optionalGenerator.get().equals(GeneratorTypes.FLAT)) {
+//							builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), split[1].replace("}", "")));
+//						} else {
+//							builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), "{" + split[1]));
+//						}
+//					}
+				} else if (arg.equalsIgnoreCase("-o") || arg.equalsIgnoreCase("-options")) {
+					source.sendMessage(Text.of(TextColors.YELLOW, "Custom Settings are not validated. Any errors and it will not apply correctly."));
+					builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), value));
 				} else if (arg.equalsIgnoreCase("-gm") || arg.equalsIgnoreCase("-gamemode")) {
 					Optional<GameMode> optionalGamemode = Optional.empty();
 					
