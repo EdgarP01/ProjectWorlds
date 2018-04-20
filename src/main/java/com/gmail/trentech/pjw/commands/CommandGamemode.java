@@ -79,6 +79,8 @@ public class CommandGamemode implements CommandCallable {
 		world.setGameMode(gameMode);
 		Sponge.getServer().saveWorldProperties(world);
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Set gamemode of ", world.getWorldName(), " to ", TextColors.YELLOW, gameMode.getTranslation().get().toUpperCase()));
+		source.sendMessage(Text.of(TextColors.YELLOW, "To allow players to switch gamemode automatically, don't forget to set forceGamemode gamerule"));
+		source.sendMessage(Text.of(TextColors.YELLOW, "/world gamerule ", world.getWorldName(), " forceGamemode true"));
 		
 		return CommandResult.success();
 	}
