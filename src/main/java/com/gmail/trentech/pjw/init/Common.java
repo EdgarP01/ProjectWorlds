@@ -34,27 +34,27 @@ public class Common {
 		String dimTypes = null;
 	    for(DimensionType type : Sponge.getRegistry().getAllOf(DimensionType.class)) {
 	    	if(dimTypes == null) {
-	    		dimTypes = type.getId();
+	    		dimTypes = type.getKey().toString();
 	    	} else {
-	    		dimTypes = dimTypes + "\n" + type.getId();
+	    		dimTypes = dimTypes + "\n" + type.getKey().toString();
 	    	}
 	    }
 	    
 		String genTypes = null;
 	    for(GeneratorType type : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
 	    	if(genTypes == null) {
-	    		genTypes = type.getId();
+	    		genTypes = type.getKey().toString();
 	    	} else {
-	    		genTypes = genTypes + "\n" + type.getId();
+	    		genTypes = genTypes + "\n" + type.getKey().toString();
 	    	}
 	    }
 	    
 		String modTypes = null;
 	    for(WorldGeneratorModifier type : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
 	    	if(modTypes == null) {
-	    		modTypes = type.getId();
+	    		modTypes = type.getKey().toString();
 	    	} else {
-	    		modTypes = modTypes + "\n" + type.getId();
+	    		modTypes = modTypes + "\n" + type.getKey().toString();
 	    	}
 	    }
 	    
@@ -70,9 +70,9 @@ public class Common {
 		String difficulties = null;
 	    for(Difficulty type : Sponge.getRegistry().getAllOf(Difficulty.class)) {
 	    	if(difficulties == null) {
-	    		difficulties = type.getId();
+	    		difficulties = type.getKey().toString();
 	    	} else {
-	    		difficulties = difficulties + "\n" + type.getId();
+	    		difficulties = difficulties + "\n" + type.getKey().toString();
 	    	}
 	    }
 	    
