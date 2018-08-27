@@ -79,7 +79,7 @@ public class Common {
 	    Usage usageCreate = new Usage(Argument.of("<world>", "Specifies the name of the world"))
 				.addArgument(Argument.of("[-d <dimensionType>]", dimTypes))
 				.addArgument(Argument.of("[-g <generatorType>]", genTypes))
-				.addArgument(Argument.of("[-o <options>]", "Sets custom world generator settings. Create unique worlds or simply customize flat worlds."))
+				.addArgument(Argument.of("[-o <options>]", "Sets custom world generator settings. Create unique worlds or simply customize flat worlds. Check out http://minecraft.tools/en/ for generated json strings"))
 				.addArgument(Argument.of("[-m <modifier>]", modTypes))
 				.addArgument(Argument.of("[-df <difficulty>]", difficulties))
 				.addArgument(Argument.of("[-gm <gameMode>]", gameModes))
