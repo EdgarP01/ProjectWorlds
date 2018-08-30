@@ -1,6 +1,5 @@
 package com.gmail.trentech.pjw.extra;
 
-import org.spongepowered.api.CatalogKey;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.world.gen.WorldGenerator;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
@@ -25,11 +24,6 @@ public class OceanWorldGeneratorModifier implements WorldGeneratorModifier {
 	@Override
 	public String getName() {
 		return "Ocean";
-	}
-
-	@Override
-	public CatalogKey getKey() {
-		return CatalogKey.of("pjw", "ocean");
 	}
 
 }

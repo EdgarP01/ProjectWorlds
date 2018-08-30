@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.spongepowered.api.CatalogKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Transform;
@@ -90,8 +89,8 @@ public class EventManager {
 		
 		if(!properties.getGeneratorModifiers().isEmpty()) {
 			for(WorldGeneratorModifier modifier : properties.getGeneratorModifiers()) {
-				if(modifier.getKey().toString().equals("pjw:void")) {
-					modifiers.add(Sponge.getRegistry().getType(WorldGeneratorModifier.class, CatalogKey.sponge("void")).get());
+				if(modifier.getId().equals("pjw:void")) {
+					modifiers.add(Sponge.getRegistry().getType(WorldGeneratorModifier.class, "sponge:void").get());
 					b = true;
 				} else {
 					modifiers.add(modifier);

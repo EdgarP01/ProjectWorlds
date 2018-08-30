@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import org.spongepowered.api.CatalogKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
@@ -63,7 +62,7 @@ public class CommandModifier implements CommandCallable {
 			List<Text> list = new ArrayList<>();
 
 			for (WorldGeneratorModifier modifier : modifiers) {
-				list.add(Text.of(TextColors.WHITE, modifier.getKey().toString()));
+				list.add(Text.of(TextColors.WHITE, modifier.getId()));
 			}
 
 			if (source instanceof Player) {
@@ -83,8 +82,7 @@ public class CommandModifier implements CommandCallable {
 			return CommandResult.success();
 		}
 
-		String[] key = mod.split(":");
-		Optional<WorldGeneratorModifier> optionalModifier = Sponge.getRegistry().getType(WorldGeneratorModifier.class, CatalogKey.of(key[0], key[1]));
+		Optional<WorldGeneratorModifier> optionalModifier = Sponge.getRegistry().getType(WorldGeneratorModifier.class, mod);
 		
 		if(!optionalModifier.isPresent()) {
 			source.sendMessage(Text.of(TextColors.YELLOW, mod, " is not a valid WorldGeneratorModifier"));
@@ -98,7 +96,7 @@ public class CommandModifier implements CommandCallable {
 				
 				world.setGeneratorModifiers(modifiers);
 
-				source.sendMessage(Text.of(TextColors.DARK_GREEN, "Removed modifier ", modifier.getKey().toString(), " to ", world.getWorldName()));
+				source.sendMessage(Text.of(TextColors.DARK_GREEN, "Removed modifier ", modifier.getId(), " to ", world.getWorldName()));
 			} else {
 				throw new CommandException(getHelp().getUsageText());
 			}
@@ -107,7 +105,7 @@ public class CommandModifier implements CommandCallable {
 			
 			world.setGeneratorModifiers(modifiers);
 
-			source.sendMessage(Text.of(TextColors.DARK_GREEN, "Added modifier ", modifier.getKey().toString(), " to ", world.getWorldName()));
+			source.sendMessage(Text.of(TextColors.DARK_GREEN, "Added modifier ", modifier.getId(), " to ", world.getWorldName()));
 		}
 		
 		return CommandResult.success();
@@ -127,7 +125,7 @@ public class CommandModifier implements CommandCallable {
 			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
 				if(world.getWorldName().equalsIgnoreCase(args[0])) {
 					for(WorldGeneratorModifier modifier : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
-						list.add(modifier.getKey().toString());
+						list.add(modifier.getId());
 					}
 					
 					return list;
@@ -141,12 +139,12 @@ public class CommandModifier implements CommandCallable {
 		
 		if(args.length >= 2) {
 			for(WorldGeneratorModifier modifier : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
-				if(modifier.getKey().toString().equalsIgnoreCase(args[1])) {
+				if(modifier.getId().equalsIgnoreCase(args[1])) {
 					return list;
 				}
 
-				if(modifier.getKey().toString().toLowerCase().startsWith(args[1].toLowerCase())) {
-					list.add(modifier.getKey().toString());
+				if(modifier.getId().toLowerCase().startsWith(args[1].toLowerCase())) {
+					list.add(modifier.getId());
 				}
 			}
 		}

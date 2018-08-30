@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.spongepowered.api.CatalogKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
@@ -81,8 +80,7 @@ public class CommandCreate implements CommandCallable {
 				}
 				
 				if(arg.equalsIgnoreCase("-d") || arg.equalsIgnoreCase("-dimension")) {
-					String[] key = value.split(":");
-					Optional<DimensionType> optionalDimension = Sponge.getRegistry().getType(DimensionType.class, CatalogKey.of(key[0] ,key[1]));
+					Optional<DimensionType> optionalDimension = Sponge.getRegistry().getType(DimensionType.class, value);
 					
 					if(!optionalDimension.isPresent()) {
 						source.sendMessage(Text.of(TextColors.YELLOW, value, " is not a valid DimensionType"));
@@ -90,25 +88,13 @@ public class CommandCreate implements CommandCallable {
 					}			
 					builder.dimension(optionalDimension.get());
 				} else if (arg.equalsIgnoreCase("-g") || arg.equalsIgnoreCase("-generator")) {
-					//String[] split = value.split("\\{");
-					String[] key = value.split(":");
-					Optional<GeneratorType> optionalGenerator = Sponge.getRegistry().getType(GeneratorType.class, CatalogKey.of(key[0] ,key[1]));
+					Optional<GeneratorType> optionalGenerator = Sponge.getRegistry().getType(GeneratorType.class, value);
 					
 					if(!optionalGenerator.isPresent()) {
 						source.sendMessage(Text.of(TextColors.YELLOW, value, " is not a valid GeneratorType"));
 						throw new CommandException(getHelp().getUsageText());
 					}
 					builder.generator(optionalGenerator.get());
-
-//					if(split.length == 2) {
-//						source.sendMessage(Text.of(TextColors.YELLOW, "Custom Settings are not validated. Any errors and it will not apply correctly."));
-//						
-//						if(optionalGenerator.get().equals(GeneratorTypes.FLAT)) {
-//							builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), split[1].replace("}", "")));
-//						} else {
-//							builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), "{" + split[1]));
-//						}
-//					}
 				} else if (arg.equalsIgnoreCase("-o") || arg.equalsIgnoreCase("-options")) {
 					source.sendMessage(Text.of(TextColors.YELLOW, "Custom Settings are not validated. Any errors and it will not apply correctly."));
 					builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), value));
@@ -127,8 +113,7 @@ public class CommandCreate implements CommandCallable {
 					}			
 					builder.gameMode(optionalGamemode.get());
 				} else if (arg.equalsIgnoreCase("-m") || arg.equalsIgnoreCase("-modifier")) {
-					String[] key = value.split(":");
-					Optional<WorldGeneratorModifier> optionalModifier = Sponge.getRegistry().getType(WorldGeneratorModifier.class, CatalogKey.of(key[0] ,key[1]));
+					Optional<WorldGeneratorModifier> optionalModifier = Sponge.getRegistry().getType(WorldGeneratorModifier.class, value);
 					
 					if(!optionalModifier.isPresent()) {
 						source.sendMessage(Text.of(TextColors.YELLOW, value, " is not a valid WorldGeneratorModifier"));
@@ -143,8 +128,7 @@ public class CommandCreate implements CommandCallable {
 						builder.seed(value.hashCode());
 					}
 				} else if (arg.equalsIgnoreCase("-df") || arg.equalsIgnoreCase("-difficulty")) {
-					String[] key = value.split(":");
-					Optional<Difficulty> optionalDifficulty = Sponge.getRegistry().getType(Difficulty.class, CatalogKey.of(key[0] ,key[1]));
+					Optional<Difficulty> optionalDifficulty = Sponge.getRegistry().getType(Difficulty.class, value);
 					
 					if(!optionalDifficulty.isPresent()) {
 						source.sendMessage(Text.of(TextColors.YELLOW, value, " is not a valid Difficulty"));
@@ -233,11 +217,11 @@ public class CommandCreate implements CommandCallable {
 
 		if(arg.equalsIgnoreCase("-d") || arg.equalsIgnoreCase("-dimension")) {
 			for(DimensionType type : Sponge.getRegistry().getAllOf(DimensionType.class)) {
-				list.add(type.getKey().toString());
+				list.add(type.getId());
 			}
 		} else if (arg.equalsIgnoreCase("-g") || arg.equalsIgnoreCase("-generator")) {
 			for(GeneratorType type : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
-				list.add(type.getKey().toString());
+				list.add(type.getId());
 			}
 		} else if (arg.equalsIgnoreCase("-gm") || arg.equalsIgnoreCase("-gamemode")) {
 			for(Gamemode type : Gamemode.values()) {
@@ -246,11 +230,11 @@ public class CommandCreate implements CommandCallable {
 			}
 		} else if (arg.equalsIgnoreCase("-m") || arg.equalsIgnoreCase("-modifier")) {
 			for(WorldGeneratorModifier type : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
-				list.add(type.getKey().toString());
+				list.add(type.getId());
 			}
 		} else if (arg.equalsIgnoreCase("-df") || arg.equalsIgnoreCase("-difficulty")) {
 			for(Difficulty type : Sponge.getRegistry().getAllOf(Difficulty.class)) {
-				list.add(type.getKey().toString());
+				list.add(type.getId());
 			}
 		} else if (arg.equalsIgnoreCase("-l") || arg.equalsIgnoreCase("-loadonstartup") || arg.equalsIgnoreCase("-k") || arg.equalsIgnoreCase("-keepspawnloaded") 
 				|| arg.equalsIgnoreCase("-c") || arg.equalsIgnoreCase("-allowcommands") || arg.equalsIgnoreCase("-b") || arg.equalsIgnoreCase("-bonuschest")
@@ -262,14 +246,14 @@ public class CommandCreate implements CommandCallable {
 			
 			if(parent.equalsIgnoreCase("-d") || parent.equalsIgnoreCase("-dimension")) {
 				for(DimensionType type : Sponge.getRegistry().getAllOf(DimensionType.class)) {
-					if(type.getKey().toString().toLowerCase().startsWith(arg.toLowerCase())) {
-						list.add(type.getKey().toString());
+					if(type.getId().toLowerCase().startsWith(arg.toLowerCase())) {
+						list.add(type.getId());
 					}
 				}
 			} else if (parent.equalsIgnoreCase("-g") || parent.equalsIgnoreCase("-generator")) {
 				for(GeneratorType type : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
-					if(type.getKey().toString().toLowerCase().startsWith(arg.toLowerCase())) {
-						list.add(type.getKey().toString());
+					if(type.getId().toLowerCase().startsWith(arg.toLowerCase())) {
+						list.add(type.getId());
 					}
 				}
 			} else if (parent.equalsIgnoreCase("-gm") || parent.equalsIgnoreCase("-gamemode")) {
@@ -280,14 +264,14 @@ public class CommandCreate implements CommandCallable {
 				}
 			} else if (parent.equalsIgnoreCase("-m") || parent.equalsIgnoreCase("-modifier")) {
 				for(WorldGeneratorModifier type : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
-					if(type.getKey().toString().toLowerCase().startsWith(arg.toLowerCase())) {
-						list.add(type.getKey().toString());
+					if(type.getId().toLowerCase().startsWith(arg.toLowerCase())) {
+						list.add(type.getId());
 					}
 				}
 			} else if (parent.equalsIgnoreCase("-df") || parent.equalsIgnoreCase("-difficulty")) {
 				for(Difficulty type : Sponge.getRegistry().getAllOf(Difficulty.class)) {
-					if(type.getKey().toString().toLowerCase().startsWith(arg.toLowerCase())) {
-						list.add(type.getKey().toString());
+					if(type.getId().toLowerCase().startsWith(arg.toLowerCase())) {
+						list.add(type.getId());
 					}
 				}
 			} else if (arg.equalsIgnoreCase("-l") || arg.equalsIgnoreCase("-loadonstartup") || arg.equalsIgnoreCase("-k") || arg.equalsIgnoreCase("-keepspawnloaded") 

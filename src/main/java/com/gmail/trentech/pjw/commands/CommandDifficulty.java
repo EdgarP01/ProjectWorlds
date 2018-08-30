@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.spongepowered.api.CatalogKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
@@ -58,8 +57,7 @@ public class CommandDifficulty implements CommandCallable {
 		}
 		WorldProperties world = optionalWorld.get();
 
-		String[] key = diff.split(":");
-		Optional<Difficulty> optionalDifficulty = Sponge.getRegistry().getType(Difficulty.class, CatalogKey.of(key[0], key[1]));
+		Optional<Difficulty> optionalDifficulty = Sponge.getRegistry().getType(Difficulty.class, diff);
 		
 		if(!optionalDifficulty.isPresent()) {
 			source.sendMessage(Text.of(TextColors.YELLOW, diff, " is not a valid Difficulty"));
@@ -89,7 +87,7 @@ public class CommandDifficulty implements CommandCallable {
 			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
 				if(world.getWorldName().equalsIgnoreCase(args[0])) {
 					for(Difficulty difficulty : Sponge.getRegistry().getAllOf(Difficulty.class)) {
-						list.add(difficulty.getKey().toString());
+						list.add(difficulty.getId());
 					}
 					
 					return list;
@@ -103,12 +101,12 @@ public class CommandDifficulty implements CommandCallable {
 		
 		if(args.length == 2) {
 			for(Difficulty difficulty : Sponge.getRegistry().getAllOf(Difficulty.class)) {
-				if(difficulty.getKey().toString().equalsIgnoreCase(args[1])) {
+				if(difficulty.getId().equalsIgnoreCase(args[1])) {
 					return list;
 				}
 				
-				if(difficulty.getKey().toString().toLowerCase().startsWith(args[1].toLowerCase())) {
-					list.add(difficulty.getKey().toString());
+				if(difficulty.getId().toLowerCase().startsWith(args[1].toLowerCase())) {
+					list.add(difficulty.getId());
 				}
 			}
 		}

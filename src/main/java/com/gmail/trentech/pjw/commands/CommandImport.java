@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.spongepowered.api.CatalogKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
@@ -78,9 +77,8 @@ public class CommandImport implements CommandCallable {
 		} catch(Exception e) {
 			throw new CommandException(getHelp().getUsageText());
 		}
-		
-		String[] dimKey = dimType.split(":");
-		Optional<DimensionType> optionalDimensionType = Sponge.getRegistry().getType(DimensionType.class, CatalogKey.of(dimKey[0], dimKey[1]));
+
+		Optional<DimensionType> optionalDimensionType = Sponge.getRegistry().getType(DimensionType.class, dimType);
 		
 		if(!optionalDimensionType.isPresent()) {
 			source.sendMessage(Text.of(TextColors.YELLOW, dimType, " is not a valid DimensionType"));
@@ -93,9 +91,8 @@ public class CommandImport implements CommandCallable {
 		} catch(Exception e) {
 			throw new CommandException(getHelp().getUsageText());
 		}
-		
-		String[] genKey = genType.split(":");
-		Optional<GeneratorType> optionalGeneratorType = Sponge.getRegistry().getType(GeneratorType.class, CatalogKey.of(genKey[0], genKey[1]));
+
+		Optional<GeneratorType> optionalGeneratorType = Sponge.getRegistry().getType(GeneratorType.class, genType);
 		
 		if(!optionalGeneratorType.isPresent()) {
 			source.sendMessage(Text.of(TextColors.YELLOW, genType, " is not a valid GeneratorType"));
@@ -109,8 +106,7 @@ public class CommandImport implements CommandCallable {
 
 		if(args.length >= 4) {
 			for(int i = 3;i < args.length - 3;i++) {
-				String[] key = args[i].split(":");
-				Optional<WorldGeneratorModifier> optionalModifier = Sponge.getRegistry().getType(WorldGeneratorModifier.class, CatalogKey.of(key[0], key[1]));
+				Optional<WorldGeneratorModifier> optionalModifier = Sponge.getRegistry().getType(WorldGeneratorModifier.class, args[i]);
 				
 				if(!optionalModifier.isPresent()) {
 					source.sendMessage(Text.of(TextColors.YELLOW, args[i], " is not a valid WorldGeneratorModifier"));
@@ -152,7 +148,7 @@ public class CommandImport implements CommandCallable {
 			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
 				if(world.getWorldName().equalsIgnoreCase(args[0])) {
 					for(DimensionType type : Sponge.getRegistry().getAllOf(DimensionType.class)) {
-						list.add(type.getKey().toString());
+						list.add(type.getId());
 					}
 					
 					return list;
@@ -166,48 +162,48 @@ public class CommandImport implements CommandCallable {
 		
 		if(args.length == 2) {
 			for(DimensionType type : Sponge.getRegistry().getAllOf(DimensionType.class)) {
-				if(type.getKey().toString().equalsIgnoreCase(args[1])) {
+				if(type.getId().equalsIgnoreCase(args[1])) {
 					for(GeneratorType genType : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
-						list.add(genType.getKey().toString());
+						list.add(genType.getId());
 					}
 					
 					return list;
 				}
 				
-				if(type.getKey().toString().toLowerCase().startsWith(args[1].toLowerCase())) {
-					list.add(type.getKey().toString());
+				if(type.getId().toLowerCase().startsWith(args[1].toLowerCase())) {
+					list.add(type.getId());
 				}
 			}
 		}
 		
 		if(args.length == 3) {
 			for(GeneratorType type : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
-				if(type.getKey().toString().equalsIgnoreCase(args[1])) {
+				if(type.getId().equalsIgnoreCase(args[1])) {
 					for(WorldGeneratorModifier modType : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
-						list.add(modType.getKey().toString());
+						list.add(modType.getId());
 					}
 					
 					return list;
 				}
 				
-				if(type.getKey().toString().toLowerCase().startsWith(args[1].toLowerCase())) {
-					list.add(type.getKey().toString());
+				if(type.getId().toLowerCase().startsWith(args[1].toLowerCase())) {
+					list.add(type.getId());
 				}
 			}
 		}
 		
 		if(args.length >= 4) {
 			for(WorldGeneratorModifier type : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
-				if(type.getKey().toString().equalsIgnoreCase(args[1])) {
+				if(type.getId().equalsIgnoreCase(args[1])) {
 					for(WorldGeneratorModifier modType : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
-						list.add(modType.getKey().toString());
+						list.add(modType.getId());
 					}
 					
 					return list;
 				}
 				
-				if(type.getKey().toString().toLowerCase().startsWith(args[1].toLowerCase())) {
-					list.add(type.getKey().toString());
+				if(type.getId().toLowerCase().startsWith(args[1].toLowerCase())) {
+					list.add(type.getId());
 				}
 			}
 		}

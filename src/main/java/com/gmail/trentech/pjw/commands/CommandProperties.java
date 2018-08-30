@@ -63,7 +63,7 @@ public class CommandProperties implements CommandCallable {
 			list.add(Text.of(TextColors.GREEN, "Generator Modifiers: "));
 		}
 		for(WorldGeneratorModifier modifier : modifiers) {
-			list.add(Text.of(TextColors.GREEN, "  - ", TextColors.WHITE, modifier.getKey().toString()));
+			list.add(Text.of(TextColors.GREEN, "  - ", TextColors.WHITE, modifier.getId()));
 		}
 
 		list.add(Text.of(TextColors.GREEN, "GameMode: ", TextColors.WHITE, properties.getGameMode().getTranslation().get().toLowerCase(), TextColors.GREEN, ", Difficulty: ", TextColors.WHITE, properties.getDifficulty().getTranslation().get().toLowerCase(), TextColors.GREEN, ", PVP: ", TextColors.WHITE, properties.isPVPEnabled()));
