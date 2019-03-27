@@ -285,6 +285,79 @@ public class Common {
 				.setUsage(usageLoad)
 				.addExample("/world unload MyWorld");
 		
+		Usage usageWorldCenter = new Usage(Argument.of("<world>", "Specifies the Targetted world"))
+				.addArgument(Argument.of("<x>", "Sets The x-axis center of the world border"))
+				.addArgument(Argument.of("<z>", "Sets The z-axis center of the world border"));
+		
+		Help worldBorderCenter = new Help("world border center", "center", "Set the center coordinates of border")
+				.setPermission("pjw.cmd.world.border.center")
+				.setUsage(usageWorldCenter)
+				.addExample("/world border center MyWorld 100 -250");
+		
+		Usage usageWorldDamage = new Usage(Argument.of("<world>", "Specifies the Targetted world"))
+				.addArgument(Argument.of("<disatance>", "Set the distance a player may be be outside the world border before taking damage."))
+				.addArgument(Argument.of("[damage]", "Set the damage done to a player per block per tick when outside the buffer."));
+		
+		Help worldBorderDamage = new Help("world border damage", "damage", "Set the damage threshold and amount damage player takes")
+				.setPermission("pjw.cmd.world.border.damage")
+				.setUsage(usageWorldDamage)
+				.addExample("/world border diameter MyWorld 50 2")
+				.addExample("/world border damage MyWorld 50");
+		
+		Usage usageWorldDiameter = new Usage(Argument.of("<world>", "Specifies the Targetted world"))
+				.addArgument(Argument.of("<startDiameter>", "The diameter where the border will start. "))
+				.addArgument(Argument.of("[<time>", "The time over which to change, in milliseconds"))
+				.addArgument(Argument.of("[endDiameter]]", "The diameter where the border will end"));
+		
+		Help worldBorderDiameter = new Help("world border diameter", "diameter", "Set the diameter of border. If [endDiameter] is present, the world border diameter will increase/decrease linearly over "
+				+ "the specified time. The specified diameter applies to the x and z axis. The world border extends over the entire y-axis.")
+				.setPermission("pjw.cmd.world.border.diameter")
+				.setUsage(usageWorldDiameter)
+				.addExample("/world border diameter MyWorld 5000 120 1000")
+				.addExample("/world border diameter MyWorld 5000 60")
+				.addExample("/world border diameter MyWorld 5000");
+		
+		Usage usageWorldGenerate = new Usage(Argument.of("<world>", "Specifies the Targetted world"))
+				.addArgument(Argument.of("[--stop]", "Stops any existing generation task running on this world"))
+				.addArgument(Argument.of("[--verbose]", "Displays chunk generation infomation in the console"))
+				.addArgument(Argument.of("[-i <tickInverval>]", "Sets the interval between generation runs. Must be greater than 0. Default is 10."))
+				.addArgument(Argument.of("[-p <tickPercent>]", "Sets the limit of tick time that can be used to generate chunks as a percentage of tickInterval. The percentage should "
+						+ "be a value in the range (0, 1]. No estimation is used to decide when to stop so the actual value will always be somewhere above the given percentage Default is 0.15."))
+				.addArgument(Argument.of("[-c <chunkCount>]", "Sets maximum number of chunks per tick to generate. Use a value smaller or equal to 0 to disable. Default is disabled."));
+				
+		Help worldBorderGenerate = new Help("world border generate", "generate", "Pre generate chunks inside border")
+				.setPermission("pjw.cmd.world.border.generate")
+				.setUsage(usageWorldGenerate)
+				.addExample("/world border generate MyWorld --verbose -i 60 -p 0.4 -c 5")
+				.addExample("/world border generate MyWorld --stop")
+				.addExample("/world border generate MyWorld");
+		
+		Usage usageWorldInfo = new Usage(Argument.of("<world>", "Specifies the Targetted world"));
+		
+		Help worldBorderInfo = new Help("world border info", "info", "Show information of world border")
+				.setPermission("pjw.cmd.world.border.info")
+				.setUsage(usageWorldInfo)
+				.addExample("/world border info MyWorld");
+		
+		Usage usageWorldWarning = new Usage(Argument.of("<world>", "Specifies the Targetted world"))
+				.addArgument(Argument.of("<distance>", "Set the distance when a contracting world border will warn a player for whom the world border is distance blocks away."))
+				.addArgument(Argument.of("[time]", "Set the time when a contracting world border will warn a player for whom the world border will reach in time seconds."));
+		
+		Help worldBorderWarning = new Help("world border warning", "warning", "Set warning distance and time. The warning is displayed in the form of a reddish tint in game.")
+				.setPermission("pjw.cmd.world.border.warning")
+				.setUsage(usageWorldWarning)
+				.addExample("/world border warning MyWorld 4900 10")
+				.addExample("/world border warning MyWorld 4900");
+		
+		Help worldBorder = new Help("world border", "border", "World border operations")
+				.setPermission("pjw.cmd.world.border")
+				.addChild(worldBorderWarning)
+				.addChild(worldBorderInfo)
+				.addChild(worldBorderGenerate)
+				.addChild(worldBorderDiameter)
+				.addChild(worldBorderDamage)
+				.addChild(worldBorderCenter);
+
 		Help world = new Help("world", "world", "Base Project Worlds command")
 				.setPermission("pjw.cmd.world")
 				.addChild(worldUnload)
@@ -311,7 +384,8 @@ public class Common {
 				.addChild(worldTime)
 				.addChild(worldWeather)
 				.addChild(worldLoadOnStartup)
-				.addChild(worldModifier);
+				.addChild(worldModifier)
+				.addChild(worldBorder);
 
 		Help.register(world);
 	}

@@ -10,6 +10,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import com.gmail.trentech.pjc.help.Help;
+import com.gmail.trentech.pjw.commands.border.CommandBorder;
 
 public class CommandWorld implements CommandExecutor {
 	
@@ -40,6 +41,7 @@ public class CommandWorld implements CommandExecutor {
 			.child(new CommandGamemode(), "gamemode", "gm")
 			.child(new CommandGamerule(), "gamerule", "gr")
 			.child(new CommandModifier(), "modifier", "m")
+			.child(new CommandBorder().getCommandSpec(), "border", "b")
 			.executor(this)
 			.build();
 	
