@@ -1,10 +1,12 @@
 package com.gmail.trentech.pjw.commands.border;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.TimeUnit;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
@@ -12,6 +14,7 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.ChunkPreGenerate;
 import org.spongepowered.api.world.ChunkPreGenerate.Builder;
@@ -35,9 +38,9 @@ public class CommandGenerate implements CommandCallable {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		String[] args = arguments.split(" ");
+		List<String> args = Arrays.asList(arguments.split(" "));
 		
-		if(args[args.length - 1].equalsIgnoreCase("--help")) {
+		if(args.contains("--help")) {
 			help.execute(source);
 			return CommandResult.success();
 		}
@@ -45,12 +48,12 @@ public class CommandGenerate implements CommandCallable {
 		String worldName;
 		
 		try {
-			worldName = args[0];
+			worldName = args.get(0);
 		} catch(Exception e) {
 			throw new CommandException(getHelp().getUsageText());
 		}
 		
-		if(worldName.equalsIgnoreCase("stop")) {
+		if(args.contains("--stop")) {
 			if (!list.containsKey(worldName)) {
 				throw new CommandException(Text.of(TextColors.YELLOW, "Pre-Generator not running for this world"), false);
 			}
@@ -75,7 +78,7 @@ public class CommandGenerate implements CommandCallable {
 		}
 		WorldProperties properties = optionalProperties.get();
 
-		Optional<World> optionalWorld = Sponge.getServer().getWorld(arguments);
+		Optional<World> optionalWorld = Sponge.getServer().getWorld(properties.getWorldName());
 
 		if (!optionalWorld.isPresent()) {
 			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " is not loaded"), false);
@@ -86,71 +89,87 @@ public class CommandGenerate implements CommandCallable {
 
 		Builder generator = border.newChunkPreGenerate(world).owner(Main.getPlugin());
 
-		if(args.length > 2) {
-			boolean skip = false;
+		boolean skip = false;
+		boolean log = false;
+		
+		for(String arg : args) {
+			if(arg.equalsIgnoreCase(worldName)) {
+				continue;
+			}
 			
-			for(int i = 1; i < args.length - 1; i++) {
-				if(skip) {
-					skip = false;
-					continue;
-				}
-				
-				String arg = args[i];
-				String value = null;
-				
+			if(skip) {
+				skip = false;
+				continue;
+			}
+
+			if(arg.equalsIgnoreCase("-i") || arg.equalsIgnoreCase("-tickInterval")) {
+				String value;
 				try {
-					value = args[i+1];
+					value = args.get(args.indexOf(arg) + 1);
 				} catch(Exception e) {
-				}
-				
-				if(arg.equalsIgnoreCase("-i") || arg.equalsIgnoreCase("-tickInterval")) {
-					int tickInterval;
-					try {
-						tickInterval = Integer.parseInt(value);
-					}catch (Exception e) {
-						throw new CommandException(Text.of(TextColors.RED, value, " is not a valid number"), false);
-					}
-					
-					generator.tickInterval(tickInterval);
-					skip = true;
-				} else if (arg.equalsIgnoreCase("-p") || arg.equalsIgnoreCase("-tickPercent")) {
-					int tickPercent;
-					try {
-						tickPercent = Integer.parseInt(value);
-					}catch (Exception e) {
-						throw new CommandException(Text.of(TextColors.RED, value, " is not a valid number"), false);
-					}
-					
-					generator.tickPercentLimit(tickPercent);
-					skip = true;
-				} else if (arg.equalsIgnoreCase("-c") || arg.equalsIgnoreCase("-chunkCount")) {
-					int chunkCount;
-					try {
-						chunkCount = Integer.parseInt(value);
-					}catch (Exception e) {
-						throw new CommandException(Text.of(TextColors.RED, value, " is not a valid number"), false);
-					}
-					
-					generator.chunksPerTick(chunkCount);
-					skip = true;
-				} else if (arg.equalsIgnoreCase("-v") || arg.equalsIgnoreCase("-verbose")) {
-					generator.logger(Main.instance().getLog());
-					skip = false;
-				} else {
-					source.sendMessage(Text.of(TextColors.YELLOW, value, " is not a valid Flag"));
 					throw new CommandException(getHelp().getUsageText());
 				}
+				
+				int tickInterval;
+				try {
+					tickInterval = Integer.parseInt(value);		
+				}catch (Exception e) {
+					throw new CommandException(Text.of(TextColors.RED, value, " is not a valid number"), false);
+				}
+				
+				generator.tickInterval(tickInterval);
+				skip = true;
+			} else if (arg.equalsIgnoreCase("-p") || arg.equalsIgnoreCase("-tickPercent")) {
+				String value;
+				try {
+					value = args.get(args.indexOf(arg) + 1);
+				} catch(Exception e) {
+					throw new CommandException(getHelp().getUsageText());
+				}
+				
+				int tickPercent;
+				try {
+					tickPercent = Integer.parseInt(value);
+				}catch (Exception e) {
+					throw new CommandException(Text.of(TextColors.RED, value, " is not a valid number"), false);
+				}
+				
+				generator.tickPercentLimit(tickPercent);
+				skip = true;
+			} else if (arg.equalsIgnoreCase("-c") || arg.equalsIgnoreCase("-chunkCount")) {
+				String value;
+				try {
+					value = args.get(args.indexOf(arg) + 1);
+				} catch(Exception e) {
+					throw new CommandException(getHelp().getUsageText());
+				}
+				
+				int chunkCount;
+				try {
+					chunkCount = Integer.parseInt(value);
+				}catch (Exception e) {
+					throw new CommandException(Text.of(TextColors.RED, value, " is not a valid number"), false);
+				}
+				
+				generator.chunksPerTick(chunkCount);
+				skip = true;
+			} else if (arg.equalsIgnoreCase("--verbose")) {
+				generator.logger(Main.instance().getLog());
+				skip = false;
+				log = true;
+			} else {
+				throw new CommandException(getHelp().getUsageText());
 			}
 		}
-		
-		ChunkPreGenerate task = generator.start();
-
-		list.put(worldName, task);
 
 		Sponge.getServer().getBroadcastChannel().send(Text.of(TextColors.DARK_GREEN, "Pre-Generator starting for ", worldName));
 		Sponge.getServer().getBroadcastChannel().send(Text.of(TextColors.GOLD, "This can cause significant lag while running"));
 		
-		status(task, worldName);
+		ChunkPreGenerate task = generator.start();
+		
+		list.put(worldName, task);
+		
+		update(worldName, log);
 
 		return CommandResult.success();
 	}
@@ -194,23 +213,35 @@ public class CommandGenerate implements CommandCallable {
 		return help;
 	}
 	
-	private AtomicReference<Integer> time = new AtomicReference<Integer>(0);
-	
-	@SuppressWarnings("unlikely-arg-type")
-	private void status(ChunkPreGenerate task, String worldName) {
-		Sponge.getScheduler().createTaskBuilder().delayTicks(100).execute(c -> {
-			if (!Sponge.getScheduler().getScheduledTasks(Main.getPlugin()).contains(task)) {
+	private void update(String worldName, boolean log) {
+		Sponge.getScheduler().createTaskBuilder().delay(10, TimeUnit.SECONDS).execute(c -> {
+			if(!list.containsKey(worldName)) {
+				return;
+			}
+			ChunkPreGenerate task = list.get(worldName);
+			
+			if(task.isCancelled()) { 
+				list.remove(worldName);
 				Sponge.getServer().getBroadcastChannel().send(Text.of(TextColors.DARK_GREEN, "Pre-Generator finished for ", worldName));
 			} else {
-				if(time.get() == 60) {
-					Sponge.getServer().getBroadcastChannel().send(Text.of(TextColors.DARK_GREEN, "Pre-Generator is running for ", worldName));
-					Sponge.getServer().getBroadcastChannel().send(Text.of(TextColors.GOLD, "This can cause significant lag while running"));
-					time.set(0);
-				} else {
-					time.set(time.get() + 5);
+				if(log) {
+					DecimalFormat df = new DecimalFormat("#.00");
+					double percent = (task.getTotalGeneratedChunks() + task.getTotalSkippedChunks()) * 100.0f / task.getTargetTotalChunks();
+					if(percent > 100) {
+						percent = 100.0;
+					}
+					
+					MessageChannel.TO_PLAYERS.send(Text.of(					
+							TextColors.DARK_GREEN, "Chunks Generated: ",
+							TextColors.WHITE, (task.getTotalGeneratedChunks() + task.getTotalSkippedChunks()),
+							TextColors.DARK_GREEN, ", Elapsed Time: ", 
+							TextColors.WHITE, task.getTotalTime().getSeconds() /60, ":",task.getTotalTime().getSeconds() % 60,
+							TextColors.DARK_GREEN, ", Complete: ",
+							TextColors.WHITE, df.format(percent), "%"));
 				}
-				status(task, worldName);
-			}			
+
+				update(worldName, log);
+			}		
 		}).submit(Main.getPlugin());
 	}
 }
