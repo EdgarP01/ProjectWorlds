@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.commands.border;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,27 +30,21 @@ public class CommandCenter implements CommandCallable {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		String[] args = arguments.split(" ");
+		List<String> args = Arrays.asList(arguments.split(" "));
 		
-		if(args[args.length - 1].equalsIgnoreCase("--help")) {
-			help.execute(source);
+		if(args.contains("--help")) {
+			getHelp().execute(source);
 			return CommandResult.success();
 		}
 		
-		String worldName;
-		String xs;
-		String zs;
-		
-		try {
-			worldName = args[0];
-		} catch(Exception e) {
+		if(args.isEmpty() || args.size() == 2) {
 			throw new CommandException(getHelp().getUsageText());
 		}
-		
-		Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(worldName);
+
+		Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(args.get(0));
 		
 		if(!optionalProperties.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"), false);
+			throw new CommandException(Text.of(TextColors.RED, args.get(0), " does not exist"), false);
 		}
 		WorldProperties properties = optionalProperties.get();
 		
@@ -64,28 +59,23 @@ public class CommandCenter implements CommandCallable {
 		
 		double x;
 		double z;
-		try {
-			xs = args[1];
-					
+		
+		if(args.size() == 3) {
 			try {
-				x = Double.parseDouble(args[1]);
+				x = Double.parseDouble(args.get(1));
 			} catch(Exception e) {
-				throw new CommandException(Text.of(TextColors.RED, xs, " is not a number value"), true);
+				throw new CommandException(Text.of(TextColors.RED, args.get(1), " is not a number value"), true);
 			}
 			
 			try {
-				zs = args[1];
+				z = Double.parseDouble(args.get(2));
 			} catch(Exception e) {
-				throw new CommandException(getHelp().getUsageText());
+				throw new CommandException(Text.of(TextColors.RED, args.get(2), " is not a number value"), true);
 			}
-						
-			try {
-				z = Double.parseDouble(args[2]);
-			} catch(Exception e) {
-				throw new CommandException(Text.of(TextColors.RED, zs, " is not a number value"), true);
-			}
-		} catch(Exception e) {
-			if(!((Player) source).getWorld().equals(world)) {
+		} else {
+			if(!(source instanceof Player)) {
+				throw new CommandException(Text.of(TextColors.RED, "You need to specify x and z coordinates.", true));
+			} else if(!((Player) source).getWorld().equals(world)) {
 				throw new CommandException(Text.of(TextColors.RED, "You need to specify x and z coordinates. You are not standing in the provided world."), true);
 			}
 			Location<World>location = ((Player) source).getLocation();
@@ -104,25 +94,33 @@ public class CommandCenter implements CommandCallable {
 	@Override
 	public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
 		List<String> list = new ArrayList<>();
+
+		if(arguments.equalsIgnoreCase("")) {
+			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+				list.add(world.getWorldName());
+			}
+			
+			return list;
+		}
 		
-		if(arguments.equalsIgnoreCase("center")) {
+		List<String> args = Arrays.asList(arguments.split(" "));
+
+		if(args.size() == 1) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+					if(world.getWorldName().toLowerCase().equalsIgnoreCase(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+					
+					if(world.getWorldName().toLowerCase().startsWith(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+				}
+			}
+			
 			return list;
 		}
 
-		String[] args = arguments.split(" ");
-		
-		if(args.length == 1) {
-			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
-				if(world.getWorldName().equalsIgnoreCase(args[0])) {
-					return list;
-				}
-				
-				if(world.getWorldName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					list.add(world.getWorldName());
-				}
-			}
-		}
-		
 		return list;
 	}
 

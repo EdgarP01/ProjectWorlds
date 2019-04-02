@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,41 +28,33 @@ public class CommandEnable implements CommandCallable {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		String[] args = arguments.split(" ");
+		List<String> args = Arrays.asList(arguments.split(" "));
 		
-		if(args[args.length - 1].equalsIgnoreCase("--help")) {
-			help.execute(source);
+		if(args.contains("--help")) {
+			getHelp().execute(source);
 			return CommandResult.success();
 		}
 		
-		String worldName;
-		String bool;
-		
-		try {
-			worldName = args[0];
-		} catch(Exception e) {
+		if(args.size() != 2) {
 			throw new CommandException(getHelp().getUsageText());
 		}
-		
-		try {
-			bool = args[1];
-		} catch(Exception e) {
-			throw new CommandException(getHelp().getUsageText());
-		}
-		
-		Optional<WorldProperties> optionalWorld = Sponge.getServer().getWorldProperties(worldName);
+
+		Optional<WorldProperties> optionalWorld = Sponge.getServer().getWorldProperties(args.get(0));
 		
 		if(!optionalWorld.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"), false);
+			throw new CommandException(Text.of(TextColors.RED, args.get(0), " does not exist"), false);
 		}
 		WorldProperties world = optionalWorld.get();
 
-		if(bool.equalsIgnoreCase("true") || bool.equalsIgnoreCase("false")) {
-			world.setEnabled(Boolean.valueOf(bool));
+		if(!args.get(1).equalsIgnoreCase("true") && !args.get(1).equalsIgnoreCase("false")) {
+			throw new CommandException(Text.of(TextColors.RED, args.get(1), " is not a valid boolean"), false);
 		}
+		
+		world.setEnabled(Boolean.valueOf(args.get(1)));
+		
 		Sponge.getServer().saveWorldProperties(world);
 		
-		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Set enabled of ", world.getWorldName(), " to ", TextColors.YELLOW, bool));
+		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Set enabled of ", world.getWorldName(), " to ", TextColors.YELLOW, args.get(1)));
 
 		return CommandResult.success();
 	}
@@ -69,43 +62,55 @@ public class CommandEnable implements CommandCallable {
 	@Override
 	public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
 		List<String> list = new ArrayList<>();
-		
-		if(arguments.equalsIgnoreCase("enable")) {
-			return list;
-		}
 
-		String[] args = arguments.split(" ");
-
-		if(args.length == 1) {
+		if(arguments.equalsIgnoreCase("")) {
 			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
-				if(world.getWorldName().equalsIgnoreCase(args[0])) {
-					list.add("true");
-					list.add("false");
-					
-					return list;
-				}
-
-				if(world.getWorldName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					list.add(world.getWorldName());
-				}
+				list.add(world.getWorldName());
 			}
 			
 			return list;
 		}
 		
-		if(args.length == 2) {
-			if("true".equalsIgnoreCase(args[1].toLowerCase()) || "false".equalsIgnoreCase(args[1].toLowerCase()) ) {
-				return list;
-			}
-			
-			if("true".startsWith(args[1].toLowerCase())) {
+		List<String> args = Arrays.asList(arguments.split(" "));
+
+		if(args.size() == 1) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+					if(world.getWorldName().toLowerCase().equalsIgnoreCase(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+					
+					if(world.getWorldName().toLowerCase().startsWith(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+				}
+			} else {
 				list.add("true");
-			}
-			if("false".startsWith(args[1].toLowerCase())) {
 				list.add("false");
 			}
+			
+			return list;
 		}
-		
+
+		if(args.size() == 2) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				if("true".equalsIgnoreCase(args.get(1).toLowerCase())) {
+					list.add("true");
+				}
+				if("false".equalsIgnoreCase(args.get(1).toLowerCase())) {
+					list.add("false");
+				}
+				if("true".startsWith(args.get(1).toLowerCase())) {
+					list.add("true");
+				}
+				if("false".startsWith(args.get(1).toLowerCase())) {
+					list.add("false");
+				}
+			}
+			
+			return list;
+		}
+
 		return list;
 	}
 

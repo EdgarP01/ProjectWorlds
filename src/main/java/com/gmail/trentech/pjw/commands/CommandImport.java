@@ -2,6 +2,7 @@ package com.gmail.trentech.pjw.commands;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -37,65 +38,47 @@ public class CommandImport implements CommandCallable {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		String[] args = arguments.split(" ");
+		List<String> args = Arrays.asList(arguments.split(" "));
 		
-		if(args[args.length - 1].equalsIgnoreCase("--help")) {
-			help.execute(source);
+		if(args.contains("--help")) {
+			getHelp().execute(source);
 			return CommandResult.success();
 		}
 		
-		String worldName;
-		String genType;
-		String dimType;
-		
-		try {
-			worldName = args[0];
-		} catch(Exception e) {
+		if(args.size() < 3) {
 			throw new CommandException(getHelp().getUsageText());
 		}
-		
-		if (Sponge.getServer().getWorld(worldName).isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " is already loaded"), false);
+
+		if (Sponge.getServer().getWorld(args.get(0)).isPresent()) {
+			throw new CommandException(Text.of(TextColors.RED, args.get(0), " is already loaded"), false);
 		}
 		
-		WorldData worldData = new WorldData(worldName);
+		WorldData worldData = new WorldData(args.get(0));
 
 		if (!worldData.exists()) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " is not a valid world"), false);
+			throw new CommandException(Text.of(TextColors.RED, args.get(0), " is not a valid world"), false);
 		}
 
-		SpongeData spongeData = new SpongeData(worldName);
+		SpongeData spongeData = new SpongeData(args.get(0));
 
 		if (spongeData.exists()) {
 			source.sendMessage(Text.of(TextColors.RED, "Sponge world detected"));
 			source.sendMessage(Text.builder().color(TextColors.YELLOW).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.runCommand("/pjw:world load")).append(Text.of(" /world load")).build());
 			return CommandResult.success();
 		}
-		
-		try {
-			dimType = args[1];
-		} catch(Exception e) {
-			throw new CommandException(getHelp().getUsageText());
-		}
 
-		Optional<DimensionType> optionalDimensionType = Sponge.getRegistry().getType(DimensionType.class, dimType);
+		Optional<DimensionType> optionalDimensionType = Sponge.getRegistry().getType(DimensionType.class, args.get(1));
 		
 		if(!optionalDimensionType.isPresent()) {
-			source.sendMessage(Text.of(TextColors.YELLOW, dimType, " is not a valid DimensionType"));
+			source.sendMessage(Text.of(TextColors.YELLOW, args.get(1), " is not a valid DimensionType"));
 			throw new CommandException(getHelp().getUsageText());
 		}
 		DimensionType dimensionType = optionalDimensionType.get();
-		
-		try {
-			genType = args[2];
-		} catch(Exception e) {
-			throw new CommandException(getHelp().getUsageText());
-		}
 
-		Optional<GeneratorType> optionalGeneratorType = Sponge.getRegistry().getType(GeneratorType.class, genType);
+		Optional<GeneratorType> optionalGeneratorType = Sponge.getRegistry().getType(GeneratorType.class, args.get(2));
 		
 		if(!optionalGeneratorType.isPresent()) {
-			source.sendMessage(Text.of(TextColors.YELLOW, genType, " is not a valid GeneratorType"));
+			source.sendMessage(Text.of(TextColors.YELLOW, args.get(2), " is not a valid GeneratorType"));
 			throw new CommandException(getHelp().getUsageText());
 		}
 		GeneratorType generatorType = optionalGeneratorType.get();
@@ -104,23 +87,23 @@ public class CommandImport implements CommandCallable {
 
 		Collection<WorldGeneratorModifier> modifiers = Collections.<WorldGeneratorModifier>emptyList();
 
-		if(args.length >= 4) {
-			for(int i = 3;i < args.length - 3;i++) {
-				Optional<WorldGeneratorModifier> optionalModifier = Sponge.getRegistry().getType(WorldGeneratorModifier.class, args[i]);
+		if(args.size() >= 4) {
+			for(int i = 3; i < args.size() - 3; i++) {
+				Optional<WorldGeneratorModifier> optionalModifier = Sponge.getRegistry().getType(WorldGeneratorModifier.class, args.get(i));
 				
 				if(!optionalModifier.isPresent()) {
-					source.sendMessage(Text.of(TextColors.YELLOW, args[i], " is not a valid WorldGeneratorModifier"));
+					source.sendMessage(Text.of(TextColors.YELLOW, args.get(i), " is not a valid WorldGeneratorModifier"));
 					throw new CommandException(getHelp().getUsageText());
 				}
 				modifiers.add(optionalModifier.get());
 			}			
 		}
 		
-		WorldArchetype settings = builder.build(worldName, worldName);
+		WorldArchetype settings = builder.build(args.get(0), args.get(0));
 		
 		WorldProperties properties;
 		try {
-			properties = Sponge.getServer().createWorldProperties(worldName, settings);
+			properties = Sponge.getServer().createWorldProperties(args.get(0), settings);
 			properties.setGeneratorModifiers(modifiers);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -129,7 +112,7 @@ public class CommandImport implements CommandCallable {
 
 		Sponge.getServer().saveWorldProperties(properties);
 
-		source.sendMessage(Text.of(TextColors.DARK_GREEN, worldName, " imported successfully"));
+		source.sendMessage(Text.of(TextColors.DARK_GREEN, args.get(0), " imported successfully"));
 
 		return CommandResult.success();
 	}
@@ -137,75 +120,79 @@ public class CommandImport implements CommandCallable {
 	@Override
 	public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
 		List<String> list = new ArrayList<>();
+
+		if(arguments.equalsIgnoreCase("")) {
+			return list;
+		}
 		
-		if(arguments.equalsIgnoreCase("import")) {
+		List<String> args = Arrays.asList(arguments.split(" "));
+
+		if(args.size() == 1) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				return list;
+			} else {
+				for(DimensionType type : Sponge.getRegistry().getAllOf(DimensionType.class)) {
+					list.add(type.getId());
+				}
+			}
+			
 			return list;
 		}
 
-		String[] args = arguments.split(" ");
-		
-		if(args.length == 1) {
-			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
-				if(world.getWorldName().equalsIgnoreCase(args[0])) {
-					for(DimensionType type : Sponge.getRegistry().getAllOf(DimensionType.class)) {
+		if(args.size() == 2) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(DimensionType type : Sponge.getRegistry().getAllOf(DimensionType.class)) {
+					if(type.getId().equalsIgnoreCase(args.get(1))) {
 						list.add(type.getId());
 					}
 					
-					return list;
-				}
-				
-				if(world.getWorldName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					list.add(world.getWorldName());
-				}
-			}
-		}
-		
-		if(args.length == 2) {
-			for(DimensionType type : Sponge.getRegistry().getAllOf(DimensionType.class)) {
-				if(type.getId().equalsIgnoreCase(args[1])) {
-					for(GeneratorType genType : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
-						list.add(genType.getId());
+					if(type.getId().toLowerCase().startsWith(args.get(1).toLowerCase())) {
+						list.add(type.getId());
 					}
-					
-					return list;
 				}
-				
-				if(type.getId().toLowerCase().startsWith(args[1].toLowerCase())) {
+			} else {
+				for(GeneratorType type : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
 					list.add(type.getId());
 				}
 			}
+			
+			return list;
 		}
-		
-		if(args.length == 3) {
-			for(GeneratorType type : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
-				if(type.getId().equalsIgnoreCase(args[1])) {
-					for(WorldGeneratorModifier modType : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
-						list.add(modType.getId());
+
+		if(args.size() == 3) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(GeneratorType type : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
+					if(type.getId().equalsIgnoreCase(args.get(2))) {
+						list.add(type.getId());
 					}
 					
-					return list;
+					if(type.getId().toLowerCase().startsWith(args.get(2).toLowerCase())) {
+						list.add(type.getId());
+					}
 				}
-				
-				if(type.getId().toLowerCase().startsWith(args[1].toLowerCase())) {
+			} else {
+				for(WorldGeneratorModifier type : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
 					list.add(type.getId());
 				}
 			}
+			
+			return list;
 		}
 		
-		if(args.length >= 4) {
-			for(WorldGeneratorModifier type : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
-				if(type.getId().equalsIgnoreCase(args[1])) {
-					for(WorldGeneratorModifier modType : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
-						list.add(modType.getId());
+		if(args.size() == 4) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(WorldGeneratorModifier type : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
+					if(type.getId().equalsIgnoreCase(args.get(2))) {
+						list.add(type.getId());
 					}
 					
-					return list;
-				}
-				
-				if(type.getId().toLowerCase().startsWith(args[1].toLowerCase())) {
-					list.add(type.getId());
+					if(type.getId().toLowerCase().startsWith(args.get(2).toLowerCase())) {
+						list.add(type.getId());
+					}
 				}
 			}
+			
+			return list;
 		}
 		
 		return list;

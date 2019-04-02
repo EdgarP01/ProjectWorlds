@@ -45,36 +45,32 @@ public class CommandGenerate implements CommandCallable {
 			return CommandResult.success();
 		}
 		
-		String worldName;
-		
-		try {
-			worldName = args.get(0);
-		} catch(Exception e) {
+		if(args.isEmpty()) {
 			throw new CommandException(getHelp().getUsageText());
 		}
-		
+
 		if(args.contains("--stop")) {
-			if (!list.containsKey(worldName)) {
+			if (!list.containsKey(args.get(0))) {
 				throw new CommandException(Text.of(TextColors.YELLOW, "Pre-Generator not running for this world"), false);
 			}
-			list.get(worldName).cancel();
-			list.remove(worldName);
+			list.get(args.get(0)).cancel();
+			list.remove(args.get(0));
 
-			source.sendMessage(Text.of(TextColors.DARK_GREEN, "Pre-Generator stopped for ", worldName));
+			source.sendMessage(Text.of(TextColors.DARK_GREEN, "Pre-Generator stopped for ", args.get(0)));
 			return CommandResult.success();
 		}
 		
-		if (list.containsKey(worldName)) {
-			if (Sponge.getScheduler().getScheduledTasks(Main.getPlugin()).contains(list.get(worldName))) {
+		if (list.containsKey(args.get(0))) {
+			if (Sponge.getScheduler().getScheduledTasks(Main.getPlugin()).contains(list.get(args.get(0)))) {
 				throw new CommandException(Text.of(TextColors.YELLOW, "Pre-Generator already running for this world"), false);
 			}
-			list.remove(worldName);
+			list.remove(args.get(0));
 		}
 		
-		Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(worldName);
+		Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(args.get(0));
 		
 		if(!optionalProperties.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"), false);
+			throw new CommandException(Text.of(TextColors.RED, args.get(0), " does not exist"), false);
 		}
 		WorldProperties properties = optionalProperties.get();
 
@@ -93,7 +89,7 @@ public class CommandGenerate implements CommandCallable {
 		boolean log = false;
 		
 		for(String arg : args) {
-			if(arg.equalsIgnoreCase(worldName)) {
+			if(arg.equalsIgnoreCase(properties.getWorldName())) {
 				continue;
 			}
 			
@@ -162,14 +158,14 @@ public class CommandGenerate implements CommandCallable {
 			}
 		}
 
-		Sponge.getServer().getBroadcastChannel().send(Text.of(TextColors.DARK_GREEN, "Pre-Generator starting for ", worldName));
+		Sponge.getServer().getBroadcastChannel().send(Text.of(TextColors.DARK_GREEN, "Pre-Generator starting for ", properties.getWorldName()));
 		Sponge.getServer().getBroadcastChannel().send(Text.of(TextColors.GOLD, "This can cause significant lag while running"));
 		
 		ChunkPreGenerate task = generator.start();
 		
-		list.put(worldName, task);
+		list.put(properties.getWorldName(), task);
 		
-		update(worldName, log);
+		update(properties.getWorldName(), log);
 
 		return CommandResult.success();
 	}
@@ -177,10 +173,84 @@ public class CommandGenerate implements CommandCallable {
 	@Override
 	public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
 		List<String> list = new ArrayList<>();
-		
-		if(arguments.equalsIgnoreCase("generate")) {
+
+		if(arguments.equalsIgnoreCase("")) {
+			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+				list.add(world.getWorldName());
+			}
+			
 			return list;
 		}
+		
+		List<String> args = Arrays.asList(arguments.split(" "));
+
+		if(args.size() == 1) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+					if(world.getWorldName().toLowerCase().equalsIgnoreCase(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+					
+					if(world.getWorldName().toLowerCase().startsWith(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+				}
+			} else {
+				list.add("-i");
+				list.add("-p");
+				list.add("-c");
+				list.add("--verbose");
+				list.add("--stop");
+			}
+			
+			return list;
+		}
+		
+		if(args.size() > 1) {
+			String arg = args.get(args.size() - 1);
+			
+			if(!arg.equalsIgnoreCase("-i") && !arg.equalsIgnoreCase("-p") && !arg.equalsIgnoreCase("-c")) {
+				if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+					if("-i".startsWith(arg)) {
+						list.add("-i");
+					}
+					if("-p".startsWith(arg)) {
+						list.add("-p");
+					}
+					if("-c".startsWith(arg)) {
+						list.add("-c");
+					}
+					if("-c".startsWith(arg)) {
+						list.add("-c");
+					}
+					if("--stop".startsWith(arg)) {
+						list.add("--stop");
+					}
+					if("--verbose".startsWith(arg)) {
+						list.add("--verbose");
+					}
+				} else {
+					if(!args.contains("-i")) {
+						list.add("-i");
+					}
+					if(!args.contains("-p")) {
+						list.add("-p");
+					}
+					if(!args.contains("-c")) {
+						list.add("-c");
+					}
+					if(!args.contains("--verbose")) {
+						list.add("--verbose");
+					}
+					if(!args.contains("--stop")) {
+						list.add("--stop");
+					}
+				}
+			}
+			
+			return list;
+		}
+		
 		return list;
 	}
 

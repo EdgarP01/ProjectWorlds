@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,47 +30,36 @@ public class CommandGamemode implements CommandCallable {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		String[] args = arguments.split(" ");
+		List<String> args = Arrays.asList(arguments.split(" "));
 		
-		if(args[args.length - 1].equalsIgnoreCase("--help")) {
-			help.execute(source);
+		if(args.contains("--help")) {
+			getHelp().execute(source);
 			return CommandResult.success();
 		}
 		
-		String worldName;
-		String gm;
-		
-		try {
-			worldName = args[0];
-		} catch(Exception e) {
+		if(args.size() != 2) {
 			throw new CommandException(getHelp().getUsageText());
 		}
 		
-		try {
-			gm = args[1];
-		} catch(Exception e) {
-			throw new CommandException(getHelp().getUsageText());
-		}
-		
-		Optional<WorldProperties> optionalWorld = Sponge.getServer().getWorldProperties(worldName);
+		Optional<WorldProperties> optionalWorld = Sponge.getServer().getWorldProperties(args.get(0));
 		
 		if(!optionalWorld.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"), false);
+			throw new CommandException(Text.of(TextColors.RED, args.get(0), " does not exist"), false);
 		}
 		WorldProperties world = optionalWorld.get();
 
-		Optional<GameMode> optionalGameMode = Gamemode.get(gm);
+		Optional<GameMode> optionalGameMode = Gamemode.get(args.get(1));
 		
 		if(!optionalGameMode.isPresent()) {
 			try {
-				optionalGameMode = Gamemode.get(Integer.parseInt(gm));
+				optionalGameMode = Gamemode.get(Integer.parseInt(args.get(1)));
 			} catch(Exception e) {
-				source.sendMessage(Text.of(TextColors.YELLOW, gm, " is not a valid GameMode"));
+				source.sendMessage(Text.of(TextColors.YELLOW, args.get(1), " is not a valid GameMode"));
 				throw new CommandException(getHelp().getUsageText());
 			}
 			
 			if(!optionalGameMode.isPresent()) {
-				source.sendMessage(Text.of(TextColors.YELLOW, gm, " is not a valid GameMode"));
+				source.sendMessage(Text.of(TextColors.YELLOW, args.get(1), " is not a valid GameMode"));
 				throw new CommandException(getHelp().getUsageText());
 			}
 		}
@@ -88,45 +78,54 @@ public class CommandGamemode implements CommandCallable {
 	@Override
 	public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
 		List<String> list = new ArrayList<>();
+
+		if(arguments.equalsIgnoreCase("")) {
+			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+				list.add(world.getWorldName());
+			}
+			
+			return list;
+		}
 		
-		if(arguments.equalsIgnoreCase("gamemode")) {
+		List<String> args = Arrays.asList(arguments.split(" "));
+
+		if(args.size() == 1) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+					if(world.getWorldName().toLowerCase().equalsIgnoreCase(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+					
+					if(world.getWorldName().toLowerCase().startsWith(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+				}
+			} else {
+				for(Gamemode gamemode : Gamemode.values()) {
+					list.add(gamemode.getGameMode().getName());
+					list.add(Integer.toString(gamemode.getIndex()));
+				}
+			}
+			
 			return list;
 		}
 
-		String[] args = arguments.split(" ");
-		
-		if(args.length == 1) {
-			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
-				if(world.getWorldName().equalsIgnoreCase(args[0])) {
-					for(Gamemode gamemode : Gamemode.values()) {
+		if(args.size() == 2) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(Gamemode gamemode : Gamemode.values()) {
+					if(gamemode.getGameMode().getName().equalsIgnoreCase(args.get(1))) {
 						list.add(gamemode.getGameMode().getName());
-						list.add(Integer.toString(gamemode.getIndex()));
 					}
 					
-					return list;
-				}
-				
-				if(world.getWorldName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					list.add(world.getWorldName());
-				}
-			}
-		}
-		
-		if(args.length == 2) {
-			for(Gamemode gamemode : Gamemode.values()) {
-				if(gamemode.getGameMode().getName().equalsIgnoreCase(args[1])) {
-					return list;
-				}
-				try {
-					Integer.parseInt(args[1]);
-				} catch (Exception e) {
-					if(gamemode.getGameMode().getName().toLowerCase().startsWith(args[1].toLowerCase())) {
+					if(gamemode.getGameMode().getName().toLowerCase().startsWith(args.get(1).toLowerCase())) {
 						list.add(gamemode.getGameMode().getName());
 					}
 				}
 			}
+			
+			return list;
 		}
-		
+
 		return list;
 	}
 

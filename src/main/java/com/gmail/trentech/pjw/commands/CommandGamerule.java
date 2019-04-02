@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -30,38 +31,25 @@ public class CommandGamerule implements CommandCallable {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		String[] args = arguments.split(" ");
+		List<String> args = Arrays.asList(arguments.split(" "));
 		
-		if(args[args.length - 1].equalsIgnoreCase("--help")) {
+		if(args.contains("--help")) {
 			getHelp().execute(source);
 			return CommandResult.success();
 		}
 		
-		String worldName;
-
-		try {
-			worldName = args[0];
-		} catch(Exception e) {
+		if(args.size() < 2) {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(worldName);
+		Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(args.get(0));
 		
 		if(!optionalProperties.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"), false);
+			throw new CommandException(Text.of(TextColors.RED, args.get(0), " does not exist"), false);
 		}
 		WorldProperties properties = optionalProperties.get();
 
-		String rule;
-		
-		try {
-			rule = args[1];
-			
-			if(!validGamerule(properties, rule)) {
-				source.sendMessage(Text.of(TextColors.YELLOW, rule, " is not a valid Gamerule"));
-				throw new CommandException(getHelp().getUsageText());
-			}
-		} catch(Exception e) {
+		if(args.size() == 1) {
 			List<Text> list = new ArrayList<>();
 
 			for (Entry<String, String> gamerule : properties.getGameRules().entrySet()) {
@@ -83,20 +71,25 @@ public class CommandGamerule implements CommandCallable {
 			return CommandResult.success();
 		}
 		
-		String value;
+		String rule = args.get(1);
 		
-		try {
-			value = args[2];
-			
-			if (!isValid(rule, value)) {
-				source.sendMessage(Text.of(TextColors.YELLOW, value, " is not a valid Value for Gamerule ", rule));
-				throw new CommandException(getHelp().getUsageText());
-			}
-		} catch(Exception e) {
+		if(!validGamerule(properties, rule)) {
+			source.sendMessage(Text.of(TextColors.YELLOW, rule, " is not a valid Gamerule"));
+			throw new CommandException(getHelp().getUsageText());
+		}
+
+		if(args.size() == 2) {
 			source.sendMessage(Text.of(TextColors.GREEN, rule, ": ", TextColors.WHITE, properties.getGameRule(rule).get()));
 			return CommandResult.success();
 		}
 		
+		String value = args.get(2);
+		
+		if (!isValid(rule, value)) {
+			source.sendMessage(Text.of(TextColors.YELLOW, value, " is not a valid Value for Gamerule ", rule));
+			throw new CommandException(getHelp().getUsageText());
+		}
+
 		properties.setGameRule(rule, value.toLowerCase());
 		Sponge.getServer().saveWorldProperties(properties);
 		
@@ -108,40 +101,65 @@ public class CommandGamerule implements CommandCallable {
 	@Override
 	public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
 		List<String> list = new ArrayList<>();
+
+		if(arguments.equalsIgnoreCase("")) {
+			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+				list.add(world.getWorldName());
+			}
+			
+			return list;
+		}
 		
-		if(arguments.equalsIgnoreCase("gamerule")) {
+		List<String> args = Arrays.asList(arguments.split(" "));
+
+		if(args.size() == 1) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+					if(world.getWorldName().toLowerCase().equalsIgnoreCase(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+					
+					if(world.getWorldName().toLowerCase().startsWith(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+				}
+			} else {
+				Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(args.get(0));
+				
+				if(optionalProperties.isPresent()) {
+					WorldProperties properties = optionalProperties.get();
+					
+					for (Entry<String, String> gamerule : properties.getGameRules().entrySet()) {
+						list.add(gamerule.getKey());
+					}
+				}
+			}
+			
 			return list;
 		}
 
-		String[] args = arguments.split(" ");
-		
-		if(args.length == 1) {
-			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
-				if(world.getWorldName().equalsIgnoreCase(args[0])) {
-					for(Entry<String, String> entry : world.getGameRules().entrySet()) {
-						list.add(entry.getKey());
+		if(args.size() == 2) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(args.get(0));
+				
+				if(optionalProperties.isPresent()) {
+					WorldProperties properties = optionalProperties.get();
+					
+					for (Entry<String, String> gamerule : properties.getGameRules().entrySet()) {
+						if(gamerule.getKey().equalsIgnoreCase(args.get(1))) {
+							list.add(gamerule.getKey());
+						}
+						
+						if(gamerule.getKey().toLowerCase().startsWith(args.get(1).toLowerCase())) {
+							list.add(gamerule.getKey());
+						}
 					}
-					return list;
-				}
-				
-				if(world.getWorldName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					list.add(world.getWorldName());
 				}
 			}
+			
+			return list;
 		}
-		
-		if(args.length == 2) {
-			for(Entry<String, String> entry : Sponge.getServer().getWorldProperties(args[0]).get().getGameRules().entrySet()) {
-				if(entry.getKey().toLowerCase().equalsIgnoreCase(args[1].toLowerCase())) {
-					return list;
-				}
-				
-				if(entry.getKey().toLowerCase().startsWith(args[1].toLowerCase())) {
-					list.add(entry.getKey());
-				}
-			}
-		}
-		
+
 		return list;
 	}
 

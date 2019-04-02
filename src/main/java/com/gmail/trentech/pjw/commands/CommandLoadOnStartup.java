@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,41 +28,33 @@ public class CommandLoadOnStartup implements CommandCallable {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		String[] args = arguments.split(" ");
+		List<String> args = Arrays.asList(arguments.split(" "));
 		
-		if(args[args.length - 1].equalsIgnoreCase("--help")) {
-			help.execute(source);
+		if(args.contains("--help")) {
+			getHelp().execute(source);
 			return CommandResult.success();
 		}
 		
-		String worldName;
-		String bool;
-		
-		try {
-			worldName = args[0];
-		} catch(Exception e) {
+		if(args.isEmpty() || args.size() < 2 || args.size() > 3) {
 			throw new CommandException(getHelp().getUsageText());
 		}
 		
-		try {
-			bool = args[1];
-		} catch(Exception e) {
-			throw new CommandException(getHelp().getUsageText());
-		}
-		
-		Optional<WorldProperties> optionalWorld = Sponge.getServer().getWorldProperties(worldName);
+		Optional<WorldProperties> optionalWorld = Sponge.getServer().getWorldProperties(args.get(0));
 		
 		if(!optionalWorld.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"), false);
+			throw new CommandException(Text.of(TextColors.RED, args.get(0), " does not exist"), false);
 		}
 		WorldProperties world = optionalWorld.get();
 
-		if(bool.equalsIgnoreCase("true") || bool.equalsIgnoreCase("false")) {
-			world.setLoadOnStartup(Boolean.valueOf(bool));
+		if(!args.get(1).equalsIgnoreCase("true") && !args.get(1).equalsIgnoreCase("false")) {
+			throw new CommandException(Text.of(TextColors.RED, args.get(1), " is not a valid boolean"), false);
 		}
+
+		world.setLoadOnStartup(Boolean.valueOf(args.get(1)));
+		
 		Sponge.getServer().saveWorldProperties(world);
 		
-		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Set load on startup of ", world.getWorldName(), " to ", TextColors.YELLOW, bool));
+		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Set load on startup of ", world.getWorldName(), " to ", TextColors.YELLOW, args.get(1)));
 
 		return CommandResult.success();
 	}

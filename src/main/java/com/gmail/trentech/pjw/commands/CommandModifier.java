@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -31,34 +32,27 @@ public class CommandModifier implements CommandCallable {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		String[] args = arguments.split(" ");
+		List<String> args = Arrays.asList(arguments.split(" "));
 		
-		if(args[args.length - 1].equalsIgnoreCase("--help")) {
-			help.execute(source);
+		if(args.contains("--help")) {
+			getHelp().execute(source);
 			return CommandResult.success();
 		}
 		
-		String worldName;
-		String mod;
-		
-		try {
-			worldName = args[0];
-		} catch(Exception e) {
+		if(args.size() < 1) {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		Optional<WorldProperties> optionalWorld = Sponge.getServer().getWorldProperties(worldName);
+		Optional<WorldProperties> optionalWorld = Sponge.getServer().getWorldProperties(args.get(0));
 		
 		if(!optionalWorld.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"), false);
+			throw new CommandException(Text.of(TextColors.RED, args.get(0), " does not exist"), false);
 		}
 		WorldProperties world = optionalWorld.get();
 
 		Collection<WorldGeneratorModifier> modifiers = world.getGeneratorModifiers();
 		
-		try {
-			mod = args[1];
-		} catch(Exception e) {
+		if(args.size() == 1) {
 			List<Text> list = new ArrayList<>();
 
 			for (WorldGeneratorModifier modifier : modifiers) {
@@ -82,27 +76,25 @@ public class CommandModifier implements CommandCallable {
 			return CommandResult.success();
 		}
 
-		Optional<WorldGeneratorModifier> optionalModifier = Sponge.getRegistry().getType(WorldGeneratorModifier.class, mod);
+		Optional<WorldGeneratorModifier> optionalModifier = Sponge.getRegistry().getType(WorldGeneratorModifier.class, args.get(1));
 		
 		if(!optionalModifier.isPresent()) {
-			source.sendMessage(Text.of(TextColors.YELLOW, mod, " is not a valid WorldGeneratorModifier"));
+			source.sendMessage(Text.of(TextColors.YELLOW, args.get(1), " is not a valid WorldGeneratorModifier"));
 			throw new CommandException(getHelp().getUsageText());
 		}	
 		WorldGeneratorModifier modifier = optionalModifier.get();
 
-		try {
-			if(args[2].equalsIgnoreCase("-r")) {
-				modifiers.remove(modifier);
-				
+		if(args.size() == 3) {
+			if(args.get(2).equalsIgnoreCase("--remove")) {
+				modifiers.remove(modifier);		
 				world.setGeneratorModifiers(modifiers);
 
 				source.sendMessage(Text.of(TextColors.DARK_GREEN, "Removed modifier ", modifier.getId(), " to ", world.getWorldName()));
 			} else {
 				throw new CommandException(getHelp().getUsageText());
 			}
-		} catch(Exception e) {
+		} else {
 			modifiers.add(modifier);
-			
 			world.setGeneratorModifiers(modifiers);
 
 			source.sendMessage(Text.of(TextColors.DARK_GREEN, "Added modifier ", modifier.getId(), " to ", world.getWorldName()));
