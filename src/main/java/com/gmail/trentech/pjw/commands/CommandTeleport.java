@@ -129,7 +129,7 @@ public class CommandTeleport implements CommandCallable {
 			Optional<Location<World>> optionalLocation = TeleportManager.getSafeLocation(location);
 
 			if (!optionalLocation.isPresent()) {
-				throw new CommandException(Text.of(Text.builder().color(TextColors.RED).append(Text.of("Unsafe spawn point detected. ")).onClick(TextActions.executeCallback(TeleportManager.setUnsafeLocation(location))).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build(), TextColors.RED, " or use the -f flag to force teleport."));
+				throw new CommandException(Text.of(Text.builder().color(TextColors.RED).append(Text.of("Unsafe spawn point detected. ")).onClick(TextActions.executeCallback(TeleportManager.setUnsafeLocation(location))).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build(), TextColors.RED, " or use the --force flag to force teleport."));
 			}
 			
 			location = optionalLocation.get();
