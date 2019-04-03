@@ -98,7 +98,7 @@ public class CommandGenerate implements CommandCallable {
 				continue;
 			}
 
-			if(arg.equalsIgnoreCase("-i") || arg.equalsIgnoreCase("-tickInterval")) {
+			if(arg.equalsIgnoreCase("-tickInterval")) {
 				String value;
 				try {
 					value = args.get(args.indexOf(arg) + 1);
@@ -115,7 +115,7 @@ public class CommandGenerate implements CommandCallable {
 				
 				generator.tickInterval(tickInterval);
 				skip = true;
-			} else if (arg.equalsIgnoreCase("-p") || arg.equalsIgnoreCase("-tickPercent")) {
+			} else if (arg.equalsIgnoreCase("-tickPercent")) {
 				String value;
 				try {
 					value = args.get(args.indexOf(arg) + 1);
@@ -132,7 +132,7 @@ public class CommandGenerate implements CommandCallable {
 				
 				generator.tickPercentLimit(tickPercent);
 				skip = true;
-			} else if (arg.equalsIgnoreCase("-c") || arg.equalsIgnoreCase("-chunkCount")) {
+			} else if (arg.equalsIgnoreCase("-chunkCount")) {
 				String value;
 				try {
 					value = args.get(args.indexOf(arg) + 1);
@@ -196,9 +196,9 @@ public class CommandGenerate implements CommandCallable {
 					}
 				}
 			} else {
-				list.add("-i");
-				list.add("-p");
-				list.add("-c");
+				list.add("-tickInterval");
+				list.add("-tickPercent");
+				list.add("-chunkCount");
 				list.add("--verbose");
 				list.add("--stop");
 			}
@@ -209,19 +209,16 @@ public class CommandGenerate implements CommandCallable {
 		if(args.size() > 1) {
 			String arg = args.get(args.size() - 1);
 			
-			if(!arg.equalsIgnoreCase("-i") && !arg.equalsIgnoreCase("-p") && !arg.equalsIgnoreCase("-c")) {
+			if(!arg.equalsIgnoreCase("-tickInterval") && !arg.equalsIgnoreCase("-tickPercent") && !arg.equalsIgnoreCase("-chunkCount")) {
 				if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
-					if("-i".startsWith(arg)) {
-						list.add("-i");
+					if("-tickInterval".startsWith(arg)) {
+						list.add("-tickInterval");
 					}
-					if("-p".startsWith(arg)) {
-						list.add("-p");
+					if("-tickPercent".startsWith(arg)) {
+						list.add("-tickPercent");
 					}
-					if("-c".startsWith(arg)) {
-						list.add("-c");
-					}
-					if("-c".startsWith(arg)) {
-						list.add("-c");
+					if("-chunkCount".startsWith(arg)) {
+						list.add("-chunkCount");
 					}
 					if("--stop".startsWith(arg)) {
 						list.add("--stop");
@@ -230,14 +227,14 @@ public class CommandGenerate implements CommandCallable {
 						list.add("--verbose");
 					}
 				} else {
-					if(!args.contains("-i")) {
-						list.add("-i");
+					if(!args.contains("-tickInterval")) {
+						list.add("-tickInterval");
 					}
-					if(!args.contains("-p")) {
-						list.add("-p");
+					if(!args.contains("-tickPercent")) {
+						list.add("-tickPercent");
 					}
-					if(!args.contains("-c")) {
-						list.add("-c");
+					if(!args.contains("-chunkCount")) {
+						list.add("-chunkCount");
 					}
 					if(!args.contains("--verbose")) {
 						list.add("--verbose");

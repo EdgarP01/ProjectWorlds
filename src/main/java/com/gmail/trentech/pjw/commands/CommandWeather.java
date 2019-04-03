@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,27 +29,21 @@ public class CommandWeather implements CommandCallable {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		String[] args = arguments.split(" ");
+		List<String> args = Arrays.asList(arguments.split(" "));
 		
-		if(args[args.length - 1].equalsIgnoreCase("--help")) {
+		if(args.contains("--help")) {
 			getHelp().execute(source);
 			return CommandResult.success();
 		}
 		
-		String worldName;
-		String value;
-		int duration = 0;
-		
-		try {
-			worldName = args[0];
-		} catch(Exception e) {
+		if(args.size() < 1) {
 			throw new CommandException(getHelp().getUsageText());
 		}
-
-		Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(worldName);
+		
+		Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(args.get(0));
 		
 		if(!optionalProperties.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"), false);
+			throw new CommandException(Text.of(TextColors.RED, args.get(0), " does not exist"), false);
 		}
 		WorldProperties properties = optionalProperties.get();
 
@@ -59,9 +54,7 @@ public class CommandWeather implements CommandCallable {
 		}
 		World world = optionalWorld.get();
 		
-		try {
-			value = args[1];
-		} catch(Exception e) {
+		if(args.size() == 1) {
 			if(properties.isRaining()) {
 				source.sendMessage(Text.of(TextColors.GREEN, "Weather: ", TextColors.WHITE, "rain"));
 			} else if(properties.isThundering()) {
@@ -72,10 +65,14 @@ public class CommandWeather implements CommandCallable {
 			
 			return CommandResult.success();
 		}
+
+		String value = args.get(1);
 		
-		if(args.length == 3) {
+		int duration = 0;
+		
+		if(args.size() == 3) {			
 			try {
-				duration = Integer.parseInt(args[2]);
+				duration = Integer.parseInt(args.get(2));
 			} catch(Exception e) {
 				throw new CommandException(getHelp().getUsageText());
 			}
@@ -113,43 +110,63 @@ public class CommandWeather implements CommandCallable {
 	@Override
 	public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
 		List<String> list = new ArrayList<>();
+
+		if(arguments.equalsIgnoreCase("")) {
+			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+				list.add(world.getWorldName());
+			}
+			
+			return list;
+		}
 		
-		if(arguments.equalsIgnoreCase("weather")) {
+		List<String> args = Arrays.asList(arguments.split(" "));
+
+		if(args.size() == 1) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+					if(world.getWorldName().toLowerCase().equalsIgnoreCase(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+					
+					if(world.getWorldName().toLowerCase().startsWith(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+				}
+			} else {
+				list.add("clear");
+				list.add("thunder");
+				list.add("rain");
+			}
+			
+			return list;
+		}
+		
+		if(args.size() == 2) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				if("clear".equalsIgnoreCase(args.get(1))) {
+					list.add("clear");
+				}
+				if("rain".equalsIgnoreCase(args.get(1))) {
+					list.add("rain");
+				}
+				if("thunder".equalsIgnoreCase(args.get(1))) {
+					list.add("thunder");
+				}
+				
+				if("clear".toLowerCase().startsWith(args.get(1).toLowerCase())) {
+					list.add("clear");
+				}
+				if("rain".toLowerCase().startsWith(args.get(1).toLowerCase())) {
+					list.add("rain");
+				}
+				if("thunder".toLowerCase().startsWith(args.get(1).toLowerCase())) {
+					list.add("thunder");
+				}
+			}
+			
 			return list;
 		}
 
-		String[] args = arguments.split(" ");
-		
-		if(args.length == 1) {
-			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
-				if(world.getWorldName().equalsIgnoreCase(args[0])) {
-					list.add("clear");
-					list.add("thunder");
-					list.add("rain");
-					return list;
-				}
-				
-				if(world.getWorldName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					list.add(world.getWorldName());
-				}
-			}
-		}
-		
-		if(args.length == 2) {
-			if("clear".equalsIgnoreCase(args[1]) || "rain".equalsIgnoreCase(args[1]) || "thunder".equalsIgnoreCase(args[1])) {
-				return list;
-			}
-			if("clear".toLowerCase().startsWith(args[1].toLowerCase())) {
-				list.add("clear");
-			}
-			if("rain".toLowerCase().startsWith(args[1].toLowerCase())) {
-				list.add("rain");
-			}
-			if("thunder".toLowerCase().startsWith(args[1].toLowerCase())) {
-				list.add("thunder");
-			}
-		}
-		
 		return list;
 	}
 

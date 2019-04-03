@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,41 +29,34 @@ public class CommandTime implements CommandCallable {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		String[] args = arguments.split(" ");
+		List<String> args = Arrays.asList(arguments.split(" "));
 		
-		if(args[args.length - 1].equalsIgnoreCase("--help")) {
+		if(args.contains("--help")) {
 			getHelp().execute(source);
 			return CommandResult.success();
 		}
 		
-		String worldName;
-		String value;
-		long time = 0;
-		
-		try {
-			worldName = args[0];
-		} catch(Exception e) {
+		if(args.size() > 1) {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(worldName);
+		Optional<WorldProperties> optionalWorld = Sponge.getServer().getWorldProperties(args.get(0));
 		
-		if(!optionalProperties.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"), false);
+		if(!optionalWorld.isPresent()) {
+			throw new CommandException(Text.of(TextColors.RED, args.get(0), " does not exist"), false);
 		}
-		WorldProperties world = optionalProperties.get();
+		WorldProperties world = optionalWorld.get();
 		
-		try {
-			value = args[1];
-		} catch(Exception e) {
+		if(args.size() != 2) {
 			source.sendMessage(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, Utils.getTime(world.getWorldTime()), TextColors.GREEN, " Ticks: ", TextColors.WHITE, world.getWorldTime() % 24000));			
 			return CommandResult.success();
 		}
 
+		long time = 0;
 		try {
-			time = Long.parseLong(value);
+			time = Long.parseLong(args.get(1));
 		} catch(Exception e) {
-			throw new CommandException(getHelp().getUsageText());
+			throw new CommandException(Text.of(TextColors.RED, args.get(1), "is not a valid number"), false);
 		}
 		
 		if(time < 0 || time > 24000) {
@@ -79,25 +73,33 @@ public class CommandTime implements CommandCallable {
 	@Override
 	public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
 		List<String> list = new ArrayList<>();
+
+		if(arguments.equalsIgnoreCase("")) {
+			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+				list.add(world.getWorldName());
+			}
+			
+			return list;
+		}
 		
-		if(arguments.equalsIgnoreCase("time")) {
+		List<String> args = Arrays.asList(arguments.split(" "));
+
+		if(args.size() == 1) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+					if(world.getWorldName().toLowerCase().equalsIgnoreCase(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+					
+					if(world.getWorldName().toLowerCase().startsWith(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+				}
+			}
+			
 			return list;
 		}
 
-		String[] args = arguments.split(" ");
-		
-		if(args.length == 1) {
-			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
-				if(world.getWorldName().equalsIgnoreCase(args[0])) {
-					return list;
-				}
-				
-				if(world.getWorldName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					list.add(world.getWorldName());
-				}
-			}
-		}
-		
 		return list;
 	}
 

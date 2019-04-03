@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +26,6 @@ public class CommandSetSpawn implements CommandCallable {
 
 	@Override
 	public CommandResult process(CommandSource source, String arguments) throws CommandException {
-		String worldName;
 		WorldProperties properties;
 		Vector3i vector3i;
 		
@@ -38,50 +38,31 @@ public class CommandSetSpawn implements CommandCallable {
 				throw new CommandException(getHelp().getUsageText());
 			}
 		} else {
-			String[] args = arguments.split(" ");
+			List<String> args = Arrays.asList(arguments.split(" "));
 			
-			if(args[args.length - 1].equalsIgnoreCase("--help")) {
+			if(args.contains("--help")) {
 				getHelp().execute(source);
 				return CommandResult.success();
 			}
 			
-			try {
-				worldName = args[0];
-				
-				Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(worldName);
-				
-				if(!optionalProperties.isPresent()) {
-					throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"), false);
-				}
-				properties = optionalProperties.get();
-			} catch(Exception e) {
-				if(source instanceof Player) {
-					properties = ((Player) source).getWorld().getProperties();
-				} else {
-					source.sendMessage(Text.of(TextColors.YELLOW, "Console must provide <world> and <x,y,z>"));
-					throw new CommandException(getHelp().getUsageText());
-				}
+			if(args.size() != 2) {
+				throw new CommandException(getHelp().getUsageText());
 			}
 			
-			String coords;
-
-			try {
-				coords = args[1];
-				String[] coordinates = args[1].split(",");
-
-				if (!isValidLocation(coordinates)) {
-					throw new CommandException(Text.of(TextColors.RED, coords.toString(), " is not valid"), true);
-				}
-				
-				vector3i = new Vector3i().add(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]), Integer.parseInt(coordinates[2]));
-			} catch (Exception e) {
-				if(source instanceof Player) {
-					vector3i = ((Player) source).getLocation().getBlockPosition();
-				} else {
-					source.sendMessage(Text.of(TextColors.YELLOW, "Console must provide <world> and <x,y,z>"));
-					throw new CommandException(getHelp().getUsageText());
-				}
+			Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(args.get(0));
+			
+			if(!optionalProperties.isPresent()) {
+				throw new CommandException(Text.of(TextColors.RED, args.get(0), " does not exist"), false);
 			}
+			properties = optionalProperties.get();
+
+			String[] coordinates = args.get(1).split(",");
+
+			if (!isValidLocation(coordinates)) {
+				throw new CommandException(Text.of(TextColors.RED, args.get(1), " is not valid"), true);
+			}
+			
+			vector3i = new Vector3i().add(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]), Integer.parseInt(coordinates[2]));
 		}
 
 		properties.setSpawnPosition(vector3i);
@@ -95,21 +76,33 @@ public class CommandSetSpawn implements CommandCallable {
 	@Override
 	public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
 		List<String> list = new ArrayList<>();
+
+		if(arguments.equalsIgnoreCase("")) {
+			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+				list.add(world.getWorldName());
+			}
+			
+			return list;
+		}
 		
-		if(arguments.equalsIgnoreCase("setspawn")) {
+		List<String> args = Arrays.asList(arguments.split(" "));
+
+		if(args.size() == 1) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+					if(world.getWorldName().toLowerCase().equalsIgnoreCase(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+					
+					if(world.getWorldName().toLowerCase().startsWith(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+				}
+			}
+			
 			return list;
 		}
 
-		for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
-			if(world.getWorldName().equalsIgnoreCase(arguments)) {
-				return list;
-			}
-			
-			if(world.getWorldName().toLowerCase().startsWith(arguments.toLowerCase())) {
-				list.add(world.getWorldName());
-			}
-		}
-		
 		return list;
 	}
 

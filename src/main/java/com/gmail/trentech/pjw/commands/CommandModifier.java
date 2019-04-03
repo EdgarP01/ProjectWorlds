@@ -106,39 +106,66 @@ public class CommandModifier implements CommandCallable {
 	@Override
 	public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
 		List<String> list = new ArrayList<>();
-		
-		if(arguments.equalsIgnoreCase("modifier")) {
+
+		if(arguments.equalsIgnoreCase("")) {
+			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+				list.add(world.getWorldName());
+			}
+			
 			return list;
 		}
-
-		String[] args = arguments.split(" ");
 		
-		if(args.length == 1) {
-			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
-				if(world.getWorldName().equalsIgnoreCase(args[0])) {
-					for(WorldGeneratorModifier modifier : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
-						list.add(modifier.getId());
+		List<String> args = Arrays.asList(arguments.split(" "));
+
+		if(args.size() == 1) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+					if(world.getWorldName().toLowerCase().equalsIgnoreCase(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
 					}
 					
-					return list;
+					if(world.getWorldName().toLowerCase().startsWith(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
 				}
-				
-				if(world.getWorldName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					list.add(world.getWorldName());
-				}
-			}
-		}
-		
-		if(args.length >= 2) {
-			for(WorldGeneratorModifier modifier : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
-				if(modifier.getId().equalsIgnoreCase(args[1])) {
-					return list;
-				}
-
-				if(modifier.getId().toLowerCase().startsWith(args[1].toLowerCase())) {
+			} else {
+				for(WorldGeneratorModifier modifier : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
 					list.add(modifier.getId());
 				}
 			}
+			
+			return list;
+		}
+
+		if(args.size() == 2) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(WorldGeneratorModifier modifier : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
+					if(modifier.getId().equalsIgnoreCase(args.get(1))) {
+						list.add(modifier.getId());
+					}
+
+					if(modifier.getId().toLowerCase().startsWith(args.get(1).toLowerCase())) {
+						list.add(modifier.getId());
+					}
+				}
+			} else {
+				list.add("--remove");
+			}
+			
+			return list;
+		}
+
+		if(args.size() == 3) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				if("--remove".equalsIgnoreCase(args.get(2))) {
+					list.add("--remove");
+				}
+				if("--remove".startsWith(args.get(2).toLowerCase())) {
+					list.add("--remove");
+				}
+			}
+			
+			return list;
 		}
 		
 		return list;

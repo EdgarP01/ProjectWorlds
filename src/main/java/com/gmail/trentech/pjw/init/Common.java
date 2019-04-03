@@ -77,26 +77,26 @@ public class Common {
 	    }
 	    
 	    Usage usageCreate = new Usage(Argument.of("<world>", "Specifies the name of the world"))
-				.addArgument(Argument.of("[-d <dimensionType>]", dimTypes))
-				.addArgument(Argument.of("[-g <generatorType>]", genTypes))
-				.addArgument(Argument.of("[-o <options>]", "Sets custom world generator settings. Create unique worlds or simply customize flat worlds. Check out http://minecraft.tools/en/ for generated json strings"))
-				.addArgument(Argument.of("[-m <modifier>]", modTypes))
-				.addArgument(Argument.of("[-df <difficulty>]", difficulties))
-				.addArgument(Argument.of("[-gm <gameMode>]", gameModes))
-				.addArgument(Argument.of("[-s <seed>]", "Sets the seed. If not specified this will default to using a random seed."))
-				.addArgument(Argument.of("[-l <true|false>]", "Sets whether to load when the server starts. Default is true"))
-				.addArgument(Argument.of("[-k <true|false>]", "Sets whether the spawn chunks should remain loaded when no players are present. Default is true"))
-				.addArgument(Argument.of("[-b <true|false>]", "Set whether to generator bonus chest. Default is false"))
-				.addArgument(Argument.of("[-c <true|false>]", "Sets whether commands are allowed to be executed. Default is true"))
-				.addArgument(Argument.of("[-f <true|false>]", "Sets whether this world will generate map features such as villages and strongholds. Default is true"));
+				.addArgument(Argument.of("[-dimension <value>]", dimTypes))
+				.addArgument(Argument.of("[-generator <value>]", genTypes))
+				.addArgument(Argument.of("[-options <json>]", "Sets custom world generator settings. Create unique worlds or simply customize flat worlds. Check out http://minecraft.tools/en/ for generated json strings"))
+				.addArgument(Argument.of("[-modifier <value>]", modTypes))
+				.addArgument(Argument.of("[-difficulty <value>]", difficulties))
+				.addArgument(Argument.of("[-gameMode <value>]", gameModes))
+				.addArgument(Argument.of("[-seed <value>]", "Sets the seed. If not specified this will default to using a random seed."))
+				.addArgument(Argument.of("[--loadsOnStartup]", "With this flag, the world will load on start up."))
+				.addArgument(Argument.of("[--keepsSpawnLoaded]", "With this flag, the world will keep spawn loaded when no players are present."))
+				.addArgument(Argument.of("[--generateBonusChest]", "With this flag, the world will generate a bonus chest at spawn on first load."))
+				.addArgument(Argument.of("[--commandsAllowed]", "With this flag, command blocks will be allowed in world"))
+				.addArgument(Argument.of("[--usesMapFeatures]", "With this flag, world world will generate map features such as villages and strongholds."));
 	    
 		Help worldCreate = new Help("world create", "create", "Allows you to creating new worlds with a combination of features. This does not automatically load newly created worlds.")
 				.setPermission("pjw.cmd.world.create")
 				.setUsage(usageCreate)
-				.addExample("/world create NewWorld -d minecraft:overworld -g minecraft:overworld")
-				.addExample("/world create NewWorld -g minecraft:flat -o 3;30*minecraft:bedrock;1")
-				.addExample("/world create NewWorld -d sponge:nether -m sponge:skylands")
-				.addExample("/world create NewWorld -s -12309830198412353456");
+				.addExample("/world create NewWorld -dimension minecraft:overworld -g minecraft:overworld")
+				.addExample("/world create NewWorld -generator minecraft:flat -o 3;30*minecraft:bedrock;1")
+				.addExample("/world create NewWorld -dimension sponge:nether -modifier sponge:skylands")
+				.addExample("/world create NewWorld -seed -12309830198412353456");
 		
 		Usage usageModifier = new Usage(Argument.of("<world>", "Specifies the targetted world"))
 				.addArgument(Argument.of("<modifier>", modTypes))
@@ -259,7 +259,7 @@ public class Common {
 				.addExample("/world rename MyWorld NewWorldName");
 		
 		Usage usageSetSpawn = new Usage(Argument.of("[<world>", "Specifies the targetted world"))
-				.addArgument(Argument.of("[x,y,z]]", "Specifies the coordinates to set spawn to. x and z must fall within the range -30,000,000 to 30,000,000 (exclusive, without the commas), and y must be within the range -4096 to 4096 inclusive."));
+				.addArgument(Argument.of("<x,y,z>]", "Specifies the coordinates to set spawn to. x and z must fall within the range -30,000,000 to 30,000,000 (exclusive, without the commas), and y must be within the range -4096 to 4096 inclusive."));
 		
 		Help worldSetSpawn = new Help("world setspawn", "setspawn", "Sets the spawn point of specified world. If no arguments present sets spawn of current world to player location")
 				.setPermission("pjw.cmd.world.setspawn")
@@ -268,17 +268,17 @@ public class Common {
 				.addExample("/world setspawn");
 		
 		Usage usageTeleport = new Usage(Argument.of("<world>", "Specifies the targetted world"))
-				.addArgument(Argument.of("[-c <x,y,z>]", "Specifies the coordinates to teleport to. x and z must fall within the range -30,000,000 to 30,000,000 (exclusive, without the commas), and y must be within the range -4096 to 4096 inclusive. Set to 'random' to teleport to random location"))
-				.addArgument(Argument.of("[-d <direction>]", "Specifies the direction player will face upon teleporting. The following can be used: NORTH, NORTH_WEST, WEST, SOUTH_WEST, SOUTH, SOUTH_EAST, EAST, NORTH_EAST"))
-				.addArgument(Argument.of("[-f]", "Skip safe location check. This flag has no effect with '-c random'"));
+				.addArgument(Argument.of("[-coords <x,y,z>]", "Specifies the coordinates to teleport to. x and z must fall within the range -30,000,000 to 30,000,000 (exclusive, without the commas), and y must be within the range -4096 to 4096 inclusive. Set to 'random' to teleport to random location"))
+				.addArgument(Argument.of("[-direction <value>]", "Specifies the direction player will face upon teleporting. The following can be used: NORTH, NORTH_WEST, WEST, SOUTH_WEST, SOUTH, SOUTH_EAST, EAST, NORTH_EAST"))
+				.addArgument(Argument.of("[--force]", "Skip safe location check. This flag has no effect with '-coords random'"));
 		
 		Help worldTeleport = new Help("world teleport", "teleport", "Teleport to specified world and location")
 				.setPermission("pjw.cmd.world.teleport")
 				.setUsage(usageTeleport)
-				.addExample("/world teleport MyWorld -c -153,75,300 -d WEST")
-				.addExample("/world teleport MyWorld -c -153,75,300")
+				.addExample("/world teleport MyWorld -coords -153,75,300 -direction WEST")
+				.addExample("/world teleport MyWorld -coords -153,75,300")
 				.addExample("/world teleport MyWorld")
-				.addExample("/world teleport MyWorld -f");
+				.addExample("/world teleport MyWorld --force");
 		
 		Help worldUnload = new Help("world unload", "unload", "Unloads specified world. If players are in world, they will be teleported to default spawn")
 				.setPermission("pjw.cmd.world.unload")
@@ -320,15 +320,15 @@ public class Common {
 		Usage usageWorldGenerate = new Usage(Argument.of("<world>", "Specifies the Targetted world"))
 				.addArgument(Argument.of("[--stop]", "Stops any existing generation task running on this world"))
 				.addArgument(Argument.of("[--verbose]", "Displays chunk generation infomation in the console"))
-				.addArgument(Argument.of("[-i <tickInverval>]", "Sets the interval between generation runs. Must be greater than 0. Default is 10."))
-				.addArgument(Argument.of("[-p <tickPercent>]", "Sets the limit of tick time that can be used to generate chunks as a percentage of tickInterval. The percentage should "
+				.addArgument(Argument.of("[-tickInverval <value>]", "Sets the interval between generation runs. Must be greater than 0. Default is 10."))
+				.addArgument(Argument.of("[-tickPercent <value>]", "Sets the limit of tick time that can be used to generate chunks as a percentage of tickInterval. The percentage should "
 						+ "be a value in the range (0, 1]. No estimation is used to decide when to stop so the actual value will always be somewhere above the given percentage Default is 0.15."))
-				.addArgument(Argument.of("[-c <chunkCount>]", "Sets maximum number of chunks per tick to generate. Use a value smaller or equal to 0 to disable. Default is disabled."));
+				.addArgument(Argument.of("[-chunkCount <value>]", "Sets maximum number of chunks per tick to generate. Use a value smaller or equal to 0 to disable. Default is disabled."));
 				
 		Help worldBorderGenerate = new Help("world border generate", "generate", "Pre generate chunks inside border")
 				.setPermission("pjw.cmd.world.border.generate")
 				.setUsage(usageWorldGenerate)
-				.addExample("/world border generate MyWorld --verbose -i 60 -p 0.4 -c 5")
+				.addExample("/world border generate MyWorld --verbose -tickInverval 60 -tickPercent 0.4 -chunkCount 5")
 				.addExample("/world border generate MyWorld --stop")
 				.addExample("/world border generate MyWorld");
 		

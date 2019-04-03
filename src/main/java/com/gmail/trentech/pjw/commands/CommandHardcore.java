@@ -35,7 +35,7 @@ public class CommandHardcore implements CommandCallable {
 			return CommandResult.success();
 		}
 		
-		if(args.isEmpty() || args.size() < 2 || args.size() > 3) {
+		if(args.size() != 2) {
 			throw new CommandException(getHelp().getUsageText());
 		}
 		

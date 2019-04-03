@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +35,7 @@ public class CommandUnload implements CommandCallable {
 		}
 
 		if(arguments.equalsIgnoreCase("--help")) {
-			help.execute(source);
+			getHelp().execute(source);
 			return CommandResult.success();
 		}
 		
@@ -89,21 +90,33 @@ public class CommandUnload implements CommandCallable {
 	@Override
 	public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
 		List<String> list = new ArrayList<>();
+
+		if(arguments.equalsIgnoreCase("")) {
+			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+				list.add(world.getWorldName());
+			}
+			
+			return list;
+		}
 		
-		if(arguments.equalsIgnoreCase("unload")) {
+		List<String> args = Arrays.asList(arguments.split(" "));
+
+		if(args.size() == 1) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+					if(world.getWorldName().toLowerCase().equalsIgnoreCase(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+					
+					if(world.getWorldName().toLowerCase().startsWith(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+				}
+			}
+			
 			return list;
 		}
 
-		for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
-			if(world.getWorldName().equalsIgnoreCase(arguments)) {
-				return list;
-			}
-			
-			if(world.getWorldName().toLowerCase().startsWith(arguments.toLowerCase())) {
-				list.add(world.getWorldName());
-			}
-		}
-		
 		return list;
 	}
 

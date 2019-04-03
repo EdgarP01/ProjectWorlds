@@ -36,7 +36,7 @@ public class CommandLoad implements CommandCallable {
 		}
 
 		if(arguments.equalsIgnoreCase("--help")) {
-			help.execute(source);
+			getHelp().execute(source);
 			return CommandResult.success();
 		}
 		

@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,28 +40,25 @@ public class CommandTeleport implements CommandCallable {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		String[] args = arguments.split(" ");
+		List<String> args = Arrays.asList(arguments.split(" "));
 		
-		if(args[args.length - 1].equalsIgnoreCase("--help")) {
-			help.execute(source);
+		if(args.contains("--help")) {
+			getHelp().execute(source);
 			return CommandResult.success();
 		}
 		
-		String worldName;
-		
-		try {
-			worldName = args[0];
-		} catch(Exception e) {
+		if(args.size() < 1) {
 			throw new CommandException(getHelp().getUsageText());
 		}
-		Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(worldName);
+
+		Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(args.get(0));
 		
 		if (!optionalProperties.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"), false);
+			throw new CommandException(Text.of(TextColors.RED, args.get(0), " does not exist"), false);
 		}
 		WorldProperties properties = optionalProperties.get();
 
-		Optional<World> optionalWorld = Sponge.getServer().getWorld(worldName);
+		Optional<World> optionalWorld = Sponge.getServer().getWorld(properties.getWorldName());
 
 		if (!optionalWorld.isPresent()) {
 			throw new CommandException(Text.of(TextColors.RED, properties.getWorldName(), " is not loaded"), false);
@@ -70,68 +68,71 @@ public class CommandTeleport implements CommandCallable {
 		Location<World> location = world.getSpawnLocation();
 		Rotation rotation = Rotation.getClosest(player.getRotation().getFloorY());
 		
-		if(args.length > 2) {
-			boolean skip = false;
+		boolean skip = false;
+
+		for(String arg : args) {
+			if(arg.equalsIgnoreCase(args.get(0)) || arg.equalsIgnoreCase("--force")) {
+				continue;
+			}
 			
-			for(int i = 1; i < args.length - 1; i++) {
-				if(skip) {
-					skip = false;
-					continue;
-				}
-				
-				String arg = args[i];
-				String value;
-				
-				try {
-					value = args[i+1];
-				} catch(Exception e) {
-					throw new CommandException(getHelp().getUsageText());
-				}
-				
-				if(arg.equalsIgnoreCase("-c") || arg.equalsIgnoreCase("-coords")) {
-					if(arg.equalsIgnoreCase("random")) {
-						Optional<Location<World>> optionalLocation = TeleportManager.getRandomLocation(world, 2000);
-						
-						if(!optionalLocation.isPresent()) {
-							throw new CommandException(Text.of(TextColors.RED, "Took to long to find a safe random location. Try again"), false);
-						}
-						
-						location = optionalLocation.get();
-					} else {
-						String[] coords = value.split(",");
-
-						try {
-							int x = Integer.parseInt(coords[0]);
-							int y = Integer.parseInt(coords[1]);
-							int z = Integer.parseInt(coords[2]);
-
-							location = world.getLocation(x, y, z);
-						} catch (Exception e) {
-							throw new CommandException(Text.of(TextColors.RED, coords.toString(), " is not a valid Coordinate"), true);
-						}
-					}
-				} else if (arg.equalsIgnoreCase("-d") || arg.equalsIgnoreCase("-direction")) {
-					Optional<Rotation> optionalRotation = Rotation.get(value);
-
-					if (!optionalRotation.isPresent()) {
-						throw new CommandException(Text.of(TextColors.RED, "Incorrect direction"));
-					}
-
-					rotation = optionalRotation.get();
-				} else if (arg.equalsIgnoreCase("-f") || arg.equalsIgnoreCase("-force")) {
-					Optional<Location<World>> optionalLocation = TeleportManager.getSafeLocation(location);
-
-					if (!optionalLocation.isPresent()) {
-						throw new CommandException(Text.of(Text.builder().color(TextColors.RED).append(Text.of("Unsafe spawn point detected. ")).onClick(TextActions.executeCallback(TeleportManager.setUnsafeLocation(location))).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build(), TextColors.RED, " or use the -f flag to force teleport."));
+			if(skip) {
+				skip = false;
+				continue;
+			}
+			
+			String value;
+			try {
+				value = args.get(args.indexOf(arg) + 1);
+			} catch(Exception e) {
+				throw new CommandException(getHelp().getUsageText());
+			}
+			
+			if(arg.equalsIgnoreCase("-coords")) {
+				if(value.equalsIgnoreCase("random")) {
+					Optional<Location<World>> optionalLocation = TeleportManager.getRandomLocation(world, 2000);
+					
+					if(!optionalLocation.isPresent()) {
+						throw new CommandException(Text.of(TextColors.RED, "Took to long to find a safe random location. Try again"), false);
 					}
 					
 					location = optionalLocation.get();
 				} else {
-					source.sendMessage(Text.of(TextColors.YELLOW, arg, " is not a valid Flag"));
-					throw new CommandException(getHelp().getUsageText());
+					String[] coords = value.split(",");
+
+					try {
+						int x = Integer.parseInt(coords[0]);
+						int y = Integer.parseInt(coords[1]);
+						int z = Integer.parseInt(coords[2]);
+
+						location = world.getLocation(x, y, z);
+					} catch (Exception e) {
+						throw new CommandException(Text.of(TextColors.RED, coords.toString(), " is not a valid Coordinate"), true);
+					}
 				}
 				skip = true;
+			} else if (arg.equalsIgnoreCase("-direction")) {
+				Optional<Rotation> optionalRotation = Rotation.get(value);
+
+				if (!optionalRotation.isPresent()) {
+					throw new CommandException(Text.of(TextColors.RED, "Incorrect direction"));
+				}
+
+				rotation = optionalRotation.get();
+				skip = true;
+			} else {
+				source.sendMessage(Text.of(TextColors.YELLOW, arg, " is not a valid Flag"));
+				throw new CommandException(getHelp().getUsageText());
 			}
+		}
+		
+		if(!args.contains("--force")) {
+			Optional<Location<World>> optionalLocation = TeleportManager.getSafeLocation(location);
+
+			if (!optionalLocation.isPresent()) {
+				throw new CommandException(Text.of(Text.builder().color(TextColors.RED).append(Text.of("Unsafe spawn point detected. ")).onClick(TextActions.executeCallback(TeleportManager.setUnsafeLocation(location))).append(Text.of(TextColors.GOLD, TextStyles.UNDERLINE, "Click Here")).build(), TextColors.RED, " or use the -f flag to force teleport."));
+			}
+			
+			location = optionalLocation.get();
 		}
 		
 		player.setLocationAndRotation(location, rotation.toVector3d());
@@ -144,49 +145,81 @@ public class CommandTeleport implements CommandCallable {
 	@Override
 	public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
 		List<String> list = new ArrayList<>();
-		
-		if(arguments.equalsIgnoreCase("teleport")) {
-			return list;
-		}
 
-		String[] args = arguments.split(" ");
-		
-		if(args.length == 1) {
+		if(arguments.equalsIgnoreCase("")) {
 			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
-				if(world.getWorldName().equalsIgnoreCase(args[0])) {
-					return list;
-				}
-
-				if(world.getWorldName().toLowerCase().startsWith(args[0].toLowerCase())) {
-					list.add(world.getWorldName());
-				}
+				list.add(world.getWorldName());
 			}
 			
 			return list;
 		}
-
-		String arg = args[args.length -1];
-
-		if(arg.equalsIgnoreCase("-c") || arg.equalsIgnoreCase("-coords") || arg.equalsIgnoreCase("-f") || arg.equalsIgnoreCase("-force")) {
-			return list;
-		} else if (arg.equalsIgnoreCase("-d") || arg.equalsIgnoreCase("-direction")) {
-			for(Rotation type : Rotation.values()) {
-				list.add(type.getName());
+		
+		List<String> args = Arrays.asList(arguments.split(" "));
+		
+		if(args.size() == 1) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+					if(world.getWorldName().toLowerCase().equalsIgnoreCase(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+					
+					if(world.getWorldName().toLowerCase().startsWith(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+				}
+			} else {
+				list.add("-coords");
+				list.add("-direction");
+				list.add("--force");
 			}
-		} else {
-			String parent = args[args.length - 2];
 			
-			if(parent.equalsIgnoreCase("-c") || parent.equalsIgnoreCase("-coords") || parent.equalsIgnoreCase("-f") || parent.equalsIgnoreCase("-force")) {
-				return list;
-			} else if (parent.equalsIgnoreCase("-d") || parent.equalsIgnoreCase("-direction")) {
-				for(Rotation type : Rotation.values()) {
-					if(type.getName().toLowerCase().startsWith(arg.toLowerCase())) {
-						list.add(type.getName());
+			return list;
+		}
+		
+		if(args.size() > 1) {
+			String arg = args.get(args.size() - 1);
+			
+			if(!arg.equalsIgnoreCase("-coords") && !arg.equalsIgnoreCase("-direction")) {
+				if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+					if("-coords".startsWith(arg)) {
+						list.add("-coords");
+					}
+					if("-direction".startsWith(arg)) {
+						list.add("-direction");
+					}
+					if("--force".startsWith(arg)) {
+						list.add("--force");
+					}
+				} else {
+					if(!args.contains("-coords")) {
+						list.add("-coords");
+					}
+					if(!args.contains("-direction")) {
+						list.add("-direction");
+					}
+					if(!args.contains("--force")) {
+						list.add("--force");
+					}
+				}
+			} else {
+				if(arg.equalsIgnoreCase("-direction")) {
+					for(Rotation direction : Rotation.values()) {
+						list.add(direction.getName());
+					}
+				} else {
+					String parent = args.get(args.size() - 2);
+					
+					if(parent.equalsIgnoreCase("-direction")) {
+						for(Rotation direction : Rotation.values()) {
+							if(direction.getName().toLowerCase().startsWith(arg.toLowerCase())) {
+								list.add(direction.getName());
+							}
+						}
 					}
 				}
 			}
 		}
-		
+
 		return list;
 	}
 

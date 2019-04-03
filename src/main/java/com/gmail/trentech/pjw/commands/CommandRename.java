@@ -1,6 +1,7 @@
 package com.gmail.trentech.pjw.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,32 +28,21 @@ public class CommandRename implements CommandCallable {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		String[] args = arguments.split(" ");
+		List<String> args = Arrays.asList(arguments.split(" "));
 		
-		if(args[args.length - 1].equalsIgnoreCase("--help")) {
-			help.execute(source);
+		if(args.contains("--help")) {
+			getHelp().execute(source);
 			return CommandResult.success();
 		}
 		
-		String srcWorldName;
-		String newWorldName;
-		
-		try {
-			srcWorldName = args[0];
-		} catch(Exception e) {
+		if(args.size() != 2) {
 			throw new CommandException(getHelp().getUsageText());
 		}
-		
-		try {
-			newWorldName = args[1];
-		} catch(Exception e) {
-			throw new CommandException(getHelp().getUsageText());
-		}	
-		
-		Optional<WorldProperties> optionalWorld = Sponge.getServer().getWorldProperties(srcWorldName);
+
+		Optional<WorldProperties> optionalWorld = Sponge.getServer().getWorldProperties(args.get(0));
 		
 		if(!optionalWorld.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, srcWorldName, " does not exist"), false);
+			throw new CommandException(Text.of(TextColors.RED, args.get(0), " does not exist"), false);
 		}
 		WorldProperties world = optionalWorld.get();
 
@@ -60,17 +50,17 @@ public class CommandRename implements CommandCallable {
 			throw new CommandException(Text.of(TextColors.RED, world.getWorldName(), " must be unloaded before you can rename"), false);
 		}
 		
-		if (Sponge.getServer().getWorldProperties(newWorldName).isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, newWorldName, " already exists"), false);
+		if (Sponge.getServer().getWorldProperties(args.get(1)).isPresent()) {
+			throw new CommandException(Text.of(TextColors.RED, args.get(1), " already exists"), false);
 		}
 
-		Optional<WorldProperties> rename = Sponge.getServer().renameWorld(world, newWorldName);
+		Optional<WorldProperties> rename = Sponge.getServer().renameWorld(world, args.get(1));
 
 		if (!rename.isPresent()) {
 			throw new CommandException(Text.of(TextColors.RED, "Could not rename ", world.getWorldName()), false);
 		}
 
-		source.sendMessage(Text.of(TextColors.DARK_GREEN, world.getWorldName(), " renamed to ", newWorldName, " successfully"));
+		source.sendMessage(Text.of(TextColors.DARK_GREEN, args.get(0), " renamed to ", args.get(1), " successfully"));
 
 		return CommandResult.success();
 	}
@@ -78,25 +68,31 @@ public class CommandRename implements CommandCallable {
 	@Override
 	public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
 		List<String> list = new ArrayList<>();
-		
-		if(arguments.equalsIgnoreCase("rename")) {
-			return list;
-		}
 
-		String[] args = arguments.split(" ");
-		
-		if(args.length != 1) {
-			return list;
-		}
-		
-		for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
-			if(world.getWorldName().equalsIgnoreCase(args[args.length - 1])) {
-				return list;
-			}
-			
-			if(world.getWorldName().toLowerCase().startsWith(args[args.length - 1].toLowerCase())) {
+		if(arguments.equalsIgnoreCase("")) {
+			for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
 				list.add(world.getWorldName());
 			}
+			
+			return list;
+		}
+		
+		List<String> args = Arrays.asList(arguments.split(" "));
+
+		if(args.size() == 1) {
+			if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
+				for(WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
+					if(world.getWorldName().toLowerCase().equalsIgnoreCase(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+					
+					if(world.getWorldName().toLowerCase().startsWith(args.get(0).toLowerCase())) {
+						list.add(world.getWorldName());
+					}
+				}
+			}
+			
+			return list;
 		}
 		
 		return list;
