@@ -37,7 +37,7 @@ public class CommandCenter implements CommandCallable {
 			return CommandResult.success();
 		}
 		
-		if(args.isEmpty() || args.size() == 2) {
+		if(args.size() < 1 || args.size() > 3) {
 			throw new CommandException(getHelp().getUsageText());
 		}
 

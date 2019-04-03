@@ -36,7 +36,7 @@ public class CommandDiameter implements CommandCallable {
 			return CommandResult.success();
 		}
 		
-		if(args.isEmpty() || args.size() < 2 || args.size() > 4) {
+		if(args.size() < 2 || args.size() > 4) {
 			throw new CommandException(getHelp().getUsageText());
 		}
 		
