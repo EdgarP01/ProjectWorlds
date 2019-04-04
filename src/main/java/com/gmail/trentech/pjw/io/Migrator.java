@@ -8,10 +8,23 @@ import org.spongepowered.api.Sponge;
 import com.gmail.trentech.pjc.core.ConfigManager;
 import com.gmail.trentech.pjw.Main;
 
+import ninja.leaping.configurate.ConfigurationNode;
+
 public class Migrator {
 
-	public static void init() {
-		String defaultWorld = ConfigManager.get(Main.getPlugin()).getConfig().getNode("options", "world_root").getString();
+	public static void init() {	
+		ConfigManager configManager = ConfigManager.get(Main.getPlugin());
+		ConfigurationNode node = configManager.getConfig().getNode("worlds").setComment("DO NOT EDIT");
+		
+		String defaultWorld = configManager.getConfig().getNode("options", "world_root").getString();
+		
+		SpongeData.ids.put(defaultWorld, 0);
+		SpongeData.ids.put("DIM-1", 1);
+		SpongeData.ids.put("DIM1", -1);
+		
+		node.getNode(defaultWorld).setValue(0);
+		node.getNode("DIM-1").setValue(1);
+		node.getNode("DIM1").setValue(-1);
 		
 		File directory = new File(Sponge.getGame().getSavesDirectory().toFile(), defaultWorld);
 
@@ -61,20 +74,26 @@ public class Migrator {
 					continue;
 				}
 			}
-			
+
 			SpongeData spongeData = new SpongeData(dest);
 			
 			if (!spongeData.exists()) {
 				Main.instance().getLog().warn(name + ": Requires importing. /world import " + name + " <type> <generator>");
 			} else {
-				if(!spongeData.isFreeDimId()) {
-					Main.instance().getLog().warn("  * Repairing dimension id conflict");
-					try {
-						spongeData.setDimId(spongeData.getFreeDimId());
-					} catch (IOException e) {
-						e.printStackTrace();
-						continue;
+				if(!SpongeData.ids.containsKey(name)) {
+					if(!spongeData.isFreeDimId()) {
+						Main.instance().getLog().warn(name + ": Repairing dimension id conflict");
+						try {
+							spongeData.setDimId(spongeData.getFreeDimId());
+						} catch (IOException e) {
+							e.printStackTrace();
+							continue;
+						}
 					}
+					
+					SpongeData.ids.put(name, spongeData.getDimId());
+					node.getNode(name).setValue(spongeData.getDimId());
+					configManager.save();
 				}
 			}
 		}

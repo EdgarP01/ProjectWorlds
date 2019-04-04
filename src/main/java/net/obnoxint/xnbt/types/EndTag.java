@@ -4,22 +4,25 @@ import net.obnoxint.xnbt.BaseTag;
 
 /**
  * <p>
- * Used to finalize {@link CompoundTag}s and files in IO operations. Shouldn't
- * be used programmatically.
+ * Used to finalize {@link CompoundTag}s and files in IO operations. Shouldn't be used programmatically.
  * </p>
  */
-public class EndTag extends BaseTag {
+public final class EndTag extends BaseTag {
 
-	public EndTag() {
-		super(new TagHeader(BaseType.END.Id(), null), null);
-	}
+    /**
+     * No reason to instantiate an {@link EndTag} every time you need one.
+     */
+    public static final EndTag INSTANCE = new EndTag();
 
-	@Override
-	public String getPayload() {
-		return null;
-	}
+    private EndTag() {
+        super(new TagHeader(BaseType.END.Id(), null), null);
+    }
 
-	public void setPayload(final String payload) {
-	}
+    @Override
+    public Object getPayload() {
+        return null;
+    }
+
+    public void setPayload(final Object payload) {}
 
 }

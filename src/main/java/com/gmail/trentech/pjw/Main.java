@@ -1,28 +1,21 @@
 package com.gmail.trentech.pjw;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
-import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.GameRegistryEvent;
-import org.spongepowered.api.event.game.state.GameAboutToStartServerEvent;
 import org.spongepowered.api.event.game.state.GameConstructionEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
-import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
-import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.pjc.core.ConfigManager;
 import com.gmail.trentech.pjw.commands.CommandWorld;
@@ -60,6 +53,16 @@ public class Main {
 		}
 		
 		Common.initConfig();
+
+		ConfigurationNode node = ConfigManager.get(Main.getPlugin()).getConfig().getNode("worlds");
+		
+		if(!node.isVirtual()) {
+			for (final Map.Entry<Object, ? extends ConfigurationNode> child : node.getChildrenMap().entrySet()) {
+				SpongeData.ids.put(child.getKey().toString(), child.getValue().getInt());
+			}
+		}
+
+		Migrator.init();
 	}
 
 	@Listener
@@ -71,34 +74,6 @@ public class Main {
 		Sponge.getCommandManager().register(this, new CommandWorld().getCommandSpec(), "world", "w");
 	}
 
-	@Listener
-	public void onAboutToStartServer(GameAboutToStartServerEvent event) {
-		ConfigurationNode node = ConfigManager.get(Main.getPlugin()).getConfig().getNode("dimension_ids");
-
-		SpongeData.getIds().addAll(node.getChildrenList().stream().map(ConfigurationNode::getInt).collect(Collectors.toList()));
-
-		if (!node.isVirtual() && new File(Sponge.getServer().getDefaultWorldName()).exists()) {
-			Migrator.init();
-		}
-	}
-
-	@Listener
-	public void onStartedServer(GameStartedServerEvent event) {
-		List<Integer> list = new ArrayList<>();
-
-		for (WorldProperties world : Sponge.getServer().getAllWorldProperties()) {
-			Sponge.getServer().saveWorldProperties(world);
-			list.add((int) world.getPropertySection(DataQuery.of("SpongeData")).get().get(DataQuery.of("dimensionId")).get());
-		}
-
-		SpongeData.setIds(list);
-
-		ConfigManager configManager = ConfigManager.get(Main.getPlugin());
-		
-		configManager.getConfig().getNode("dimension_ids").setValue(list).setComment("DO NOT EDIT");
-		configManager.save();
-	}
-	
 	@Listener
 	public void onRegister(GameRegistryEvent.Register<WorldGeneratorModifier> event) {
 		event.register(new OceanWorldGeneratorModifier());

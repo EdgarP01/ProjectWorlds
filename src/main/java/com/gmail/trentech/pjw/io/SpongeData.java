@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.spongepowered.api.Sponge;
+import com.gmail.trentech.pjc.core.ConfigManager;
+import com.gmail.trentech.pjw.Main;
 
 import net.obnoxint.xnbt.XNBT;
 import net.obnoxint.xnbt.types.CompoundTag;
@@ -19,10 +21,10 @@ public class SpongeData {
 	private CompoundTag compoundTag;
 	private int dimId;
 	private boolean exists = false;
-	private static List<Integer> ids = new ArrayList<>();
-
+	public static ConcurrentHashMap<String,Integer> ids = new ConcurrentHashMap<>();
+	
 	public SpongeData(String worldName) {
-		String defaultWorld = Sponge.getServer().getDefaultWorldName();
+		String defaultWorld = ConfigManager.get(Main.getPlugin()).getConfig().getNode("options", "world_root").getString();
 
 		if (defaultWorld.equalsIgnoreCase(worldName)) {
 			dataFile = new File(defaultWorld, "level_sponge.dat");
@@ -65,11 +67,11 @@ public class SpongeData {
 		}
 	}
 
-	public static List<Integer> getIds() {
+	public static ConcurrentHashMap<String,Integer> getIds() {
 		return ids;
 	}
 
-	public static void setIds(List<Integer> list) {
+	public static void setIds(ConcurrentHashMap<String,Integer> list) {
 		ids = list;
 	}
 
@@ -82,7 +84,7 @@ public class SpongeData {
 	}
 
 	public boolean isFreeDimId() {
-		if (ids.contains(getDimId())) {
+		if (ids.containsValue(getDimId())) {
 			return false;
 		}
 		return true;
@@ -90,7 +92,7 @@ public class SpongeData {
 
 	public int getFreeDimId() {
 		for (int i = 1; i < Integer.MAX_VALUE; i++) {
-			if (!ids.contains(i)) {
+			if (!ids.containsValue(i)) {
 				return i;
 			}
 		}
@@ -116,7 +118,7 @@ public class SpongeData {
 		list.add(compoundRoot);
 
 		XNBT.saveTags(list, dataFile);
-
-		ids.add(id);
+		
+		this.dimId = id;
 	}
 }
