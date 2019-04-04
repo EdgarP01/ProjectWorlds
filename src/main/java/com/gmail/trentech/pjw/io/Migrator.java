@@ -66,6 +66,16 @@ public class Migrator {
 			
 			if (!spongeData.exists()) {
 				Main.instance().getLog().warn(name + ": Requires importing. /world import " + name + " <type> <generator>");
+			} else {
+				if(!spongeData.isFreeDimId()) {
+					Main.instance().getLog().warn("  * Repairing dimension id conflict");
+					try {
+						spongeData.setDimId(spongeData.getFreeDimId());
+					} catch (IOException e) {
+						e.printStackTrace();
+						continue;
+					}
+				}
 			}
 		}
 	}
