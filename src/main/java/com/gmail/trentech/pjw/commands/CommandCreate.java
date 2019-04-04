@@ -25,8 +25,13 @@ import org.spongepowered.api.world.difficulty.Difficulty;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.gmail.trentech.pjc.core.ConfigManager;
 import com.gmail.trentech.pjc.help.Help;
+import com.gmail.trentech.pjw.Main;
+import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.utils.Gamemode;
+
+import ninja.leaping.configurate.ConfigurationNode;
 
 public class CommandCreate implements CommandCallable {
 	
@@ -181,6 +186,18 @@ public class CommandCreate implements CommandCallable {
 
 		Sponge.getServer().saveWorldProperties(properties);
 
+		SpongeData spongeData = new SpongeData(properties.getWorldName());
+		
+		if (spongeData.exists()) {
+			ConfigManager config = ConfigManager.get(Main.getPlugin());
+			
+			ConfigurationNode node = config.getConfig().getNode("worlds");
+
+			SpongeData.ids.put(properties.getWorldName(), spongeData.getDimId());
+			node.getNode(properties.getWorldName()).setValue(spongeData.getDimId());
+			config.save();
+		}
+		
 		worlds.add(args.get(0));
 
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, args.get(0), " created successfully"));

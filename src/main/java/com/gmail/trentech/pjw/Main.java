@@ -12,6 +12,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.GameRegistryEvent;
 import org.spongepowered.api.event.game.state.GameConstructionEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -74,6 +75,22 @@ public class Main {
 		Sponge.getCommandManager().register(this, new CommandWorld().getCommandSpec(), "world", "w");
 	}
 
+	@Listener
+	public void onGameStartedServer(GameStartedServerEvent event) {
+		ConfigManager config = ConfigManager.get(Main.getPlugin());
+		
+		ConfigurationNode node = config.getConfig().getNode("worlds");
+
+		for (final Map.Entry<Object, ? extends ConfigurationNode> child : node.getChildrenMap().entrySet()) {
+			if(!Sponge.getServer().getWorldProperties(child.getKey().toString()).isPresent()) {
+				SpongeData.ids.remove(child.getKey().toString());
+				node.removeChild(child.getKey());
+			}
+		}
+		
+		config.save();
+	}
+	
 	@Listener
 	public void onRegister(GameRegistryEvent.Register<WorldGeneratorModifier> event) {
 		event.register(new OceanWorldGeneratorModifier());
