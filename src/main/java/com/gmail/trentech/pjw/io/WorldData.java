@@ -2,24 +2,20 @@ package com.gmail.trentech.pjw.io;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
 
 import com.gmail.trentech.pjc.core.ConfigManager;
 import com.gmail.trentech.pjw.Main;
 
-import net.obnoxint.xnbt.XNBT;
-import net.obnoxint.xnbt.types.CompoundTag;
-import net.obnoxint.xnbt.types.NBTTag;
-import net.obnoxint.xnbt.types.StringTag;
+import eisenwave.nbt.NBTCompound;
+import eisenwave.nbt.NBTNamedTag;
+import eisenwave.nbt.io.NBTDeserializer;
+import eisenwave.nbt.io.NBTSerializer;
 
 public class WorldData {
 
 	private String worldName;
 	private File dataFile;
-	private CompoundTag compoundTag;
-	private boolean exists = false;
+	private NBTNamedTag namedTag;
 
 	public WorldData(String worldName) {
 		this.worldName = worldName;
@@ -32,80 +28,58 @@ public class WorldData {
 			dataFile = new File(defaultWorld + File.separator + worldName, "level.dat");
 		}
 
-		if (dataFile.exists()) {
-			exists = true;
-			init();
-		}
+		initialize();
 	}
 
 	public WorldData(File directory) {
 		this.dataFile = new File(directory, "level.dat");
-		this.worldName = directory.getName();
-
-		if (dataFile.exists()) {
-			exists = true;
-			init();
+		
+		if(dataFile.exists()) {
+			this.worldName = directory.getName();
 		}
+		
+		initialize();
 	}
 
-	public boolean exists() {
-		return exists;
-	}
-
-	private void init() {
-		try {
-			for (NBTTag root : XNBT.loadTags(dataFile)) {
-				CompoundTag compoundRoot = (CompoundTag) root;
-
-				for (Entry<String, NBTTag> rootItem : compoundRoot.entrySet()) {
-					if (rootItem.getKey().equalsIgnoreCase("Data")) {
-						compoundTag = (CompoundTag) rootItem.getValue();
-					}
-				}
+	private void initialize() {
+		if (dataFile.exists()) {		
+			try {
+				namedTag = new NBTDeserializer().fromFile(dataFile);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
+	}
+	
+	public boolean exists() {
+		return dataFile.exists();
 	}
 
 	public boolean isCorrectLevelName() {
-		for (Entry<String, NBTTag> entry : compoundTag.entrySet()) {
-			if (!entry.getKey().equalsIgnoreCase("LevelName")) {
-				continue;
-			}
+	    NBTCompound root = (NBTCompound) namedTag.getTag();
+	    NBTCompound data = root.getCompoundTag("Data");
 
-			String levelName = (String) entry.getValue().getPayload();
-
-			if (levelName.equalsIgnoreCase(worldName)) {
-				return true;
-			}
+		if (data.getString("LevelName").equalsIgnoreCase(worldName)) {
+			return true;
 		}
+
 		return false;
 	}
 
 	public String getLevelName() {
-		for (Entry<String, NBTTag> entry : compoundTag.entrySet()) {
-			if (!entry.getKey().equalsIgnoreCase("LevelName")) {
-				continue;
-			}
-
-			return (String) entry.getValue().getPayload();
-		}
-		
-		return null;
+	    NBTCompound root = (NBTCompound) namedTag.getTag();
+	    NBTCompound data = root.getCompoundTag("Data");
+	    
+	    return data.getString("LevelName");
 	}
 	
 	public void setLevelName(String name) throws IOException {
-		compoundTag.put(new StringTag("LevelName", name));
-
-		CompoundTag compoundRoot = new CompoundTag("", null);
-
-		compoundRoot.put(compoundTag);
-
-		List<NBTTag> list = new ArrayList<>();
-
-		list.add(compoundRoot);
-
-		XNBT.saveTags(list, dataFile);
+	    NBTCompound root = (NBTCompound) namedTag.getTag();
+	    NBTCompound data = root.getCompoundTag("Data");
+	    data.putString("LevelName", worldName);
+	    
+	    dataFile.delete();
+	    
+	    new NBTSerializer().toFile(namedTag, dataFile);
 	}
 }
