@@ -400,8 +400,10 @@ public class Common {
 		if (config.getNode("options", "lobby_mode").isVirtual()) {
 			config.getNode("options", "lobby_mode").setValue(false).setComment("If true, player will always spawn in first_join world on join");
 		}
-		if(config.getNode("options", "world_root").isVirtual()) {
-			config.getNode("options", "world_root").setValue("world").setComment("The directory name of the main world. Unless you rename the default world, leave this set to 'world'");
+		
+		// REMOVE OBSOLETE NODE
+		if(!config.getNode("options", "world_root").isVirtual()) {
+			config.getNode("options").removeChild("world_root");
 		}
 		
 		configManager.save();

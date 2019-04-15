@@ -1,7 +1,9 @@
 package com.gmail.trentech.pjw.io;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 
 import org.spongepowered.api.Sponge;
 
@@ -16,8 +18,25 @@ public class Migrator {
 		ConfigManager configManager = ConfigManager.get(Main.getPlugin());
 		ConfigurationNode node = configManager.getConfig().getNode("worlds").setComment("DO NOT EDIT");
 		
-		String defaultWorld = configManager.getConfig().getNode("options", "world_root").getString();
-		
+		String defaultWorld = null;
+
+		try {
+			Scanner scanner = new Scanner(new File("server.properties"));
+			
+	        while(scanner.hasNextLine()) {
+	            String line = scanner.nextLine();
+	            
+	            if(line.startsWith("level-name=")) {
+	         	   defaultWorld = line.replace("level-name=", "");
+	         	   scanner.close();
+	         	   break;
+	            }
+	         }
+	        scanner.close();
+		} catch (FileNotFoundException e2) {
+			e2.printStackTrace();
+		}
+
 		SpongeData.ids.put(defaultWorld, 0);
 		SpongeData.ids.put("DIM-1", 1);
 		SpongeData.ids.put("DIM1", -1);
