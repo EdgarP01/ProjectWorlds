@@ -34,12 +34,6 @@ public class SpongeData {
 	public SpongeData(File directory) {
 		dataFile = new File(directory, "level_sponge.dat");
 
-		try {
-			namedTag = new NBTDeserializer().fromFile(dataFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
 		initialize();
 	}
 
