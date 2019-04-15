@@ -196,7 +196,7 @@ public class Common {
 		Usage usageImport = new Usage(Argument.of("<world>", "Specifies the targetted world"))
 				.addArgument(Argument.of("<dimensionType>", dimTypes))
 				.addArgument(Argument.of("<generatorType>", genTypes))
-				.addArgument(Argument.of("[modifer]", modTypes));
+				.addArgument(Argument.of("[modifier]", modTypes));
 		
 		Help worldImport = new Help("world import", "import", "Import worlds not native to Sponge")
 				.setPermission("pjw.cmd.world.import")
