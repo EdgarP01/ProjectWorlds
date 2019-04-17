@@ -1,11 +1,10 @@
 package com.gmail.trentech.pjw.io;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.gmail.trentech.pjc.core.ConfigManager;
-import com.gmail.trentech.pjw.Main;
 
 import eisenwave.nbt.NBTCompound;
 import eisenwave.nbt.NBTNamedTag;
@@ -20,7 +19,24 @@ public class SpongeData {
 	public static ConcurrentHashMap<String,Integer> ids = new ConcurrentHashMap<>();
 	
 	public SpongeData(String worldName) {
-		String defaultWorld = ConfigManager.get(Main.getPlugin()).getConfig().getNode("options", "world_root").getString();
+		String defaultWorld = null;
+
+		try {
+			Scanner scanner = new Scanner(new File("server.properties"));
+			
+	        while(scanner.hasNextLine()) {
+	            String line = scanner.nextLine();
+	            
+	            if(line.startsWith("level-name=")) {
+	         	   defaultWorld = line.replace("level-name=", "");
+	         	   scanner.close();
+	         	   break;
+	            }
+	         }
+	        scanner.close();
+		} catch (FileNotFoundException e2) {
+			e2.printStackTrace();
+		}
 
 		if (defaultWorld.equalsIgnoreCase(worldName)) {
 			dataFile = new File(defaultWorld, "level_sponge.dat");

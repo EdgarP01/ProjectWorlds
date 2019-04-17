@@ -14,7 +14,6 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.storage.WorldProperties;
@@ -23,7 +22,6 @@ import com.gmail.trentech.pjc.help.Help;
 import com.gmail.trentech.pjw.Main;
 import com.gmail.trentech.pjw.io.SpongeData;
 import com.gmail.trentech.pjw.io.WorldData;
-import com.gmail.trentech.pjw.utils.Utils;
 
 public class CommandLoad implements CommandCallable {
 	
@@ -75,10 +73,10 @@ public class CommandLoad implements CommandCallable {
 				return;
 			}
 
-			if (CommandCreate.worlds.contains(world.getWorldName())) {
-				Utils.createPlatform(load.get().getSpawnLocation().getRelative(Direction.DOWN));
-				CommandCreate.worlds.remove(world.getWorldName());
-			}
+		//	if (CommandCreate.worlds.contains(world.getWorldName())) {
+		//		Utils.createPlatform(load.get().getSpawnLocation().getRelative(Direction.DOWN));
+		//		CommandCreate.worlds.remove(world.getWorldName());
+		//	}
 
 			source.sendMessage(Text.of(TextColors.DARK_GREEN, world.getWorldName(), " loaded successfully"));
 		}).submit(Main.getPlugin());

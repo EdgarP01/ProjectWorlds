@@ -36,7 +36,7 @@ import ninja.leaping.configurate.ConfigurationNode;
 public class CommandCreate implements CommandCallable {
 	
 	private final Help help = Help.get("world create").get();
-	public static List<String> worlds = new ArrayList<>();
+//	public static List<String> worlds = new ArrayList<>();
 	
 	@Override
 	public CommandResult process(CommandSource source, String arguments) throws CommandException {
@@ -198,7 +198,7 @@ public class CommandCreate implements CommandCallable {
 			config.save();
 		}
 		
-		worlds.add(args.get(0));
+		//worlds.add(args.get(0));
 
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, args.get(0), " created successfully"));
 
