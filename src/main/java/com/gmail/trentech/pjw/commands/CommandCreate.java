@@ -242,41 +242,74 @@ public class CommandCreate implements CommandCallable {
 			if(!arg.equalsIgnoreCase("-generator") && !arg.equalsIgnoreCase("-dimension") && !arg.equalsIgnoreCase("-options") && !arg.equalsIgnoreCase("-seed") 
 					&& !arg.equalsIgnoreCase("-gameMode") && !arg.equalsIgnoreCase("-modifier") && !arg.equalsIgnoreCase("-difficulty")) {
 				if(!arguments.substring(arguments.length() - 1).equalsIgnoreCase(" ")) {
-					if("-dimension".startsWith(arg)) {
-						list.add("-dimension");
-					}
-					if("-generator".startsWith(arg)) {
-						list.add("-generator");
-					}
-					if("-gameMode".startsWith(arg)) {
-						list.add("-gameMode");
-					}
-					if("-modifier".startsWith(arg)) {
-						list.add("-modifier");
-					}
-					if("-difficulty".startsWith(arg)) {
-						list.add("-difficulty");
-					}
-					if("-seed".startsWith(arg)) {
-						list.add("-seed");
-					}
-					if("-options".startsWith(arg)) {
-						list.add("-options");
-					}
-					if("--usesMapFeatures".startsWith(arg)) {
-						list.add("--usesMapFeatures");
-					}
-					if("--keepsSpawnLoaded".startsWith(arg)) {
-						list.add("--keepsSpawnLoaded");
-					}
-					if("--loadsOnStartup".startsWith(arg)) {
-						list.add("--loadsOnStartup");
-					}
-					if("--commandsAllowed".startsWith(arg)) {
-						list.add("--commandsAllowed");
-					}
-					if("--generateBonusChest".startsWith(arg)) {
-						list.add("--generateBonusChest");
+					String parent = args.get(args.size() - 2);
+					if(parent.equalsIgnoreCase("-dimension")) {
+						for(DimensionType type : Sponge.getRegistry().getAllOf(DimensionType.class)) {
+							if(type.getId().toLowerCase().startsWith(arg.toLowerCase())) {
+								list.add(type.getId());
+							}
+						}
+					} else if (parent.equalsIgnoreCase("-generator")) {
+						for(GeneratorType type : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
+							if(type.getId().toLowerCase().startsWith(arg.toLowerCase())) {
+								list.add(type.getId());
+							}
+						}
+					} else if (parent.equalsIgnoreCase("-gameMode")) {
+						for(Gamemode type : Gamemode.values()) {
+							if(type.getGameMode().getName().toLowerCase().startsWith(arg.toLowerCase())) {
+								list.add(type.getGameMode().getName());
+							}
+						}
+					} else if (parent.equalsIgnoreCase("-modifier")) {
+						for(WorldGeneratorModifier type : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
+							if(type.getId().toLowerCase().startsWith(arg.toLowerCase())) {
+								list.add(type.getId());
+							}
+						}
+					} else if (parent.equalsIgnoreCase("-difficulty")) {
+						for(Difficulty type : Sponge.getRegistry().getAllOf(Difficulty.class)) {
+							if(type.getId().toLowerCase().startsWith(arg.toLowerCase())) {
+								list.add(type.getId());
+							}
+						}
+					} else {
+						if("-dimension".startsWith(arg)) {
+							list.add("-dimension");
+						}
+						if("-generator".startsWith(arg)) {
+							list.add("-generator");
+						}
+						if("-gameMode".startsWith(arg)) {
+							list.add("-gameMode");
+						}
+						if("-modifier".startsWith(arg)) {
+							list.add("-modifier");
+						}
+						if("-difficulty".startsWith(arg)) {
+							list.add("-difficulty");
+						}
+						if("-seed".startsWith(arg)) {
+							list.add("-seed");
+						}
+						if("-options".startsWith(arg)) {
+							list.add("-options");
+						}
+						if("--usesMapFeatures".startsWith(arg)) {
+							list.add("--usesMapFeatures");
+						}
+						if("--keepsSpawnLoaded".startsWith(arg)) {
+							list.add("--keepsSpawnLoaded");
+						}
+						if("--loadsOnStartup".startsWith(arg)) {
+							list.add("--loadsOnStartup");
+						}
+						if("--commandsAllowed".startsWith(arg)) {
+							list.add("--commandsAllowed");
+						}
+						if("--generateBonusChest".startsWith(arg)) {
+							list.add("--generateBonusChest");
+						}
 					}
 				} else {
 					if(!args.contains("-dimension")) {
@@ -338,40 +371,6 @@ public class CommandCreate implements CommandCallable {
 				} else if (arg.equalsIgnoreCase("--loadsOnStartup") || arg.equalsIgnoreCase("--keepsSpawnLoaded") || arg.equalsIgnoreCase("--commandsAllowed") 
 						|| arg.equalsIgnoreCase("--generateBonusChest") || arg.equalsIgnoreCase("--usesMapFeatures")) {
 					return list;
-				} else {
-					String parent = args.get(args.size() - 2);
-					
-					if(parent.equalsIgnoreCase("-dimension")) {
-						for(DimensionType type : Sponge.getRegistry().getAllOf(DimensionType.class)) {
-							if(type.getId().toLowerCase().startsWith(arg.toLowerCase())) {
-								list.add(type.getId());
-							}
-						}
-					} else if (parent.equalsIgnoreCase("-generator")) {
-						for(GeneratorType type : Sponge.getRegistry().getAllOf(GeneratorType.class)) {
-							if(type.getId().toLowerCase().startsWith(arg.toLowerCase())) {
-								list.add(type.getId());
-							}
-						}
-					} else if (parent.equalsIgnoreCase("-gameMode")) {
-						for(Gamemode type : Gamemode.values()) {
-							if(type.getGameMode().getName().toLowerCase().startsWith(arg.toLowerCase())) {
-								list.add(type.getGameMode().getName());
-							}
-						}
-					} else if (parent.equalsIgnoreCase("-modifier")) {
-						for(WorldGeneratorModifier type : Sponge.getRegistry().getAllOf(WorldGeneratorModifier.class)) {
-							if(type.getId().toLowerCase().startsWith(arg.toLowerCase())) {
-								list.add(type.getId());
-							}
-						}
-					} else if (parent.equalsIgnoreCase("-difficulty")) {
-						for(Difficulty type : Sponge.getRegistry().getAllOf(Difficulty.class)) {
-							if(type.getId().toLowerCase().startsWith(arg.toLowerCase())) {
-								list.add(type.getId());
-							}
-						}
-					}
 				}
 			}
 		}
