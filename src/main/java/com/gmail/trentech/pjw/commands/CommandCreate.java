@@ -125,9 +125,9 @@ public class CommandCreate implements CommandCallable {
 					throw new CommandException(getHelp().getUsageText());
 				}
 				builder.generator(optionalGenerator.get());
-			} else if (arg.equalsIgnoreCase("-options")) {
+			} else if (arg.equalsIgnoreCase("-options")) {			
 				source.sendMessage(Text.of(TextColors.YELLOW, "Custom Settings are not validated. Any errors and it will not apply correctly."));
-				builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), value));
+				builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), arguments.substring(arguments.indexOf("{"), arguments.lastIndexOf("}") + 1)));
 			} else if (arg.equalsIgnoreCase("-gameMode")) {
 				Optional<GameMode> optionalGamemode = Optional.empty();
 				
@@ -165,9 +165,6 @@ public class CommandCreate implements CommandCallable {
 					throw new CommandException(getHelp().getUsageText());
 				}			
 				builder.difficulty(optionalDifficulty.get());
-			} else {
-				source.sendMessage(Text.of(TextColors.YELLOW, value, " is not a valid Flag"));
-				throw new CommandException(getHelp().getUsageText());
 			}
 			skip = true;
 		}
