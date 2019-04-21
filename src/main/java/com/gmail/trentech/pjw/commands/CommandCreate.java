@@ -18,6 +18,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.DimensionType;
 import org.spongepowered.api.world.GeneratorType;
+import org.spongepowered.api.world.GeneratorTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.WorldArchetype;
@@ -36,8 +37,7 @@ import ninja.leaping.configurate.ConfigurationNode;
 public class CommandCreate implements CommandCallable {
 	
 	private final Help help = Help.get("world create").get();
-//	public static List<String> worlds = new ArrayList<>();
-	
+
 	@Override
 	public CommandResult process(CommandSource source, String arguments) throws CommandException {
 		if(arguments.equalsIgnoreCase("create")) {
@@ -109,6 +109,8 @@ public class CommandCreate implements CommandCallable {
 				throw new CommandException(getHelp().getUsageText());
 			}
 			
+			GeneratorType generator = GeneratorTypes.DEFAULT;
+			
 			if(arg.equalsIgnoreCase("-dimension")) {
 				Optional<DimensionType> optionalDimension = Sponge.getRegistry().getType(DimensionType.class, value);
 				
@@ -124,10 +126,15 @@ public class CommandCreate implements CommandCallable {
 					source.sendMessage(Text.of(TextColors.YELLOW, value, " is not a valid GeneratorType"));
 					throw new CommandException(getHelp().getUsageText());
 				}
-				builder.generator(optionalGenerator.get());
-			} else if (arg.equalsIgnoreCase("-options")) {			
+				generator = optionalGenerator.get();
+				builder.generator(generator);
+			} else if (arg.equalsIgnoreCase("-options")) {
 				source.sendMessage(Text.of(TextColors.YELLOW, "Custom Settings are not validated. Any errors and it will not apply correctly."));
-				builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), arguments.substring(arguments.indexOf("{"), arguments.lastIndexOf("}") + 1)));
+				if(generator.equals(GeneratorTypes.FLAT)) {
+					builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), value));
+				} else {
+					DataContainer.createNew().set(DataQuery.of("customSettings"), arguments.substring(arguments.indexOf("{"), arguments.lastIndexOf("}") + 1));
+				}			
 			} else if (arg.equalsIgnoreCase("-gameMode")) {
 				Optional<GameMode> optionalGamemode = Optional.empty();
 				
@@ -194,8 +201,6 @@ public class CommandCreate implements CommandCallable {
 			node.getNode(properties.getWorldName()).setValue(spongeData.getDimId());
 			config.save();
 		}
-		
-		//worlds.add(args.get(0));
 
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, args.get(0), " created successfully"));
 
