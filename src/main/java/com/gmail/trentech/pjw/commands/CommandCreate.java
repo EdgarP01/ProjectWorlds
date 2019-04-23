@@ -37,7 +37,8 @@ import ninja.leaping.configurate.ConfigurationNode;
 public class CommandCreate implements CommandCallable {
 	
 	private final Help help = Help.get("world create").get();
-
+	public static List<String> worlds = new ArrayList<>();
+	
 	@Override
 	public CommandResult process(CommandSource source, String arguments) throws CommandException {
 		if(arguments.equalsIgnoreCase("create")) {
@@ -130,11 +131,7 @@ public class CommandCreate implements CommandCallable {
 				builder.generator(generator);
 			} else if (arg.equalsIgnoreCase("-options")) {
 				source.sendMessage(Text.of(TextColors.YELLOW, "Custom Settings are not validated. Any errors and it will not apply correctly."));
-				if(generator.equals(GeneratorTypes.FLAT)) {
-					builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), value));
-				} else {
-					DataContainer.createNew().set(DataQuery.of("customSettings"), arguments.substring(arguments.indexOf("{"), arguments.lastIndexOf("}") + 1));
-				}			
+				builder.generatorSettings(DataContainer.createNew().set(DataQuery.of("customSettings"), value));		
 			} else if (arg.equalsIgnoreCase("-gameMode")) {
 				Optional<GameMode> optionalGamemode = Optional.empty();
 				
@@ -202,6 +199,8 @@ public class CommandCreate implements CommandCallable {
 			config.save();
 		}
 
+		worlds.add(args.get(0));
+		
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, args.get(0), " created successfully"));
 
 		return CommandResult.success();
