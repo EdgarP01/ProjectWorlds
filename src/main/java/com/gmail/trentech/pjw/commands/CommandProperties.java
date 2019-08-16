@@ -70,13 +70,14 @@ public class CommandProperties implements CommandCallable {
 		list.add(Text.of(TextColors.GREEN, "GameMode: ", TextColors.WHITE, properties.getGameMode().getTranslation().get().toLowerCase(), TextColors.GREEN, ", Difficulty: ", TextColors.WHITE, properties.getDifficulty().getTranslation().get().toLowerCase(), TextColors.GREEN, ", PVP: ", TextColors.WHITE, properties.isPVPEnabled()));
 		list.add(Text.of(TextColors.GREEN, "Keep Spawn Loaded: ", TextColors.WHITE, properties.doesKeepSpawnLoaded(), TextColors.GREEN, ", Load on Startup: ", TextColors.WHITE, properties.loadOnStartup()));
 		list.add(Text.of(TextColors.GREEN, "Bonus Chest: ", TextColors.WHITE, properties.doesGenerateBonusChest(), TextColors.GREEN, " Map Features: ", TextColors.WHITE, properties.usesMapFeatures()));
+		list.add(Text.of(TextColors.GREEN, "Commands Allowed: ", TextColors.WHITE, properties.areCommandsAllowed()));
 		
 		if(optionalWorld.isPresent()) {
 			list.add(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, Utils.getTime(properties.getWorldTime()), TextColors.GREEN, ", Ticks: ", TextColors.WHITE, (properties.getWorldTime() % 24000), TextColors.GREEN, ", Weather: ", TextColors.WHITE, optionalWorld.get().getWeather().getName()));
 		} else {
 			list.add(Text.of(TextColors.GREEN, "Time: ", TextColors.WHITE, Utils.getTime(properties.getWorldTime()), TextColors.GREEN, ", Ticks: ", TextColors.WHITE, (properties.getWorldTime() % 24000)));
 		}
-
+		
 		list.add(Text.of(TextColors.GREEN, "UUID: ", TextColors.WHITE, properties.getUniqueId().toString()));
 		list.add(Text.of(TextColors.GREEN, "Seed: ", TextColors.WHITE, properties.getSeed()));	
 
