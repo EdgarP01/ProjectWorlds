@@ -60,6 +60,17 @@ public class EventManager {
 			return;
 		}
 
+		if(firstJoin && !node.getNode("first_join", "enable").getBoolean()) {
+			if (!player.hasPermission("pjw.override.gamemode")) {
+				World world = player.getWorld();
+				
+				if(world.getGameRule("forceGamemode").get().equalsIgnoreCase("true")) {
+					player.offer(Keys.GAME_MODE, player.getWorld().getProperties().getGameMode());
+				}			
+			}
+			return;
+		}
+		
 		String worldName = node.getNode("first_join", "world").getString();
 
 		Optional<World> optionalWorld = Sponge.getServer().getWorld(worldName);

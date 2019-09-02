@@ -397,6 +397,10 @@ public class Common {
 		if (config.getNode("options", "first_join", "world").isVirtual()) {
 			config.getNode("options", "first_join", "world").setValue("world").setComment("World player spawns to when joining for the first time");
 		}
+		if (config.getNode("options", "first_join", "enable").isVirtual()) {
+			config.getNode("options", "first_join", "enable").setValue(true).setComment("Disable to not allow pjw to manage new player joins");
+		}
+		
 		if (config.getNode("options", "lobby_mode").isVirtual()) {
 			config.getNode("options", "lobby_mode").setValue(false).setComment("If true, player will always spawn in first_join world on join");
 		}
