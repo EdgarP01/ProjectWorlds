@@ -90,7 +90,7 @@ public class CommandGamerule implements CommandCallable {
 			throw new CommandException(getHelp().getUsageText());
 		}
 
-		properties.setGameRule(rule, value.toLowerCase());
+		properties.setGameRule(rule, value);
 		Sponge.getServer().saveWorldProperties(properties);
 		
 		source.sendMessage(Text.of(TextColors.DARK_GREEN, "Set gamerule ", rule, " to ", value));

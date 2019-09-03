@@ -24,14 +24,15 @@ import org.spongepowered.api.event.world.ChangeWorldWeatherEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.DimensionTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.PortalAgent;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.flowpowered.math.vector.Vector3i;
 import com.gmail.trentech.pjc.core.ConfigManager;
-import com.gmail.trentech.pjc.core.TeleportManager;
 import com.gmail.trentech.pjw.Main;
 
 import ninja.leaping.configurate.ConfigurationNode;
@@ -254,6 +255,8 @@ public class EventManager {
 		World from = event.getFromTransform().getExtent();
 		World to = event.getToTransform().getExtent();
 
+		PortalAgent portalAgent = event.getPortalAgent();
+		
 		String toName;
 		if (to.getName().equals("DIM-1")) {
 			toName = from.getGameRule("netherPortal").get();
@@ -261,52 +264,59 @@ public class EventManager {
 			if(toName.equals("DIM-1") || toName.equalsIgnoreCase("default")) {
 				return;
 			}
+			
+			event.setUsePortalAgent(true);
 		} else if (to.getName().equals("DIM1")) {
 			toName = from.getGameRule("endPortal").get();
 			
 			if(toName.equals("DIM1") || toName.equalsIgnoreCase("default")) {
 				return;
 			}
+			
+			event.setUsePortalAgent(false);
 		} else {
 			return;
 		}
 
 		Optional<World> optionalWorld = Sponge.getServer().getWorld(toName);
-
-		if (!optionalWorld.isPresent()) {
+		
+		if(!optionalWorld.isPresent()) {
+			player.sendMessage(Text.of(TextColors.RED, toName, " is not a valid world"));
 			return;
 		}
+		
 		World world = optionalWorld.get();
-
-		Optional<Location<World>> optionalLocation = TeleportManager.getRandomLocation(world, 2000);
-
+		
 		Location<World> location;
-		
-		if(!optionalLocation.isPresent()) {
-			location = world.getSpawnLocation();
-		} else {
-			location = optionalLocation.get();
-		}
 
-		PortalAgent portalAgent = event.getPortalAgent();
+		if(world.getProperties().getDimensionType().equals(DimensionTypes.NETHER)) {
+			Vector3i position = event.getFromTransform().getLocation().getBlockPosition();
 
-		optionalLocation = portalAgent.findPortal(location);
-
-		if(!optionalLocation.isPresent()) {
-			optionalLocation = portalAgent.createPortal(location);
+			location = world.getLocation(Math.floor(position.getX() / 8), position.getY(), Math.floor(position.getZ() / 8));
 			
-			if(!optionalLocation.isPresent()) {
-				event.setCancelled(true);
-				return;
-			}
-		}
-		
-		location = optionalLocation.get();	
-		
-		Transform<World> transform = new Transform<>(location.getExtent(), location.getPosition());
-		
-		event.setToTransform(transform);
+			portalAgent.setSearchRadius(20);
+			portalAgent.setCreationRadius(20);
+			
+			Optional<Location<World>> optionalLocation = portalAgent.findOrCreatePortal(location);
 
-		event.setUsePortalAgent(true);
+			if(optionalLocation.isPresent()) {
+				location = optionalLocation.get();
+			} else {
+				optionalLocation = portalAgent.createPortal(location);
+			
+				if(optionalLocation.isPresent()) {
+					location = optionalLocation.get();
+				}
+			}
+			
+			event.setPortalAgent(portalAgent);
+		} else if(world.getProperties().getDimensionType().equals(DimensionTypes.THE_END)) {
+			location = new Location<World>(world, 100, 49, 0);
+		} else {
+			location = world.getSpawnLocation();
+		}
+
+		Transform<World> transform = new Transform<>(location);
+		event.setToTransform(transform);		
 	}
 }
